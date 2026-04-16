@@ -1,0 +1,75 @@
+{
+  "name": "copilot-chat-sync",
+  "displayName": "Copilot Chat Sync",
+  "description": "Automatically sync GitHub Copilot chat history to a GitHub repository",
+  "version": "0.3.0",
+  "publisher": "yuzuan",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "copilotChatSync.syncNow",
+        "title": "Copilot Chat Sync: Sync Now"
+      },
+      {
+        "command": "copilotChatSync.exportAll",
+        "title": "Copilot Chat Sync: Export All Sessions to Markdown"
+      },
+      {
+        "command": "copilotChatSync.configure",
+        "title": "Copilot Chat Sync: Configure Repository"
+      }
+    ],
+    "configuration": {
+      "title": "Copilot Chat Sync",
+      "properties": {
+        "copilotChatSync.repoPath": {
+          "type": "string",
+          "default": "",
+          "description": "Local path to the git repository for syncing chat history"
+        },
+        "copilotChatSync.remoteUrl": {
+          "type": "string",
+          "default": "",
+          "description": "GitHub remote URL (e.g. https://github.com/user/repo.git)"
+        },
+        "copilotChatSync.autoSync": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically sync when chat sessions change"
+        },
+        "copilotChatSync.syncIntervalMinutes": {
+          "type": "number",
+          "default": 5,
+          "description": "Auto-sync interval in minutes"
+        },
+        "copilotChatSync.includeToolCalls": {
+          "type": "boolean",
+          "default": false,
+          "description": "Include tool call details in exported Markdown"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "package": "vsce package"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.85.0",
+    "typescript": "^5.3.0",
+    "@vscode/vsce": "^3.0.0"
+  }
+}
