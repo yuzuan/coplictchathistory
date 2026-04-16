@@ -51,6 +51,12 @@ export async function ensureRepo(config: GitConfig): Promise<void> {
     } catch {
       await git(config.repoPath, ['remote', 'add', 'origin', effectiveUrl]);
     }
+
+    // Persist Host header and SSL settings so all git network operations work
+    if (effectiveUrl.includes(GITHUB_IP)) {
+      await git(config.repoPath, ['config', 'http.extraHeader', 'Host: github.com']);
+      await git(config.repoPath, ['config', 'http.sslVerify', 'false']);
+    }
   }
 }
 
@@ -84,9 +90,9 @@ export async function commitAndPush(
   // Commit
   await git(repoPath, ['commit', '-m', message]);
 
-  // Push (with Host header workaround for hosts file blocking)
+  // Push (Host header and SSL config already persisted by ensureRepo)
   try {
-    await git(repoPath, ['-c', 'http.extraHeader=Host: github.com', 'push', '-u', 'origin', 'main']);
+    await git(repoPath, ['push', '-u', 'origin', 'main']);
     return { committed: true, pushed: true };
   } catch (err) {
     const errorMsg = err instanceof Error ? err.message : String(err);
