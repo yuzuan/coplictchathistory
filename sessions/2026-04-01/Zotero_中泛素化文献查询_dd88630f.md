@@ -16,7 +16,9 @@
 
 ### 🤖 Copilot <sub>2026/04/01 14:21</sub>
 
-你的 Zotero 库中共找到 **57 篇**与泛素化相关的文献，没有单独的"泛素化"收藏集。以下按主题分类整理：
+
+
+  你的 Zotero 库中共找到 **57 篇**与泛素化相关的文献，没有单独的"泛素化"收藏集。以下按主题分类整理：
 
 ---
 
@@ -105,13 +107,7 @@
 
 ---
 
-**总结**：你的文献集中围绕 **去泛素化酶（USP16 占比最高）、TGF-β 信号通路泛素化调控、蛋白酶体泛素受体（Rpn13/ADRM1）、E3 连接酶（TRIM 家族）与肿瘤** 四大主题展开。
-
-你想对这些泛素化文献做什么？
-
-你想对这些泛素化文献做什么？
-
-你的 Zotero MCP 插件信息如下：
+**总结**：你的文献集中围绕 **去泛素化酶（USP16 占比最高）、TGF-β 信号通路泛素化调控、蛋白酶体泛素受体（Rpn13/ADRM1）、E3 连接酶（TRIM 家族）与肿瘤** 四大主题展开。 你的 Zotero MCP 插件信息如下：
 
 | 项目 | 信息 |
 |------|------|
@@ -120,13 +116,7 @@
 | **作者** | cookjohn |
 | **GitHub** | https://github.com/cookjohn/zotero-mcp |
 | **插件 ID** | `zotero-mcp-plugin@autoagent.my` |
-| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 |
-
-还需要对这个 Zotero MCP 插件做什么吗？
-
-还需要对这个 Zotero MCP 插件做什么吗？
-
-两个项目对比如下：
+| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 | 两个项目对比如下：
 
 ---
 
@@ -159,9 +149,7 @@
 
 2. **54yyyu** 是一个 **独立 Python MCP 服务器**，功能更丰富（Scite 引用分析、OA PDF 自动下载、去重合并），社区更大，但需要独立安装和管理 Python 进程。
 
-3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn
-
-两个项目对比如下：
+3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 两个项目对比如下：
 
 ---
 
@@ -194,16 +182,7 @@
 
 2. **54yyyu** 是一个 **独立 Python MCP 服务器**，功能更丰富（Scite 引用分析、OA PDF 自动下载、去重合并），社区更大，但需要独立安装和管理 Python 进程。
 
-3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。
-
-对这两个项目还有什么想了解的？
-
-对这两个项目还有什么想了解的？
-Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
-
-现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器：
-
-安装和配置完成。当前状态：
+3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。 现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器： 安装和配置完成。当前状态：
 
 | MCP 服务器 | 来源 | 连接方式 | 状态 |
 |---|---|---|---|
@@ -214,14 +193,7 @@ Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
 - 两个 MCP 共存互不冲突 — cookjohn 是 Zotero 插件进程内的 HTTP 服务，54yyyu 是独立 Python stdio 进程
 - 54yyyu 版本的工具名以 `zotero_` 前缀开头（如 `zotero_search_items`、`zotero_add_by_doi`），与 cookjohn 的工具名不冲突
 - **需要重启 VS Code/Copilot Chat** 才能加载新的 MCP 服务器
-- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only`
-
-双 MCP 已配置完成，还需要做什么？
-
-双 MCP 已配置完成，还需要做什么？
-Selected: 安装 scite extra 获取引用分析能力
-
-Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
+- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only` Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 
 重启 VS Code 后，54yyyu 版 MCP 将提供以下 Scite 专属工具：
 
@@ -229,9 +201,7 @@ Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 |---|---|
 | `scite_enrich_item` | 查看单篇论文的引用计数（supporting / contrasting / mentioning）+ 撤稿检测 |
 | `scite_enrich_search` | 搜索结果内联 Scite 引用数据 |
-| `scite_check_retractions` |
-
-Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
+| `scite_check_retractions` | Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 
 重启 VS Code 后，54yyyu 版 MCP 将提供以下 Scite 专属工具：
 
@@ -241,11 +211,7 @@ Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 | `scite_enrich_search` | 搜索结果内联 Scite 引用数据 |
 | `scite_check_retractions` | 批量扫描你的文献库中是否有已撤稿论文 |
 
-无需 Scite 账户，使用公开 API 端点。
-
-Scite 已安装，还需要做什么？
-
-你的 Zotero MCP 插件信息如下：
+无需 Scite 账户，使用公开 API 端点。 你的 Zotero MCP 插件信息如下：
 
 | 项目 | 信息 |
 |------|------|
@@ -254,11 +220,7 @@ Scite 已安装，还需要做什么？
 | **作者** | cookjohn |
 | **GitHub** | https://github.com/cookjohn/zotero-mcp |
 | **插件 ID** | `zotero-mcp-plugin@autoagent.my` |
-| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 |
-
-还需要对这个 Zotero MCP 插件做什么吗？
-
-两个项目对比如下：
+| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 | 两个项目对比如下：
 
 ---
 
@@ -291,14 +253,7 @@ Scite 已安装，还需要做什么？
 
 2. **54yyyu** 是一个 **独立 Python MCP 服务器**，功能更丰富（Scite 引用分析、OA PDF 自动下载、去重合并），社区更大，但需要独立安装和管理 Python 进程。
 
-3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。
-
-对这两个项目还有什么想了解的？
-Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
-
-现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器：
-
-安装和配置完成。当前状态：
+3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。 现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器： 安装和配置完成。当前状态：
 
 | MCP 服务器 | 来源 | 连接方式 | 状态 |
 |---|---|---|---|
@@ -309,12 +264,7 @@ Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
 - 两个 MCP 共存互不冲突 — cookjohn 是 Zotero 插件进程内的 HTTP 服务，54yyyu 是独立 Python stdio 进程
 - 54yyyu 版本的工具名以 `zotero_` 前缀开头（如 `zotero_search_items`、`zotero_add_by_doi`），与 cookjohn 的工具名不冲突
 - **需要重启 VS Code/Copilot Chat** 才能加载新的 MCP 服务器
-- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only`
-
-双 MCP 已配置完成，还需要做什么？
-Selected: 安装 scite extra 获取引用分析能力
-
-Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
+- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only` Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 
 重启 VS Code 后，54yyyu 版 MCP 将提供以下 Scite 专属工具：
 
@@ -324,11 +274,7 @@ Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 | `scite_enrich_search` | 搜索结果内联 Scite 引用数据 |
 | `scite_check_retractions` | 批量扫描你的文献库中是否有已撤稿论文 |
 
-无需 Scite 账户，使用公开 API 端点。
-
-Scite 已安装，还需要做什么？
-
-你的 Zotero MCP 插件信息如下：
+无需 Scite 账户，使用公开 API 端点。 你的 Zotero MCP 插件信息如下：
 
 | 项目 | 信息 |
 |------|------|
@@ -337,11 +283,7 @@ Scite 已安装，还需要做什么？
 | **作者** | cookjohn |
 | **GitHub** | https://github.com/cookjohn/zotero-mcp |
 | **插件 ID** | `zotero-mcp-plugin@autoagent.my` |
-| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 |
-
-还需要对这个 Zotero MCP 插件做什么吗？
-
-两个项目对比如下：
+| **运行方式** | HTTP 模式，本地监听 `127.0.0.1:23121/mcp`，由 Zotero 7 进程直接提供 | 两个项目对比如下：
 
 ---
 
@@ -374,14 +316,7 @@ Scite 已安装，还需要做什么？
 
 2. **54yyyu** 是一个 **独立 Python MCP 服务器**，功能更丰富（Scite 引用分析、OA PDF 自动下载、去重合并），社区更大，但需要独立安装和管理 Python 进程。
 
-3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。
-
-对这两个项目还有什么想了解的？
-Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
-
-现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器：
-
-安装和配置完成。当前状态：
+3. 两者**完全独立**，不是 fork 关系，只是同名项目。你目前用的 cookjohn 版本已经能满足基本的搜索、阅读、注释、写操作需求。如果需要 Scite 引用分析或自动下载 OA PDF，可以考虑额外安装 54yyyu 版本。 现在配置 VS Code 的 mcp.json，添加 54yyyu 版本作为第二个 MCP 服务器： 安装和配置完成。当前状态：
 
 | MCP 服务器 | 来源 | 连接方式 | 状态 |
 |---|---|---|---|
@@ -392,12 +327,7 @@ Selected: 同时安装 54yyyu 版本，双 MCP 并行使用
 - 两个 MCP 共存互不冲突 — cookjohn 是 Zotero 插件进程内的 HTTP 服务，54yyyu 是独立 Python stdio 进程
 - 54yyyu 版本的工具名以 `zotero_` 前缀开头（如 `zotero_search_items`、`zotero_add_by_doi`），与 cookjohn 的工具名不冲突
 - **需要重启 VS Code/Copilot Chat** 才能加载新的 MCP 服务器
-- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only`
-
-双 MCP 已配置完成，还需要做什么？
-Selected: 安装 scite extra 获取引用分析能力
-
-Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
+- 如果后续想启用语义搜索，运行 `zotero-mcp setup --semantic-config-only` Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 
 重启 VS Code 后，54yyyu 版 MCP 将提供以下 Scite 专属工具：
 
@@ -407,6 +337,4 @@ Scite extra 安装完成。`zotero-mcp-server[scite]` v0.2.2 已就绪。
 | `scite_enrich_search` | 搜索结果内联 Scite 引用数据 |
 | `scite_check_retractions` | 批量扫描你的文献库中是否有已撤稿论文 |
 
-无需 Scite 账户，使用公开 API 端点。
-
-Scite 已安装，还需要做什么？
+无需 Scite 账户，使用公开 API 端点。 

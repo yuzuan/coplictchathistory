@@ -16,11 +16,7 @@
 
 ### 🤖 Copilot <sub>2026/03/02 22:45</sub>
 
-Terminal 输出混乱了，让我改用脚本文件方式执行。
-
-现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。
-
-数据分析完成，CSV 已导出。以下是汇总：
+Terminal 输出混乱了，让我改用脚本文件方式执行。 现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。 数据分析完成，CSV 已导出。以下是汇总：
 
 ---
 
@@ -56,15 +52,7 @@ Terminal 输出混乱了，让我改用脚本文件方式执行。
 - **Multiome**：128,038 cells
 - **ParseBio**：61,609 cells
 
-CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。
-
-[object Object]
-
-Terminal 输出混乱了，让我改用脚本文件方式执行。
-
-现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。
-
-数据分析完成，CSV 已导出。以下是汇总：
+CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。 Terminal 输出混乱了，让我改用脚本文件方式执行。 现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。 数据分析完成，CSV 已导出。以下是汇总：
 
 ---
 
@@ -100,15 +88,7 @@ Terminal 输出混乱了，让我改用脚本文件方式执行。
 - **Multiome**：128,038 cells
 - **ParseBio**：61,609 cells
 
-CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。
-
-[object Object]
-
-Terminal 输出混乱了，让我改用脚本文件方式执行。
-
-现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。
-
-数据分析完成，CSV 已导出。以下是汇总：
+CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。 Terminal 输出混乱了，让我改用脚本文件方式执行。 现在我能看到全貌了。让我进一步查看 Patient-Sample 的详细对应关系，并导出 CSV。 数据分析完成，CSV 已导出。以下是汇总：
 
 ---
 
@@ -144,6 +124,4 @@ Terminal 输出混乱了，让我改用脚本文件方式执行。
 - **Multiome**：128,038 cells
 - **ParseBio**：61,609 cells
 
-CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。
-
-[object Object]
+CSV 已保存至：`/Users/yuzuan/Downloads/生信技能树月更复现/肿瘤及瘤旁 2/write/GSE274987_sample_grouping.csv`，包含每个 Patient-Sample-Region-tissue_type-Batch-Platform 组合及其细胞数。 
