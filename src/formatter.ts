@@ -41,7 +41,7 @@ export function sessionToMarkdown(session: ChatSession, opts: Partial<FormatOpti
   const lines: string[] = [];
 
   // Title
-  const title = deriveTitle(session);
+  const title = getSessionTitle(session);
   lines.push(`# ${title}`);
   lines.push('');
 
@@ -116,18 +116,22 @@ function formatMessage(msg: ChatMessage, options: FormatOptions): string {
 }
 
 /**
- * Derive a human-readable title from the first user message
+ * Derive a human-readable title from the first user message,
+ * or fall back to the first assistant message when needed.
  */
-function deriveTitle(session: ChatSession): string {
-  const firstUser = session.messages.find(m => m.role === 'user');
-  if (firstUser?.content) {
-    const preview = firstUser.content.replace(/\n/g, ' ').trim();
-    if (preview.length <= 80) {
-      return preview;
-    }
-    return preview.slice(0, 77) + '...';
+export function getSessionTitle(session: ChatSession, maxLength: number = 80): string {
+  const preferredMessage = session.messages.find(m => m.role === 'user' && m.content?.trim())
+    || session.messages.find(m => m.role === 'assistant' && m.content?.trim());
+
+  if (!preferredMessage?.content) {
+    return `Session ${session.sessionId.slice(0, 8)}`;
   }
-  return `Chat Session ${session.sessionId.slice(0, 8)}`;
+
+  const preview = normalizeTitleText(preferredMessage.content);
+  if (preview.length <= maxLength) {
+    return preview;
+  }
+  return preview.slice(0, Math.max(maxLength - 3, 1)) + '...';
 }
 
 function formatTime(isoString: string): string {
@@ -200,7 +204,7 @@ export function sessionToJSON(session: ChatSession, opts: Partial<FormatOptions>
  */
 export function sessionToHTML(session: ChatSession, opts: Partial<FormatOptions> = {}): string {
   const options = { ...defaultOptions, ...opts };
-  const title = escapeHtml(deriveTitle(session));
+  const title = escapeHtml(getSessionTitle(session));
   const messages = session.messages.map(msg => {
     const icon = msg.role === 'user' ? '👤' : '🤖';
     const label = msg.role === 'user' ? 'User' : 'Copilot';
@@ -307,7 +311,7 @@ function extractFirstParagraph(text: string): string {
  */
 export function sessionToQA(session: ChatSession): string {
   const lines: string[] = [];
-  const title = deriveTitle(session);
+  const title = getSessionTitle(session);
   lines.push(`# Q&A Archive: ${title}`);
   lines.push(`> Workspace: ${session.workspaceName} | ${formatTime(session.startTime)}`);
   lines.push('');
@@ -381,4 +385,12 @@ export function sessionToChunks(session: ChatSession, pairsPerChunk: number = 5)
     chunks.push(redactSecrets(lines.join('\n')));
   }
   return chunks;
+}
+
+function normalizeTitleText(text: string): string {
+  const firstParagraph = extractFirstParagraph(text);
+  const normalized = (firstParagraph || text)
+    .replace(/\s+/g, ' ')
+    .trim();
+  return normalized || 'Untitled Session';
 }

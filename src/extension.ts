@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { findAllTranscripts, parseStoredSession, getWorkspaceStorageBase, getGlobalStorageBase, ChatSession } from './parser';
-import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks } from './formatter';
+import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks, getSessionTitle } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
 import { showPreview } from './preview';
@@ -215,8 +215,7 @@ async function searchHistory() {
   }
 
   const items = matches.map(m => {
-    const firstUser = m.session.messages.find(msg => msg.role === 'user');
-    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || m.session.sessionId.slice(0, 8);
+    const title = getSessionTitle(m.session, 60);
     return {
       label: `$(comment-discussion) ${title}`,
       description: m.session.workspaceName,
@@ -493,8 +492,7 @@ async function exportQAArchive() {
   }
 
   const items = sessions.map(s => {
-    const firstUser = s.messages.find(m => m.role === 'user');
-    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || s.sessionId.slice(0, 8);
+    const title = getSessionTitle(s, 60);
     return { label: title, description: s.workspaceName, session: s };
   });
 
@@ -526,8 +524,7 @@ async function exportChunks() {
   }
 
   const items = sessions.map(s => {
-    const firstUser = s.messages.find(m => m.role === 'user');
-    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || s.sessionId.slice(0, 8);
+    const title = getSessionTitle(s, 60);
     return { label: title, description: `${s.messages.length} msgs — ${s.workspaceName}`, session: s };
   });
 

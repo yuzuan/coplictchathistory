@@ -4,6 +4,7 @@
 
 import * as vscode from 'vscode';
 import { findAllTranscripts, parseStoredSession, ChatSession } from './parser';
+import { getSessionTitle } from './formatter';
 
 export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<SessionTreeItem | undefined>();
@@ -93,7 +94,7 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
         return d === date;
       })
       .map(s => {
-        const title = this.deriveTitle(s);
+        const title = getSessionTitle(s, 60);
         const item = new SessionTreeItem(
           title,
           vscode.TreeItemCollapsibleState.None,
@@ -115,15 +116,6 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
         };
         return item;
       });
-  }
-
-  private deriveTitle(session: ChatSession): string {
-    const firstUser = session.messages.find(m => m.role === 'user');
-    if (firstUser?.content) {
-      const preview = firstUser.content.replace(/\n/g, ' ').trim();
-      return preview.length <= 60 ? preview : preview.slice(0, 57) + '...';
-    }
-    return `Session ${session.sessionId.slice(0, 8)}`;
   }
 
   private formatTime(iso: string): string {

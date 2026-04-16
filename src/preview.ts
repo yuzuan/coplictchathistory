@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { ChatSession } from './parser';
-import { sessionToHTML } from './formatter';
+import { sessionToHTML, getSessionTitle } from './formatter';
 
 const panels = new Map<string, vscode.WebviewPanel>();
 
@@ -18,7 +18,7 @@ export function showPreview(session: ChatSession, context: vscode.ExtensionConte
     return;
   }
 
-  const title = deriveShortTitle(session);
+  const title = getSessionTitle(session, 40);
   const panel = vscode.window.createWebviewPanel(
     'copilotChatSync.preview',
     `💬 ${title}`,
@@ -30,13 +30,4 @@ export function showPreview(session: ChatSession, context: vscode.ExtensionConte
 
   panels.set(key, panel);
   panel.onDidDispose(() => panels.delete(key));
-}
-
-function deriveShortTitle(session: ChatSession): string {
-  const firstUser = session.messages.find(m => m.role === 'user');
-  if (firstUser?.content) {
-    const preview = firstUser.content.replace(/\n/g, ' ').trim();
-    return preview.length <= 40 ? preview : preview.slice(0, 37) + '...';
-  }
-  return `Session ${session.sessionId.slice(0, 8)}`;
 }
