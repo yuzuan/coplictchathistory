@@ -6,10 +6,11 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { findAllTranscripts, parseTranscript, getWorkspaceStorageBase, ChatSession } from './parser';
-import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML } from './formatter';
+import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
 import { showPreview } from './preview';
+import { parseHtmlTranscript } from './htmlImporter';
 
 let syncTimer: ReturnType<typeof setInterval> | undefined;
 let fileWatcher: vscode.FileSystemWatcher | undefined;
@@ -35,6 +36,10 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('copilotChatSync.previewSession', (session: ChatSession) => showPreview(session, context)),
     vscode.commands.registerCommand('copilotChatSync.exportSession', (session: ChatSession) => exportSingleSession(session)),
     vscode.commands.registerCommand('copilotChatSync.search', () => searchHistory()),
+    vscode.commands.registerCommand('copilotChatSync.exportQA', () => exportQAArchive()),
+    vscode.commands.registerCommand('copilotChatSync.exportChunks', () => exportChunks()),
+    vscode.commands.registerCommand('copilotChatSync.importHtml', () => importFromHtml()),
+    vscode.commands.registerCommand('copilotChatSync.copyToClipboard', (session: ChatSession) => copySessionToClipboard(session)),
   );
 
   // Start auto-sync if configured
@@ -428,4 +433,161 @@ function setupFileWatcher(context: vscode.ExtensionContext) {
 function log(msg: string) {
   const ts = new Date().toLocaleTimeString('zh-CN');
   outputChannel.appendLine(`[${ts}] ${msg}`);
+}
+
+// --- Q&A Archive Export ---
+
+async function exportQAArchive() {
+  const sessions = treeProvider.getSessions();
+  if (sessions.length === 0) {
+    vscode.window.showInformationMessage('No sessions found.');
+    return;
+  }
+
+  const items = sessions.map(s => {
+    const firstUser = s.messages.find(m => m.role === 'user');
+    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || s.sessionId.slice(0, 8);
+    return { label: title, description: s.workspaceName, session: s };
+  });
+
+  const pick = await vscode.window.showQuickPick(items, { placeHolder: 'Select session for Q&A archive' });
+  if (!pick) { return; }
+
+  const folder = await vscode.window.showOpenDialog({
+    canSelectFolders: true, canSelectFiles: false, canSelectMany: false,
+    openLabel: 'Save Q&A Archive Here',
+  });
+  if (!folder || folder.length === 0) { return; }
+
+  const qa = sessionToQA(pick.session);
+  const filename = `qa_archive_${pick.session.sessionId.slice(0, 8)}.md`;
+  const outPath = path.join(folder[0].fsPath, filename);
+  fs.writeFileSync(outPath, qa, 'utf-8');
+
+  const qaPairCount = (qa.match(/### Q\d+/g) || []).length;
+  vscode.window.showInformationMessage(`Exported ${qaPairCount} Q&A pairs to ${filename}`);
+}
+
+// --- Chunk Export ---
+
+async function exportChunks() {
+  const sessions = treeProvider.getSessions();
+  if (sessions.length === 0) {
+    vscode.window.showInformationMessage('No sessions found.');
+    return;
+  }
+
+  const items = sessions.map(s => {
+    const firstUser = s.messages.find(m => m.role === 'user');
+    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || s.sessionId.slice(0, 8);
+    return { label: title, description: `${s.messages.length} msgs — ${s.workspaceName}`, session: s };
+  });
+
+  const pick = await vscode.window.showQuickPick(items, { placeHolder: 'Select session to chunk' });
+  if (!pick) { return; }
+
+  const sizeInput = await vscode.window.showInputBox({
+    prompt: 'Q&A pairs per chunk',
+    value: '5',
+    validateInput: v => /^\d+$/.test(v) && parseInt(v) > 0 ? null : 'Enter a positive number',
+  });
+  if (!sizeInput) { return; }
+
+  const folder = await vscode.window.showOpenDialog({
+    canSelectFolders: true, canSelectFiles: false, canSelectMany: false,
+    openLabel: 'Save Chunks Here',
+  });
+  if (!folder || folder.length === 0) { return; }
+
+  const chunks = sessionToChunks(pick.session, parseInt(sizeInput));
+  const shortId = pick.session.sessionId.slice(0, 8);
+  for (let i = 0; i < chunks.length; i++) {
+    const filename = `chunk_${shortId}_${String(i + 1).padStart(4, '0')}.md`;
+    fs.writeFileSync(path.join(folder[0].fsPath, filename), chunks[i], 'utf-8');
+  }
+
+  vscode.window.showInformationMessage(`Exported ${chunks.length} chunks`);
+}
+
+// --- HTML Import ---
+
+async function importFromHtml() {
+  const files = await vscode.window.showOpenDialog({
+    canSelectFiles: true, canSelectFolders: false, canSelectMany: true,
+    openLabel: 'Select HTML File(s)',
+    filters: { 'HTML Files': ['html', 'htm'] },
+  });
+  if (!files || files.length === 0) { return; }
+
+  const imported: ChatSession[] = [];
+  for (const file of files) {
+    const html = fs.readFileSync(file.fsPath, 'utf-8');
+    const session = parseHtmlTranscript(html, path.basename(file.fsPath));
+    if (session && session.messages.length > 0) {
+      imported.push(session);
+    }
+  }
+
+  if (imported.length === 0) {
+    vscode.window.showWarningMessage('No valid conversations found in the selected HTML file(s).');
+    return;
+  }
+
+  // Ask what to do with imported sessions
+  const action = await vscode.window.showQuickPick([
+    { label: '$(eye) Preview', description: 'Open in preview panel', action: 'preview' },
+    { label: '$(export) Export as Markdown', description: 'Save as .md files', action: 'export' },
+    { label: '$(clippy) Copy Q&A to Clipboard', description: 'Copy condensed Q&A format', action: 'clipboard' },
+  ], { placeHolder: `Imported ${imported.length} session(s) — what would you like to do?` });
+
+  if (!action) { return; }
+
+  if (action.action === 'preview') {
+    for (const session of imported) {
+      showPreview(session, {} as vscode.ExtensionContext);
+    }
+  } else if (action.action === 'export') {
+    const folder = await vscode.window.showOpenDialog({
+      canSelectFolders: true, canSelectFiles: false, canSelectMany: false,
+    });
+    if (!folder) { return; }
+    for (const session of imported) {
+      const md = sessionToMarkdown(session);
+      const filename = `imported_${session.sessionId.slice(0, 8)}.md`;
+      fs.writeFileSync(path.join(folder[0].fsPath, filename), md, 'utf-8');
+    }
+    vscode.window.showInformationMessage(`Exported ${imported.length} imported session(s)`);
+  } else if (action.action === 'clipboard') {
+    const allQA = imported.map(s => sessionToQA(s)).join('\n\n---\n\n');
+    await vscode.env.clipboard.writeText(allQA);
+    vscode.window.showInformationMessage('Q&A archive copied to clipboard!');
+  }
+}
+
+// --- Copy to Clipboard ---
+
+async function copySessionToClipboard(session: ChatSession) {
+  const format = await vscode.window.showQuickPick([
+    { label: 'Q&A Archive (condensed)', action: 'qa' },
+    { label: 'Full Markdown', action: 'markdown' },
+    { label: 'JSON', action: 'json' },
+  ], { placeHolder: 'Select format to copy' });
+
+  if (!format) { return; }
+
+  let content: string;
+  const config = getConfig();
+  switch (format.action) {
+    case 'qa':
+      content = sessionToQA(session);
+      break;
+    case 'json':
+      content = sessionToJSON(session, { includeToolCalls: config.includeToolCalls });
+      break;
+    default:
+      content = sessionToMarkdown(session, { includeToolCalls: config.includeToolCalls });
+  }
+
+  await vscode.env.clipboard.writeText(content);
+  vscode.window.showInformationMessage(`Session copied to clipboard (${format.label})`);
 }

@@ -271,3 +271,114 @@ function escapeHtml(text: string): string {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
 }
+
+/**
+ * Extract the first paragraph of text (stops at blank lines, bullets, numbered lists, emoji headers)
+ */
+function extractFirstParagraph(text: string): string {
+  if (!text) { return ''; }
+  const lines = text.split('\n');
+  const para: string[] = [];
+  const emojiHeaderPattern = /^[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/u;
+
+  for (let i = 0; i < lines.length; i++) {
+    const stripped = lines[i].trim();
+    if (i === 0) {
+      if (stripped) { para.push(stripped); }
+      continue;
+    }
+    if (
+      stripped === '' ||
+      /^[-•*#]+/.test(stripped) ||
+      /^\d+\./.test(stripped) ||
+      emojiHeaderPattern.test(stripped) ||
+      stripped.startsWith('```')
+    ) {
+      break;
+    }
+    para.push(stripped);
+  }
+  return para.join(' ');
+}
+
+/**
+ * Convert a ChatSession to a condensed Q&A archive format
+ * Only includes the first paragraph of each Copilot response
+ */
+export function sessionToQA(session: ChatSession): string {
+  const lines: string[] = [];
+  const title = deriveTitle(session);
+  lines.push(`# Q&A Archive: ${title}`);
+  lines.push(`> Workspace: ${session.workspaceName} | ${formatTime(session.startTime)}`);
+  lines.push('');
+
+  // Pair up user/assistant messages
+  let chunkNum = 0;
+  for (let i = 0; i < session.messages.length; i++) {
+    const msg = session.messages[i];
+    if (msg.role === 'user' && msg.content) {
+      chunkNum++;
+      lines.push(`---`);
+      lines.push(`### Q${chunkNum}`);
+      lines.push(`🧑 **User:**`);
+      lines.push(msg.content.trim());
+      lines.push('');
+
+      // Find the next assistant message
+      const next = session.messages[i + 1];
+      if (next && next.role === 'assistant' && next.content) {
+        const firstPara = extractFirstParagraph(next.content);
+        lines.push(`🤖 **Copilot:**`);
+        lines.push(firstPara);
+        lines.push('');
+        i++; // skip the assistant message
+      }
+    }
+  }
+
+  lines.push(`---`);
+  lines.push(`*Total: ${chunkNum} Q&A pairs*`);
+  return redactSecrets(lines.join('\n'));
+}
+
+/**
+ * Split a session into chunks of N Q&A pairs each
+ */
+export function sessionToChunks(session: ChatSession, pairsPerChunk: number = 5): string[] {
+  const chunks: string[] = [];
+  const pairs: Array<{ user: string; assistant: string }> = [];
+
+  for (let i = 0; i < session.messages.length; i++) {
+    const msg = session.messages[i];
+    if (msg.role === 'user' && msg.content) {
+      const next = session.messages[i + 1];
+      const assistantContent = (next && next.role === 'assistant' && next.content)
+        ? extractFirstParagraph(next.content)
+        : '(no response)';
+      pairs.push({ user: msg.content.trim(), assistant: assistantContent });
+      if (next && next.role === 'assistant') { i++; }
+    }
+  }
+
+  const totalChunks = Math.ceil(pairs.length / pairsPerChunk);
+  for (let c = 0; c < totalChunks; c++) {
+    const slice = pairs.slice(c * pairsPerChunk, (c + 1) * pairsPerChunk);
+    const lines: string[] = [];
+    lines.push(`# Chunk ${c + 1} of ${totalChunks} — ${session.workspaceName}`);
+    lines.push(`> ${formatTime(session.startTime)}`);
+    lines.push('');
+    for (let j = 0; j < slice.length; j++) {
+      const p = slice[j];
+      const globalIdx = c * pairsPerChunk + j + 1;
+      lines.push(`### Q${globalIdx}`);
+      lines.push(`🧑 User:`);
+      lines.push(p.user);
+      lines.push('');
+      lines.push(`🤖 Copilot:`);
+      lines.push(p.assistant);
+      lines.push('');
+    }
+    chunks.push(redactSecrets(lines.join('\n')));
+  }
+  return chunks;
+}
