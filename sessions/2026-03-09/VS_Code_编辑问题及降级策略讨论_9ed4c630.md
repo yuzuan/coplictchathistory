@@ -16,9 +16,9 @@
 
 ### 🤖 Copilot <sub>2026/03/09 17:29</sub>
 
+我来排查你的 VS Code 配置和环境，找出编辑经常失败的根本原因。
 
-
-我来排查你的 VS Code 配置和环境，找出编辑经常失败的根本原因。 诊断完成，以下是问题根因和详细分析：
+诊断完成，以下是问题根因和详细分析：
 
 ---
 
@@ -90,13 +90,25 @@ Agent 发起编辑 → VS Code 写入 buffer
     "source.sort.json": "never"
   }
 }
-``` 好，执行彻底修复方案。 
 ```
+
+诊断已完成。你想怎么修复这些导致 AI 编辑失败的设置？
+
+诊断已完成。你想怎么修复这些导致 AI 编辑失败的设置？
+Selected: 彻底修复：额外把 codeActionsOnSave 全部改为 explicit
+
+好，执行彻底修复方案。
 
 ```
 
 ```
-验证修改已生效： 全部修改已生效。 ## 修改总结
+
+```
+验证修改已生效：
+
+全部修改已生效。
+
+## 修改总结
 
 已完成 **彻底修复**，共改动 3 处、13 个设置项：
 
@@ -106,4 +118,11 @@ Agent 发起编辑 → VS Code 写入 buffer
 | `files.autoSave` | `"afterDelay"` → `"onFocusChange"` | **不再后台偷偷保存**，只在切换窗口时保存 |
 | `notebook.formatOnSave.enabled` | `true` → `false` | **Notebook 保存时不再自动格式化** |
 
-> 注意：`editor.formatOnSave: true` 保留了——它在 `onFocusChange` 模式下只在你手动 Cmd+S 时触发，不会与 AI 编辑冲突。如果仍想手动触发那些 codeActions，可以在 VS Code 里用 `Cmd+Shift+P` → "Source Action..." 手动执行。 已写入记忆文件。以后再遇到类似 AI 编辑失败的情况，会自动参考这份诊断清单优先排查。
+> 注意：`editor.formatOnSave: true` 保留了——它在 `onFocusChange` 模式下只在你手动 Cmd+S 时触发，不会与 AI 编辑冲突。如果仍想手动触发那些 codeActions，可以在 VS Code 里用 `Cmd+Shift+P` → "Source Action..." 手动执行。
+
+设置已更新，建议重启 VS Code 窗口让配置生效。还有什么想做的？
+
+设置已更新，建议重启 VS Code 窗口让配置生效。还有什么想做的？
+Selected: 将此诊断经验写入记忆文件
+
+已写入记忆文件。以后再遇到类似 AI 编辑失败的情况，会自动参考这份诊断清单优先排查。
