@@ -1,4 +1,4 @@
-# 自动检测到: /Users/yuzuan/Zotero ✅ Zotero路径验证成功: /Users/yuzuan/Zotero 📍 检测到zotlin...
+# 自动检测到: /Users/yuzuan/Zotero
 
 | Field | Value |
 |-------|-------|

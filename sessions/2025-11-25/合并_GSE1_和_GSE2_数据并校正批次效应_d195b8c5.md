@@ -1,4 +1,4 @@
-# GSE1=exp pd1=pd  GSE2=exp pd2=pd,现在 GSE1 和 GSE2 合并去批次
+# GSE1=exp pd1=pd
 
 | Field | Value |
 |-------|-------|

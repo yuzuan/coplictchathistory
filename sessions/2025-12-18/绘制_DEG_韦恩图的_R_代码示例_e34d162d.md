@@ -1,4 +1,4 @@
-# GSE246298_DEG = DEG_tb GSE106090_DEG = DEG_tb  library(ggVennDiagram) library...
+# GSE246298_DEG = DEG_tb GSE106090_DEG = DEG_tb
 
 | Field | Value |
 |-------|-------|

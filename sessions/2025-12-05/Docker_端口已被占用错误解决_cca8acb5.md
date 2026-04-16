@@ -1,4 +1,4 @@
-# Welcome to Alibaba Cloud Elastic Compute Service !  Updates Information Summa...
+# Welcome to Alibaba Cloud Elastic Compute Service !
 
 | Field | Value |
 |-------|-------|

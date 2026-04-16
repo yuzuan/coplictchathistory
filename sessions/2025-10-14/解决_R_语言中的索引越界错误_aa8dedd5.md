@@ -1,4 +1,4 @@
-# Error in mat_scaled[, group_order, drop = FALSE] :    subscript out of bounds
+# Error in mat_scaled[, group_order, drop = FALSE] : subscript out of bounds
 
 | Field | Value |
 |-------|-------|

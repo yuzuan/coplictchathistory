@@ -1,4 +1,4 @@
-# R encountered a fatal error.  The session was terminated.
+# R encountered a fatal error.
 
 | Field | Value |
 |-------|-------|

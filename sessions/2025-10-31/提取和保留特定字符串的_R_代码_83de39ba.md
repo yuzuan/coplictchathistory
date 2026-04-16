@@ -1,4 +1,4 @@
-# pd 的 title 列的SAT_obese_132_1  SAT_normal_weight_143要保留132_1和143如何写 R代码
+# pd 的 title 列的SAT_obese_132_1
 
 | Field | Value |
 |-------|-------|

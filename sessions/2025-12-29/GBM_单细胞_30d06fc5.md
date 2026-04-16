@@ -1,4 +1,4 @@
-# GSE235980=exp  GSE235980pd=pd   GSE149940=exp GSE149940pd=pd   GSE153867=exp ...
+# GSE235980=exp
 
 | Field | Value |
 |-------|-------|

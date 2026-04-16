@@ -1,4 +1,4 @@
-# 开始使用   获取 Auth Token： ANTHROPIC_AUTH_TOKEN ：注册后在 API令牌 页面点击 添加令牌 获得（以 sk- 开头）...
+# 开始使用
 
 | Field | Value |
 |-------|-------|

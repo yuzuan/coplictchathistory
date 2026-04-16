@@ -1,4 +1,4 @@
-# doublet 处理  10x 数据里 doublet 很常见，尤其肿瘤样本。你现在流程里没做 scrublet / scDblFinder / Solo...
+# doublet 处理
 
 | Field | Value |
 |-------|-------|

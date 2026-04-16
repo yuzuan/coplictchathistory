@@ -1,4 +1,4 @@
-# library(AnnotationDbi) library(org.Mm.eg.db)  anno <- data.frame(ID = exp$V1)...
+# library(AnnotationDbi) library(org.Mm.eg.db)
 
 | Field | Value |
 |-------|-------|

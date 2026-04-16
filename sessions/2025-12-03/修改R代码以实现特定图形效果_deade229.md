@@ -1,4 +1,4 @@
-# 请帮我把这个代码改成我想要图片的效果：library(ggpubr)  p_box_stat <- ggplot(plot_data, aes(x = g...
+# 请帮我把这个代码改成我想要图片的效果：library(ggpubr)
 
 | Field | Value |
 |-------|-------|

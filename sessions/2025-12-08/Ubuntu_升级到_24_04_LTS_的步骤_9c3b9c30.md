@@ -1,4 +1,4 @@
-# Welcome to Alibaba Cloud Elastic Compute Service !  Last login: Mon Dec  8 19...
+# Welcome to Alibaba Cloud Elastic Compute Service !
 
 | Field | Value |
 |-------|-------|
