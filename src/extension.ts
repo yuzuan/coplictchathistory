@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { findAllTranscripts, parseTranscript, getWorkspaceStorageBase, ChatSession } from './parser';
+import { findAllTranscripts, parseTranscript, parseEmptyWindowSession, getWorkspaceStorageBase, ChatSession } from './parser';
 import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
@@ -141,7 +141,9 @@ async function exportAll() {
   let count = 0;
 
   for (const t of transcripts) {
-    const session = parseTranscript(t.filePath, t.workspaceHash);
+    const session = t.isEmptyWindow
+      ? parseEmptyWindowSession(t.filePath)
+      : parseTranscript(t.filePath, t.workspaceHash);
     if (!session) { continue; }
 
     const content = formatSession(session, format, config.includeToolCalls);
@@ -312,7 +314,9 @@ async function doSync(config: ExtConfig) {
   }
 
   for (const t of transcripts) {
-    const session = parseTranscript(t.filePath, t.workspaceHash);
+    const session = t.isEmptyWindow
+      ? parseEmptyWindowSession(t.filePath)
+      : parseTranscript(t.filePath, t.workspaceHash);
     if (!session || session.messages.length === 0) { continue; }
 
     const relPath = sessionToRelativePath(session);

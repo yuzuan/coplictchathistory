@@ -3,7 +3,7 @@
  */
 
 import * as vscode from 'vscode';
-import { findAllTranscripts, parseTranscript, ChatSession } from './parser';
+import { findAllTranscripts, parseTranscript, parseEmptyWindowSession, ChatSession } from './parser';
 
 export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<SessionTreeItem | undefined>();
@@ -42,7 +42,9 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
     const transcripts = findAllTranscripts();
 
     for (const t of transcripts) {
-      const session = parseTranscript(t.filePath, t.workspaceHash);
+      const session = t.isEmptyWindow
+        ? parseEmptyWindowSession(t.filePath)
+        : parseTranscript(t.filePath, t.workspaceHash);
       if (session && session.messages.length > 0) {
         this.sessions.push(session);
       }

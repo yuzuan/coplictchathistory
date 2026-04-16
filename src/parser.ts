@@ -237,27 +237,185 @@ export function getWorkspaceStorageBase(): string {
 }
 
 /**
- * Find all transcript JSONL files across all workspaces
+ * Get the globalStorage base path (for empty window sessions)
  */
-export function findAllTranscripts(): Array<{ filePath: string; workspaceHash: string }> {
-  const base = getWorkspaceStorageBase();
-  const results: Array<{ filePath: string; workspaceHash: string }> = [];
+function getGlobalStorageBase(): string {
+  const platform = process.platform;
+  const home = process.env.HOME || process.env.USERPROFILE || '';
 
-  if (!fs.existsSync(base)) {
-    return results;
+  if (platform === 'darwin') {
+    return path.join(home, 'Library', 'Application Support', 'Code', 'User', 'globalStorage');
+  } else if (platform === 'win32') {
+    return path.join(process.env.APPDATA || '', 'Code', 'User', 'globalStorage');
+  } else {
+    return path.join(home, '.config', 'Code', 'User', 'globalStorage');
+  }
+}
+
+/**
+ * Reconstruct state from VS Code's incremental JSONL format.
+ * kind=0: full init, kind=1: set at path, kind=2: push/extend array at path.
+ */
+function reconstructState(lines: string[]): Record<string, unknown> | null {
+  let state: Record<string, unknown> = {};
+
+  for (const line of lines) {
+    let obj: Record<string, unknown>;
+    try { obj = JSON.parse(line); } catch { continue; }
+
+    const kind = obj.kind as number;
+    const k = (obj.k as Array<string | number>) || [];
+    const v = obj.v;
+
+    if (kind === 0) {
+      state = (v as Record<string, unknown>) || {};
+    } else if (kind === 1) {
+      // Set value at path
+      let target: unknown = state;
+      for (const key of k.slice(0, -1)) {
+        if (Array.isArray(target)) {
+          target = target[Number(key)];
+        } else if (typeof target === 'object' && target !== null) {
+          target = (target as Record<string, unknown>)[String(key)];
+        }
+      }
+      const lastKey = k[k.length - 1];
+      if (Array.isArray(target)) {
+        target[Number(lastKey)] = v;
+      } else if (typeof target === 'object' && target !== null) {
+        (target as Record<string, unknown>)[String(lastKey)] = v;
+      }
+    } else if (kind === 2) {
+      // Push/extend array at path
+      let target: unknown = state;
+      for (const key of k) {
+        if (Array.isArray(target)) {
+          target = target[Number(key)];
+        } else if (typeof target === 'object' && target !== null) {
+          target = (target as Record<string, unknown>)[String(key)];
+        }
+      }
+      if (Array.isArray(target) && Array.isArray(v)) {
+        target.push(...v);
+      }
+    }
   }
 
-  const entries = fs.readdirSync(base, { withFileTypes: true });
-  for (const entry of entries) {
-    if (!entry.isDirectory()) { continue; }
-    const transcriptDir = path.join(base, entry.name, 'GitHub.copilot-chat', 'transcripts');
-    if (!fs.existsSync(transcriptDir)) { continue; }
+  return state;
+}
 
-    const jsonlFiles = fs.readdirSync(transcriptDir).filter(f => f.endsWith('.jsonl'));
+/**
+ * Parse an empty-window chat session JSONL (VS Code native format) into a ChatSession.
+ */
+export function parseEmptyWindowSession(filePath: string): ChatSession | null {
+  const content = fs.readFileSync(filePath, 'utf-8');
+  const lines = content.split('\n').filter(l => l.trim());
+  const state = reconstructState(lines);
+  if (!state) { return null; }
+
+  const sessionId = (state.sessionId as string) || path.basename(filePath, '.jsonl');
+  const customTitle = (state.customTitle as string) || '';
+  const creationDate = state.creationDate as number | undefined;
+  const requests = (state.requests as Array<Record<string, unknown>>) || [];
+  const messages: ChatMessage[] = [];
+
+  const startTime = creationDate ? new Date(creationDate).toISOString() : '';
+  let endTime = startTime;
+
+  for (const req of requests) {
+    // Extract user message
+    const msg = req.message as Record<string, unknown> | undefined;
+    const userText = (msg?.text as string) || '';
+    const timestamp = req.timestamp as number | undefined;
+    const ts = timestamp ? new Date(timestamp).toISOString() : '';
+
+    if (userText && !userText.startsWith('[Terminal ')) {
+      messages.push({ role: 'user', content: userText, timestamp: ts });
+    }
+
+    // Extract assistant response
+    const response = (req.response as Array<Record<string, unknown>>) || [];
+    let assistantContent = '';
+    const toolCalls: ToolCall[] = [];
+
+    for (const part of response) {
+      const partKind = part.kind as string | undefined;
+
+      if (!partKind && typeof part.value === 'string') {
+        // Text content (no explicit kind = markdown text)
+        assistantContent += part.value;
+      } else if (partKind === 'markdownContent') {
+        const c = part.content as Record<string, unknown> | undefined;
+        assistantContent += (c?.value as string) || '';
+      } else if (partKind === 'toolInvocationSerialized') {
+        const toolId = (part.toolId as string) || '';
+        toolCalls.push({
+          name: toolId,
+          arguments: {},
+        });
+      }
+    }
+
+    if (assistantContent || toolCalls.length > 0) {
+      messages.push({
+        role: 'assistant',
+        content: assistantContent,
+        timestamp: ts,
+        toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      });
+      if (ts) { endTime = ts; }
+    }
+  }
+
+  if (messages.length === 0) { return null; }
+
+  // Use customTitle as workspaceName, fallback to "(no workspace)"
+  const workspaceName = customTitle || '(no workspace)';
+
+  return {
+    sessionId,
+    startTime,
+    endTime,
+    workspaceName,
+    workspaceHash: 'emptyWindow',
+    messages,
+  };
+}
+
+/**
+ * Find all transcript JSONL files across all workspaces, including empty-window sessions.
+ */
+export function findAllTranscripts(): Array<{ filePath: string; workspaceHash: string; isEmptyWindow?: boolean }> {
+  const base = getWorkspaceStorageBase();
+  const results: Array<{ filePath: string; workspaceHash: string; isEmptyWindow?: boolean }> = [];
+
+  if (fs.existsSync(base)) {
+    const entries = fs.readdirSync(base, { withFileTypes: true });
+    for (const entry of entries) {
+      if (!entry.isDirectory()) { continue; }
+      const transcriptDir = path.join(base, entry.name, 'GitHub.copilot-chat', 'transcripts');
+      if (!fs.existsSync(transcriptDir)) { continue; }
+
+      const jsonlFiles = fs.readdirSync(transcriptDir).filter(f => f.endsWith('.jsonl'));
+      for (const jsonlFile of jsonlFiles) {
+        results.push({
+          filePath: path.join(transcriptDir, jsonlFile),
+          workspaceHash: entry.name,
+        });
+      }
+    }
+  }
+
+  // Also scan empty-window chat sessions
+  const globalBase = getGlobalStorageBase();
+  const emptyDir = path.join(globalBase, 'emptyWindowChatSessions');
+  if (fs.existsSync(emptyDir)) {
+    const jsonlFiles = fs.readdirSync(emptyDir).filter(f => f.endsWith('.jsonl'));
     for (const jsonlFile of jsonlFiles) {
       results.push({
-        filePath: path.join(transcriptDir, jsonlFile),
-        workspaceHash: entry.name,
+        filePath: path.join(emptyDir, jsonlFile),
+        workspaceHash: 'emptyWindow',
+        isEmptyWindow: true,
       });
     }
   }
