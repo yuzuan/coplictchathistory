@@ -5,7 +5,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { findAllTranscripts, parseTranscript, parseEmptyWindowSession, getWorkspaceStorageBase, ChatSession } from './parser';
+import { findAllTranscripts, parseStoredSession, getWorkspaceStorageBase, getGlobalStorageBase, ChatSession } from './parser';
 import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
@@ -13,7 +13,7 @@ import { showPreview } from './preview';
 import { parseHtmlTranscript } from './htmlImporter';
 
 let syncTimer: ReturnType<typeof setInterval> | undefined;
-let fileWatcher: vscode.FileSystemWatcher | undefined;
+let pendingSyncTimer: ReturnType<typeof setTimeout> | undefined;
 let outputChannel: vscode.OutputChannel;
 let treeProvider: SessionTreeProvider;
 
@@ -66,6 +66,10 @@ export function deactivate() {
     clearInterval(syncTimer);
     syncTimer = undefined;
   }
+  if (pendingSyncTimer) {
+    clearTimeout(pendingSyncTimer);
+    pendingSyncTimer = undefined;
+  }
 }
 
 // --- Config ---
@@ -112,6 +116,7 @@ async function syncNow() {
     async () => {
       try {
         await doSync(config);
+        treeProvider.refresh();
         vscode.window.showInformationMessage('Copilot Chat Sync: Sync complete!');
       } catch (err) {
         const msg = err instanceof Error ? err.message : String(err);
@@ -137,13 +142,11 @@ async function exportAll() {
 
   const config = getConfig();
   const exportDir = folder[0].fsPath;
-  const transcripts = findAllTranscripts();
+  const sessionFiles = findAllTranscripts();
   let count = 0;
 
-  for (const t of transcripts) {
-    const session = t.isEmptyWindow
-      ? parseEmptyWindowSession(t.filePath)
-      : parseTranscript(t.filePath, t.workspaceHash);
+  for (const sessionFile of sessionFiles) {
+    const session = parseStoredSession(sessionFile);
     if (!session) { continue; }
 
     const content = formatSession(session, format, config.includeToolCalls);
@@ -301,22 +304,13 @@ async function doSync(config: ExtConfig) {
   };
   await ensureRepo(gitConfig);
 
-  const transcripts = findAllTranscripts();
+  const sessionFiles = findAllTranscripts();
   const files: Array<{ relativePath: string; content: string }> = [];
 
-  // Track which sessions we already have
-  const sessionsDir = path.join(config.repoPath, 'sessions');
-  const existingFiles = new Set<string>();
-  if (fs.existsSync(sessionsDir)) {
-    for (const f of fs.readdirSync(sessionsDir)) {
-      existingFiles.add(f);
-    }
-  }
+  log(`Discovered ${sessionFiles.length} session files`);
 
-  for (const t of transcripts) {
-    const session = t.isEmptyWindow
-      ? parseEmptyWindowSession(t.filePath)
-      : parseTranscript(t.filePath, t.workspaceHash);
+  for (const sessionFile of sessionFiles) {
+    const session = parseStoredSession(sessionFile);
     if (!session || session.messages.length === 0) { continue; }
 
     const relPath = sessionToRelativePath(session);
@@ -371,17 +365,33 @@ function generateIndex(files: Array<{ relativePath: string; content: string }>):
 
   const sessionFiles = files
     .filter(f => f.relativePath.startsWith('sessions/'))
-    .sort((a, b) => b.relativePath.localeCompare(a.relativePath));
+    .sort((a, b) => compareSessionPathByDateDesc(a.relativePath, b.relativePath));
 
   for (const f of sessionFiles) {
     const name = path.basename(f.relativePath, '.md');
-    const parts = name.split('_');
-    const date = parts[0] || '';
-    const workspace = parts.slice(1, -1).join('_') || '';
+    const date = path.dirname(f.relativePath).replace(/^sessions[\\/]/, '');
+    const lastUnderscore = name.lastIndexOf('_');
+    const workspace = lastUnderscore >= 0 ? name.slice(0, lastUnderscore) : name;
     lines.push(`| ${date} | ${workspace} | [${name}](${f.relativePath}) |`);
   }
 
   return lines.join('\n');
+}
+
+function compareSessionPathByDateDesc(a: string, b: string): number {
+  const dateA = path.dirname(a).replace(/^sessions[\\/]/, '');
+  const dateB = path.dirname(b).replace(/^sessions[\\/]/, '');
+  const dateCompare = compareDateDesc(dateA, dateB);
+  if (dateCompare !== 0) {
+    return dateCompare;
+  }
+  return b.localeCompare(a);
+}
+
+function compareDateDesc(a: string, b: string): number {
+  if (a === 'unknown') { return 1; }
+  if (b === 'unknown') { return -1; }
+  return b.localeCompare(a);
 }
 
 // --- Auto Sync ---
@@ -394,9 +404,16 @@ function startAutoSync(config: ExtConfig) {
   const intervalMs = Math.max(config.syncIntervalMinutes, 1) * 60 * 1000;
   log(`Auto-sync started: every ${config.syncIntervalMinutes} minutes`);
 
+  void doSync(config)
+    .then(() => treeProvider.refresh())
+    .catch(err => {
+      log(`Initial auto-sync error: ${err instanceof Error ? err.message : String(err)}`);
+    });
+
   syncTimer = setInterval(async () => {
     try {
       await doSync(config);
+      treeProvider.refresh();
     } catch (err) {
       log(`Auto-sync error: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -415,23 +432,50 @@ function restartAutoSync() {
   }
 }
 
-function setupFileWatcher(context: vscode.ExtensionContext) {
-  const base = getWorkspaceStorageBase();
-  const pattern = new vscode.RelativePattern(
-    vscode.Uri.file(base),
-    '**/GitHub.copilot-chat/transcripts/*.jsonl'
-  );
+function scheduleSync(reason: string) {
+  const config = getConfig();
+  if (!config.autoSync || !config.repoPath) {
+    return;
+  }
 
-  fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
-  fileWatcher.onDidChange(() => {
-    const config = getConfig();
-    if (config.autoSync && config.repoPath) {
-      // Debounce: sync after a short delay
-      log('Transcript changed, scheduling sync...');
+  if (pendingSyncTimer) {
+    clearTimeout(pendingSyncTimer);
+  }
+
+  log(`${reason}, scheduling sync...`);
+  pendingSyncTimer = setTimeout(async () => {
+    pendingSyncTimer = undefined;
+    try {
+      await doSync(getConfig());
+      treeProvider.refresh();
+    } catch (err) {
+      log(`Scheduled sync error: ${err instanceof Error ? err.message : String(err)}`);
     }
-  });
+  }, 1500);
+}
 
-  context.subscriptions.push(fileWatcher);
+function setupFileWatcher(context: vscode.ExtensionContext) {
+  const workspaceBase = getWorkspaceStorageBase();
+  const globalBase = getGlobalStorageBase();
+  const patterns = [
+    new vscode.RelativePattern(vscode.Uri.file(workspaceBase), '**/GitHub.copilot-chat/transcripts/*.jsonl'),
+    new vscode.RelativePattern(vscode.Uri.file(workspaceBase), '**/chatSessions/*.json'),
+    new vscode.RelativePattern(vscode.Uri.file(workspaceBase), '**/chatSessions/*.jsonl'),
+    new vscode.RelativePattern(vscode.Uri.file(globalBase), 'emptyWindowChatSessions/*.json'),
+    new vscode.RelativePattern(vscode.Uri.file(globalBase), 'emptyWindowChatSessions/*.jsonl'),
+  ];
+
+  for (const pattern of patterns) {
+    const watcher = vscode.workspace.createFileSystemWatcher(pattern);
+    const onChange = (uri: vscode.Uri) => {
+      scheduleSync(`Session file changed: ${path.basename(uri.fsPath)}`);
+    };
+
+    watcher.onDidChange(onChange);
+    watcher.onDidCreate(onChange);
+    watcher.onDidDelete(onChange);
+    context.subscriptions.push(watcher);
+  }
 }
 
 function log(msg: string) {

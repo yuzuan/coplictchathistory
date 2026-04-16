@@ -1,5 +1,5 @@
 /**
- * Copilot Chat Sync — Parse Copilot Chat transcript JSONL files into structured data
+ * Copilot Chat Sync — Parse Copilot Chat storage files into structured data
  */
 
 import * as fs from 'fs';
@@ -28,8 +28,14 @@ export interface ChatSession {
   vscodeVersion?: string;
 }
 
+export interface StoredSessionFile {
+  filePath: string;
+  workspaceHash: string;
+  format: 'legacyTranscript' | 'workspaceSession' | 'emptyWindow';
+}
+
 /**
- * Parse a single JSONL transcript file into a ChatSession
+ * Parse a single legacy transcript JSONL file into a ChatSession.
  */
 export function parseTranscript(filePath: string, workspaceHash: string): ChatSession | null {
   const content = fs.readFileSync(filePath, 'utf-8');
@@ -43,31 +49,13 @@ export function parseTranscript(filePath: string, workspaceHash: string): ChatSe
   const messages: ChatMessage[] = [];
   let pendingAssistant: { content: string; timestamp: string; toolCalls: ToolCall[] } | null = null;
 
-  // First pass: collect tool execution info for enrichment
-  const toolExecutions = new Map<string, { name: string; args: Record<string, unknown> }>();
-
   for (const line of lines) {
     let event: Record<string, unknown>;
-    try { event = JSON.parse(line); } catch { continue; }
-    const type = event.type as string;
-    const data = event.data as Record<string, unknown> | undefined;
-    if (type === 'tool.execution_start' && data) {
-      const toolCallId = data.toolCallId as string;
-      if (toolCallId) {
-        toolExecutions.set(toolCallId, {
-          name: (data.toolName as string) || '',
-          args: safeParseArgs(data.arguments),
-        });
-      }
+    try {
+      event = JSON.parse(line);
+    } catch {
+      continue;
     }
-  }
-
-  // Second pass: build messages
-  let turnCount = 0;
-
-  for (const line of lines) {
-    let event: Record<string, unknown>;
-    try { event = JSON.parse(line); } catch { continue; }
 
     const type = event.type as string;
     const data = event.data as Record<string, unknown> | undefined;
@@ -75,7 +63,7 @@ export function parseTranscript(filePath: string, workspaceHash: string): ChatSe
 
     switch (type) {
       case 'session.start': {
-        sessionId = (data?.sessionId as string) || path.basename(filePath, '.jsonl');
+        sessionId = (data?.sessionId as string) || basenameWithoutExt(filePath);
         startTime = timestamp;
         copilotVersion = data?.copilotVersion as string | undefined;
         vscodeVersion = data?.vscodeVersion as string | undefined;
@@ -83,19 +71,10 @@ export function parseTranscript(filePath: string, workspaceHash: string): ChatSe
       }
 
       case 'user.message': {
-        // Flush pending assistant message
-        if (pendingAssistant) {
-          messages.push({
-            role: 'assistant',
-            content: pendingAssistant.content,
-            timestamp: pendingAssistant.timestamp,
-            toolCalls: pendingAssistant.toolCalls.length > 0 ? pendingAssistant.toolCalls : undefined,
-          });
-          pendingAssistant = null;
-        }
+        flushPendingAssistant(messages, pendingAssistant);
+        pendingAssistant = null;
 
         const userContent = (data?.content as string) || '';
-        // Skip terminal notification auto-messages
         if (!userContent.startsWith('[Terminal ')) {
           messages.push({
             role: 'user',
@@ -107,23 +86,14 @@ export function parseTranscript(filePath: string, workspaceHash: string): ChatSe
       }
 
       case 'assistant.turn_start': {
-        turnCount++;
-        // Flush previous assistant if exists
-        if (pendingAssistant) {
-          messages.push({
-            role: 'assistant',
-            content: pendingAssistant.content,
-            timestamp: pendingAssistant.timestamp,
-            toolCalls: pendingAssistant.toolCalls.length > 0 ? pendingAssistant.toolCalls : undefined,
-          });
-          pendingAssistant = null;
-        }
+        flushPendingAssistant(messages, pendingAssistant);
+        pendingAssistant = null;
         break;
       }
 
       case 'assistant.message': {
         const assistantContent = (data?.content as string) || '';
-        const toolRequests = (data?.toolRequests as Array<Record<string, unknown>>) || [];
+        const toolRequests = asRecordArray(data?.toolRequests);
         const tools: ToolCall[] = toolRequests.map(tr => ({
           name: (tr.name as string) || '',
           arguments: safeParseArgs(tr.arguments),
@@ -142,47 +112,256 @@ export function parseTranscript(filePath: string, workspaceHash: string): ChatSe
 
       case 'assistant.turn_end': {
         endTime = timestamp;
-        if (pendingAssistant) {
-          messages.push({
-            role: 'assistant',
-            content: pendingAssistant.content,
-            timestamp: pendingAssistant.timestamp,
-            toolCalls: pendingAssistant.toolCalls.length > 0 ? pendingAssistant.toolCalls : undefined,
-          });
-          pendingAssistant = null;
-        }
+        flushPendingAssistant(messages, pendingAssistant);
+        pendingAssistant = null;
         break;
       }
     }
   }
 
-  // Flush any remaining assistant message
-  if (pendingAssistant) {
-    messages.push({
-      role: 'assistant',
-      content: pendingAssistant.content,
-      timestamp: pendingAssistant.timestamp,
-      toolCalls: pendingAssistant.toolCalls.length > 0 ? pendingAssistant.toolCalls : undefined,
-    });
+  flushPendingAssistant(messages, pendingAssistant);
+
+  if (messages.length === 0) {
+    return null;
+  }
+
+  return {
+    sessionId: sessionId || basenameWithoutExt(filePath),
+    startTime: startTime || messages[0]?.timestamp || '',
+    endTime: endTime || messages[messages.length - 1]?.timestamp || '',
+    workspaceName: resolveWorkspaceName(workspaceHash),
+    workspaceHash,
+    messages,
+    copilotVersion,
+    vscodeVersion,
+  };
+}
+
+/**
+ * Parse a workspace chatSessions file (.json or .jsonl) into a ChatSession.
+ */
+export function parseWorkspaceChatSession(filePath: string, workspaceHash: string): ChatSession | null {
+  const state = readStoredSessionState(filePath);
+  if (!state) {
+    return null;
+  }
+
+  return parseStoredSessionState(state, {
+    filePath,
+    workspaceHash,
+    workspaceName: resolveWorkspaceName(workspaceHash),
+  });
+}
+
+/**
+ * Parse an empty-window chat session file (.json or .jsonl) into a ChatSession.
+ */
+export function parseEmptyWindowSession(filePath: string): ChatSession | null {
+  const state = readStoredSessionState(filePath);
+  if (!state) {
+    return null;
+  }
+
+  return parseStoredSessionState(state, {
+    filePath,
+    workspaceHash: 'emptyWindow',
+    workspaceName: '(no workspace)',
+  });
+}
+
+export function parseStoredSession(file: StoredSessionFile): ChatSession | null {
+  switch (file.format) {
+    case 'workspaceSession':
+      return parseWorkspaceChatSession(file.filePath, file.workspaceHash);
+    case 'emptyWindow':
+      return parseEmptyWindowSession(file.filePath);
+    default:
+      return parseTranscript(file.filePath, file.workspaceHash);
+  }
+}
+
+function parseStoredSessionState(
+  state: Record<string, unknown>,
+  options: { filePath: string; workspaceHash: string; workspaceName: string },
+): ChatSession | null {
+  const sessionId = (state.sessionId as string) || basenameWithoutExt(options.filePath);
+  const customTitle = ((state.customTitle as string) || '').trim();
+  const requests = asRecordArray(state.requests);
+  const messages: ChatMessage[] = [];
+
+  const startTime = toIsoTimestamp(state.creationDate);
+  let endTime = toIsoTimestamp(state.lastMessageDate) || startTime;
+
+  for (const request of requests) {
+    const timestamp = toIsoTimestamp(request.timestamp) || startTime;
+    const userText = extractUserText(request.message as Record<string, unknown> | undefined);
+
+    if (userText && !userText.startsWith('[Terminal ')) {
+      messages.push({
+        role: 'user',
+        content: userText,
+        timestamp,
+      });
+    }
+
+    const { content, toolCalls } = extractAssistantResponse(request.response);
+    if (content || toolCalls.length > 0) {
+      messages.push({
+        role: 'assistant',
+        content,
+        timestamp,
+        toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
+      });
+
+      if (timestamp) {
+        endTime = timestamp;
+      }
+    }
   }
 
   if (messages.length === 0) {
     return null;
   }
 
-  // Derive workspace name from path
-  const workspaceName = resolveWorkspaceName(workspaceHash);
+  const workspaceName = options.workspaceHash === 'emptyWindow'
+    ? (customTitle || options.workspaceName)
+    : options.workspaceName;
 
   return {
-    sessionId: sessionId || path.basename(filePath, '.jsonl'),
+    sessionId,
     startTime: startTime || messages[0]?.timestamp || '',
     endTime: endTime || messages[messages.length - 1]?.timestamp || '',
     workspaceName,
-    workspaceHash,
+    workspaceHash: options.workspaceHash,
     messages,
-    copilotVersion,
-    vscodeVersion,
   };
+}
+
+function extractUserText(message: Record<string, unknown> | undefined): string {
+  if (!message) {
+    return '';
+  }
+
+  const directText = message.text;
+  if (typeof directText === 'string' && directText.trim()) {
+    return directText;
+  }
+
+  const parts = asRecordArray(message.parts);
+  const textParts = parts
+    .map(part => (typeof part.text === 'string' ? part.text : ''))
+    .filter(Boolean);
+
+  return textParts.join('\n').trim();
+}
+
+function extractAssistantResponse(response: unknown): { content: string; toolCalls: ToolCall[] } {
+  const parts = asRecordArray(response);
+  let content = '';
+  const toolCalls: ToolCall[] = [];
+
+  for (const part of parts) {
+    const text = extractAssistantTextPart(part);
+    if (text) {
+      content = appendTextBlock(content, text);
+    }
+
+    if ((part.kind as string | undefined) === 'toolInvocationSerialized') {
+      const name =
+        (part.toolId as string) ||
+        (part.toolName as string) ||
+        (part.invocationMessage as string) ||
+        'toolInvocation';
+
+      toolCalls.push({
+        name,
+        arguments: {},
+      });
+    }
+  }
+
+  return {
+    content: content.trim(),
+    toolCalls,
+  };
+}
+
+function extractAssistantTextPart(part: Record<string, unknown>): string {
+  const kind = part.kind as string | undefined;
+
+  if (!kind && typeof part.value === 'string') {
+    return part.value;
+  }
+
+  if (kind === 'markdownContent') {
+    const content = part.content as Record<string, unknown> | undefined;
+    return typeof content?.value === 'string' ? content.value : '';
+  }
+
+  if (kind === 'questionCarousel') {
+    return formatQuestionCarousel(part);
+  }
+
+  return '';
+}
+
+function formatQuestionCarousel(part: Record<string, unknown>): string {
+  const questions = asRecordArray(part.questions);
+  const lines: string[] = [];
+
+  for (const question of questions) {
+    const prompt =
+      (question.message as string) ||
+      (question.title as string) ||
+      '';
+
+    if (prompt) {
+      lines.push(prompt);
+    }
+  }
+
+  const data = part.data as Record<string, unknown> | undefined;
+  if (data) {
+    for (const answer of Object.values(data)) {
+      if (typeof answer !== 'object' || answer === null) {
+        continue;
+      }
+
+      const selectedValue = (answer as Record<string, unknown>).selectedValue;
+      if (typeof selectedValue === 'string' && selectedValue.trim()) {
+        lines.push(`Selected: ${selectedValue}`);
+      }
+    }
+  }
+
+  return lines.join('\n').trim();
+}
+
+function appendTextBlock(existing: string, addition: string): string {
+  const trimmed = addition.trim();
+  if (!trimmed) {
+    return existing;
+  }
+  if (!existing) {
+    return trimmed;
+  }
+  return `${existing}\n\n${trimmed}`;
+}
+
+function flushPendingAssistant(
+  messages: ChatMessage[],
+  pendingAssistant: { content: string; timestamp: string; toolCalls: ToolCall[] } | null,
+): void {
+  if (!pendingAssistant) {
+    return;
+  }
+
+  messages.push({
+    role: 'assistant',
+    content: pendingAssistant.content,
+    timestamp: pendingAssistant.timestamp,
+    toolCalls: pendingAssistant.toolCalls.length > 0 ? pendingAssistant.toolCalls : undefined,
+  });
 }
 
 function safeParseArgs(args: unknown): Record<string, unknown> {
@@ -193,14 +372,51 @@ function safeParseArgs(args: unknown): Record<string, unknown> {
       return { raw: args };
     }
   }
+
   if (typeof args === 'object' && args !== null) {
     return args as Record<string, unknown>;
   }
+
   return {};
 }
 
+function asRecordArray(value: unknown): Array<Record<string, unknown>> {
+  if (!Array.isArray(value)) {
+    return [];
+  }
+
+  return value.filter((entry): entry is Record<string, unknown> => (
+    typeof entry === 'object' && entry !== null
+  ));
+}
+
+function basenameWithoutExt(filePath: string): string {
+  return path.basename(filePath, path.extname(filePath));
+}
+
+function toIsoTimestamp(value: unknown): string {
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return new Date(value).toISOString();
+  }
+
+  if (typeof value !== 'string' || !value.trim()) {
+    return '';
+  }
+
+  if (/^\d+$/.test(value)) {
+    return new Date(Number(value)).toISOString();
+  }
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) {
+    return value;
+  }
+
+  return date.toISOString();
+}
+
 /**
- * Try to resolve workspace name from the workspace.json in storage
+ * Try to resolve workspace name from the workspace.json in storage.
  */
 function resolveWorkspaceName(workspaceHash: string): string {
   const basePath = getWorkspaceStorageBase();
@@ -210,18 +426,18 @@ function resolveWorkspaceName(workspaceHash: string): string {
     const wsData = JSON.parse(fs.readFileSync(wsJsonPath, 'utf-8'));
     const folder = wsData.folder as string | undefined;
     if (folder) {
-      // file:///path/to/folder -> folder name
       const decoded = decodeURIComponent(folder.replace('file://', ''));
       return path.basename(decoded);
     }
   } catch {
     // ignore
   }
+
   return workspaceHash.slice(0, 8);
 }
 
 /**
- * Get the base workspace storage path for the current platform
+ * Get the base workspace storage path for the current platform.
  */
 export function getWorkspaceStorageBase(): string {
   const platform = process.platform;
@@ -237,9 +453,9 @@ export function getWorkspaceStorageBase(): string {
 }
 
 /**
- * Get the globalStorage base path (for empty window sessions)
+ * Get the globalStorage base path for empty-window sessions.
  */
-function getGlobalStorageBase(): string {
+export function getGlobalStorageBase(): string {
   const platform = process.platform;
   const home = process.env.HOME || process.env.USERPROFILE || '';
 
@@ -261,7 +477,11 @@ function reconstructState(lines: string[]): Record<string, unknown> | null {
 
   for (const line of lines) {
     let obj: Record<string, unknown>;
-    try { obj = JSON.parse(line); } catch { continue; }
+    try {
+      obj = JSON.parse(line);
+    } catch {
+      continue;
+    }
 
     const kind = obj.kind as number;
     const k = (obj.k as Array<string | number>) || [];
@@ -269,8 +489,10 @@ function reconstructState(lines: string[]): Record<string, unknown> | null {
 
     if (kind === 0) {
       state = (v as Record<string, unknown>) || {};
-    } else if (kind === 1) {
-      // Set value at path
+      continue;
+    }
+
+    if (kind === 1) {
       let target: unknown = state;
       for (const key of k.slice(0, -1)) {
         if (Array.isArray(target)) {
@@ -279,14 +501,17 @@ function reconstructState(lines: string[]): Record<string, unknown> | null {
           target = (target as Record<string, unknown>)[String(key)];
         }
       }
+
       const lastKey = k[k.length - 1];
       if (Array.isArray(target)) {
         target[Number(lastKey)] = v;
       } else if (typeof target === 'object' && target !== null) {
         (target as Record<string, unknown>)[String(lastKey)] = v;
       }
-    } else if (kind === 2) {
-      // Push/extend array at path
+      continue;
+    }
+
+    if (kind === 2) {
       let target: unknown = state;
       for (const key of k) {
         if (Array.isArray(target)) {
@@ -295,6 +520,7 @@ function reconstructState(lines: string[]): Record<string, unknown> | null {
           target = (target as Record<string, unknown>)[String(key)];
         }
       }
+
       if (Array.isArray(target) && Array.isArray(v)) {
         target.push(...v);
       }
@@ -304,121 +530,107 @@ function reconstructState(lines: string[]): Record<string, unknown> | null {
   return state;
 }
 
-/**
- * Parse an empty-window chat session JSONL (VS Code native format) into a ChatSession.
- */
-export function parseEmptyWindowSession(filePath: string): ChatSession | null {
+function readStoredSessionState(filePath: string): Record<string, unknown> | null {
+  const ext = path.extname(filePath).toLowerCase();
   const content = fs.readFileSync(filePath, 'utf-8');
-  const lines = content.split('\n').filter(l => l.trim());
-  const state = reconstructState(lines);
-  if (!state) { return null; }
 
-  const sessionId = (state.sessionId as string) || path.basename(filePath, '.jsonl');
-  const customTitle = (state.customTitle as string) || '';
-  const creationDate = state.creationDate as number | undefined;
-  const requests = (state.requests as Array<Record<string, unknown>>) || [];
-  const messages: ChatMessage[] = [];
-
-  const startTime = creationDate ? new Date(creationDate).toISOString() : '';
-  let endTime = startTime;
-
-  for (const req of requests) {
-    // Extract user message
-    const msg = req.message as Record<string, unknown> | undefined;
-    const userText = (msg?.text as string) || '';
-    const timestamp = req.timestamp as number | undefined;
-    const ts = timestamp ? new Date(timestamp).toISOString() : '';
-
-    if (userText && !userText.startsWith('[Terminal ')) {
-      messages.push({ role: 'user', content: userText, timestamp: ts });
-    }
-
-    // Extract assistant response
-    const response = (req.response as Array<Record<string, unknown>>) || [];
-    let assistantContent = '';
-    const toolCalls: ToolCall[] = [];
-
-    for (const part of response) {
-      const partKind = part.kind as string | undefined;
-
-      if (!partKind && typeof part.value === 'string') {
-        // Text content (no explicit kind = markdown text)
-        assistantContent += part.value;
-      } else if (partKind === 'markdownContent') {
-        const c = part.content as Record<string, unknown> | undefined;
-        assistantContent += (c?.value as string) || '';
-      } else if (partKind === 'toolInvocationSerialized') {
-        const toolId = (part.toolId as string) || '';
-        toolCalls.push({
-          name: toolId,
-          arguments: {},
-        });
-      }
-    }
-
-    if (assistantContent || toolCalls.length > 0) {
-      messages.push({
-        role: 'assistant',
-        content: assistantContent,
-        timestamp: ts,
-        toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
-      });
-      if (ts) { endTime = ts; }
+  if (ext === '.json') {
+    try {
+      return JSON.parse(content) as Record<string, unknown>;
+    } catch {
+      return null;
     }
   }
 
-  if (messages.length === 0) { return null; }
+  const lines = content.split('\n').filter(line => line.trim());
+  return reconstructState(lines);
+}
 
-  // Use customTitle as workspaceName, fallback to "(no workspace)"
-  const workspaceName = customTitle || '(no workspace)';
+function safeMtimeMs(filePath: string): number {
+  try {
+    return fs.statSync(filePath).mtimeMs;
+  } catch {
+    return 0;
+  }
+}
 
-  return {
-    sessionId,
-    startTime,
-    endTime,
-    workspaceName,
-    workspaceHash: 'emptyWindow',
-    messages,
-  };
+function registerSessionFile(
+  results: Map<string, { file: StoredSessionFile; priority: number; mtimeMs: number }>,
+  file: StoredSessionFile,
+  priority: number,
+): void {
+  const sessionId = basenameWithoutExt(file.filePath);
+  const key = `${file.workspaceHash}:${sessionId}`;
+  const mtimeMs = safeMtimeMs(file.filePath);
+  const existing = results.get(key);
+
+  if (
+    !existing ||
+    priority > existing.priority ||
+    (priority === existing.priority && mtimeMs > existing.mtimeMs)
+  ) {
+    results.set(key, { file, priority, mtimeMs });
+  }
+}
+
+function getSessionFiles(dirPath: string): string[] {
+  if (!fs.existsSync(dirPath)) {
+    return [];
+  }
+
+  return fs.readdirSync(dirPath)
+    .filter(fileName => fileName.endsWith('.json') || fileName.endsWith('.jsonl'))
+    .map(fileName => path.join(dirPath, fileName));
 }
 
 /**
- * Find all transcript JSONL files across all workspaces, including empty-window sessions.
+ * Find all chat session sources across workspaces.
+ * Prefer modern chatSessions files over legacy transcripts when both exist.
  */
-export function findAllTranscripts(): Array<{ filePath: string; workspaceHash: string; isEmptyWindow?: boolean }> {
-  const base = getWorkspaceStorageBase();
-  const results: Array<{ filePath: string; workspaceHash: string; isEmptyWindow?: boolean }> = [];
+export function findAllTranscripts(): StoredSessionFile[] {
+  const results = new Map<string, { file: StoredSessionFile; priority: number; mtimeMs: number }>();
+  const workspaceBase = getWorkspaceStorageBase();
 
-  if (fs.existsSync(base)) {
-    const entries = fs.readdirSync(base, { withFileTypes: true });
+  if (fs.existsSync(workspaceBase)) {
+    const entries = fs.readdirSync(workspaceBase, { withFileTypes: true });
     for (const entry of entries) {
-      if (!entry.isDirectory()) { continue; }
-      const transcriptDir = path.join(base, entry.name, 'GitHub.copilot-chat', 'transcripts');
-      if (!fs.existsSync(transcriptDir)) { continue; }
+      if (!entry.isDirectory()) {
+        continue;
+      }
 
-      const jsonlFiles = fs.readdirSync(transcriptDir).filter(f => f.endsWith('.jsonl'));
-      for (const jsonlFile of jsonlFiles) {
-        results.push({
-          filePath: path.join(transcriptDir, jsonlFile),
-          workspaceHash: entry.name,
-        });
+      const workspaceHash = entry.name;
+
+      const chatSessionsDir = path.join(workspaceBase, workspaceHash, 'chatSessions');
+      for (const filePath of getSessionFiles(chatSessionsDir)) {
+        registerSessionFile(results, {
+          filePath,
+          workspaceHash,
+          format: 'workspaceSession',
+        }, 3);
+      }
+
+      const transcriptDir = path.join(workspaceBase, workspaceHash, 'GitHub.copilot-chat', 'transcripts');
+      for (const filePath of getSessionFiles(transcriptDir).filter(item => item.endsWith('.jsonl'))) {
+        registerSessionFile(results, {
+          filePath,
+          workspaceHash,
+          format: 'legacyTranscript',
+        }, 4);
       }
     }
   }
 
-  // Also scan empty-window chat sessions
   const globalBase = getGlobalStorageBase();
   const emptyDir = path.join(globalBase, 'emptyWindowChatSessions');
-  if (fs.existsSync(emptyDir)) {
-    const jsonlFiles = fs.readdirSync(emptyDir).filter(f => f.endsWith('.jsonl'));
-    for (const jsonlFile of jsonlFiles) {
-      results.push({
-        filePath: path.join(emptyDir, jsonlFile),
-        workspaceHash: 'emptyWindow',
-        isEmptyWindow: true,
-      });
-    }
+  for (const filePath of getSessionFiles(emptyDir)) {
+    registerSessionFile(results, {
+      filePath,
+      workspaceHash: 'emptyWindow',
+      format: 'emptyWindow',
+    }, 3);
   }
 
-  return results;
+  return Array.from(results.values())
+    .sort((a, b) => b.mtimeMs - a.mtimeMs)
+    .map(item => item.file);
 }

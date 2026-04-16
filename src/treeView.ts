@@ -3,7 +3,7 @@
  */
 
 import * as vscode from 'vscode';
-import { findAllTranscripts, parseTranscript, parseEmptyWindowSession, ChatSession } from './parser';
+import { findAllTranscripts, parseStoredSession, ChatSession } from './parser';
 
 export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<SessionTreeItem | undefined>();
@@ -39,12 +39,10 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
     if (this.sessions.length > 0) { return; }
 
     const maxSessions = vscode.workspace.getConfiguration('copilotChatSync').get('maxSessionsInView', 100);
-    const transcripts = findAllTranscripts();
+    const sessionFiles = findAllTranscripts();
 
-    for (const t of transcripts) {
-      const session = t.isEmptyWindow
-        ? parseEmptyWindowSession(t.filePath)
-        : parseTranscript(t.filePath, t.workspaceHash);
+    for (const sessionFile of sessionFiles) {
+      const session = parseStoredSession(sessionFile);
       if (session && session.messages.length > 0) {
         this.sessions.push(session);
       }
@@ -72,7 +70,7 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
       dateMap.set(date, (dateMap.get(date) || 0) + 1);
     }
 
-    const dates = Array.from(dateMap.keys()).sort().reverse();
+    const dates = Array.from(dateMap.keys()).sort(compareDateDesc);
     return dates.map(date => {
       const count = dateMap.get(date) || 0;
       const item = new SessionTreeItem(
@@ -144,6 +142,12 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
     this.loadSessions();
     return this.sessions;
   }
+}
+
+function compareDateDesc(a: string, b: string): number {
+  if (a === 'unknown') { return 1; }
+  if (b === 'unknown') { return -1; }
+  return b.localeCompare(a);
 }
 
 export class SessionTreeItem extends vscode.TreeItem {
