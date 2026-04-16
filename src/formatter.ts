@@ -9,6 +9,8 @@ export interface FormatOptions {
   includeMetadata: boolean;
 }
 
+export const SESSION_TIME_ZONE = 'Asia/Shanghai';
+
 const defaultOptions: FormatOptions = {
   includeToolCalls: false,
   includeMetadata: true,
@@ -144,10 +146,42 @@ function formatTime(isoString: string): string {
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      timeZone: 'Asia/Shanghai',
+      timeZone: SESSION_TIME_ZONE,
     });
   } catch {
     return isoString;
+  }
+}
+
+export function getSessionDateKey(isoString: string): string {
+  if (!isoString) {
+    return 'unknown';
+  }
+
+  try {
+    const date = new Date(isoString);
+    if (Number.isNaN(date.getTime())) {
+      return 'unknown';
+    }
+
+    const parts = new Intl.DateTimeFormat('en-CA', {
+      timeZone: SESSION_TIME_ZONE,
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+    }).formatToParts(date);
+
+    const year = parts.find(part => part.type === 'year')?.value;
+    const month = parts.find(part => part.type === 'month')?.value;
+    const day = parts.find(part => part.type === 'day')?.value;
+
+    if (!year || !month || !day) {
+      return 'unknown';
+    }
+
+    return `${year}-${month}-${day}`;
+  } catch {
+    return 'unknown';
   }
 }
 
@@ -165,9 +199,7 @@ export function sessionToFilename(session: ChatSession, format: 'markdown' | 'js
  * Generate a date-folder relative path: YYYY-MM-DD/workspace_shortid.ext
  */
 export function sessionToRelativePath(session: ChatSession, format: 'markdown' | 'json' | 'html' = 'markdown'): string {
-  const date = session.startTime
-    ? new Date(session.startTime).toISOString().slice(0, 10)
-    : 'unknown';
+  const date = getSessionDateKey(session.startTime);
   return `${date}/${sessionToFilename(session, format)}`;
 }
 

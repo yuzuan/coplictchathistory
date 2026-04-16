@@ -4,7 +4,7 @@
 
 import * as vscode from 'vscode';
 import { findAllTranscripts, parseStoredSession, ChatSession } from './parser';
-import { getSessionTitle } from './formatter';
+import { getSessionDateKey, getSessionTitle } from './formatter';
 
 export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeItem> {
   private _onDidChangeTreeData = new vscode.EventEmitter<SessionTreeItem | undefined>();
@@ -65,9 +65,7 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
   private getDateGroups(): SessionTreeItem[] {
     const dateMap = new Map<string, number>();
     for (const s of this.sessions) {
-      const date = s.startTime
-        ? new Date(s.startTime).toISOString().slice(0, 10)
-        : 'unknown';
+      const date = getSessionDateKey(s.startTime);
       dateMap.set(date, (dateMap.get(date) || 0) + 1);
     }
 
@@ -88,9 +86,7 @@ export class SessionTreeProvider implements vscode.TreeDataProvider<SessionTreeI
   private getSessionsForDate(date: string): SessionTreeItem[] {
     return this.sessions
       .filter(s => {
-        const d = s.startTime
-          ? new Date(s.startTime).toISOString().slice(0, 10)
-          : 'unknown';
+        const d = getSessionDateKey(s.startTime);
         return d === date;
       })
       .map(s => {

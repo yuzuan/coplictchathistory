@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { findAllTranscripts, parseStoredSession, getWorkspaceStorageBase, getGlobalStorageBase, ChatSession } from './parser';
-import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks, getSessionTitle } from './formatter';
+import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML, sessionToQA, sessionToChunks, getSessionDateKey, getSessionTitle } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
 import { showPreview } from './preview';
@@ -16,6 +16,14 @@ let syncTimer: ReturnType<typeof setInterval> | undefined;
 let pendingSyncTimer: ReturnType<typeof setTimeout> | undefined;
 let outputChannel: vscode.OutputChannel;
 let treeProvider: SessionTreeProvider;
+
+interface SyncFile {
+  relativePath: string;
+  content: string;
+  sessionStartTime?: string;
+  sessionDate?: string;
+  workspaceName?: string;
+}
 
 export function activate(context: vscode.ExtensionContext) {
   outputChannel = vscode.window.createOutputChannel('Copilot Chat Sync');
@@ -304,7 +312,7 @@ async function doSync(config: ExtConfig) {
   await ensureRepo(gitConfig);
 
   const sessionFiles = findAllTranscripts();
-  const files: Array<{ relativePath: string; content: string }> = [];
+  const files: SyncFile[] = [];
 
   log(`Discovered ${sessionFiles.length} session files`);
 
@@ -319,6 +327,9 @@ async function doSync(config: ExtConfig) {
     files.push({
       relativePath: path.join('sessions', relPath),
       content: markdown,
+      sessionStartTime: session.startTime,
+      sessionDate: getSessionDateKey(session.startTime),
+      workspaceName: session.workspaceName,
     });
   }
 
@@ -326,6 +337,8 @@ async function doSync(config: ExtConfig) {
     log('No sessions to sync');
     return;
   }
+
+  pruneObsoleteSessionFiles(config.repoPath, files);
 
   // Generate index
   files.push({
@@ -350,7 +363,7 @@ async function doSync(config: ExtConfig) {
   }
 }
 
-function generateIndex(files: Array<{ relativePath: string; content: string }>): string {
+function generateIndex(files: SyncFile[]): string {
   const lines: string[] = [];
   lines.push('# Copilot Chat History');
   lines.push('');
@@ -364,33 +377,100 @@ function generateIndex(files: Array<{ relativePath: string; content: string }>):
 
   const sessionFiles = files
     .filter(f => f.relativePath.startsWith('sessions/'))
-    .sort((a, b) => compareSessionPathByDateDesc(a.relativePath, b.relativePath));
+    .sort(compareSessionFilesDesc);
 
   for (const f of sessionFiles) {
     const name = path.basename(f.relativePath, '.md');
-    const date = path.dirname(f.relativePath).replace(/^sessions[\\/]/, '');
-    const lastUnderscore = name.lastIndexOf('_');
-    const workspace = lastUnderscore >= 0 ? name.slice(0, lastUnderscore) : name;
+    const date = f.sessionDate || extractSessionDateFromPath(f.relativePath);
+    const workspace = f.workspaceName || extractWorkspaceFromFilename(name);
     lines.push(`| ${date} | ${workspace} | [${name}](${f.relativePath}) |`);
   }
 
   return lines.join('\n');
 }
 
-function compareSessionPathByDateDesc(a: string, b: string): number {
-  const dateA = path.dirname(a).replace(/^sessions[\\/]/, '');
-  const dateB = path.dirname(b).replace(/^sessions[\\/]/, '');
+function compareSessionFilesDesc(a: SyncFile, b: SyncFile): number {
+  const timeA = toSortTime(a.sessionStartTime);
+  const timeB = toSortTime(b.sessionStartTime);
+  if (timeA !== timeB) {
+    return timeB - timeA;
+  }
+
+  const dateA = a.sessionDate || extractSessionDateFromPath(a.relativePath);
+  const dateB = b.sessionDate || extractSessionDateFromPath(b.relativePath);
   const dateCompare = compareDateDesc(dateA, dateB);
   if (dateCompare !== 0) {
     return dateCompare;
   }
-  return b.localeCompare(a);
+
+  return b.relativePath.localeCompare(a.relativePath);
 }
 
 function compareDateDesc(a: string, b: string): number {
   if (a === 'unknown') { return 1; }
   if (b === 'unknown') { return -1; }
   return b.localeCompare(a);
+}
+
+function extractSessionDateFromPath(relativePath: string): string {
+  const parts = relativePath.split(/[\\/]/);
+  return parts.length >= 2 ? parts[1] : 'unknown';
+}
+
+function extractWorkspaceFromFilename(name: string): string {
+  const lastUnderscore = name.lastIndexOf('_');
+  return lastUnderscore >= 0 ? name.slice(0, lastUnderscore) : name;
+}
+
+function toSortTime(iso: string | undefined): number {
+  if (!iso) {
+    return 0;
+  }
+
+  const time = new Date(iso).getTime();
+  return Number.isNaN(time) ? 0 : time;
+}
+
+function pruneObsoleteSessionFiles(repoPath: string, files: SyncFile[]): void {
+  const sessionsDir = path.join(repoPath, 'sessions');
+  if (!fs.existsSync(sessionsDir)) {
+    return;
+  }
+
+  const expected = new Set(
+    files
+      .filter(file => file.relativePath.startsWith('sessions/'))
+      .map(file => normalizeRelativePath(file.relativePath))
+  );
+
+  pruneDirectory(sessionsDir, 'sessions', expected);
+}
+
+function pruneDirectory(dirPath: string, relativeDir: string, expected: Set<string>): boolean {
+  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
+
+  for (const entry of entries) {
+    const fullPath = path.join(dirPath, entry.name);
+    const relativePath = normalizeRelativePath(path.join(relativeDir, entry.name));
+
+    if (entry.isDirectory()) {
+      const keepDir = pruneDirectory(fullPath, relativePath, expected);
+      if (!keepDir) {
+        fs.rmdirSync(fullPath);
+      }
+      continue;
+    }
+
+    if (!expected.has(relativePath)) {
+      fs.unlinkSync(fullPath);
+    }
+  }
+
+  return fs.readdirSync(dirPath).length > 0;
+}
+
+function normalizeRelativePath(relativePath: string): string {
+  return relativePath.split(path.sep).join('/');
 }
 
 // --- Auto Sync ---
