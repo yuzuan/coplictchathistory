@@ -5,23 +5,36 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { findAllTranscripts, parseTranscript, getWorkspaceStorageBase } from './parser';
-import { sessionToMarkdown, sessionToFilename, sessionToRelativePath } from './formatter';
+import { findAllTranscripts, parseTranscript, getWorkspaceStorageBase, ChatSession } from './parser';
+import { sessionToMarkdown, sessionToFilename, sessionToRelativePath, sessionToJSON, sessionToHTML } from './formatter';
 import { ensureRepo, commitAndPush, GitConfig } from './git';
+import { SessionTreeProvider } from './treeView';
+import { showPreview } from './preview';
 
 let syncTimer: ReturnType<typeof setInterval> | undefined;
 let fileWatcher: vscode.FileSystemWatcher | undefined;
 let outputChannel: vscode.OutputChannel;
+let treeProvider: SessionTreeProvider;
 
 export function activate(context: vscode.ExtensionContext) {
   outputChannel = vscode.window.createOutputChannel('Copilot Chat Sync');
   log('Extension activated');
+
+  // Register sidebar tree view
+  treeProvider = new SessionTreeProvider();
+  context.subscriptions.push(
+    vscode.window.registerTreeDataProvider('copilotChatSync.sessions', treeProvider),
+  );
 
   // Register commands
   context.subscriptions.push(
     vscode.commands.registerCommand('copilotChatSync.syncNow', () => syncNow()),
     vscode.commands.registerCommand('copilotChatSync.exportAll', () => exportAll()),
     vscode.commands.registerCommand('copilotChatSync.configure', () => configure()),
+    vscode.commands.registerCommand('copilotChatSync.refreshSessions', () => treeProvider.refresh()),
+    vscode.commands.registerCommand('copilotChatSync.previewSession', (session: ChatSession) => showPreview(session, context)),
+    vscode.commands.registerCommand('copilotChatSync.exportSession', (session: ChatSession) => exportSingleSession(session)),
+    vscode.commands.registerCommand('copilotChatSync.search', () => searchHistory()),
   );
 
   // Start auto-sync if configured
@@ -58,6 +71,7 @@ interface ExtConfig {
   autoSync: boolean;
   syncIntervalMinutes: number;
   includeToolCalls: boolean;
+  defaultExportFormat: 'markdown' | 'json' | 'html';
 }
 
 function getConfig(): ExtConfig {
@@ -68,6 +82,7 @@ function getConfig(): ExtConfig {
     autoSync: c.get('autoSync', true),
     syncIntervalMinutes: c.get('syncIntervalMinutes', 5),
     includeToolCalls: c.get('includeToolCalls', false),
+    defaultExportFormat: c.get('defaultExportFormat', 'markdown') as 'markdown' | 'json' | 'html',
   };
 }
 
@@ -103,6 +118,10 @@ async function syncNow() {
 }
 
 async function exportAll() {
+  // Ask format
+  const format = await pickExportFormat();
+  if (!format) { return; }
+
   const folder = await vscode.window.showOpenDialog({
     canSelectFolders: true,
     canSelectFiles: false,
@@ -120,18 +139,112 @@ async function exportAll() {
     const session = parseTranscript(t.filePath, t.workspaceHash);
     if (!session) { continue; }
 
-    const markdown = sessionToMarkdown(session, { includeToolCalls: config.includeToolCalls });
-    const relPath = sessionToRelativePath(session);
+    const content = formatSession(session, format, config.includeToolCalls);
+    const relPath = sessionToRelativePath(session, format);
     const outPath = path.join(exportDir, relPath);
     const outDir = path.dirname(outPath);
     if (!fs.existsSync(outDir)) {
       fs.mkdirSync(outDir, { recursive: true });
     }
-    fs.writeFileSync(outPath, markdown, 'utf-8');
+    fs.writeFileSync(outPath, content, 'utf-8');
     count++;
   }
 
-  vscode.window.showInformationMessage(`Exported ${count} chat sessions to ${exportDir}`);
+  vscode.window.showInformationMessage(`Exported ${count} sessions (${format}) to ${exportDir}`);
+}
+
+async function exportSingleSession(session: ChatSession) {
+  const format = await pickExportFormat();
+  if (!format) { return; }
+
+  const folder = await vscode.window.showOpenDialog({
+    canSelectFolders: true,
+    canSelectFiles: false,
+    canSelectMany: false,
+    openLabel: 'Select Export Directory',
+  });
+  if (!folder || folder.length === 0) { return; }
+
+  const config = getConfig();
+  const content = formatSession(session, format, config.includeToolCalls);
+  const filename = sessionToFilename(session, format);
+  const outPath = path.join(folder[0].fsPath, filename);
+  fs.writeFileSync(outPath, content, 'utf-8');
+  vscode.window.showInformationMessage(`Exported: ${filename}`);
+}
+
+async function searchHistory() {
+  const query = await vscode.window.showInputBox({
+    prompt: 'Search chat history',
+    placeHolder: 'Enter keywords to search...',
+  });
+  if (!query) { return; }
+
+  const sessions = treeProvider.getSessions();
+  const lowerQuery = query.toLowerCase();
+  const matches: Array<{ session: ChatSession; snippet: string }> = [];
+
+  for (const session of sessions) {
+    for (const msg of session.messages) {
+      if (msg.content && msg.content.toLowerCase().includes(lowerQuery)) {
+        const idx = msg.content.toLowerCase().indexOf(lowerQuery);
+        const start = Math.max(0, idx - 40);
+        const end = Math.min(msg.content.length, idx + query.length + 40);
+        const snippet = (start > 0 ? '...' : '') +
+          msg.content.slice(start, end).replace(/\n/g, ' ') +
+          (end < msg.content.length ? '...' : '');
+        matches.push({ session, snippet });
+        break; // one match per session
+      }
+    }
+  }
+
+  if (matches.length === 0) {
+    vscode.window.showInformationMessage(`No results for "${query}"`);
+    return;
+  }
+
+  const items = matches.map(m => {
+    const firstUser = m.session.messages.find(msg => msg.role === 'user');
+    const title = firstUser?.content?.replace(/\n/g, ' ').trim().slice(0, 60) || m.session.sessionId.slice(0, 8);
+    return {
+      label: `$(comment-discussion) ${title}`,
+      description: m.session.workspaceName,
+      detail: m.snippet,
+      session: m.session,
+    };
+  });
+
+  const pick = await vscode.window.showQuickPick(items, {
+    placeHolder: `${matches.length} result${matches.length > 1 ? 's' : ''} for "${query}"`,
+    matchOnDetail: true,
+  });
+
+  if (pick) {
+    showPreview(pick.session, {} as vscode.ExtensionContext);
+  }
+}
+
+function formatSession(session: ChatSession, format: 'markdown' | 'json' | 'html', includeToolCalls: boolean): string {
+  switch (format) {
+    case 'json': return sessionToJSON(session, { includeToolCalls });
+    case 'html': return sessionToHTML(session, { includeToolCalls });
+    default: return sessionToMarkdown(session, { includeToolCalls });
+  }
+}
+
+async function pickExportFormat(): Promise<'markdown' | 'json' | 'html' | undefined> {
+  const config = getConfig();
+  const items: vscode.QuickPickItem[] = [
+    { label: 'Markdown (.md)', description: 'Clean readable format', picked: config.defaultExportFormat === 'markdown' },
+    { label: 'JSON (.json)', description: 'Structured data format', picked: config.defaultExportFormat === 'json' },
+    { label: 'HTML (.html)', description: 'Styled web page with dark/light mode', picked: config.defaultExportFormat === 'html' },
+  ];
+  const pick = await vscode.window.showQuickPick(items, { placeHolder: 'Select export format' });
+  if (!pick) { return undefined; }
+  if (pick.label.includes('JSON')) { return 'json'; }
+  if (pick.label.includes('HTML')) { return 'html'; }
+  return 'markdown';
 }
 
 async function configure() {

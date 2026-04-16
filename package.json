@@ -15,6 +15,23 @@
   ],
   "main": "./out/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "copilotChatSync",
+          "title": "Copilot Chat History",
+          "icon": "$(comment-discussion)"
+        }
+      ]
+    },
+    "views": {
+      "copilotChatSync": [
+        {
+          "id": "copilotChatSync.sessions",
+          "name": "Chat Sessions"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "copilotChatSync.syncNow",
@@ -22,13 +39,49 @@
       },
       {
         "command": "copilotChatSync.exportAll",
-        "title": "Copilot Chat Sync: Export All Sessions to Markdown"
+        "title": "Copilot Chat Sync: Export All Sessions"
       },
       {
         "command": "copilotChatSync.configure",
         "title": "Copilot Chat Sync: Configure Repository"
+      },
+      {
+        "command": "copilotChatSync.search",
+        "title": "Copilot Chat Sync: Search Chat History"
+      },
+      {
+        "command": "copilotChatSync.refreshSessions",
+        "title": "Copilot Chat Sync: Refresh Sessions",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "copilotChatSync.previewSession",
+        "title": "Preview Session"
+      },
+      {
+        "command": "copilotChatSync.exportSession",
+        "title": "Export Session"
       }
     ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "copilotChatSync.refreshSessions",
+          "when": "view == copilotChatSync.sessions",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "copilotChatSync.previewSession",
+          "when": "view == copilotChatSync.sessions && viewItem == session"
+        },
+        {
+          "command": "copilotChatSync.exportSession",
+          "when": "view == copilotChatSync.sessions && viewItem == session"
+        }
+      ]
+    },
     "configuration": {
       "title": "Copilot Chat Sync",
       "properties": {
@@ -56,6 +109,17 @@
           "type": "boolean",
           "default": false,
           "description": "Include tool call details in exported Markdown"
+        },
+        "copilotChatSync.defaultExportFormat": {
+          "type": "string",
+          "default": "markdown",
+          "enum": ["markdown", "json", "html"],
+          "description": "Default export format for chat sessions"
+        },
+        "copilotChatSync.maxSessionsInView": {
+          "type": "number",
+          "default": 100,
+          "description": "Maximum sessions shown in sidebar"
         }
       }
     }

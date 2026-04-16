@@ -150,18 +150,124 @@ function formatTime(isoString: string): string {
 /**
  * Generate a safe filename from session metadata (without date prefix)
  */
-export function sessionToFilename(session: ChatSession): string {
+export function sessionToFilename(session: ChatSession, format: 'markdown' | 'json' | 'html' = 'markdown'): string {
   const workspace = session.workspaceName.replace(/[^a-zA-Z0-9\u4e00-\u9fff_-]/g, '_');
   const shortId = session.sessionId.slice(0, 8);
-  return `${workspace}_${shortId}.md`;
+  const ext = format === 'json' ? '.json' : format === 'html' ? '.html' : '.md';
+  return `${workspace}_${shortId}${ext}`;
 }
 
 /**
- * Generate a date-folder relative path: YYYY-MM-DD/workspace_shortid.md
+ * Generate a date-folder relative path: YYYY-MM-DD/workspace_shortid.ext
  */
-export function sessionToRelativePath(session: ChatSession): string {
+export function sessionToRelativePath(session: ChatSession, format: 'markdown' | 'json' | 'html' = 'markdown'): string {
   const date = session.startTime
     ? new Date(session.startTime).toISOString().slice(0, 10)
     : 'unknown';
-  return `${date}/${sessionToFilename(session)}`;
+  return `${date}/${sessionToFilename(session, format)}`;
+}
+
+/**
+ * Convert a ChatSession to JSON format
+ */
+export function sessionToJSON(session: ChatSession, opts: Partial<FormatOptions> = {}): string {
+  const options = { ...defaultOptions, ...opts };
+  const data = {
+    sessionId: session.sessionId,
+    workspace: session.workspaceName,
+    startTime: session.startTime,
+    endTime: session.endTime,
+    copilotVersion: session.copilotVersion || null,
+    vscodeVersion: session.vscodeVersion || null,
+    messageCount: session.messages.length,
+    messages: session.messages.map(msg => {
+      const m: Record<string, unknown> = {
+        role: msg.role,
+        timestamp: msg.timestamp,
+        content: msg.content,
+      };
+      if (options.includeToolCalls && msg.toolCalls && msg.toolCalls.length > 0) {
+        m.toolCalls = msg.toolCalls;
+      }
+      return m;
+    }),
+  };
+  return redactSecrets(JSON.stringify(data, null, 2));
+}
+
+/**
+ * Convert a ChatSession to a styled HTML page
+ */
+export function sessionToHTML(session: ChatSession, opts: Partial<FormatOptions> = {}): string {
+  const options = { ...defaultOptions, ...opts };
+  const title = escapeHtml(deriveTitle(session));
+  const messages = session.messages.map(msg => {
+    const icon = msg.role === 'user' ? '👤' : '🤖';
+    const label = msg.role === 'user' ? 'User' : 'Copilot';
+    const cssClass = msg.role === 'user' ? 'user' : 'assistant';
+    const time = formatTime(msg.timestamp);
+    let content = escapeHtml(msg.content || '');
+    // Basic code block rendering
+    content = content.replace(/```(\w*)\n([\s\S]*?)```/g, '<pre><code class="language-$1">$2</code></pre>');
+    content = content.replace(/`([^`]+)`/g, '<code>$1</code>');
+    content = content.replace(/\n/g, '<br>');
+
+    let toolHtml = '';
+    if (options.includeToolCalls && msg.toolCalls && msg.toolCalls.length > 0) {
+      const tools = msg.toolCalls.map(tc =>
+        `<li><strong>${escapeHtml(tc.name)}</strong></li>`
+      ).join('\n');
+      toolHtml = `<details><summary>🔧 Tool calls (${msg.toolCalls.length})</summary><ul>${tools}</ul></details>`;
+    }
+
+    return `<div class="message ${cssClass}">
+      <div class="header">${icon} <strong>${label}</strong> <span class="time">${time}</span></div>
+      <div class="content">${content}</div>
+      ${toolHtml}
+    </div>`;
+  }).join('\n');
+
+  return redactSecrets(`<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<style>
+  :root { --bg: #1e1e1e; --fg: #d4d4d4; --user-bg: #264f78; --assistant-bg: #2d2d2d; --border: #404040; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #ffffff; --fg: #1e1e1e; --user-bg: #e3f2fd; --assistant-bg: #f5f5f5; --border: #e0e0e0; }
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); max-width: 900px; margin: 0 auto; padding: 20px; line-height: 1.6; }
+  h1 { border-bottom: 2px solid var(--border); padding-bottom: 10px; }
+  .meta { opacity: 0.7; font-size: 0.9em; margin-bottom: 20px; }
+  .message { margin: 16px 0; padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border); }
+  .message.user { background: var(--user-bg); }
+  .message.assistant { background: var(--assistant-bg); }
+  .header { font-size: 0.9em; margin-bottom: 8px; }
+  .time { opacity: 0.6; font-size: 0.85em; }
+  pre { background: #1a1a2e; color: #e0e0e0; padding: 12px; border-radius: 6px; overflow-x: auto; }
+  code { font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.9em; }
+  code:not(pre code) { background: rgba(128,128,128,0.2); padding: 2px 6px; border-radius: 3px; }
+  details { margin-top: 8px; font-size: 0.9em; }
+</style>
+</head>
+<body>
+<h1>${title}</h1>
+<div class="meta">
+  <strong>Workspace:</strong> ${escapeHtml(session.workspaceName)} &nbsp;|&nbsp;
+  <strong>Start:</strong> ${formatTime(session.startTime)} &nbsp;|&nbsp;
+  <strong>Messages:</strong> ${session.messages.length}
+</div>
+${messages}
+</body>
+</html>`);
+}
+
+function escapeHtml(text: string): string {
+  return text
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
 }
