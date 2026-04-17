@@ -5,8 +5,8 @@
 | Session ID | `2cf059a8-f798-408f-80a5-b744292525be` |
 | Workspace | CloudSaver 项目安装与运行总结 |
 | Start | 2025/12/06 20:39 |
-| End | 2025/12/06 21:13 |
-| Messages | 25 |
+| End | 2025/12/06 21:06 |
+| Messages | 24 |
 
 ---
 
@@ -497,6 +497,3 @@ Need me to drop in your subscription URL/content into the config and start the p
 ### 👤 User <sub>2025/12/06 21:13</sub>
 
 https://fcsblka.fcsubcn.cc:2096/api/v1/client/subscribe?token=7ff4b316c589c8425a28561671322da4
-
-### 🤖 Copilot <sub>2025/12/06 21:13</sub>
-
