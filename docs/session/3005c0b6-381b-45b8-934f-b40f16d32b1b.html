@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根据这个教程要怎么布置</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根据这个教程要怎么布置</h1>
+      <p class="selected-session-meta">Docker部署Microsoft Rewards脚本指南 · 2025/09/29 12:09 · 4 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-09-29/Docker部署Microsoft_Rewards脚本指南_3005c0b6.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#3005c0b6-381b-45b8-934f-b40f16d32b1b">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/09/29 12:10</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根据这个教程要怎么布置</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/09/29 12:10</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我来帮您分析这个Microsoft Rewards脚本的Docker部署方案。首先让我获取该GitHub仓库的信息。</p><p class="message-paragraph">现在让我获取Docker相关的配置文件来了解具体的部署方案：</p><p class="message-paragraph">让我通过获取README中的具体Docker配置部分：</p><p class="message-paragraph">基于获取的信息，我为您整理了这个Microsoft Rewards脚本的Docker部署教程：</p><p class="message-paragraph">## 📋 Microsoft Rewards Script Docker部署教程</p><p class="message-paragraph">### 🔧 准备工作</p><p class="message-paragraph">1. **环境要求**<br>   - Docker 和 Docker Compose 已安装<br>   - 确保系统支持Docker容器化</p><p class="message-paragraph">2. **清理之前的构建**（如果有的话）</p><pre class="message-code-block"><code>   # 删除之前的本地构建文件
+   rm -rf node_modules dist
+   
+   # 如果从1.4版本或更早版本升级，删除旧的Docker volumes
+   docker volume prune</code></pre><p class="message-paragraph">### 📥 下载和配置</p><p class="message-paragraph">1. **获取源代码**</p><pre class="message-code-block"><code>   git clone https://github.com/TheNetsky/Microsoft-Rewards-Script.git
+   cd Microsoft-Rewards-Script</code></pre><p class="message-paragraph">2. **配置账户信息**</p><pre class="message-code-block"><code>   # 复制示例配置文件
+   cp src/accounts.example.json src/accounts.json</code></pre><p class="message-paragraph">编辑 <code class="inline-code">src/accounts.json</code> 添加您的Microsoft账户信息：</p><pre class="message-code-block"><code>   [
+     {
+       &quot;email&quot;: &quot;your-email@example.com&quot;,
+       &quot;password&quot;: &quot;your-password&quot;
+     }
+   ]</code></pre><p class="message-paragraph">3. **配置脚本设置**<br>   编辑 <code class="inline-code">src/config.json</code>，**重要：确保设置 <code class="inline-code">&quot;headless&quot;: true</code>**：</p><pre class="message-code-block"><code>   {
+     &quot;headless&quot;: true,
+     &quot;baseURL&quot;: &quot;https://rewards.bing.com&quot;,
+     &quot;workers&quot;: {
+       &quot;doDailySet&quot;: true,
+       &quot;doMorePromotions&quot;: true,
+       &quot;doPunchCards&quot;: true,
+       &quot;doDesktopSearch&quot;: true,
+       &quot;doMobileSearch&quot;: true
+     }
+   }</code></pre><p class="message-paragraph">### 🐳 Docker配置</p><p class="message-paragraph">4. **自定义 compose.yaml 配置**</p><p class="message-paragraph">关键配置项：</p><pre class="message-code-block"><code>   environment:
+     # 设置您的时区
+     TZ: &quot;Asia/Shanghai&quot;  # 或其他时区，如 &quot;America/New_York&quot;
+     
+     # 配置执行计划（使用crontab格式）
+     CRON_SCHEDULE: &quot;0 7,16,20 * * *&quot;  # 每天7点、16点、20点执行
+     
+     # 容器启动时是否立即执行
+     RUN_ON_START: &quot;true&quot;
+     
+     # 添加随机延迟（推荐保持开启）
+     MIN_SLEEP_MINUTES: &quot;5&quot;
+     MAX_SLEEP_MINUTES: &quot;50&quot; 
+     SKIP_RANDOM_SLEEP: &quot;false&quot;</code></pre><p class="message-paragraph">完整的 <code class="inline-code">compose.yaml</code> 示例：</p><pre class="message-code-block"><code>   services:
+     microsoft-rewards-script:
+       build: .
+       container_name: microsoft-rewards-script
+       restart: unless-stopped
+       
+       volumes:
+         - ./src/accounts.json:/usr/src/microsoft-rewards-script/dist/accounts.json:ro
+         - ./src/config.json:/usr/src/microsoft-rewards-script/dist/config.json:ro
+         - ./sessions:/usr/src/microsoft-rewards-script/dist/browser/sessions
+       
+       environment:
+         TZ: &quot;Asia/Shanghai&quot;
+         NODE_ENV: &quot;production&quot;
+         CRON_SCHEDULE: &quot;0 8,14,20 * * *&quot;
+         RUN_ON_START: &quot;true&quot;
+         SKIP_RANDOM_SLEEP: &quot;false&quot;
+       
+       mem_limit: 4g
+       cpus: 2
+       
+       healthcheck:
+         test: [&quot;CMD&quot;, &quot;sh&quot;, &quot;-c&quot;, &quot;pgrep cron &gt; /dev/null || exit 1&quot;]
+         interval: 60s
+         timeout: 10s
+         retries: 3
+         start_period: 30s</code></pre><p class="message-paragraph">### 🚀 部署和启动</p><p class="message-paragraph">5. **启动Docker容器**</p><pre class="message-code-block"><code>   # 构建并启动容器
+   docker compose up -d</code></pre><p class="message-paragraph">6. **验证部署**</p><pre class="message-code-block"><code>   # 查看容器状态
+   docker ps
+   
+   # 查看实时日志
+   docker logs -f microsoft-rewards-script
+   
+   # 检查健康状态
+   docker compose ps</code></pre><p class="message-paragraph">### 📊 监控和维护</p><p class="message-paragraph">7. **日常监控命令**</p><pre class="message-code-block"><code>   # 查看最近的日志
+   docker logs --tail 50 microsoft-rewards-script
+   
+   # 重启容器
+   docker compose restart
+   
+   # 停止容器
+   docker compose down
+   
+   # 重新构建并启动（配置更改后）
+   docker compose up -d --build</code></pre><p class="message-paragraph">### ⚙️ 高级配置</p><p class="message-paragraph">8. **计划任务配置**</p><p class="message-paragraph">使用 [crontab.guru](https://crontab.guru/) 来配置您的执行时间：<br>   - <code class="inline-code">&quot;0 8,20 * * *&quot;</code> - 每天8点和20点<br>   - <code class="inline-code">&quot;0 */6 * * *&quot;</code> - 每6小时一次<br>   - <code class="inline-code">&quot;30 7,12,18 * * *&quot;</code> - 每天7:30、12:30、18:30</p><p class="message-paragraph">9. **资源限制调整**</p><pre class="message-code-block"><code>   mem_limit: 2g      # 根据需要调整内存限制
+   cpus: 1            # 根据需要调整CPU核心数</code></pre><p class="message-paragraph">### ⚠️ 重要提示</p><p class="message-paragraph">- **风险警告**：使用自动化脚本可能导致Microsoft Rewards账户被暂停或封禁<br>- **随机延迟**：容器会在计划执行时添加5-50分钟的随机延迟，模拟更自然的行为<br>- **会话保存**：<code class="inline-code">sessions</code> 目录会保存登录会话，避免频繁重新登录<br>- **配置更新**：修改 <code class="inline-code">accounts.json</code> 或 <code class="inline-code">config.json</code> 后需要重启容器</p><p class="message-paragraph">这样配置后，您的Microsoft Rewards脚本就会在Docker容器中自动运行，按照您设定的时间表执行奖励任务。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (4)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/09/29 12:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如何在VScode的docker插件里面启动呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/09/29 12:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我来为您详细介绍如何在VS Code的Docker插件中启动Microsoft Rewards脚本容器。</p><p class="message-paragraph">## 📋 在VS Code Docker插件中启动Microsoft Rewards脚本</p><p class="message-paragraph">### 1️⃣ 安装和准备</p><p class="message-paragraph">**安装必要的VS Code插件：**</p><p class="message-paragraph">1. **Docker 插件** (Microsoft)<br>2. **Docker Compose 插件** (可选，但推荐)</p><p class="message-paragraph">在VS Code中按 <code class="inline-code">Ctrl+Shift+X</code> 打开扩展面板，搜索并安装：<br>- <code class="inline-code">ms-azuretools.vscode-docker</code></p><p class="message-paragraph">### 2️⃣ 项目准备</p><p class="message-paragraph">1. **克隆项目到本地**</p><pre class="message-code-block"><code>   git clone https://github.com/TheNetsky/Microsoft-Rewards-Script.git</code></pre><p class="message-paragraph">2. **在VS Code中打开项目**<br>   - <code class="inline-code">文件</code> → <code class="inline-code">打开文件夹</code> → 选择 <code class="inline-code">Microsoft-Rewards-Script</code> 文件夹<br>   - 或者使用命令：<code class="inline-code">code Microsoft-Rewards-Script</code></p><p class="message-paragraph">### 3️⃣ 配置文件设置</p><p class="message-paragraph">**在VS Code中编辑配置文件：**</p><p class="message-paragraph">1. **配置账户信息**<br>   - 复制 <code class="inline-code">src/accounts.example.json</code> 为 <code class="inline-code">src/accounts.json</code><br>   - 编辑添加您的Microsoft账户信息</p><p class="message-paragraph">2. **修改配置**<br>   - 编辑 <code class="inline-code">src/config.json</code>，确保 <code class="inline-code">&quot;headless&quot;: true</code></p><p class="message-paragraph">3. **自定义Docker Compose配置**<br>   - 编辑 <code class="inline-code">compose.yaml</code> 设置时区和执行计划</p><p class="message-paragraph">### 4️⃣ 使用Docker插件启动</p><p class="message-paragraph">#### 方法一：通过Docker视图面板</p><p class="message-paragraph">1. **打开Docker视图**<br>   - 点击左侧活动栏的Docker图标 🐳<br>   - 或按 <code class="inline-code">Ctrl+Shift+P</code> 输入 &quot;Docker: Focus on Docker View&quot;</p><p class="message-paragraph">2. **构建并启动容器**<br>   - 在Explorer面板中右键点击 <code class="inline-code">compose.yaml</code><br>   - 选择 **&quot;Compose Up&quot;**<br>   - 或者选择 **&quot;Compose Up - Select Services&quot;** 来选择特定服务</p><p class="message-paragraph">#### 方法二：通过命令面板</p><p class="message-paragraph">1. **打开命令面板** (<code class="inline-code">Ctrl+Shift+P</code>)</p><p class="message-paragraph">2. **选择Docker命令**<br>   - 输入 &quot;Docker Compose: Up&quot;<br>   - 选择 <code class="inline-code">compose.yaml</code> 文件<br>   - 容器将开始构建和启动</p><p class="message-paragraph">#### 方法三：通过集成终端</p><p class="message-paragraph">1. **打开集成终端** (<code class="inline-code">Ctrl+</code>`)</p><p class="message-paragraph">2. **运行Docker Compose命令**</p><pre class="message-code-block"><code>   # 构建并启动
+   docker compose up -d
+   
+   # 或者强制重新构建
+   docker compose up -d --build</code></pre><p class="message-paragraph">### 5️⃣ 监控和管理</p><p class="message-paragraph">#### 在Docker插件面板中：</p><p class="message-paragraph">1. **查看运行中的容器**<br>   - Docker视图 → Containers<br>   - 找到 <code class="inline-code">microsoft-rewards-script</code></p><p class="message-paragraph">2. **容器操作**<br>   - **右键容器** 可以选择：<br>     - <code class="inline-code">View Logs</code> - 查看实时日志<br>     - <code class="inline-code">Attach Shell</code> - 进入容器终端<br>     - <code class="inline-code">Restart</code> - 重启容器<br>     - <code class="inline-code">Stop</code> - 停止容器<br>     - <code class="inline-code">Remove</code> - 删除容器</p><p class="message-paragraph">3. **查看日志**<br>   - 右键容器选择 &quot;View Logs&quot;<br>   - 日志会在新的VS Code终端标签中显示<br>   - 可以看到脚本的执行状态和结果</p><p class="message-paragraph">#### 实用的VS Code Docker操作：</p><p class="message-paragraph">**快捷操作面板：**<br>- <code class="inline-code">Ctrl+Shift+P</code> → &quot;Docker: Show Logs&quot; - 快速查看容器日志<br>- <code class="inline-code">Ctrl+Shift+P</code> → &quot;Docker: Restart&quot; - 重启选定容器<br>- <code class="inline-code">Ctrl+Shift+P</code> → &quot;Docker: Stop&quot; - 停止选定容器</p><p class="message-paragraph">### 6️⃣ 调试和故障排除</p><p class="message-paragraph">**在VS Code中进行调试：**</p><p class="message-paragraph">1. **查看构建输出**<br>   - 构建时输出会显示在集成终端中<br>   - 可以看到任何构建错误或警告</p><p class="message-paragraph">2. **实时监控日志**</p><pre class="message-code-block"><code>   # 在集成终端中运行
+   docker logs -f microsoft-rewards-script</code></pre><p class="message-paragraph">3. **检查容器健康状态**<br>   - 在Docker视图中，容器图标会显示健康状态<br>   - 绿色：运行正常<br>   - 红色：有问题<br>   - 黄色：启动中或不健康</p><p class="message-paragraph">### 7️⃣ 高效的工作流程</p><p class="message-paragraph">**推荐的开发和部署流程：**</p><p class="message-paragraph">1. **配置更改后重新部署**</p><pre class="message-code-block"><code>   # 在VS Code终端中
+   docker compose down
+   docker compose up -d --build</code></pre><p class="message-paragraph">2. **使用VS Code任务**<br>   - 创建 <code class="inline-code">.vscode/tasks.json</code>：</p><pre class="message-code-block"><code>   {
+     &quot;version&quot;: &quot;2.0.0&quot;,
+     &quot;tasks&quot;: [
+       {
+         &quot;label&quot;: &quot;Docker: Compose Up&quot;,
+         &quot;type&quot;: &quot;shell&quot;,
+         &quot;command&quot;: &quot;docker&quot;,
+         &quot;args&quot;: [&quot;compose&quot;, &quot;up&quot;, &quot;-d&quot;],
+         &quot;group&quot;: &quot;build&quot;,
+         &quot;presentation&quot;: {
+           &quot;reveal&quot;: &quot;always&quot;,
+           &quot;panel&quot;: &quot;new&quot;
+         }
+       },
+       {
+         &quot;label&quot;: &quot;Docker: View Logs&quot;,
+         &quot;type&quot;: &quot;shell&quot;,
+         &quot;command&quot;: &quot;docker&quot;,
+         &quot;args&quot;: [&quot;logs&quot;, &quot;-f&quot;, &quot;microsoft-rewards-script&quot;],
+         &quot;group&quot;: &quot;test&quot;
+       }
+     ]
+   }</code></pre><p class="message-paragraph">3. **快捷键绑定**<br>   - <code class="inline-code">Ctrl+Shift+P</code> → &quot;Preferences: Open Keyboard Shortcuts (JSON)&quot;<br>   - 添加自定义快捷键：</p><pre class="message-code-block"><code>   [
+     {
+       &quot;key&quot;: &quot;ctrl+shift+d ctrl+u&quot;,
+       &quot;command&quot;: &quot;workbench.action.tasks.runTask&quot;,
+       &quot;args&quot;: &quot;Docker: Compose Up&quot;
+     }
+   ]</code></pre><p class="message-paragraph">### 8️⃣ 监控脚本执行</p><p class="message-paragraph">**在VS Code中监控脚本状态：**</p><p class="message-paragraph">1. **设置定时查看日志**<br>   - 可以保持日志终端打开<br>   - 脚本执行时会看到详细的输出</p><p class="message-paragraph">2. **检查执行结果**<br>   - 日志会显示每个账户的积分获取情况<br>   - 可以看到任何错误或警告信息</p><p class="message-paragraph">通过这种方式，您可以完全在VS Code环境中管理Microsoft Rewards脚本的Docker容器，享受图形界面带来的便利，同时保持对容器状态的完全可见性和控制。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">mcp_sequentialthi_sequentialthinking</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

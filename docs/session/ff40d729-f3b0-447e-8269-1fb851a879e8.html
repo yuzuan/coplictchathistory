@@ -1,0 +1,1925 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>library(limma) # 差异分析 library(ggplot2) # 绑图 library(pheatmap) # 热图 library(gg...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>library(limma) # 差异分析 library(ggplot2) # 绑图 library(pheatmap) # 热图 library(gg...</h1>
+      <p class="selected-session-meta">差异表达分析中的错误修复建议 · 2026/01/07 10:23 · 34 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2026-01-07/差异表达分析中的错误修复建议_ff40d729.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#ff40d729-f3b0-447e-8269-1fb851a879e8">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 10:24</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(limma)      # 差异分析<br>library(ggplot2)    # 绑图<br>library(pheatmap)   # 热图<br>library(ggrepel)    # 火山图标签<br>library(STRINGdb)   # PPI分析<br>library(igraph)     # 网络分析<br>library(ComplexHeatmap)</p><p class="message-paragraph"># 设置分组因子，proliferative vs resting<br>group &lt;- factor(pd$group, levels = c(&quot;resting&quot;, &quot;proliferative&quot;))<br>#group &lt;- factor(group, levels = c(&quot;resting&quot;, &quot;proliferative&quot;))<br>design &lt;- model.matrix(~ 0 + group)<br>colnames(design) &lt;- levels(group)<br>fit &lt;- lmFit(exp, design)<br>contrast &lt;- makeContrasts(proliferative - resting, levels = design)<br>fit2 &lt;- contrasts.fit(fit, contrast)<br>fit2 &lt;- eBayes(fit2)</p><p class="message-paragraph">DEG &lt;- topTable(fit2, coef = 1, number = Inf, adjust.method = &quot;BH&quot;)<br>DEG$gene &lt;- rownames(DEG)<br>DEG$FDR &lt;- DEG$adj.P.Val</p><p class="message-paragraph"># 添加差异表达标签 (logFC &gt; 1, adj.P.Val &lt; 0.05)<br>DEG$change &lt;- ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &gt; 1, &quot;Up&quot;,<br>                     ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &lt; -1, &quot;Down&quot;, &quot;Not Sig&quot;))<br>DEG &lt;- DEG[, c(&quot;gene&quot;, &quot;logFC&quot;, &quot;AveExpr&quot;, &quot;t&quot;, &quot;P.Value&quot;, &quot;FDR&quot;, &quot;B&quot;, &quot;change&quot;)]<br>table(DEG$change)<br>write.csv(DEG, file.path(out_dir, &quot;DEG_results.csv&quot;), row.names = FALSE)</p><p class="message-paragraph">DEG_sig &lt;- DEG[DEG$change != &quot;Not Sig&quot;, ]<br>write.csv(DEG_sig, file.path(out_dir, &quot;DEG_significant.csv&quot;), row.names = FALSE)<br>cat(&quot;上调基因:&quot;, sum(DEG$change == &quot;Up&quot;), &quot;\n&quot;)<br>cat(&quot;下调基因:&quot;, sum(DEG$change == &quot;Down&quot;), &quot;\n&quot;)</p><p class="message-paragraph"># 火山图分别选择Up和Down的top 10基因<br>DEG_up &lt;- DEG[DEG$change == &quot;Up&quot;, ]<br>DEG_down &lt;- DEG[DEG$change == &quot;Down&quot;, ]</p><p class="message-paragraph"># 按logFC绝对值排序，各取top 10<br>top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), ]<br>top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), ]</p><p class="message-paragraph"># 合并用于标注的基因<br>top_genes &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># 火山图 - 使用FDR替代adj.P.Val<br>p_volcano &lt;- ggplot(DEG, aes(x = logFC, y = -log10(FDR), color = change)) +<br>    geom_point(alpha = 0.6, size = 1.5) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    theme_bw() +<br>    labs(x = &quot;log2 Fold Change&quot;, <br>         y = &quot;-log10(FDR)&quot;, <br>         title = &quot;Volcano Plot: proliferative vs resting&quot;,<br>         color = &quot;Expression&quot;) +<br>    theme(plot.title = element_text(hjust = 0.5),<br>          legend.position = &quot;right&quot;) +<br>    geom_text_repel(data = top_genes,<br>                    aes(label = gene),<br>                    size = 3,<br>                    max.overlaps = 20,<br>                    show.legend = FALSE)</p><p class="message-paragraph">print(p_volcano)<br>ggsave(file.path(out_dir, &quot;volcano_plot.pdf&quot;), p_volcano, width = 8, height = 6)</p><p class="message-paragraph">DEG_up_sig &lt;- DEG[DEG$change == &quot;Up&quot;, ]<br>DEG_down_sig &lt;- DEG[DEG$change == &quot;Down&quot;, ]</p><p class="message-paragraph">DEG_up_sig &lt;- DEG_up_sig[order(DEG_up_sig$FDR), ]<br>DEG_down_sig &lt;- DEG_down_sig[order(DEG_down_sig$FDR), ]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sig$gene, 50)<br>top_down_heatmap &lt;- head(DEG_down_sig$gene, 50)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- top_heatmap_genes[top_heatmap_genes %in% rownames(exp)]</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)</p><p class="message-paragraph"># 提取表达矩阵<br>exp_heatmap &lt;- exp[top_heatmap_genes, ]</p><p class="message-paragraph"># 标准化（Z-score）<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))</p><p class="message-paragraph"># 注释信息（列：样本分组）<br>annotation_col_all &lt;- data.frame(<br>    Group = pd$group,<br>    row.names = rownames(pd)<br>)</p><p class="message-paragraph"># 行注释（标记 Up/Down/Not Sig）<br>deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row_all &lt;- data.frame(<br>    Regulation = deg_regulation[all_deg_genes, &quot;change&quot;],<br>    row.names = all_deg_genes<br>)</p><p class="message-paragraph"># 定义颜色<br>group_colors_all &lt;- c(&quot;resting&quot; = &quot;#4DAF4A&quot;, &quot;proliferative&quot; = &quot;#E41A1C&quot;)<br>regulation_colors_all &lt;- c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)</p><p class="message-paragraph"># 顶部注释<br>ha_all &lt;- HeatmapAnnotation(<br>    Group = annotation_col_all$Group,<br>    col = list(Group = group_colors_all),<br>    show_annotation_name = FALSE,<br>    annotation_name_side = &quot;left&quot;<br>)</p><p class="message-paragraph"># 行注释（Up/Down）<br>ra_all &lt;- rowAnnotation(<br>    Regulation = annotation_row_all$Regulation,<br>    col = list(Regulation = regulation_colors_all),<br>    show_annotation_name = FALSE<br>)<br># 绘制热图<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,                              # Z-score标准化后的表达矩阵（行=基因，列=样本）<br>    col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),  # 颜色梯度：紫色(低表达)-白色-红色(高表达)<br>    name = &quot;Gene Expression\n(Z-score)&quot;,             # 图例标题<br>    heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),  # 图例水平显示<br>    show_row_names = TRUE,                           # 显示行名（基因名）<br>    show_column_names = FALSE,                       # 不显示列名（样本名太多会乱）<br>    show_row_dend = FALSE,                           # 不显示行聚类树<br>    show_column_dend = FALSE,                        # 不显示列聚类树<br>    top_annotation = ha_deg,                         # 顶部添加分组注释<br>    column_title_side = &quot;top&quot;,                       # 列标题显示在顶部<br>    column_split = annotation_col$Group,             # 按Group（resting/proliferative）分割列<br>    row_split = annotation_row$Regulation,           # 按Regulation（Up/Down）分割行<br>    #column_title = TRUE,                             # 显示列标题（分组名）<br>    row_names_gp = gpar(fontsize = 5),               # 行名字体大小<br>    cluster_rows = TRUE,                             # 对行进行聚类<br>    cluster_columns = TRUE                           # 对列进行聚类<br>)</p><p class="message-paragraph"># 保存热图<br>pdf(file.path(out_dir, &quot;heatmap_DEGs.pdf&quot;), width = 10, height = 14)<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)<br>dev.off()</p><p class="message-paragraph"># 在屏幕上显示<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)</p><p class="message-paragraph">出现报错 deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]<br>Error in h(simpleError(msg, call)) : <br>  error in evaluating the argument &#39;table&#39; in selecting a method for function &#39;%in%&#39;: object &#39;all_deg_genes&#39; not found</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 10:24</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">看到问题了！代码中使用了未定义的变量 <code class="inline-code">all_deg_genes</code>。根据您的代码逻辑，这个变量应该是指热图中使用的基因 <code class="inline-code">top_heatmap_genes</code>。另外还有几处变量命名不一致的问题。</p><p class="message-paragraph">以下是需要修复的地方：</p><p class="message-paragraph">1. **<code class="inline-code">all_deg_genes</code> 应该是 <code class="inline-code">top_heatmap_genes</code>**<br>2. **<code class="inline-code">annotation_col_all</code> 应该改为 <code class="inline-code">annotation_col</code>**（或者在热图中使用 <code class="inline-code">annotation_col_all</code>）<br>3. **<code class="inline-code">ha_all</code> 和 <code class="inline-code">ra_all</code> 应该改为 <code class="inline-code">ha_deg</code> 和 <code class="inline-code">ra_deg</code>**（或者在热图中使用 <code class="inline-code">ha_all</code> 和 <code class="inline-code">ra_all</code>）</p><p class="message-paragraph">修复后的代码：</p><pre class="message-code-block"><code># 提取表达矩阵
+exp_heatmap &lt;- exp[top_heatmap_genes, ]
+
+# 标准化（Z-score）
+exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))
+
+# 注释信息（列：样本分组）
+annotation_col &lt;- data.frame(
+    Group = pd$group,
+    row.names = rownames(pd)
+)
+
+# 行注释（标记 Up/Down）
+deg_regulation &lt;- DEG[DEG$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;change&quot;)]
+rownames(deg_regulation) &lt;- deg_regulation$gene
+
+annotation_row &lt;- data.frame(
+    Regulation = deg_regulation[top_heatmap_genes, &quot;change&quot;],
+    row.names = top_heatmap_genes
+)
+
+# 定义颜色
+group_colors &lt;- c(&quot;resting&quot; = &quot;#4DAF4A&quot;, &quot;proliferative&quot; = &quot;#E41A1C&quot;)
+regulation_colors &lt;- c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)
+
+# 顶部注释
+ha_deg &lt;- HeatmapAnnotation(
+    Group = annotation_col$Group,
+    col = list(Group = group_colors),
+    show_annotation_name = FALSE,
+    annotation_name_side = &quot;left&quot;
+)
+
+# 行注释（Up/Down）
+ra_deg &lt;- rowAnnotation(
+    Regulation = annotation_row$Regulation,
+    col = list(Regulation = regulation_colors),
+    show_annotation_name = FALSE
+)
+
+# 绘制热图
+p_heatmap &lt;- Heatmap(
+    exp_heatmap_scaled,
+    col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),
+    name = &quot;Gene Expression\n(Z-score)&quot;,
+    heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),
+    show_row_names = TRUE,
+    show_column_names = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    top_annotation = ha_deg,
+    column_title_side = &quot;top&quot;,
+    column_split = annotation_col$Group,
+    row_split = annotation_row$Regulation,
+    row_names_gp = gpar(fontsize = 5),
+    cluster_rows = TRUE,
+    cluster_columns = TRUE
+)
+
+# 保存热图
+pdf(file.path(out_dir, &quot;heatmap_DEGs.pdf&quot;), width = 10, height = 14)
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)
+dev.off()
+
+# 在屏幕上显示
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)</code></pre><p class="message-paragraph">**主要修改：**<br>- <code class="inline-code">all_deg_genes</code> → <code class="inline-code">top_heatmap_genes</code><br>- <code class="inline-code">annotation_col_all</code> → <code class="inline-code">annotation_col</code><br>- <code class="inline-code">annotation_row_all</code> → <code class="inline-code">annotation_row</code><br>- <code class="inline-code">ha_all</code> → <code class="inline-code">ha_deg</code><br>- <code class="inline-code">ra_all</code> → <code class="inline-code">ra_deg</code><br>- <code class="inline-code">group_colors_all</code> → <code class="inline-code">group_colors</code><br>- <code class="inline-code">regulation_colors_all</code> → <code class="inline-code">regulation_colors</code></p><p class="message-paragraph">现在变量命名统一，代码应该可以正常运行了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 14:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我觉得这个配色一般，不是有一个 ggsci 的包，应用到热图上来看看</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 14:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的！<code class="inline-code">ggsci</code> 包提供了很多高质量的科研期刊配色方案。我来帮你改进热图的配色：</p><pre class="message-code-block"><code># 加载 ggsci 包
+library(ggsci)
+
+# 提取表达矩阵
+exp_heatmap &lt;- exp[top_heatmap_genes, ]
+
+# 标准化（Z-score）
+exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))
+
+# 注释信息（列：样本分组）
+annotation_col &lt;- data.frame(
+    Group = pd$group,
+    row.names = rownames(pd)
+)
+
+# 行注释（标记 Up/Down）
+deg_regulation &lt;- DEG[DEG$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;change&quot;)]
+rownames(deg_regulation) &lt;- deg_regulation$gene
+
+annotation_row &lt;- data.frame(
+    Regulation = deg_regulation[top_heatmap_genes, &quot;change&quot;],
+    row.names = top_heatmap_genes
+)
+
+# 使用 ggsci 配色方案
+# 分组颜色 - 使用 Nature Publishing Group (NPG) 配色
+npg_colors &lt;- pal_npg(&quot;nrc&quot;)(10)
+group_colors &lt;- c(&quot;resting&quot; = npg_colors[4], &quot;proliferative&quot; = npg_colors[1])
+
+# 调控颜色 - 使用 Lancet 配色
+lancet_colors &lt;- pal_lancet(&quot;lanonc&quot;)(9)
+regulation_colors &lt;- c(&quot;Up&quot; = lancet_colors[1], &quot;Down&quot; = lancet_colors[2], &quot;Not Sig&quot; = &quot;grey80&quot;)
+
+# 热图主体颜色 - 使用蓝-白-红渐变（经典差异表达配色）
+# 也可以尝试：pal_gsea() 的配色
+heatmap_colors &lt;- colorRampPalette(c(npg_colors[3], &quot;white&quot;, npg_colors[1]))(100)
+
+# 顶部注释
+ha_deg &lt;- HeatmapAnnotation(
+    Group = annotation_col$Group,
+    col = list(Group = group_colors),
+    show_annotation_name = TRUE,
+    annotation_name_side = &quot;left&quot;,
+    annotation_name_gp = gpar(fontsize = 10, fontface = &quot;bold&quot;)
+)
+
+# 行注释（Up/Down）
+ra_deg &lt;- rowAnnotation(
+    Regulation = annotation_row$Regulation,
+    col = list(Regulation = regulation_colors),
+    show_annotation_name = TRUE,
+    annotation_name_gp = gpar(fontsize = 10, fontface = &quot;bold&quot;),
+    width = unit(0.5, &quot;cm&quot;)
+)
+
+# 绘制热图
+p_heatmap &lt;- Heatmap(
+    exp_heatmap_scaled,
+    col = heatmap_colors,
+    name = &quot;Z-score&quot;,
+    heatmap_legend_param = list(
+        direction = &quot;horizontal&quot;,
+        title_position = &quot;topcenter&quot;,
+        legend_width = unit(6, &quot;cm&quot;)
+    ),
+    show_row_names = TRUE,
+    show_column_names = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    top_annotation = ha_deg,
+    right_annotation = ra_deg,
+    column_title_side = &quot;top&quot;,
+    column_split = annotation_col$Group,
+    row_split = annotation_row$Regulation,
+    row_names_gp = gpar(fontsize = 6),
+    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;),
+    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;),
+    cluster_rows = TRUE,
+    cluster_columns = TRUE,
+    border = TRUE
+)
+
+# 保存热图
+pdf(file.path(out_dir, &quot;heatmap_DEGs_ggsci.pdf&quot;), width = 12, height = 14)
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)
+dev.off()
+
+# 在屏幕上显示
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)</code></pre><p class="message-paragraph">**主要改进：**</p><p class="message-paragraph">1. **热图主体配色**：使用 NPG（Nature）配色的蓝-白-红渐变，更加专业美观</p><p class="message-paragraph">2. **分组颜色**：使用 NPG 配色方案中的颜色</p><p class="message-paragraph">3. **调控标签颜色**：使用 Lancet 配色方案</p><p class="message-paragraph">4. **其他优化**：<br>   - 添加了行注释到右侧（<code class="inline-code">right_annotation</code>）<br>   - 增强了标题和注释的字体样式<br>   - 添加了热图边框<br>   - 优化了图例显示</p><p class="message-paragraph">**如果想尝试其他配色方案：**</p><pre class="message-code-block"><code># 方案2：使用 AAAS (Science) 配色
+aaas_colors &lt;- pal_aaas()(10)
+heatmap_colors &lt;- colorRampPalette(c(aaas_colors[2], &quot;white&quot;, aaas_colors[1]))(100)
+
+# 方案3：使用 JCO 配色
+jco_colors &lt;- pal_jco()(10)
+heatmap_colors &lt;- colorRampPalette(c(jco_colors[4], &quot;white&quot;, jco_colors[1]))(100)
+
+# 方案4：使用经典的 RdBu（红蓝）配色
+library(RColorBrewer)
+heatmap_colors &lt;- colorRampPalette(rev(brewer.pal(11, &quot;RdBu&quot;)))(100)</code></pre><p class="message-paragraph">如果还没安装 ggsci 包，运行：<code class="inline-code">install.packages(&quot;ggsci&quot;)</code></p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我现在有一个数据，colnames(data)<br> [1] &quot;AC8_1&quot;                     &quot;AC8_2&quot;                     &quot;His_1&quot;                    <br> [4] &quot;His_2&quot;                     &quot;FC&quot;                        &quot;P&quot;                        <br> [7] &quot;log2FC&quot;                    &quot;Protein&quot;                   &quot;Description&quot;              <br>[10] &quot;Sig&quot;                       &quot;AC8.vs.Control UP.DOWN&quot;    &quot;GO_NUM&quot;                   <br>[13] &quot;GO_Description&quot;            &quot;KEGG_Description&quot;          &quot;KEGG_EC&quot;                  <br>[16] &quot;KEGG_ko&quot;                   &quot;KOGs_Function_Description&quot; &quot;KOGs_Function_Class&quot;      <br>[19] &quot;KOGs_Class_Description&quot;    &quot;IPR_Term&quot;                  &quot;Subcellular_localization&quot; <br>[22] &quot;TF_family&quot;   ，请帮我做出火山图，FC 或者log2FC存在 inf</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的！我来帮你处理包含 inf 值的数据并绘制火山图。以下是完整的代码：</p><pre class="message-code-block"><code>library(ggplot2)
+library(ggrepel)
+
+# 处理 inf 值
+# 方法1：移除包含 inf 的行
+data_clean &lt;- data[!is.infinite(data$log2FC) &amp; !is.infinite(data$FC), ]
+
+# 或者方法2：将 inf 替换为最大值（如果想保留这些数据点）
+# data_clean &lt;- data
+# max_log2fc &lt;- max(data_clean$log2FC[!is.infinite(data_clean$log2FC)], na.rm = TRUE)
+# min_log2fc &lt;- min(data_clean$log2FC[!is.infinite(data_clean$log2FC)], na.rm = TRUE)
+# data_clean$log2FC[is.infinite(data_clean$log2FC) &amp; data_clean$log2FC &gt; 0] &lt;- max_log2fc + 1
+# data_clean$log2FC[is.infinite(data_clean$log2FC) &amp; data_clean$log2FC &lt; 0] &lt;- min_log2fc - 1
+
+# 查看数据分布
+cat(&quot;移除前总数:&quot;, nrow(data), &quot;\n&quot;)
+cat(&quot;移除后总数:&quot;, nrow(data_clean), &quot;\n&quot;)
+cat(&quot;移除的行数:&quot;, nrow(data) - nrow(data_clean), &quot;\n&quot;)
+
+# 如果有 Sig 列或 AC8.vs.Control UP.DOWN 列，直接使用
+# 如果没有，需要根据阈值定义（例如 |log2FC| &gt; 1, P &lt; 0.05）
+if(&quot;Sig&quot; %in% colnames(data_clean)) {
+    data_clean$change &lt;- data_clean$Sig
+} else if(&quot;AC8.vs.Control UP.DOWN&quot; %in% colnames(data_clean)) {
+    data_clean$change &lt;- data_clean$`AC8.vs.Control UP.DOWN`
+} else {
+    # 自定义阈值
+    data_clean$change &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 1, &quot;Up&quot;,
+                               ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -1, &quot;Down&quot;, 
+                                     &quot;Not Sig&quot;))
+}
+
+# 统计数量
+table(data_clean$change)
+
+# 选择标注的基因（Top 10 上调和下调）
+data_up &lt;- data_clean[data_clean$change == &quot;Up&quot; | data_clean$change == &quot;up&quot;, ]
+data_down &lt;- data_clean[data_clean$change == &quot;Down&quot; | data_clean$change == &quot;down&quot;, ]
+
+if(nrow(data_up) &gt; 0) {
+    top_up &lt;- data_up[order(abs(data_up$log2FC), decreasing = TRUE), ][1:min(10, nrow(data_up)), ]
+} else {
+    top_up &lt;- data.frame()
+}
+
+if(nrow(data_down) &gt; 0) {
+    top_down &lt;- data_down[order(abs(data_down$log2FC), decreasing = TRUE), ][1:min(10, nrow(data_down)), ]
+} else {
+    top_down &lt;- data.frame()
+}
+
+top_proteins &lt;- rbind(top_up, top_down)
+
+# 绘制火山图
+p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, 
+                                  &quot;up&quot; = &quot;#E41A1C&quot;,
+                                  &quot;Down&quot; = &quot;#377EB8&quot;, 
+                                  &quot;down&quot; = &quot;#377EB8&quot;,
+                                  &quot;Not Sig&quot; = &quot;grey60&quot;,
+                                  &quot;not sig&quot; = &quot;grey60&quot;)) +
+    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 16),
+          legend.position = &quot;right&quot;,
+          panel.grid.minor = element_blank()) +
+    geom_text_repel(data = top_proteins,
+                    aes(label = Protein),
+                    size = 3,
+                    max.overlaps = 20,
+                    box.padding = 0.5,
+                    point.padding = 0.3,
+                    show.legend = FALSE)
+
+print(p_volcano)
+
+# 保存图片（根据需要修改路径）
+ggsave(&quot;volcano_plot_AC8.pdf&quot;, p_volcano, width = 10, height = 8)
+ggsave(&quot;volcano_plot_AC8.png&quot;, p_volcano, width = 10, height = 8, dpi = 300)
+
+# 输出统计信息
+cat(&quot;\n=== 差异表达统计 ===\n&quot;)
+print(table(data_clean$change))
+cat(&quot;\n上调蛋白数:&quot;, sum(grepl(&quot;up&quot;, data_clean$change, ignore.case = TRUE)), &quot;\n&quot;)
+cat(&quot;下调蛋白数:&quot;, sum(grepl(&quot;down&quot;, data_clean$change, ignore.case = TRUE)), &quot;\n&quot;)</code></pre><p class="message-paragraph">**关键点说明：**</p><p class="message-paragraph">1. **处理 inf 值**：默认移除包含 inf 的行，也提供了替换方法的注释代码</p><p class="message-paragraph">2. **灵活处理分组列**：自动识别 <code class="inline-code">Sig</code> 或 <code class="inline-code">AC8.vs.Control UP.DOWN</code> 列</p><p class="message-paragraph">3. **标注 Top 基因**：自动选择 log2FC 绝对值最大的上调/下调蛋白各 Top 10</p><p class="message-paragraph">4. **配色**：红色（上调）、蓝色（下调）、灰色（不显著）</p><p class="message-paragraph">5. **保存格式**：同时保存 PDF 和 PNG 格式</p><p class="message-paragraph">如果你想保留 inf 值的数据点，可以取消注释&quot;方法2&quot;的代码！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:17</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">分别就data_clean的 log2FC和 P 值的范围</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:17</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code># 查看 log2FC 的范围和分布
+cat(&quot;=== log2FC 统计信息 ===\n&quot;)
+cat(&quot;最小值:&quot;, min(data_clean$log2FC, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;最大值:&quot;, max(data_clean$log2FC, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;中位数:&quot;, median(data_clean$log2FC, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;平均值:&quot;, mean(data_clean$log2FC, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;标准差:&quot;, sd(data_clean$log2FC, na.rm = TRUE), &quot;\n&quot;)
+summary(data_clean$log2FC)
+
+cat(&quot;\n=== P 值统计信息 ===\n&quot;)
+cat(&quot;最小值:&quot;, min(data_clean$P, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;最大值:&quot;, max(data_clean$P, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;中位数:&quot;, median(data_clean$P, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;平均值:&quot;, mean(data_clean$P, na.rm = TRUE), &quot;\n&quot;)
+summary(data_clean$P)
+
+# 查看有多少 P &lt; 0.05 的蛋白
+cat(&quot;\nP &lt; 0.05 的蛋白数:&quot;, sum(data_clean$P &lt; 0.05, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;P &lt; 0.01 的蛋白数:&quot;, sum(data_clean$P &lt; 0.01, na.rm = TRUE), &quot;\n&quot;)
+
+# 查看 log2FC 的分布区间
+cat(&quot;\n=== log2FC 分布区间 ===\n&quot;)
+cat(&quot;|log2FC| &gt; 2:&quot;, sum(abs(data_clean$log2FC) &gt; 2, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;|log2FC| &gt; 1:&quot;, sum(abs(data_clean$log2FC) &gt; 1, na.rm = TRUE), &quot;\n&quot;)
+cat(&quot;|log2FC| &gt; 0.5:&quot;, sum(abs(data_clean$log2FC) &gt; 0.5, na.rm = TRUE), &quot;\n&quot;)
+
+# 可视化分布
+par(mfrow = c(1, 2))
+hist(data_clean$log2FC, breaks = 50, main = &quot;log2FC Distribution&quot;, 
+     xlab = &quot;log2FC&quot;, col = &quot;skyblue&quot;, border = &quot;white&quot;)
+abline(v = c(-1, 1), col = &quot;red&quot;, lty = 2, lwd = 2)
+
+hist(-log10(data_clean$P), breaks = 50, main = &quot;-log10(P) Distribution&quot;,
+     xlab = &quot;-log10(P)&quot;, col = &quot;lightcoral&quot;, border = &quot;white&quot;)
+abline(v = -log10(0.05), col = &quot;red&quot;, lty = 2, lwd = 2)</code></pre><p class="message-paragraph">这段代码会输出详细的统计信息和分布直方图，帮助你了解数据的整体情况！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:18</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">cat(&quot;\nP &lt; 0.05 的蛋白数:&quot;, sum(data_clean$P &lt; 0.05, na.rm = TRUE), &quot;\n&quot;)</p><p class="message-paragraph">P &lt; 0.05 的蛋白数: 187 <br>&gt; cat(&quot;P &lt; 0.01 的蛋白数:&quot;, sum(data_clean$P &lt; 0.01, na.rm = TRUE), &quot;\n&quot;)<br>P &lt; 0.01 的蛋白数: 62 <br>&gt; <br>&gt; # 查看 log2FC 的分布区间<br>&gt; cat(&quot;\n=== log2FC 分布区间 ===\n&quot;)</p><p class="message-paragraph">=== log2FC 分布区间 ===<br>&gt; cat(&quot;|log2FC| &gt; 2:&quot;, sum(abs(data_clean$log2FC) &gt; 2, na.rm = TRUE), &quot;\n&quot;)<br>|log2FC| &gt; 2: 74 <br>&gt; cat(&quot;|log2FC| &gt; 1:&quot;, sum(abs(data_clean$log2FC) &gt; 1, na.rm = TRUE), &quot;\n&quot;)<br>|log2FC| &gt; 1: 317 <br>&gt; cat(&quot;|log2FC| &gt; 0.5:&quot;, sum(abs(data_clean$log2FC) &gt; 0.5, na.rm = TRUE), &quot;\n&quot;)<br>|log2FC| &gt; 0.5: 669</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:18</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根据你的数据分布，我建议根据实际情况调整火山图的阈值。以下是几种阈值方案的代码：</p><pre class="message-code-block"><code># 方案1：严格阈值 (|log2FC| &gt; 2, P &lt; 0.01) - 更保守，得到 62 个显著蛋白
+data_clean$change_strict &lt;- ifelse(data_clean$P &lt; 0.01 &amp; data_clean$log2FC &gt; 2, &quot;Up&quot;,
+                                   ifelse(data_clean$P &lt; 0.01 &amp; data_clean$log2FC &lt; -2, &quot;Down&quot;, 
+                                         &quot;Not Sig&quot;))
+
+# 方案2：中等阈值 (|log2FC| &gt; 1, P &lt; 0.05) - 标准阈值，约 187 个
+data_clean$change_moderate &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 1, &quot;Up&quot;,
+                                     ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -1, &quot;Down&quot;, 
+                                           &quot;Not Sig&quot;))
+
+# 方案3：宽松阈值 (|log2FC| &gt; 0.5, P &lt; 0.05) - 更多候选，约 669 个
+data_clean$change_loose &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 0.5, &quot;Up&quot;,
+                                  ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -0.5, &quot;Down&quot;, 
+                                        &quot;Not Sig&quot;))
+
+# 查看各方案的差异蛋白数量
+cat(&quot;=== 不同阈值的差异蛋白数 ===\n&quot;)
+cat(&quot;严格阈值 (|log2FC|&gt;2, P&lt;0.01):\n&quot;)
+print(table(data_clean$change_strict))
+
+cat(&quot;\n中等阈值 (|log2FC|&gt;1, P&lt;0.05):\n&quot;)
+print(table(data_clean$change_moderate))
+
+cat(&quot;\n宽松阈值 (|log2FC|&gt;0.5, P&lt;0.05):\n&quot;)
+print(table(data_clean$change_loose))
+
+# 推荐使用中等阈值绘制火山图
+library(ggplot2)
+library(ggrepel)
+
+# 选择 Top 10 标注（使用中等阈值）
+data_up &lt;- data_clean[data_clean$change_moderate == &quot;Up&quot;, ]
+data_down &lt;- data_clean[data_clean$change_moderate == &quot;Down&quot;, ]
+
+top_up &lt;- data_up[order(abs(data_up$log2FC), decreasing = TRUE), ][1:min(10, nrow(data_up)), ]
+top_down &lt;- data_down[order(abs(data_down$log2FC), decreasing = TRUE), ][1:min(10, nrow(data_down)), ]
+top_proteins &lt;- rbind(top_up, top_down)
+
+# 火山图（中等阈值版本）
+p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change_moderate)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, 
+                                  &quot;Down&quot; = &quot;#377EB8&quot;, 
+                                  &quot;Not Sig&quot; = &quot;grey70&quot;)) +
+    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control\n(|log2FC| &gt; 1, P &lt; 0.05)&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 16),
+          legend.position = &quot;right&quot;,
+          panel.grid.minor = element_blank()) +
+    geom_text_repel(data = top_proteins,
+                    aes(label = Protein),
+                    size = 3,
+                    max.overlaps = 20,
+                    box.padding = 0.5,
+                    segment.color = &quot;black&quot;,
+                    segment.size = 0.3,
+                    show.legend = FALSE)
+
+print(p_volcano)
+ggsave(&quot;volcano_plot_moderate.pdf&quot;, p_volcano, width = 10, height = 8)
+
+# 如果想要严格阈值的火山图
+p_volcano_strict &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change_strict)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, 
+                                  &quot;Down&quot; = &quot;#377EB8&quot;, 
+                                  &quot;Not Sig&quot; = &quot;grey70&quot;)) +
+    geom_hline(yintercept = -log10(0.01), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    geom_vline(xintercept = c(-2, 2), linetype = &quot;dashed&quot;, color = &quot;black&quot;, size = 0.5) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control\n(|log2FC| &gt; 2, P &lt; 0.01)&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, size = 16),
+          legend.position = &quot;right&quot;,
+          panel.grid.minor = element_blank())
+
+print(p_volcano_strict)
+ggsave(&quot;volcano_plot_strict.pdf&quot;, p_volcano_strict, width = 10, height = 8)</code></pre><p class="message-paragraph">**建议：**<br>- **中等阈值** (|log2FC| &gt; 1, P &lt; 0.05)：平衡严格性和发现更多差异蛋白，推荐用于初步筛选<br>- **严格阈值** (|log2FC| &gt; 2, P &lt; 0.01)：如果需要高置信度的核心差异蛋白<br>- **宽松阈值** (|log2FC| &gt; 0.5, P &lt; 0.05)：探索性分析，不遗漏潜在候选</p><p class="message-paragraph">根据你的研究目的选择合适的阈值即可！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">不要搞这么复杂，就保留一个|log2FC| &gt;• 1, P. &lt;•0.05)</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，给你一个简洁版本：</p><pre class="message-code-block"><code>library(ggplot2)
+library(ggrepel)
+
+# 定义差异表达 (|log2FC| &gt; 1, P &lt; 0.05)
+data_clean$change &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 1, &quot;Up&quot;,
+                           ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -1, &quot;Down&quot;, 
+                                 &quot;Not Sig&quot;))
+
+# 统计
+cat(&quot;上调:&quot;, sum(data_clean$change == &quot;Up&quot;), &quot;\n&quot;)
+cat(&quot;下调:&quot;, sum(data_clean$change == &quot;Down&quot;), &quot;\n&quot;)
+cat(&quot;不显著:&quot;, sum(data_clean$change == &quot;Not Sig&quot;), &quot;\n&quot;)
+
+# 选择 Top 10 标注
+data_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, ]
+data_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(data_up[order(abs(data_up$log2FC), decreasing = TRUE), ], 10)
+top_down &lt;- head(data_down[order(abs(data_down$log2FC), decreasing = TRUE), ], 10)
+top_proteins &lt;- rbind(top_up, top_down)
+
+# 火山图
+p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey70&quot;)) +
+    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          legend.position = &quot;right&quot;) +
+    geom_text_repel(data = top_proteins,
+                    aes(label = Protein),
+                    size = 3,
+                    max.overlaps = 20,
+                    show.legend = FALSE)
+
+print(p_volcano)
+ggsave(&quot;volcano_plot.pdf&quot;, p_volcano, width = 10, height = 8)</code></pre><p class="message-paragraph">简洁明了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:25</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">再搞一个热图看看</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:25</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，给你画个差异蛋白的热图：</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 提取差异表达的蛋白
+DEG_sig &lt;- data_clean[data_clean$change != &quot;Not Sig&quot;, ]
+
+# 选择 Top 50 上调和 Top 50 下调（按 log2FC 排序）
+DEG_up &lt;- DEG_sig[DEG_sig$change == &quot;Up&quot;, ]
+DEG_down &lt;- DEG_sig[DEG_sig$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(DEG_up[order(DEG_up$log2FC, decreasing = TRUE), ], 50)
+top_down &lt;- head(DEG_down[order(DEG_down$log2FC, decreasing = FALSE), ], 50)
+
+# 合并用于热图的蛋白
+heatmap_proteins &lt;- rbind(top_up, top_down)
+
+# 提取表达矩阵（4个样本列）
+exp_matrix &lt;- as.matrix(heatmap_proteins[, c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)])
+rownames(exp_matrix) &lt;- heatmap_proteins$Protein
+
+# Z-score 标准化
+exp_scaled &lt;- t(scale(t(exp_matrix)))
+
+# 样本分组注释
+annotation_col &lt;- data.frame(
+    Group = c(&quot;Control&quot;, &quot;Control&quot;, &quot;AC8&quot;, &quot;AC8&quot;),
+    row.names = c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)
+)
+
+# 行注释（Up/Down）
+annotation_row &lt;- data.frame(
+    Regulation = heatmap_proteins$change,
+    row.names = heatmap_proteins$Protein
+)
+
+# 颜色设置
+ann_colors &lt;- list(
+    Group = c(Control = &quot;#4DAF4A&quot;, AC8 = &quot;#E41A1C&quot;),
+    Regulation = c(Up = &quot;#E41A1C&quot;, Down = &quot;#377EB8&quot;)
+)
+
+# 绘制热图
+pheatmap(exp_scaled,
+         color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),
+         annotation_col = annotation_col,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         cluster_rows = TRUE,
+         cluster_cols = FALSE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 6,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = &quot;Heatmap of DEPs (Top 50 Up + Top 50 Down)&quot;,
+         border_color = NA,
+         filename = &quot;heatmap_DEPs.pdf&quot;,
+         width = 8,
+         height = 12)
+
+cat(&quot;热图已保存: heatmap_DEPs.pdf\n&quot;)
+cat(&quot;包含蛋白数:&quot;, nrow(heatmap_proteins), &quot;\n&quot;)
+cat(&quot;上调:&quot;, nrow(top_up), &quot;, 下调:&quot;, nrow(top_down), &quot;\n&quot;)</code></pre><p class="message-paragraph">如果想调整显示的蛋白数量，修改 <code class="inline-code">head()</code> 里的数字即可！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 行注释（Up/Down）<br>&gt; annotation_row &lt;- data.frame(<br>+     Regulation = heatmap_proteins$change,<br>+     row.names = heatmap_proteins$Protein<br>+ )<br>Error in data.frame(Regulation = heatmap_proteins$change, row.names = heatmap_proteins$Protein) : <br>  row names contain missing values</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">有蛋白名称缺失的问题，需要先过滤掉 NA 值：</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 提取差异表达的蛋白
+DEG_sig &lt;- data_clean[data_clean$change != &quot;Not Sig&quot;, ]
+
+# 移除 Protein 列为 NA 的行
+DEG_sig &lt;- DEG_sig[!is.na(DEG_sig$Protein), ]
+
+# 选择 Top 50 上调和 Top 50 下调（按 log2FC 排序）
+DEG_up &lt;- DEG_sig[DEG_sig$change == &quot;Up&quot;, ]
+DEG_down &lt;- DEG_sig[DEG_sig$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(DEG_up[order(DEG_up$log2FC, decreasing = TRUE), ], 50)
+top_down &lt;- head(DEG_down[order(DEG_down$log2FC, decreasing = FALSE), ], 50)
+
+# 合并用于热图的蛋白
+heatmap_proteins &lt;- rbind(top_up, top_down)
+
+# 再次确保没有 NA
+heatmap_proteins &lt;- heatmap_proteins[!is.na(heatmap_proteins$Protein), ]
+
+# 提取表达矩阵（4个样本列）
+exp_matrix &lt;- as.matrix(heatmap_proteins[, c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)])
+rownames(exp_matrix) &lt;- heatmap_proteins$Protein
+
+# Z-score 标准化
+exp_scaled &lt;- t(scale(t(exp_matrix)))
+
+# 样本分组注释
+annotation_col &lt;- data.frame(
+    Group = c(&quot;Control&quot;, &quot;Control&quot;, &quot;AC8&quot;, &quot;AC8&quot;),
+    row.names = c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)
+)
+
+# 行注释（Up/Down）
+annotation_row &lt;- data.frame(
+    Regulation = heatmap_proteins$change,
+    row.names = heatmap_proteins$Protein
+)
+
+# 颜色设置
+ann_colors &lt;- list(
+    Group = c(Control = &quot;#4DAF4A&quot;, AC8 = &quot;#E41A1C&quot;),
+    Regulation = c(Up = &quot;#E41A1C&quot;, Down = &quot;#377EB8&quot;)
+)
+
+# 绘制热图
+pheatmap(exp_scaled,
+         color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),
+         annotation_col = annotation_col,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         cluster_rows = TRUE,
+         cluster_cols = FALSE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 6,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = &quot;Heatmap of DEPs (Top 50 Up + Top 50 Down)&quot;,
+         border_color = NA,
+         filename = &quot;heatmap_DEPs.pdf&quot;,
+         width = 8,
+         height = 12)
+
+cat(&quot;热图已保存: heatmap_DEPs.pdf\n&quot;)
+cat(&quot;包含蛋白数:&quot;, nrow(heatmap_proteins), &quot;\n&quot;)</code></pre><p class="message-paragraph">现在会先过滤掉 Protein 列为 NA 的行，应该就不会报错了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:34</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">colnames(data)<br> [1] &quot;AC8_1&quot;                     &quot;AC8_2&quot;                     &quot;His_1&quot;                    <br> [4] &quot;His_2&quot;                     &quot;FC&quot;                        &quot;P&quot;                        <br> [7] &quot;log2FC&quot;                    &quot;Protein&quot;                   &quot;Description&quot;              <br>[10] &quot;Sig&quot;                       &quot;AC8.vs.Control UP.DOWN&quot;    &quot;GO_NUM&quot;                   <br>[13] &quot;GO_Description&quot;            &quot;KEGG_Description&quot;          &quot;KEGG_EC&quot;                  <br>[16] &quot;KEGG_ko&quot;                   &quot;KOGs_Function_Description&quot; &quot;KOGs_Function_Class&quot;      <br>[19] &quot;KOGs_Class_Description&quot;    &quot;IPR_Term&quot;                  &quot;Subcellular_localization&quot; <br>[22] &quot;TF_family&quot;                data 中还包括富集分析的，请帮根据上调 gene 的富集分析图，gene 是行名</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:34</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，我来帮你用上调基因的富集分析数据画图：</p><pre class="message-code-block"><code>library(ggplot2)
+library(dplyr)
+library(stringr)
+
+# 提取上调的蛋白
+DEG_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, ]
+
+# ========== GO 富集分析 ==========
+# 提取有 GO 注释的上调蛋白
+GO_up &lt;- DEG_up[!is.na(DEG_up$GO_Description) &amp; DEG_up$GO_Description != &quot;&quot;, ]
+
+# 将 GO 描述拆分（如果一个基因有多个 GO term，用分号或其他分隔符分开）
+GO_split &lt;- strsplit(as.character(GO_up$GO_Description), &quot;;|\\|&quot;)
+GO_df &lt;- data.frame(
+    Protein = rep(GO_up$Protein, sapply(GO_split, length)),
+    GO_term = unlist(GO_split),
+    stringsAsFactors = FALSE
+)
+GO_df$GO_term &lt;- trimws(GO_df$GO_term)  # 去除空格
+GO_df &lt;- GO_df[GO_df$GO_term != &quot;&quot;, ]   # 去除空白项
+
+# 统计每个 GO term 的基因数
+GO_count &lt;- GO_df %&gt;%
+    group_by(GO_term) %&gt;%
+    summarise(Count = n_distinct(Protein)) %&gt;%
+    arrange(desc(Count)) %&gt;%
+    head(20)  # Top 20
+
+# GO 富集柱状图
+p_GO &lt;- ggplot(GO_count, aes(x = reorder(GO_term, Count), y = Count)) +
+    geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +
+    coord_flip() +
+    theme_bw(base_size = 12) +
+    labs(x = &quot;&quot;, y = &quot;Number of Proteins&quot;, 
+         title = &quot;GO Enrichment Analysis (Up-regulated Proteins)&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          axis.text.y = element_text(size = 10))
+
+print(p_GO)
+ggsave(&quot;GO_enrichment_upregulated.pdf&quot;, p_GO, width = 10, height = 8)
+
+
+# ========== KEGG 富集分析 ==========
+KEGG_up &lt;- DEG_up[!is.na(DEG_up$KEGG_Description) &amp; DEG_up$KEGG_Description != &quot;&quot;, ]
+
+# 将 KEGG 描述拆分
+KEGG_split &lt;- strsplit(as.character(KEGG_up$KEGG_Description), &quot;;|\\|&quot;)
+KEGG_df &lt;- data.frame(
+    Protein = rep(KEGG_up$Protein, sapply(KEGG_split, length)),
+    KEGG_pathway = unlist(KEGG_split),
+    stringsAsFactors = FALSE
+)
+KEGG_df$KEGG_pathway &lt;- trimws(KEGG_df$KEGG_pathway)
+KEGG_df &lt;- KEGG_df[KEGG_df$KEGG_pathway != &quot;&quot;, ]
+
+# 统计每个 KEGG pathway 的基因数
+KEGG_count &lt;- KEGG_df %&gt;%
+    group_by(KEGG_pathway) %&gt;%
+    summarise(Count = n_distinct(Protein)) %&gt;%
+    arrange(desc(Count)) %&gt;%
+    head(20)  # Top 20
+
+# KEGG 富集柱状图
+p_KEGG &lt;- ggplot(KEGG_count, aes(x = reorder(KEGG_pathway, Count), y = Count)) +
+    geom_bar(stat = &quot;identity&quot;, fill = &quot;#377EB8&quot;, alpha = 0.8) +
+    coord_flip() +
+    theme_bw(base_size = 12) +
+    labs(x = &quot;&quot;, y = &quot;Number of Proteins&quot;, 
+         title = &quot;KEGG Pathway Enrichment (Up-regulated Proteins)&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          axis.text.y = element_text(size = 10))
+
+print(p_KEGG)
+ggsave(&quot;KEGG_enrichment_upregulated.pdf&quot;, p_KEGG, width = 10, height = 8)
+
+
+# ========== 综合气泡图（可选） ==========
+# 如果你想要更fancy的气泡图
+GO_count$Type &lt;- &quot;GO&quot;
+KEGG_count$Type &lt;- &quot;KEGG&quot;
+
+# 各取 Top 10 合并
+top_enrichment &lt;- rbind(
+    head(GO_count, 10),
+    head(KEGG_count %&gt;% rename(GO_term = KEGG_pathway), 10)
+)
+
+p_bubble &lt;- ggplot(top_enrichment, aes(x = Count, y = reorder(GO_term, Count), 
+                                        size = Count, color = Type)) +
+    geom_point(alpha = 0.7) +
+    scale_color_manual(values = c(&quot;GO&quot; = &quot;#E41A1C&quot;, &quot;KEGG&quot; = &quot;#377EB8&quot;)) +
+    scale_size_continuous(range = c(3, 12)) +
+    theme_bw(base_size = 12) +
+    labs(x = &quot;Number of Proteins&quot;, y = &quot;&quot;, 
+         title = &quot;Enrichment Analysis (Up-regulated Proteins)&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          legend.position = &quot;right&quot;)
+
+print(p_bubble)
+ggsave(&quot;enrichment_bubble.pdf&quot;, p_bubble, width = 12, height = 8)
+
+# 输出统计
+cat(&quot;\n上调蛋白数:&quot;, nrow(DEG_up), &quot;\n&quot;)
+cat(&quot;有 GO 注释:&quot;, nrow(GO_up), &quot;\n&quot;)
+cat(&quot;有 KEGG 注释:&quot;, nrow(KEGG_up), &quot;\n&quot;)
+cat(&quot;GO terms 数量:&quot;, nrow(GO_count), &quot;\n&quot;)
+cat(&quot;KEGG pathways 数量:&quot;, nrow(KEGG_count), &quot;\n&quot;)</code></pre><p class="message-paragraph">这段代码会生成：<br>1. **GO 富集柱状图** - Top 20 GO terms<br>2. **KEGG 富集柱状图** - Top 20 pathways  <br>3. **综合气泡图** - GO 和 KEGG 合并展示</p><p class="message-paragraph">如果你的数据分隔符不是分号，告诉我实际的分隔符，我帮你调整！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这是小鼠的标本，直接根据 gene 帮我 R包提取 Go、kegg、gsea 的富集分析</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的！我来帮你用 R 包对小鼠数据进行完整的富集分析：</p><pre class="message-code-block"><code># 安装必要的包（如果还没安装）
+# if (!require(&quot;BiocManager&quot;, quietly = TRUE))
+#     install.packages(&quot;BiocManager&quot;)
+# BiocManager::install(c(&quot;clusterProfiler&quot;, &quot;org.Mm.eg.db&quot;, &quot;enrichplot&quot;, &quot;DOSE&quot;))
+
+library(clusterProfiler)
+library(org.Mm.eg.db)  # 小鼠注释数据库
+library(enrichplot)
+library(ggplot2)
+library(DOSE)
+
+# ========== 准备基因列表 ==========
+# 上调基因
+gene_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, &quot;Protein&quot;]
+gene_up &lt;- gene_up[!is.na(gene_up)]
+
+# 下调基因
+gene_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, &quot;Protein&quot;]
+gene_down &lt;- gene_down[!is.na(gene_down)]
+
+# 所有差异基因
+gene_all &lt;- c(gene_up, gene_down)
+
+# GSEA 需要排序的基因列表（所有基因，按 log2FC 排序）
+gene_list &lt;- data_clean$log2FC
+names(gene_list) &lt;- data_clean$Protein
+gene_list &lt;- na.omit(gene_list)
+gene_list &lt;- sort(gene_list, decreasing = TRUE)
+
+cat(&quot;上调基因数:&quot;, length(gene_up), &quot;\n&quot;)
+cat(&quot;下调基因数:&quot;, length(gene_down), &quot;\n&quot;)
+cat(&quot;GSEA 基因数:&quot;, length(gene_list), &quot;\n&quot;)
+
+# ========== GO 富集分析 (上调基因) ==========
+GO_up &lt;- enrichGO(gene = gene_up,
+                  OrgDb = org.Mm.eg.db,
+                  keyType = &quot;SYMBOL&quot;,  # 如果是基因symbol
+                  ont = &quot;ALL&quot;,         # BP, CC, MF, 或 ALL
+                  pAdjustMethod = &quot;BH&quot;,
+                  pvalueCutoff = 0.05,
+                  qvalueCutoff = 0.05)
+
+# 可视化
+if(!is.null(GO_up) &amp;&amp; nrow(GO_up@result) &gt; 0) {
+    # 气泡图
+    p1 &lt;- dotplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    print(p1)
+    ggsave(&quot;GO_dotplot_up.pdf&quot;, p1, width = 10, height = 8)
+    
+    # 柱状图
+    p2 &lt;- barplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    print(p2)
+    ggsave(&quot;GO_barplot_up.pdf&quot;, p2, width = 10, height = 8)
+    
+    # 保存结果
+    write.csv(GO_up@result, &quot;GO_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;GO 富集完成！富集到&quot;, nrow(GO_up@result), &quot;个 GO terms\n&quot;)
+} else {
+    cat(&quot;未找到显著富集的 GO terms\n&quot;)
+}
+
+# ========== GO 富集分析 (下调基因) ==========
+GO_down &lt;- enrichGO(gene = gene_down,
+                    OrgDb = org.Mm.eg.db,
+                    keyType = &quot;SYMBOL&quot;,
+                    ont = &quot;ALL&quot;,
+                    pAdjustMethod = &quot;BH&quot;,
+                    pvalueCutoff = 0.05,
+                    qvalueCutoff = 0.05)
+
+if(!is.null(GO_down) &amp;&amp; nrow(GO_down@result) &gt; 0) {
+    p3 &lt;- dotplot(GO_down, showCategory = 20, title = &quot;GO Enrichment (Down-regulated)&quot;)
+    print(p3)
+    ggsave(&quot;GO_dotplot_down.pdf&quot;, p3, width = 10, height = 8)
+    write.csv(GO_down@result, &quot;GO_enrichment_down.csv&quot;, row.names = FALSE)
+}
+
+# ========== KEGG 富集分析 (上调基因) ==========
+# 需要将 SYMBOL 转换为 ENTREZ ID
+gene_up_entrez &lt;- bitr(gene_up, fromType = &quot;SYMBOL&quot;, toType = &quot;ENTREZID&quot;, 
+                       OrgDb = org.Mm.eg.db)
+
+KEGG_up &lt;- enrichKEGG(gene = gene_up_entrez$ENTREZID,
+                      organism = &quot;mmu&quot;,  # 小鼠
+                      pvalueCutoff = 0.05,
+                      qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_up) &amp;&amp; nrow(KEGG_up@result) &gt; 0) {
+    # 气泡图
+    p4 &lt;- dotplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    print(p4)
+    ggsave(&quot;KEGG_dotplot_up.pdf&quot;, p4, width = 10, height = 8)
+    
+    # 柱状图
+    p5 &lt;- barplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    print(p5)
+    ggsave(&quot;KEGG_barplot_up.pdf&quot;, p5, width = 10, height = 8)
+    
+    # 保存结果
+    write.csv(KEGG_up@result, &quot;KEGG_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;KEGG 富集完成！富集到&quot;, nrow(KEGG_up@result), &quot;个 pathways\n&quot;)
+} else {
+    cat(&quot;未找到显著富集的 KEGG pathways\n&quot;)
+}
+
+# ========== KEGG 富集分析 (下调基因) ==========
+gene_down_entrez &lt;- bitr(gene_down, fromType = &quot;SYMBOL&quot;, toType = &quot;ENTREZID&quot;, 
+                         OrgDb = org.Mm.eg.db)
+
+KEGG_down &lt;- enrichKEGG(gene = gene_down_entrez$ENTREZID,
+                        organism = &quot;mmu&quot;,
+                        pvalueCutoff = 0.05,
+                        qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_down) &amp;&amp; nrow(KEGG_down@result) &gt; 0) {
+    p6 &lt;- dotplot(KEGG_down, showCategory = 20, title = &quot;KEGG Pathway (Down-regulated)&quot;)
+    print(p6)
+    ggsave(&quot;KEGG_dotplot_down.pdf&quot;, p6, width = 10, height = 8)
+    write.csv(KEGG_down@result, &quot;KEGG_enrichment_down.csv&quot;, row.names = FALSE)
+}
+
+# ========== GSEA 分析 ==========
+# 转换为 ENTREZ ID
+gene_list_entrez &lt;- bitr(names(gene_list), fromType = &quot;SYMBOL&quot;, 
+                         toType = &quot;ENTREZID&quot;, OrgDb = org.Mm.eg.db)
+
+# 合并 log2FC
+gene_list_df &lt;- data.frame(SYMBOL = names(gene_list), log2FC = gene_list)
+gene_list_entrez &lt;- merge(gene_list_entrez, gene_list_df, by = &quot;SYMBOL&quot;)
+gene_list_entrez &lt;- gene_list_entrez[order(gene_list_entrez$log2FC, decreasing = TRUE), ]
+
+# 创建排序的向量
+gsea_list &lt;- gene_list_entrez$log2FC
+names(gsea_list) &lt;- gene_list_entrez$ENTREZID
+
+# GO GSEA
+gsea_GO &lt;- gseGO(geneList = gsea_list,
+                 OrgDb = org.Mm.eg.db,
+                 ont = &quot;ALL&quot;,
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_GO) &amp;&amp; nrow(gsea_GO@result) &gt; 0) {
+    # GSEA 点图
+    p7 &lt;- dotplot(gsea_GO, showCategory = 20, title = &quot;GSEA - GO&quot;)
+    print(p7)
+    ggsave(&quot;GSEA_GO_dotplot.pdf&quot;, p7, width = 10, height = 8)
+    
+    # GSEA 经典图（展示前5个）
+    p8 &lt;- gseaplot2(gsea_GO, geneSetID = 1:min(5, nrow(gsea_GO@result)), 
+                    title = &quot;GSEA - GO Enrichment&quot;)
+    print(p8)
+    ggsave(&quot;GSEA_GO_plot.pdf&quot;, p8, width = 12, height = 10)
+    
+    write.csv(gsea_GO@result, &quot;GSEA_GO_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-GO 完成！富集到&quot;, nrow(gsea_GO@result), &quot;个 GO terms\n&quot;)
+}
+
+# KEGG GSEA
+gsea_KEGG &lt;- gseKEGG(geneList = gsea_list,
+                     organism = &quot;mmu&quot;,
+                     pvalueCutoff = 0.05,
+                     pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_KEGG) &amp;&amp; nrow(gsea_KEGG@result) &gt; 0) {
+    p9 &lt;- dotplot(gsea_KEGG, showCategory = 20, title = &quot;GSEA - KEGG&quot;)
+    print(p9)
+    ggsave(&quot;GSEA_KEGG_dotplot.pdf&quot;, p9, width = 10, height = 8)
+    
+    p10 &lt;- gseaplot2(gsea_KEGG, geneSetID = 1:min(5, nrow(gsea_KEGG@result)), 
+                     title = &quot;GSEA - KEGG Pathways&quot;)
+    print(p10)
+    ggsave(&quot;GSEA_KEGG_plot.pdf&quot;, p10, width = 12, height = 10)
+    
+    write.csv(gsea_KEGG@result, &quot;GSEA_KEGG_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-KEGG 完成！富集到&quot;, nrow(gsea_KEGG@result), &quot;个 pathways\n&quot;)
+}
+
+cat(&quot;\n所有富集分析完成！\n&quot;)</code></pre><p class="message-paragraph">**注意事项：**</p><p class="message-paragraph">1. **keyType**: 如果你的 Protein 列不是基因 SYMBOL，而是其他 ID（如 ENSEMBL、ENTREZID），需要修改 <code class="inline-code">keyType</code> 参数</p><p class="message-paragraph">2. **如果是蛋白 ID 而不是基因名**，可能需要先转换：</p><pre class="message-code-block"><code># 查看支持的 ID 类型
+keytypes(org.Mm.eg.db)</code></pre><p class="message-paragraph">3. **如果网络不好导致 KEGG 下载失败**，可以使用本地数据库或者只做 GO 分析</p><p class="message-paragraph">运行后会生成多个图和 CSV 文件，包括上调、下调和 GSEA 的完整结果！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:46</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Protein 列是蛋白，需要你先转换成其他 ID</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:46</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，我来帮你先转换蛋白 ID 到基因 SYMBOL，然后再进行富集分析：</p><p class="message-paragraph">```r<br>library(clusterProfiler)<br>library(org.Mm.eg.db)<br>library(enrichplot)<br>library(ggplot2)<br>library(DOSE)</p><p class="message-paragraph"># ========== 第一步：查看 Protein ID 格式 ==========<br>cat(&quot;查看前几个 Protein ID:\n&quot;)<br>head(data_clean$Protein, 20)</p><p class="message-paragraph"># ========== 第二步：尝试转换 Protein ID ==========<br># 移除 NA 值<br>proteins &lt;- data_clean$Protein[!is.na(data_clean$Protein)]</p><p class="message-paragraph"># 尝试多种转换方式<br># 方式1：尝试 UNIPROT<br>protein_to_gene &lt;- tryCatch({<br>    bitr(proteins, <br>         fromType = &quot;UNIPROT&quot;, <br>         toType = c(&quot;SYMBOL&quot;, &quot;ENTREZID&quot;), <br>         OrgDb = org.Mm.eg.db)<br>}, error = function(e) NULL)</p><p class="message-paragraph"># 方式2：如果是 RefSeq 蛋白 ID<br>if(is.null(protein_to_gene)) {<br>    protein_to_gene &lt;- tryCatch({<br>        bitr(proteins, <br>             fromType = &quot;REFSEQ&quot;, <br>             toType = c(&quot;SYMBOL&quot;, &quot;ENTREZID&quot;), <br>             OrgDb = org.Mm.eg.db)<br>    }, error = function(e) NULL)<br>}</p><p class="message-paragraph"># 方式3：如果是 Ensembl 蛋白 ID<br>if(is.null(protein_to_gene)) {<br>    protein_to_gene &lt;- tryCatch({<br>        bitr(proteins, <br>             fromType = &quot;ENSEMBLPROT&quot;, <br>             toType = c(&quot;SYMBOL&quot;, &quot;ENTREZID&quot;), <br>             OrgDb = org.Mm.eg.db)<br>    }, error = function(e) NULL)<br>}</p><p class="message-paragraph"># 方式4：使用 biomaRt（如果上面都失败）<br>if(is.null(protein_to_gene)) {<br>    cat(&quot;使</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:46</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我有 geneID，在行名</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:46</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的！那我们用行名作为基因ID来做富集分析：</p><pre class="message-code-block"><code>library(clusterProfiler)
+library(org.Mm.eg.db)
+library(enrichplot)
+library(ggplot2)
+library(DOSE)
+
+# ========== 准备基因列表（使用行名） ==========
+# 给 data_clean 添加行名列
+data_clean$GeneID &lt;- rownames(data_clean)
+
+# 上调基因
+gene_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, &quot;GeneID&quot;]
+gene_up &lt;- gene_up[!is.na(gene_up) &amp; gene_up != &quot;&quot;]
+
+# 下调基因
+gene_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, &quot;GeneID&quot;]
+gene_down &lt;- gene_down[!is.na(gene_down) &amp; gene_down != &quot;&quot;]
+
+# GSEA 需要排序的基因列表
+gene_list &lt;- data_clean$log2FC
+names(gene_list) &lt;- data_clean$GeneID
+gene_list &lt;- na.omit(gene_list)
+gene_list &lt;- sort(gene_list, decreasing = TRUE)
+
+cat(&quot;上调基因数:&quot;, length(gene_up), &quot;\n&quot;)
+cat(&quot;下调基因数:&quot;, length(gene_down), &quot;\n&quot;)
+cat(&quot;GSEA 基因数:&quot;, length(gene_list), &quot;\n&quot;)
+
+# 查看基因ID格式示例
+cat(&quot;\n基因ID示例:\n&quot;)
+print(head(gene_up, 5))
+
+# ========== 判断并转换ID类型 ==========
+# 先尝试不同的ID类型
+# 常见类型: ENSEMBL, ENSEMBLPROT, SYMBOL, ENTREZID, REFSEQ
+
+# 方法1: 尝试直接使用（如果是 SYMBOL）
+# 方法2: 如果是 ENSEMBL 蛋白 ID (ENSMUSP开头)，需要转换
+# 方法3: 如果是其他格式，需要相应转换
+
+# 尝试转换为 ENTREZID（用于 KEGG）和 SYMBOL（用于 GO）
+# 先检测 ID 类型
+sample_id &lt;- gene_up[1]
+cat(&quot;\n检测ID类型，示例ID:&quot;, sample_id, &quot;\n&quot;)
+
+# 根据ID格式选择 keyType
+if(grepl(&quot;^ENSMUSP&quot;, sample_id)) {
+    keytype &lt;- &quot;ENSEMBLPROT&quot;
+    cat(&quot;检测到 ENSEMBL 蛋白ID格式\n&quot;)
+} else if(grepl(&quot;^ENSMUSG&quot;, sample_id)) {
+    keytype &lt;- &quot;ENSEMBL&quot;
+    cat(&quot;检测到 ENSEMBL 基因ID格式\n&quot;)
+} else if(grepl(&quot;^[0-9]+$&quot;, sample_id)) {
+    keytype &lt;- &quot;ENTREZID&quot;
+    cat(&quot;检测到 ENTREZ ID格式\n&quot;)
+} else {
+    keytype &lt;- &quot;SYMBOL&quot;
+    cat(&quot;假设为基因 SYMBOL 格式\n&quot;)
+}
+
+# 转换ID
+cat(&quot;\n正在转换ID...\n&quot;)
+gene_up_convert &lt;- tryCatch({
+    bitr(gene_up, fromType = keytype, 
+         toType = c(&quot;ENTREZID&quot;, &quot;SYMBOL&quot;), 
+         OrgDb = org.Mm.eg.db)
+}, error = function(e) {
+    cat(&quot;转换失败，尝试其他类型...\n&quot;)
+    # 如果失败，尝试其他类型
+    NULL
+})
+
+# 如果转换失败，尝试不同的 keyType
+if(is.null(gene_up_convert)) {
+    for(kt in c(&quot;ENSEMBL&quot;, &quot;ENSEMBLPROT&quot;, &quot;SYMBOL&quot;, &quot;REFSEQ&quot;, &quot;UNIPROT&quot;)) {
+        cat(&quot;尝试&quot;, kt, &quot;...\n&quot;)
+        gene_up_convert &lt;- tryCatch({
+            bitr(gene_up, fromType = kt, 
+                 toType = c(&quot;ENTREZID&quot;, &quot;SYMBOL&quot;), 
+                 OrgDb = org.Mm.eg.db)
+        }, error = function(e) NULL)
+        
+        if(!is.null(gene_up_convert) &amp;&amp; nrow(gene_up_convert) &gt; 0) {
+            keytype &lt;- kt
+            cat(&quot;成功！使用&quot;, kt, &quot;类型\n&quot;)
+            break
+        }
+    }
+}
+
+if(is.null(gene_up_convert) || nrow(gene_up_convert) == 0) {
+    stop(&quot;无法识别基因ID类型，请手动指定 keyType 参数&quot;)
+}
+
+cat(&quot;成功转换&quot;, nrow(gene_up_convert), &quot;个上调基因\n&quot;)
+
+# 同样转换下调基因
+gene_down_convert &lt;- bitr(gene_down, fromType = keytype, 
+                          toType = c(&quot;ENTREZID&quot;, &quot;SYMBOL&quot;), 
+                          OrgDb = org.Mm.eg.db)
+cat(&quot;成功转换&quot;, nrow(gene_down_convert), &quot;个下调基因\n&quot;)
+
+# ========== GO 富集分析 (上调基因) ==========
+GO_up &lt;- enrichGO(gene = gene_up_convert$ENTREZID,
+                  OrgDb = org.Mm.eg.db,
+                  keyType = &quot;ENTREZID&quot;,
+                  ont = &quot;ALL&quot;,
+                  pAdjustMethod = &quot;BH&quot;,
+                  pvalueCutoff = 0.05,
+                  qvalueCutoff = 0.05)
+
+if(!is.null(GO_up) &amp;&amp; nrow(GO_up@result) &gt; 0) {
+    p1 &lt;- dotplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    print(p1)
+    ggsave(&quot;GO_dotplot_up.pdf&quot;, p1, width = 10, height = 8)
+    
+    p2 &lt;- barplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    ggsave(&quot;GO_barplot_up.pdf&quot;, p2, width = 10, height = 8)
+    
+    write.csv(GO_up@result, &quot;GO_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;\nGO 富集完成！富集到&quot;, nrow(GO_up@result), &quot;个 GO terms\n&quot;)
+} else {
+    cat(&quot;\n未找到显著富集的 GO terms (上调)\n&quot;)
+}
+
+# ========== GO 富集分析 (下调基因) ==========
+GO_down &lt;- enrichGO(gene = gene_down_convert$ENTREZID,
+                    OrgDb = org.Mm.eg.db,
+                    keyType = &quot;ENTREZID&quot;,
+                    ont = &quot;ALL&quot;,
+                    pAdjustMethod = &quot;BH&quot;,
+                    pvalueCutoff = 0.05,
+                    qvalueCutoff = 0.05)
+
+if(!is.null(GO_down) &amp;&amp; nrow(GO_down@result) &gt; 0) {
+    p3 &lt;- dotplot(GO_down, showCategory = 20, title = &quot;GO Enrichment (Down-regulated)&quot;)
+    print(p3)
+    ggsave(&quot;GO_dotplot_down.pdf&quot;, p3, width = 10, height = 8)
+    write.csv(GO_down@result, &quot;GO_enrichment_down.csv&quot;, row.names = FALSE)
+    cat(&quot;GO 富集完成！富集到&quot;, nrow(GO_down@result), &quot;个 GO terms (下调)\n&quot;)
+}
+
+# ========== KEGG 富集分析 (上调基因) ==========
+KEGG_up &lt;- enrichKEGG(gene = gene_up_convert$ENTREZID,
+                      organism = &quot;mmu&quot;,
+                      pvalueCutoff = 0.05,
+                      qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_up) &amp;&amp; nrow(KEGG_up@result) &gt; 0) {
+    p4 &lt;- dotplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    print(p4)
+    ggsave(&quot;KEGG_dotplot_up.pdf&quot;, p4, width = 10, height = 8)
+    
+    p5 &lt;- barplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    ggsave(&quot;KEGG_barplot_up.pdf&quot;, p5, width = 10, height = 8)
+    
+    write.csv(KEGG_up@result, &quot;KEGG_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;KEGG 富集完成！富集到&quot;, nrow(KEGG_up@result), &quot;个 pathways (上调)\n&quot;)
+}
+
+# ========== KEGG 富集分析 (下调基因) ==========
+KEGG_down &lt;- enrichKEGG(gene = gene_down_convert$ENTREZID,
+                        organism = &quot;mmu&quot;,
+                        pvalueCutoff = 0.05,
+                        qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_down) &amp;&amp; nrow(KEGG_down@result) &gt; 0) {
+    p6 &lt;- dotplot(KEGG_down, showCategory = 20, title = &quot;KEGG Pathway (Down-regulated)&quot;)
+    print(p6)
+    ggsave(&quot;KEGG_dotplot_down.pdf&quot;, p6, width = 10, height = 8)
+    write.csv(KEGG_down@result, &quot;KEGG_enrichment_down.csv&quot;, row.names = FALSE)
+}
+
+# ========== GSEA 分析 ==========
+# 转换所有基因ID
+gene_list_convert &lt;- bitr(names(gene_list), fromType = keytype, 
+                          toType = &quot;ENTREZID&quot;, OrgDb = org.Mm.eg.db)
+
+# 合并 log2FC
+gene_list_df &lt;- data.frame(GeneID = names(gene_list), log2FC = gene_list)
+colnames(gene_list_convert)[1] &lt;- &quot;GeneID&quot;
+gene_list_convert &lt;- merge(gene_list_convert, gene_list_df, by = &quot;GeneID&quot;)
+gene_list_convert &lt;- gene_list_convert[order(gene_list_convert$log2FC, decreasing = TRUE), ]
+
+# 创建排序的向量
+gsea_list &lt;- gene_list_convert$log2FC
+names(gsea_list) &lt;- gene_list_convert$ENTREZID
+
+cat(&quot;\nGSEA 分析基因数:&quot;, length(gsea_list), &quot;\n&quot;)
+
+# GO GSEA
+gsea_GO &lt;- gseGO(geneList = gsea_list,
+                 OrgDb = org.Mm.eg.db,
+                 ont = &quot;ALL&quot;,
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_GO) &amp;&amp; nrow(gsea_GO@result) &gt; 0) {
+    p7 &lt;- dotplot(gsea_GO, showCategory = 20, title = &quot;GSEA - GO&quot;, split = &quot;.sign&quot;) + 
+        facet_grid(.~.sign)
+    print(p7)
+    ggsave(&quot;GSEA_GO_dotplot.pdf&quot;, p7, width = 12, height = 8)
+    
+    p8 &lt;- gseaplot2(gsea_GO, geneSetID = 1:min(3, nrow(gsea_GO@result)), 
+                    title = &quot;GSEA - GO Enrichment&quot;)
+    ggsave(&quot;GSEA_GO_plot.pdf&quot;, p8, width = 12, height = 10)
+    
+    write.csv(gsea_GO@result, &quot;GSEA_GO_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-GO 完成！富集到&quot;, nrow(gsea_GO@result), &quot;个 GO terms\n&quot;)
+}
+
+# KEGG GSEA
+gsea_KEGG &lt;- gseKEGG(geneList = gsea_list,
+                     organism = &quot;mmu&quot;,
+                     pvalueCutoff = 0.05,
+                     pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_KEGG) &amp;&amp; nrow(gsea_KEGG@result) &gt; 0) {
+    p9 &lt;- dotplot(gsea_KEGG, showCategory = 20, title = &quot;GSEA - KEGG&quot;, split = &quot;.sign&quot;) +
+        facet_grid(.~.sign)
+    print(p9)
+    ggsave(&quot;GSEA_KEGG_dotplot.pdf&quot;, p9, width = 12, height = 8)
+    
+    p10 &lt;- gseaplot2(gsea_KEGG, geneSetID = 1:min(3, nrow(gsea_KEGG@result)), 
+                     title = &quot;GSEA - KEGG Pathways&quot;)
+    ggsave(&quot;GSEA_KEGG_plot.pdf&quot;, p10, width = 12, height = 10)
+    
+    write.csv(gsea_KEGG@result, &quot;GSEA_KEGG_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-KEGG 完成！富集到&quot;, nrow(gsea_KEGG@result), &quot;个 pathways\n&quot;)
+}
+
+cat(&quot;\n所有富集分析完成！\n&quot;)</code></pre><p class="message-paragraph">这个代码会：<br>1. **自动检测**行名的基因ID类型（ENSEMBL、ENTREZID、SYMBOL等）<br>2. **自动转换**为适合分析的ID格式<br>3. 完成 GO、KEGG 和 GSEA 的完整分析<br>4. 生成所有图表和结果文件</p><p class="message-paragraph">如果自动检测失败，会提示你手动指定 keyType！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:47</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">行名就是正常的小鼠 gene</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:47</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的！那直接用基因名（SYMBOL）做富集分析：</p><pre class="message-code-block"><code>library(clusterProfiler)
+library(org.Mm.eg.db)
+library(enrichplot)
+library(ggplot2)
+library(DOSE)
+
+# ========== 准备基因列表（使用行名） ==========
+data_clean$GeneID &lt;- rownames(data_clean)
+
+# 上调基因
+gene_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, &quot;GeneID&quot;]
+gene_up &lt;- gene_up[!is.na(gene_up) &amp; gene_up != &quot;&quot;]
+
+# 下调基因
+gene_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, &quot;GeneID&quot;]
+gene_down &lt;- gene_down[!is.na(gene_down) &amp; gene_down != &quot;&quot;]
+
+# GSEA 需要排序的基因列表
+gene_list &lt;- data_clean$log2FC
+names(gene_list) &lt;- data_clean$GeneID
+gene_list &lt;- na.omit(gene_list)
+gene_list &lt;- sort(gene_list, decreasing = TRUE)
+
+cat(&quot;上调基因数:&quot;, length(gene_up), &quot;\n&quot;)
+cat(&quot;下调基因数:&quot;, length(gene_down), &quot;\n&quot;)
+cat(&quot;GSEA 基因数:&quot;, length(gene_list), &quot;\n&quot;)
+
+# ========== GO 富集分析 (上调基因) ==========
+GO_up &lt;- enrichGO(gene = gene_up,
+                  OrgDb = org.Mm.eg.db,
+                  keyType = &quot;SYMBOL&quot;,
+                  ont = &quot;ALL&quot;,
+                  pAdjustMethod = &quot;BH&quot;,
+                  pvalueCutoff = 0.05,
+                  qvalueCutoff = 0.05)
+
+if(!is.null(GO_up) &amp;&amp; nrow(GO_up@result) &gt; 0) {
+    p1 &lt;- dotplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    print(p1)
+    ggsave(&quot;GO_dotplot_up.pdf&quot;, p1, width = 10, height = 8)
+    
+    p2 &lt;- barplot(GO_up, showCategory = 20, title = &quot;GO Enrichment (Up-regulated)&quot;)
+    print(p2)
+    ggsave(&quot;GO_barplot_up.pdf&quot;, p2, width = 10, height = 8)
+    
+    write.csv(GO_up@result, &quot;GO_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;\nGO 上调富集:&quot;, nrow(GO_up@result), &quot;个 GO terms\n&quot;)
+} else {
+    cat(&quot;\n未找到显著富集的 GO terms (上调)\n&quot;)
+}
+
+# ========== GO 富集分析 (下调基因) ==========
+GO_down &lt;- enrichGO(gene = gene_down,
+                    OrgDb = org.Mm.eg.db,
+                    keyType = &quot;SYMBOL&quot;,
+                    ont = &quot;ALL&quot;,
+                    pAdjustMethod = &quot;BH&quot;,
+                    pvalueCutoff = 0.05,
+                    qvalueCutoff = 0.05)
+
+if(!is.null(GO_down) &amp;&amp; nrow(GO_down@result) &gt; 0) {
+    p3 &lt;- dotplot(GO_down, showCategory = 20, title = &quot;GO Enrichment (Down-regulated)&quot;)
+    print(p3)
+    ggsave(&quot;GO_dotplot_down.pdf&quot;, p3, width = 10, height = 8)
+    write.csv(GO_down@result, &quot;GO_enrichment_down.csv&quot;, row.names = FALSE)
+    cat(&quot;GO 下调富集:&quot;, nrow(GO_down@result), &quot;个 GO terms\n&quot;)
+}
+
+# ========== KEGG 富集分析 ==========
+# 转换 SYMBOL 为 ENTREZID (KEGG 需要)
+gene_up_entrez &lt;- bitr(gene_up, fromType = &quot;SYMBOL&quot;, toType = &quot;ENTREZID&quot;, 
+                       OrgDb = org.Mm.eg.db)
+gene_down_entrez &lt;- bitr(gene_down, fromType = &quot;SYMBOL&quot;, toType = &quot;ENTREZID&quot;, 
+                         OrgDb = org.Mm.eg.db)
+
+cat(&quot;\n转换为 ENTREZID:\n&quot;)
+cat(&quot;上调:&quot;, nrow(gene_up_entrez), &quot;/&quot;, length(gene_up), &quot;\n&quot;)
+cat(&quot;下调:&quot;, nrow(gene_down_entrez), &quot;/&quot;, length(gene_down), &quot;\n&quot;)
+
+# KEGG 上调
+KEGG_up &lt;- enrichKEGG(gene = gene_up_entrez$ENTREZID,
+                      organism = &quot;mmu&quot;,
+                      pvalueCutoff = 0.05,
+                      qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_up) &amp;&amp; nrow(KEGG_up@result) &gt; 0) {
+    p4 &lt;- dotplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    print(p4)
+    ggsave(&quot;KEGG_dotplot_up.pdf&quot;, p4, width = 10, height = 8)
+    
+    p5 &lt;- barplot(KEGG_up, showCategory = 20, title = &quot;KEGG Pathway (Up-regulated)&quot;)
+    print(p5)
+    ggsave(&quot;KEGG_barplot_up.pdf&quot;, p5, width = 10, height = 8)
+    
+    write.csv(KEGG_up@result, &quot;KEGG_enrichment_up.csv&quot;, row.names = FALSE)
+    cat(&quot;\nKEGG 上调富集:&quot;, nrow(KEGG_up@result), &quot;个 pathways\n&quot;)
+} else {
+    cat(&quot;\n未找到显著富集的 KEGG pathways (上调)\n&quot;)
+}
+
+# KEGG 下调
+KEGG_down &lt;- enrichKEGG(gene = gene_down_entrez$ENTREZID,
+                        organism = &quot;mmu&quot;,
+                        pvalueCutoff = 0.05,
+                        qvalueCutoff = 0.05)
+
+if(!is.null(KEGG_down) &amp;&amp; nrow(KEGG_down@result) &gt; 0) {
+    p6 &lt;- dotplot(KEGG_down, showCategory = 20, title = &quot;KEGG Pathway (Down-regulated)&quot;)
+    print(p6)
+    ggsave(&quot;KEGG_dotplot_down.pdf&quot;, p6, width = 10, height = 8)
+    write.csv(KEGG_down@result, &quot;KEGG_enrichment_down.csv&quot;, row.names = FALSE)
+    cat(&quot;KEGG 下调富集:&quot;, nrow(KEGG_down@result), &quot;个 pathways\n&quot;)
+}
+
+# ========== GSEA 分析 ==========
+# 转换所有基因为 ENTREZID
+gene_list_entrez &lt;- bitr(names(gene_list), fromType = &quot;SYMBOL&quot;, 
+                         toType = &quot;ENTREZID&quot;, OrgDb = org.Mm.eg.db)
+
+# 合并 log2FC
+gene_list_df &lt;- data.frame(SYMBOL = names(gene_list), log2FC = gene_list)
+gene_list_entrez &lt;- merge(gene_list_entrez, gene_list_df, by = &quot;SYMBOL&quot;)
+gene_list_entrez &lt;- gene_list_entrez[order(gene_list_entrez$log2FC, decreasing = TRUE), ]
+
+# 创建排序向量
+gsea_list &lt;- gene_list_entrez$log2FC
+names(gsea_list) &lt;- gene_list_entrez$ENTREZID
+
+cat(&quot;\nGSEA 分析:&quot;, length(gsea_list), &quot;个基因\n&quot;)
+
+# GO GSEA
+gsea_GO &lt;- gseGO(geneList = gsea_list,
+                 OrgDb = org.Mm.eg.db,
+                 ont = &quot;ALL&quot;,
+                 pvalueCutoff = 0.05,
+                 pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_GO) &amp;&amp; nrow(gsea_GO@result) &gt; 0) {
+    p7 &lt;- dotplot(gsea_GO, showCategory = 20, title = &quot;GSEA - GO&quot;, split = &quot;.sign&quot;) + 
+        facet_grid(.~.sign)
+    print(p7)
+    ggsave(&quot;GSEA_GO_dotplot.pdf&quot;, p7, width = 12, height = 8)
+    
+    # 展示前3个显著通路
+    p8 &lt;- gseaplot2(gsea_GO, geneSetID = 1:min(3, nrow(gsea_GO@result)), 
+                    title = &quot;GSEA - GO&quot;)
+    print(p8)
+    ggsave(&quot;GSEA_GO_plot.pdf&quot;, p8, width = 12, height = 10)
+    
+    write.csv(gsea_GO@result, &quot;GSEA_GO_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-GO:&quot;, nrow(gsea_GO@result), &quot;个 GO terms\n&quot;)
+}
+
+# KEGG GSEA
+gsea_KEGG &lt;- gseKEGG(geneList = gsea_list,
+                     organism = &quot;mmu&quot;,
+                     pvalueCutoff = 0.05,
+                     pAdjustMethod = &quot;BH&quot;)
+
+if(!is.null(gsea_KEGG) &amp;&amp; nrow(gsea_KEGG@result) &gt; 0) {
+    p9 &lt;- dotplot(gsea_KEGG, showCategory = 20, title = &quot;GSEA - KEGG&quot;, split = &quot;.sign&quot;) +
+        facet_grid(.~.sign)
+    print(p9)
+    ggsave(&quot;GSEA_KEGG_dotplot.pdf&quot;, p9, width = 12, height = 8)
+    
+    p10 &lt;- gseaplot2(gsea_KEGG, geneSetID = 1:min(3, nrow(gsea_KEGG@result)), 
+                     title = &quot;GSEA - KEGG&quot;)
+    print(p10)
+    ggsave(&quot;GSEA_KEGG_plot.pdf&quot;, p10, width = 12, height = 10)
+    
+    write.csv(gsea_KEGG@result, &quot;GSEA_KEGG_results.csv&quot;, row.names = FALSE)
+    cat(&quot;GSEA-KEGG:&quot;, nrow(gsea_KEGG@result), &quot;个 pathways\n&quot;)
+}
+
+cat(&quot;\n========== 富集分析完成！==========\n&quot;)</code></pre><p class="message-paragraph">直接用 SYMBOL 类型，简洁高效！会生成：<br>- GO/KEGG 的点图和柱状图<br>- GSEA 的经典图和点图<br>- 所有结果的 CSV 文件</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:50</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(ggplot2)<br>library(ggrepel)</p><p class="message-paragraph"># 定义差异表达 (|log2FC| &gt; 1, P &lt; 0.05)<br>data_clean$change &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 1, &quot;Up&quot;,<br>                            ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -1, &quot;Down&quot;, <br>                                   &quot;Not Sig&quot;))</p><p class="message-paragraph"># 统计<br>cat(&quot;上调:&quot;, sum(data_clean$change == &quot;Up&quot;), &quot;\n&quot;)<br>cat(&quot;下调:&quot;, sum(data_clean$change == &quot;Down&quot;), &quot;\n&quot;)<br>cat(&quot;不显著:&quot;, sum(data_clean$change == &quot;Not Sig&quot;), &quot;\n&quot;)</p><p class="message-paragraph"># 选择 Top 10 标注<br>data_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, ]<br>data_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, ]</p><p class="message-paragraph">top_up &lt;- head(data_up[order(abs(data_up$log2FC), decreasing = TRUE), ], 10)<br>top_down &lt;- head(data_down[order(abs(data_down$log2FC), decreasing = TRUE), ], 10)<br>top_proteins &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># 火山图<br>p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +<br>    geom_point(alpha = 0.6, size = 2) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey70&quot;)) +<br>    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    theme_bw(base_size = 14) +<br>    labs(x = &quot;log2 Fold Change&quot;, <br>         y = &quot;-log10(P value)&quot;, <br>         title = &quot;Volcano Plot: AC8 vs Control&quot;,<br>         color = &quot;Expression&quot;) +<br>    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),<br>          legend.position = &quot;right&quot;) +<br>    geom_text_repel(data = top_proteins,<br>                    aes(label = Protein),<br>                    size = 3,<br>                    max.overlaps = 20,<br>                    show.legend = FALSE)</p><p class="message-paragraph">print(p_volcano)<br>ggsave(&quot;volcano_plot.pdf&quot;, p_volcano, width = 10, height = 8)<br>这部分也帮我改成 gene</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:50</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，把标注改成基因名：</p><pre class="message-code-block"><code>library(ggplot2)
+library(ggrepel)
+
+# 添加基因名列（行名）
+data_clean$Gene &lt;- rownames(data_clean)
+
+# 定义差异表达 (|log2FC| &gt; 1, P &lt; 0.05)
+data_clean$change &lt;- ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &gt; 1, &quot;Up&quot;,
+                            ifelse(data_clean$P &lt; 0.05 &amp; data_clean$log2FC &lt; -1, &quot;Down&quot;, 
+                                   &quot;Not Sig&quot;))
+
+# 统计
+cat(&quot;上调:&quot;, sum(data_clean$change == &quot;Up&quot;), &quot;\n&quot;)
+cat(&quot;下调:&quot;, sum(data_clean$change == &quot;Down&quot;), &quot;\n&quot;)
+cat(&quot;不显著:&quot;, sum(data_clean$change == &quot;Not Sig&quot;), &quot;\n&quot;)
+
+# 选择 Top 10 标注
+data_up &lt;- data_clean[data_clean$change == &quot;Up&quot;, ]
+data_down &lt;- data_clean[data_clean$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(data_up[order(abs(data_up$log2FC), decreasing = TRUE), ], 10)
+top_down &lt;- head(data_down[order(abs(data_down$log2FC), decreasing = TRUE), ], 10)
+top_genes &lt;- rbind(top_up, top_down)
+
+# 火山图
+p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey70&quot;)) +
+    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          legend.position = &quot;right&quot;) +
+    geom_text_repel(data = top_genes,
+                    aes(label = Gene),
+                    size = 3,
+                    max.overlaps = 20,
+                    show.legend = FALSE)
+
+print(p_volcano)
+ggsave(&quot;volcano_plot.pdf&quot;, p_volcano, width = 10, height = 8)</code></pre><p class="message-paragraph">主要改动：<br>- 添加 <code class="inline-code">data_clean$Gene &lt;- rownames(data_clean)</code> 提取基因名<br>- <code class="inline-code">top_proteins</code> 改为 <code class="inline-code">top_genes</code><br>- <code class="inline-code">aes(label = Protein)</code> 改为 <code class="inline-code">aes(label = Gene)</code></p><p class="message-paragraph">现在火山图上标注的就是基因名了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:52</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(pheatmap)<br>library(RColorBrewer)</p><p class="message-paragraph"># 提取差异表达的蛋白<br>DEG_sig &lt;- data_clean[data_clean$change != &quot;Not Sig&quot;, ]</p><p class="message-paragraph"># 移除 Protein 列为 NA 的行<br>DEG_sig &lt;- DEG_sig[!is.na(DEG_sig$Protein), ]</p><p class="message-paragraph"># 选择 Top 50 上调和 Top 50 下调（按 log2FC 排序）<br>DEG_up &lt;- DEG_sig[DEG_sig$change == &quot;Up&quot;, ]<br>DEG_down &lt;- DEG_sig[DEG_sig$change == &quot;Down&quot;, ]</p><p class="message-paragraph">top_up &lt;- head(DEG_up[order(DEG_up$log2FC, decreasing = TRUE), ], 20)<br>top_down &lt;- head(DEG_down[order(DEG_down$log2FC, decreasing = FALSE), ], 20)</p><p class="message-paragraph"># 合并用于热图的蛋白<br>heatmap_proteins &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># 再次确保没有 NA<br>heatmap_proteins &lt;- heatmap_proteins[!is.na(heatmap_proteins$Protein), ]</p><p class="message-paragraph"># 提取表达矩阵（4个样本列）<br>exp_matrix &lt;- as.matrix(heatmap_proteins[, c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)])<br>rownames(exp_matrix) &lt;- heatmap_proteins$Protein</p><p class="message-paragraph"># Z-score 标准化<br>exp_scaled &lt;- t(scale(t(exp_matrix)))</p><p class="message-paragraph"># 样本分组注释<br>annotation_col &lt;- data.frame(<br>    Group = c(&quot;Control&quot;, &quot;Control&quot;, &quot;AC8&quot;, &quot;AC8&quot;),<br>    row.names = c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)<br>)</p><p class="message-paragraph"># 行注释（Up/Down）<br>annotation_row &lt;- data.frame(<br>    Regulation = heatmap_proteins$change,<br>    row.names = heatmap_proteins$Protein<br>)</p><p class="message-paragraph"># 颜色设置<br>ann_colors &lt;- list(<br>    Group = c(Control = &quot;#4DAF4A&quot;, AC8 = &quot;#E41A1C&quot;),<br>    Regulation = c(Up = &quot;#E41A1C&quot;, Down = &quot;#377EB8&quot;)<br>)</p><p class="message-paragraph"># 绘制热图<br>pheatmap(exp_scaled,<br>         color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>         annotation_col = annotation_col,<br>         annotation_row = annotation_row,<br>         annotation_colors = ann_colors,<br>         cluster_rows = TRUE,<br>         cluster_cols = FALSE,<br>         show_rownames = TRUE,<br>         show_colnames = TRUE,<br>         fontsize_row = 6,<br>         fontsize_col = 10,<br>         angle_col = 45,<br>         main = &quot;Heatmap of DEPs (Top 20 Up + Top 20 Down)&quot;,<br>         border_color = NA,<br>         filename = &quot;heatmap_DEPs.pdf&quot;,<br>         width = 8,<br>         height = 12)</p><p class="message-paragraph">cat(&quot;热图已保存: heatmap_DEPs.pdf\n&quot;)<br>cat(&quot;包含蛋白数:&quot;, nrow(heatmap_proteins), &quot;\n&quot;)<br>这个也帮我转成 gene</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:52</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，把热图改成基因名：</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 提取差异表达的基因
+DEG_sig &lt;- data_clean[data_clean$change != &quot;Not Sig&quot;, ]
+
+# 选择 Top 20 上调和 Top 20 下调（按 log2FC 排序）
+DEG_up &lt;- DEG_sig[DEG_sig$change == &quot;Up&quot;, ]
+DEG_down &lt;- DEG_sig[DEG_sig$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(DEG_up[order(DEG_up$log2FC, decreasing = TRUE), ], 20)
+top_down &lt;- head(DEG_down[order(DEG_down$log2FC, decreasing = FALSE), ], 20)
+
+# 合并用于热图的基因
+heatmap_genes &lt;- rbind(top_up, top_down)
+
+# 提取表达矩阵（4个样本列）
+exp_matrix &lt;- as.matrix(heatmap_genes[, c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)])
+rownames(exp_matrix) &lt;- heatmap_genes$Gene
+
+# Z-score 标准化
+exp_scaled &lt;- t(scale(t(exp_matrix)))
+
+# 样本分组注释
+annotation_col &lt;- data.frame(
+    Group = c(&quot;Control&quot;, &quot;Control&quot;, &quot;AC8&quot;, &quot;AC8&quot;),
+    row.names = c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)
+)
+
+# 行注释（Up/Down）
+annotation_row &lt;- data.frame(
+    Regulation = heatmap_genes$change,
+    row.names = heatmap_genes$Gene
+)
+
+# 颜色设置
+ann_colors &lt;- list(
+    Group = c(Control = &quot;#4DAF4A&quot;, AC8 = &quot;#E41A1C&quot;),
+    Regulation = c(Up = &quot;#E41A1C&quot;, Down = &quot;#377EB8&quot;)
+)
+
+# 绘制热图
+pheatmap(exp_scaled,
+         color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),
+         annotation_col = annotation_col,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         cluster_rows = TRUE,
+         cluster_cols = FALSE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 6,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = &quot;Heatmap of DEGs (Top 20 Up + Top 20 Down)&quot;,
+         border_color = NA,
+         filename = &quot;heatmap_DEGs.pdf&quot;,
+         width = 8,
+         height = 12)
+
+cat(&quot;热图已保存: heatmap_DEGs.pdf\n&quot;)
+cat(&quot;包含基因数:&quot;, nrow(heatmap_genes), &quot;\n&quot;)</code></pre><p class="message-paragraph">主要改动：<br>- <code class="inline-code">heatmap_proteins</code> → <code class="inline-code">heatmap_genes</code><br>- <code class="inline-code">rownames(exp_matrix) &lt;- heatmap_genes$Gene</code> 使用基因名<br>- <code class="inline-code">row.names = heatmap_genes$Gene</code> 行注释使用基因名<br>- 移除了 NA 检查（因为行名不会是 NA）<br>- 标题改为 &quot;DEGs&quot; (差异表达基因)<br>- 文件名改为 <code class="inline-code">heatmap_DEGs.pdf</code></p><p class="message-paragraph">现在热图显示的就是基因名了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 15:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">annotation_row &lt;- data.frame(<br>+     Regulation = heatmap_genes$change,<br>+     row.names = heatmap_genes$Gene<br>+ )<br>Error in data.frame(Regulation = heatmap_genes$change, row.names = heatmap_genes$Gene) : <br>  row names contain missing values</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 15:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">基因名中有 NA，需要过滤掉：</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 提取差异表达的基因
+DEG_sig &lt;- data_clean[data_clean$change != &quot;Not Sig&quot;, ]
+
+# 移除 Gene 列为 NA 的行
+DEG_sig &lt;- DEG_sig[!is.na(DEG_sig$Gene) &amp; DEG_sig$Gene != &quot;&quot;, ]
+
+# 选择 Top 20 上调和 Top 20 下调（按 log2FC 排序）
+DEG_up &lt;- DEG_sig[DEG_sig$change == &quot;Up&quot;, ]
+DEG_down &lt;- DEG_sig[DEG_sig$change == &quot;Down&quot;, ]
+
+top_up &lt;- head(DEG_up[order(DEG_up$log2FC, decreasing = TRUE), ], 20)
+top_down &lt;- head(DEG_down[order(DEG_down$log2FC, decreasing = FALSE), ], 20)
+
+# 合并用于热图的基因
+heatmap_genes &lt;- rbind(top_up, top_down)
+
+# 再次确保没有 NA
+heatmap_genes &lt;- heatmap_genes[!is.na(heatmap_genes$Gene) &amp; heatmap_genes$Gene != &quot;&quot;, ]
+
+# 提取表达矩阵（4个样本列）
+exp_matrix &lt;- as.matrix(heatmap_genes[, c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)])
+rownames(exp_matrix) &lt;- heatmap_genes$Gene
+
+# Z-score 标准化
+exp_scaled &lt;- t(scale(t(exp_matrix)))
+
+# 样本分组注释
+annotation_col &lt;- data.frame(
+    Group = c(&quot;Control&quot;, &quot;Control&quot;, &quot;AC8&quot;, &quot;AC8&quot;),
+    row.names = c(&quot;His_1&quot;, &quot;His_2&quot;, &quot;AC8_1&quot;, &quot;AC8_2&quot;)
+)
+
+# 行注释（Up/Down）
+annotation_row &lt;- data.frame(
+    Regulation = heatmap_genes$change,
+    row.names = heatmap_genes$Gene
+)
+
+# 颜色设置
+ann_colors &lt;- list(
+    Group = c(Control = &quot;#4DAF4A&quot;, AC8 = &quot;#E41A1C&quot;),
+    Regulation = c(Up = &quot;#E41A1C&quot;, Down = &quot;#377EB8&quot;)
+)
+
+# 绘制热图
+pheatmap(exp_scaled,
+         color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),
+         annotation_col = annotation_col,
+         annotation_row = annotation_row,
+         annotation_colors = ann_colors,
+         cluster_rows = TRUE,
+         cluster_cols = FALSE,
+         show_rownames = TRUE,
+         show_colnames = TRUE,
+         fontsize_row = 6,
+         fontsize_col = 10,
+         angle_col = 45,
+         main = &quot;Heatmap of DEGs (Top 20 Up + Top 20 Down)&quot;,
+         border_color = NA,
+         filename = &quot;heatmap_DEGs.pdf&quot;,
+         width = 8,
+         height = 12)
+
+cat(&quot;热图已保存: heatmap_DEGs.pdf\n&quot;)
+cat(&quot;包含基因数:&quot;, nrow(heatmap_genes), &quot;\n&quot;)</code></pre><p class="message-paragraph">添加了两处过滤：<br>1. <code class="inline-code">DEG_sig &lt;- DEG_sig[!is.na(DEG_sig$Gene) &amp; DEG_sig$Gene != &quot;&quot;, ]</code> <br>2. <code class="inline-code">heatmap_genes &lt;- heatmap_genes[!is.na(heatmap_genes$Gene) &amp; heatmap_genes$Gene != &quot;&quot;, ]</code></p><p class="message-paragraph">现在应该不会报错了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 16:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,<br>    col = heatmap_colors,<br>    name = &quot;Z-score&quot;,<br>    heatmap_legend_param = list(<br>        direction = &quot;horizontal&quot;,<br>        title_position = &quot;topcenter&quot;,<br>        legend_width = unit(6, &quot;cm&quot;)<br>    ),<br>    show_row_names = TRUE,<br>    show_column_names = FALSE,<br>    show_row_dend = FALSE,<br>    show_column_dend = FALSE,<br>    top_annotation = ha_deg,<br>    left_annotation = ra_deg,<br>    column_title_side = &quot;top&quot;,<br>    column_split = annotation_col$Group,<br>    row_split = annotation_row$Regulation,<br>    row_names_gp = gpar(fontsize = 6),<br>    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;),<br>    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;),<br>    cluster_rows = TRUE,<br>    cluster_columns = TRUE,<br>    border = TRUE<br>)</p><p class="message-paragraph"># 保存热图<br>pdf(file.path(out_dir, &quot;heatmap_DEGs_ggsci.pdf&quot;), width = 12, height = 14)<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)<br>dev.off()</p><p class="message-paragraph"># 在屏幕上显示<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)<br>我不想显示 group 和 regulation 两个字样</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 16:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，隐藏分组标题：</p><pre class="message-code-block"><code>p_heatmap &lt;- Heatmap(
+    exp_heatmap_scaled,
+    col = heatmap_colors,
+    name = &quot;Z-score&quot;,
+    heatmap_legend_param = list(
+        direction = &quot;horizontal&quot;,
+        title_position = &quot;topcenter&quot;,
+        legend_width = unit(6, &quot;cm&quot;)
+    ),
+    show_row_names = TRUE,
+    show_column_names = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    top_annotation = ha_deg,
+    left_annotation = ra_deg,
+    column_title_side = &quot;top&quot;,
+    column_split = annotation_col$Group,
+    row_split = annotation_row$Regulation,
+    column_title = NULL,  # 隐藏列标题
+    row_title = NULL,      # 隐藏行标题
+    row_names_gp = gpar(fontsize = 6),
+    cluster_rows = TRUE,
+    cluster_columns = TRUE,
+    border = TRUE
+)
+
+# 保存热图
+pdf(file.path(out_dir, &quot;heatmap_DEGs_ggsci.pdf&quot;), width = 12, height = 14)
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)
+dev.off()
+
+# 在屏幕上显示
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)</code></pre><p class="message-paragraph">添加了：<br>- <code class="inline-code">column_title = NULL</code> - 隐藏列标题（Group）<br>- <code class="inline-code">row_title = NULL</code> - 隐藏行标题（Regulation）<br>- 移除了 <code class="inline-code">column_title_gp</code> 和 <code class="inline-code">row_title_gp</code>（不需要了）</p><p class="message-paragraph">现在热图不会显示分组标题了！</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,1281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>出现报错</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>出现报错</h1>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/13 07:23 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2026-04-13/生信技能树月更复现_de0cc04c.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#de0cc04c-441a-4430-adfe-f6cd0b8aaac2">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/04/13 15:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">出现报错</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/13 15:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误原因：抽样后的变量名是 <code class="inline-code">adata</code>，但 AUCell 及后续 cell 中使用了 <code class="inline-code">adata_sub</code>。需要统一为 <code class="inline-code">adata</code>。整个 notebook 中有多个 cell 引用了 <code class="inline-code">adata_sub</code>，需要全部改为 <code class="inline-code">adata</code>。让我逐个修复：</p><p class="message-paragraph">已修复。问题是抽样后变量名为 <code class="inline-code">adata</code>，但第 13 个 cell 起错误使用了 <code class="inline-code">adata_sub</code>。已将所有 <code class="inline-code">adata_sub</code> 统一替换为 <code class="inline-code">adata</code>（共涉及 7 个 cell）。重新运行报错的 cell 即可。</p><p class="message-paragraph">修复已完成，请选择下一步操作：<br>Selected: 重新运行报错 cell 验证修复</p><p class="message-paragraph">运行成功。AUCell 完成，生成 9503 cells × 239 regulons 的活性矩阵，数据已存入 <code class="inline-code">adata.obsm[&#39;X_aucell&#39;]</code> 并保存 CSV。</p><p class="message-paragraph">AUCell cell 已通过验证，请选择下一步操作：<br>Selected: 继续运行后续分析 cell（差异分析 + 可视化）</p><p class="message-paragraph">全部后续 cell 运行成功。汇总：</p><p class="message-paragraph">- **239 regulons** 通过 cisTarget 验证<br>- **196 个** regulon 在 Tumor vs Peritumoral 间显著差异 (padj &lt; 0.05)<br>- Tumor 上调 Top TF: TEAD1, PDLIM5, MSRA, TPI1, PRRX1<br>- Peritumoral 上调 Top TF: FOXP2, TFEC, MXI1, MAF, IRF8<br>- 所有图表和 CSV 已保存至</p><p class="message-paragraph">和</p><p class="message-paragraph">GRN 分析已全部完成，请选择下一步操作：</p><p class="message-paragraph">GRN 分析已全部完成，请选择下一步操作：</p><p class="message-paragraph">按照</p><p class="message-paragraph">研究思路，Directions 1-8 已全部完成，下一个是 **Direction 9: 空间转录组学 (Spatial Transcriptomics)**。让我先检查可用的空间数据。</p><p class="message-paragraph">空间数据丰富：GSE253080 有 3 个 GBM 患者共 12 个 Visium 切片，GSE273275 有 2 个切片。让我先看看之前的探索 notebook 了解数据结构，然后创建 Direction 9 分析。</p><p class="message-paragraph">Now I&#39;ll create the Direction 9 notebook. Let me also quickly check what snGBM single-cell reference data is available for deconvolution.</p><p class="message-paragraph">Notebook 已创建。现在逐步运行。先加载数据：</p><p class="message-paragraph">Let me first read the notebook code to understand the current content before executing.</p><p class="message-paragraph">数据加载成功。现在运行 QC 和预处理 cells。</p><p class="message-paragraph">QC 完成，9508 spots，9 个 Leiden clusters。继续空间可视化。</p><p class="message-paragraph">空间概览图生成成功。接下来运行 signature scoring。</p><p class="message-paragraph">Signature 空间梯度图生成成功。接下来进行空间反卷积分析。</p><p class="message-paragraph">空间反卷积完成。继续 Niche 分析。</p><p class="message-paragraph">问题是 boolean mask 是 pandas Series，索引方式不正确。需要用 <code class="inline-code">.values</code> 转为 numpy 数组。</p><p class="message-paragraph">The issue is duplicate barcodes across samples (10x Visium uses the same barcode set). Let me fix with positional indexing.</p><p class="message-paragraph">Let me debug the actual dimensions.</p><p class="message-paragraph">The edits didn&#39;t fully apply. Let me rewrite the cell definitively — avoid <code class="inline-code">.loc</code> entirely, use positional indexing.</p><p class="message-paragraph">The <code class="inline-code">edit_notebook_file</code> tool isn&#39;t saving my edits. Let me use <code class="inline-code">replace_string_in_file</code> directly on the notebook JSON.</p><p class="message-paragraph">The kernel cached the old cell. Let me insert a new code cell and run the fix there directly.</p><p class="message-paragraph">The <code class="inline-code">edit_notebook_file</code> tool isn&#39;t working for this cell. Let me fix it by modifying the raw notebook JSON precisely.</p><p class="message-paragraph">The file on disk has the fixed code but VS Code&#39;s in-memory buffer has the old code. Let me force a reload.</p><p class="message-paragraph">VS Code now shows the fixed code. Now I need to re-run all cells since the kernel was restarted.</p><p class="message-paragraph">好的，kernel 已重启，需要从头重新执行所有 cell。开始按顺序运行。</p><p class="message-paragraph">前 17 个 code cell 全部成功复现。现在运行关键的 **niche 分析 cell** — 之前修复了重复 barcode 问题。</p><p class="message-paragraph">Niche cell 终于成功！继续后续 cells。</p><p class="message-paragraph">Niche 空间图非常好！继续剩余分析 cells。</p><p class="message-paragraph"><code class="inline-code">edit_notebook_file</code> 工具又没有实际修改 cell。用终端直接改 JSON。</p><p class="message-paragraph">Kernel 状态保留了（变量都在）。Cell ID 变了但不影响。直接运行修复后的 Moran&#39;s I cell (新 ID #VSC-dc456cb4</p><p class="message-paragraph">)。</p><p class="message-paragraph">继续剩余 cells。L-R co-localization 和 boundary 分析。</p><p class="message-paragraph">内核状态完好。运行修复后的 boundary DEG cell (新 ID: #VSC-28e7a735</p><p class="message-paragraph">)。</p><p class="message-paragraph">最后一个 cell — 保存所有结果。</p><p class="message-paragraph">内核状态完整，所有分析变量都在。Save cell 是 #VSC-56d6d332</p><p class="message-paragraph">。但我注意到 cells 33、35、36 没有输出显示（因为 cell ID 变更后输出丢失）。让我先检查 save cell 内容，然后执行它。</p><p class="message-paragraph">Save cell 内容已修复，语法正确。执行最后的保存 cell：</p><p class="message-paragraph">**Direction 9 (空间转录组学) 全部完成！**</p><p class="message-paragraph">**保存的数据文件** (</p><p class="message-paragraph">):<br>- <code class="inline-code">spatial_analyzed.h5ad</code> — 692.9 MB（含全部注释）<br>- <code class="inline-code">deconvolution_NNLS.csv</code> — 1.1 MB（NNLS 反卷积结果）<br>- <code class="inline-code">niche_features.csv</code> — 1.3 MB（Niche 特征矩阵）<br>- <code class="inline-code">boundary_DEG.csv</code> — 0.4 MB（边界差异基因）</p><p class="message-paragraph">**保存的 18 张图** (</p><p class="message-paragraph">): 覆盖 QC、空间概览、signatures 空间分布、反卷积空间映射、Niche 聚类/空间分布、L-R 共定位、边界检测等。</p><p class="message-paragraph">**关键发现总结**:<br>- 9,508 spots，3 个 GBM 患者<br>- MES-like 为主导细胞类型（均值比例 0.561）<br>- 6 个空间 Niche 各具特征性细胞组成<br>- Moran&#39;s I: SPP1_TAM (0.52) 和 Hypoxia (0.52) 空间自相关最高<br>- 5,841 个边界富集基因（padj &lt; 0.05）</p><p class="message-paragraph">至此 **Directions 1–9 均已完成**。</p><p class="message-paragraph">Direction 9 已完成。接下来要做什么？<br>Selected: 继续 Direction 11: CNV 与基因组不稳定性</p><p class="message-paragraph"><code class="inline-code">infercnvpy 0.6.1</code> 已安装，GENCODE GTF 可用。现在创建 Direction 11 notebook。</p><p class="message-paragraph">已修复。问题是抽样后变量名为 <code class="inline-code">adata</code>，但第 13 个 cell 起错误使用了 <code class="inline-code">adata_sub</code>。已将所有 <code class="inline-code">adata_sub</code> 统一替换为 <code class="inline-code">adata</code>（共涉及 7 个 cell）。重新运行报错的 cell 即可。</p><p class="message-paragraph">修复已完成，请选择下一步操作：<br>Selected: 重新运行报错 cell 验证修复</p><p class="message-paragraph">运行成功。AUCell 完成，生成 9503 cells × 239 regulons 的活性矩阵，数据已存入 <code class="inline-code">adata.obsm[&#39;X_aucell&#39;]</code> 并保存 CSV。</p><p class="message-paragraph">AUCell cell 已通过验证，请选择下一步操作：<br>Selected: 继续运行后续分析 cell（差异分析 + 可视化）</p><p class="message-paragraph">全部后续 cell 运行成功。汇总：</p><p class="message-paragraph">- **239 regulons** 通过 cisTarget 验证<br>- **196 个** regulon 在 Tumor vs Peritumoral 间显著差异 (padj &lt; 0.05)<br>- Tumor 上调 Top TF: TEAD1, PDLIM5, MSRA, TPI1, PRRX1<br>- Peritumoral 上调 Top TF: FOXP2, TFEC, MXI1, MAF, IRF8<br>- 所有图表和 CSV 已保存至</p><p class="message-paragraph">和</p><p class="message-paragraph">GRN 分析已全部完成，请选择下一步操作：</p><p class="message-paragraph">按照</p><p class="message-paragraph">研究思路，Directions 1-8 已全部完成，下一个是 **Direction 9: 空间转录组学 (Spatial Transcriptomics)**。让我先检查可用的空间数据。</p><p class="message-paragraph">空间数据丰富：GSE253080 有 3 个 GBM 患者共 12 个 Visium 切片，GSE273275 有 2 个切片。让我先看看之前的探索 notebook 了解数据结构，然后创建 Direction 9 分析。</p><p class="message-paragraph">Now I&#39;ll create the Direction 9 notebook. Let me also quickly check what snGBM single-cell reference data is available for deconvolution.</p><p class="message-paragraph">Notebook 已创建。现在逐步运行。先加载数据：</p><p class="message-paragraph">Let me first read the notebook code to understand the current content before executing.</p><p class="message-paragraph">数据加载成功。现在运行 QC 和预处理 cells。</p><p class="message-paragraph">QC 完成，9508 spots，9 个 Leiden clusters。继续空间可视化。</p><p class="message-paragraph">空间概览图生成成功。接下来运行 signature scoring。</p><p class="message-paragraph">Signature 空间梯度图生成成功。接下来进行空间反卷积分析。</p><p class="message-paragraph">空间反卷积完成。继续 Niche 分析。</p><p class="message-paragraph">问题是 boolean mask 是 pandas Series，索引方式不正确。需要用 <code class="inline-code">.values</code> 转为 numpy 数组。</p><p class="message-paragraph">The issue is duplicate barcodes across samples (10x Visium uses the same barcode set). Let me fix with positional indexing.</p><p class="message-paragraph">Let me debug the actual dimensions.</p><p class="message-paragraph">The edits didn&#39;t fully apply. Let me rewrite the cell definitively — avoid <code class="inline-code">.loc</code> entirely, use positional indexing.</p><p class="message-paragraph">The <code class="inline-code">edit_notebook_file</code> tool isn&#39;t saving my edits. Let me use <code class="inline-code">replace_string_in_file</code> directly on the notebook JSON.</p><p class="message-paragraph">The kernel cached the old cell. Let me insert a new code cell and run the fix there directly.</p><p class="message-paragraph">The <code class="inline-code">edit_notebook_file</code> tool isn&#39;t working for this cell. Let me fix it by modifying the raw notebook JSON precisely.</p><p class="message-paragraph">The file on disk has the fixed code but VS Code&#39;s in-memory buffer has the old code. Let me force a reload.</p><p class="message-paragraph">VS Code now shows the fixed code. Now I need to re-run all cells since the kernel was restarted.</p><p class="message-paragraph">好的，kernel 已重启，需要从头重新执行所有 cell。开始按顺序运行。</p><p class="message-paragraph">前 17 个 code cell 全部成功复现。现在运行关键的 **niche 分析 cell** — 之前修复了重复 barcode 问题。</p><p class="message-paragraph">Niche cell 终于成功！继续后续 cells。</p><p class="message-paragraph">Niche 空间图非常好！继续剩余分析 cells。</p><p class="message-paragraph"><code class="inline-code">edit_notebook_file</code> 工具又没有实际修改 cell。用终端直接改 JSON。</p><p class="message-paragraph">Kernel 状态保留了（变量都在）。Cell ID 变了但不影响。直接运行修复后的 Moran&#39;s I cell (新 ID #VSC-dc456cb4</p><p class="message-paragraph">)。</p><p class="message-paragraph">继续剩余 cells。L-R co-localization 和 boundary 分析。</p><p class="message-paragraph">内核状态完好。运行修复后的 boundary DEG cell (新 ID: #VSC-28e7a735</p><p class="message-paragraph">)。</p><p class="message-paragraph">最后一个 cell — 保存所有结果。</p><p class="message-paragraph">内核状态完整，所有分析变量都在。Save cell 是 #VSC-56d6d332</p><p class="message-paragraph">。但我注意到 cells 33、35、36 没有输出显示（因为 cell ID 变更后输出丢失）。让我先检查 save cell 内容，然后执行它。</p><p class="message-paragraph">Save cell 内容已修复，语法正确。执行最后的保存 cell：</p><p class="message-paragraph">**Direction 9 (空间转录组学) 全部完成！**</p><p class="message-paragraph">**保存的数据文件** (</p><p class="message-paragraph">):<br>- <code class="inline-code">spatial_analyzed.h5ad</code> — 692.9 MB（含全部注释）<br>- <code class="inline-code">deconvolution_NNLS.csv</code> — 1.1 MB（NNLS 反卷积结果）<br>- <code class="inline-code">niche_features.csv</code> — 1.3 MB（Niche 特征矩阵）<br>- <code class="inline-code">boundary_DEG.csv</code> — 0.4 MB（边界差异基因）</p><p class="message-paragraph">**保存的 18 张图** (</p><p class="message-paragraph">): 覆盖 QC、空间概览、signatures 空间分布、反卷积空间映射、Niche 聚类/空间分布、L-R 共定位、边界检测等。</p><p class="message-paragraph">**关键发现总结**:<br>- 9,508 spots，3 个 GBM 患者<br>- MES-like 为主导细胞类型（均值比例 0.561）<br>- 6 个空间 Niche 各具特征性细胞组成<br>- Moran&#39;s I: SPP1_TAM (0.52) 和 Hypoxia (0.52) 空间自相关最高<br>- 5,841 个边界富集基因（padj &lt; 0.05）</p><p class="message-paragraph">至此 **Directions 1–9 均已完成**。</p><p class="message-paragraph">Direction 9 已完成。接下来要做什么？<br>Selected: 继续 Direction 11: CNV 与基因组不稳定性</p><p class="message-paragraph"><code class="inline-code">infercnvpy 0.6.1</code> 已安装，GENCODE GTF 可用。现在创建 Direction 11 notebook。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (406)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">restart_notebook_kernel</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">runSubagent</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">runSubagent</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">restart_notebook_kernel</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runVscodeCommand</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">runSubagent</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

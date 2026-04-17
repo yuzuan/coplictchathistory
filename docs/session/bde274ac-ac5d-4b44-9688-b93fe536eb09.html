@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>exp_heatmap &lt;- exp[top_heatmap_genes, ] &gt; &gt; # 标准化（Z-score） &gt; exp_heatmap_scal...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>exp_heatmap &lt;- exp[top_heatmap_genes, ] &gt; &gt; # 标准化（Z-score） &gt; exp_heatmap_scal...</h1>
+      <p class="selected-session-meta">R语言中对象未找到错误解决方案 · 2026/01/05 15:47 · 8 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2026-01-05/R语言中对象未找到错误解决方案_bde274ac.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#bde274ac-ac5d-4b44-9688-b93fe536eb09">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/05 17:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">exp_heatmap &lt;- exp[top_heatmap_genes, ]<br>&gt; <br>&gt; # 标准化（Z-score）<br>&gt; exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>&gt; <br>&gt; # 注释信息（列：样本分组）<br>&gt; annotation_col_all &lt;- data.frame(<br>+   Group = pd$group,<br>+   row.names = rownames(pd)<br>+ )<br>&gt; <br>&gt; # 行注释（标记 Up/Down/Not Sig）<br>&gt; deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]<br>Error in h(simpleError(msg, call)) : <br>  error in evaluating the argument &#39;table&#39; in selecting a method for function &#39;%in%&#39;: object &#39;all_deg_genes&#39; not found</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/05 17:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误原因是 <code class="inline-code">all_deg_genes</code> 对象不存在。根据你的代码逻辑，你应该使用 <code class="inline-code">top_heatmap_genes</code> 来替换 <code class="inline-code">all_deg_genes</code>，或者先创建这个变量。</p><p class="message-paragraph">**解决方案1** - 使用 <code class="inline-code">top_heatmap_genes</code>（推荐）：</p><pre class="message-code-block"><code>deg_regulation &lt;- DEG[DEG$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;change&quot;)]</code></pre><p class="message-paragraph">**解决方案2** - 如果你想要所有差异基因，先创建 <code class="inline-code">all_deg_genes</code>：</p><pre class="message-code-block"><code># 提取所有差异表达基因
+all_deg_genes &lt;- DEG$gene[DEG$change != &quot;Not Sig&quot;]
+
+# 然后再执行行注释
+deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]</code></pre><p class="message-paragraph">根据你前面的代码，你已经筛选了 <code class="inline-code">top_heatmap_genes</code> 用于热图，所以应该使用**解决方案1**，保持数据一致性。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/05 17:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">all_deg_genes &lt;- DEG$gene[DEG$change != &quot;Not Sig&quot;]<br>&gt; DEG_up_sig &lt;- DEG[DEG$change == &quot;Up&quot;, ]<br>&gt; DEG_down_sig &lt;- DEG[DEG$change == &quot;Down&quot;, ]<br>&gt; <br>&gt; DEG_up_sig &lt;- DEG_up_sig[order(DEG_up_sig$FDR), ]<br>&gt; DEG_down_sig &lt;- DEG_down_sig[order(DEG_down_sig$FDR), ]<br>&gt; <br>&gt; top_up_heatmap &lt;- head(DEG_up_sig$gene, 50)<br>&gt; top_down_heatmap &lt;- head(DEG_down_sig$gene, 50)<br>&gt; top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>&gt; top_heatmap_genes &lt;- top_heatmap_genes[top_heatmap_genes %in% rownames(exp)]<br>&gt; <br>&gt; cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>热图基因数: Up = 50 , Down = 50 <br>&gt; cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>热图基因数: Up = 50 , Down = 50 <br>&gt; <br>&gt; # 提取表达矩阵<br>&gt; exp_heatmap &lt;- exp[top_heatmap_genes, ]<br>&gt; <br>&gt; # 标准化（Z-score）<br>&gt; exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>&gt; <br>&gt; # 注释信息（列：样本分组）<br>&gt; annotation_col_all &lt;- data.frame(<br>+   Group = pd$group,<br>+   row.names = rownames(pd)<br>+ )<br>&gt; <br>&gt; # 行注释（标记 Up/Down/Not Sig）<br>&gt; deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]<br>&gt; rownames(deg_regulation) &lt;- deg_regulation$gene<br>&gt; <br>&gt; annotation_row_all &lt;- data.frame(<br>+   Regulation = deg_regulation[all_deg_genes, &quot;change&quot;],<br>+   row.names = all_deg_genes<br>+ )<br>&gt; <br>&gt; # 定义颜色<br>&gt; group_colors_all &lt;- c(&quot;control&quot; = &quot;#4DAF4A&quot;, &quot;LDHAi&quot; = &quot;#E41A1C&quot;)<br>&gt; regulation_colors_all &lt;- c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)<br>&gt; <br>&gt; # 顶部注释<br>&gt; ha_all &lt;- HeatmapAnnotation(<br>+   Group = annotation_col_all$Group,<br>+   col = list(Group = group_colors_all),<br>+   show_annotation_name = FALSE,<br>+   annotation_name_side = &quot;left&quot;<br>+ )<br>&gt; <br>&gt; # 行注释（Up/Down）<br>&gt; ra_all &lt;- rowAnnotation(<br>+   Regulation = annotation_row_all$Regulation,<br>+   col = list(Regulation = regulation_colors_all),<br>+   show_annotation_name = FALSE<br>+ )<br>&gt; # 绘制热图<br>&gt; p_heatmap &lt;- Heatmap(<br>+     exp_heatmap_scaled,                              # Z-score标准化后的表达矩阵（行=基因，列=样本）<br>+     col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),  # 颜色梯度：紫色(低表达)-白色-红色(高表达)<br>+     name = &quot;Gene Expression\n(Z-score)&quot;,             # 图例标题<br>+     heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),  # 图例水平显示<br>+     show_row_names = TRUE,                           # 显示行名（基因名）<br>+     show_column_names = FALSE,                       # 不显示列名（样本名太多会乱）<br>+     show_row_dend = FALSE,                           # 不显示行聚类树<br>+     show_column_dend = FALSE,                        # 不显示列聚类树<br>+     top_annotation = ha_deg,                         # 顶部添加分组注释<br>+     column_title_side = &quot;top&quot;,                       # 列标题显示在顶部<br>+     column_split = annotation_col$Group,             # 按Group（control/LDHAi）分割列<br>+     row_split = annotation_row$Regulation,           # 按Regulation（Up/Down）分割行<br>+     #column_title = TRUE,                             # 显示列标题（分组名）<br>+     row_names_gp = gpar(fontsize = 5),               # 行名字体大小<br>+     cluster_rows = TRUE,                             # 对行进行聚类<br>+     cluster_columns = TRUE                           # 对列进行聚类<br>+ )<br>Error: object &#39;annotation_row&#39; not found</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/05 17:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误原因是变量命名不一致。你创建的变量名是 <code class="inline-code">annotation_row_all</code>、<code class="inline-code">annotation_col_all</code>、<code class="inline-code">ha_all</code>，但在热图代码中使用的是 <code class="inline-code">annotation_row</code>、<code class="inline-code">annotation_col</code>、<code class="inline-code">ha_deg</code>。</p><p class="message-paragraph">**解决方案** - 修改热图代码中的变量名：</p><pre class="message-code-block"><code># 绘制热图
+p_heatmap &lt;- Heatmap(
+    exp_heatmap_scaled,
+    col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),
+    name = &quot;Gene Expression\n(Z-score)&quot;,
+    heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),
+    show_row_names = TRUE,
+    show_column_names = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    top_annotation = ha_all,                         # 改为 ha_all
+    column_title_side = &quot;top&quot;,
+    column_split = annotation_col_all$Group,         # 改为 annotation_col_all
+    row_split = annotation_row_all$Regulation,       # 改为 annotation_row_all
+    row_names_gp = gpar(fontsize = 5),
+    cluster_rows = TRUE,
+    cluster_columns = TRUE
+)</code></pre><p class="message-paragraph">需要修改的三处：<br>1. <code class="inline-code">ha_deg</code> → <code class="inline-code">ha_all</code><br>2. <code class="inline-code">annotation_col$Group</code> → <code class="inline-code">annotation_col_all$Group</code><br>3. <code class="inline-code">annotation_row$Regulation</code> → <code class="inline-code">annotation_row_all$Regulation</code></p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/05 17:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Error: Length or nrow of <code class="inline-code">row_split</code> should be same as nrow of <code class="inline-code">matrix</code>.</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/05 17:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误原因是 <code class="inline-code">annotation_row_all</code> 使用了所有差异基因（<code class="inline-code">all_deg_genes</code>），但热图矩阵只包含 <code class="inline-code">top_heatmap_genes</code>（100个基因）。行数不匹配导致报错。</p><p class="message-paragraph">**解决方案** - 修改行注释创建代码，使用 <code class="inline-code">top_heatmap_genes</code>：</p><pre class="message-code-block"><code># 行注释（标记 Up/Down）- 只针对热图中的基因
+annotation_row_all &lt;- data.frame(
+  Regulation = deg_regulation[top_heatmap_genes, &quot;change&quot;],
+  row.names = top_heatmap_genes
+)</code></pre><p class="message-paragraph">同时更新行注释对象的创建：</p><pre class="message-code-block"><code># 行注释（Up/Down）
+ra_all &lt;- rowAnnotation(
+  Regulation = annotation_row_all$Regulation,
+  col = list(Regulation = regulation_colors_all),
+  show_annotation_name = FALSE
+)</code></pre><p class="message-paragraph">这样 <code class="inline-code">annotation_row_all</code> 就会有100行（与热图基因数一致），而不是所有差异基因的数量。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/05 17:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">all_deg_genes &lt;- DEG$gene[DEG$change != &quot;Not Sig&quot;]<br>DEG_up_sig &lt;- DEG[DEG$change == &quot;Up&quot;, ]<br>DEG_down_sig &lt;- DEG[DEG$change == &quot;Down&quot;, ]</p><p class="message-paragraph">DEG_up_sig &lt;- DEG_up_sig[order(DEG_up_sig$FDR), ]<br>DEG_down_sig &lt;- DEG_down_sig[order(DEG_down_sig$FDR), ]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sig$gene, 50)<br>top_down_heatmap &lt;- head(DEG_down_sig$gene, 50)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- top_heatmap_genes[top_heatmap_genes %in% rownames(exp)]</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)</p><p class="message-paragraph"># 提取表达矩阵<br>exp_heatmap &lt;- exp[top_heatmap_genes, ]</p><p class="message-paragraph"># 标准化（Z-score）<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))</p><p class="message-paragraph"># 注释信息（列：样本分组）<br>annotation_col_all &lt;- data.frame(<br>  Group = pd$group,<br>  row.names = rownames(pd)<br>)</p><p class="message-paragraph"># 行注释（标记 Up/Down/Not Sig）<br>deg_regulation &lt;- DEG[DEG$gene %in% all_deg_genes, c(&quot;gene&quot;, &quot;change&quot;)]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row_all &lt;- data.frame(<br>  Regulation = deg_regulation[all_deg_genes, &quot;change&quot;],<br>  row.names = all_deg_genes<br>)</p><p class="message-paragraph"># 定义颜色<br>group_colors_all &lt;- c(&quot;control&quot; = &quot;#4DAF4A&quot;, &quot;LDHAi&quot; = &quot;#E41A1C&quot;)<br>regulation_colors_all &lt;- c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)</p><p class="message-paragraph"># 顶部注释<br>ha_all &lt;- HeatmapAnnotation(<br>  Group = annotation_col_all$Group,<br>  col = list(Group = group_colors_all),<br>  show_annotation_name = FALSE,<br>  annotation_name_side = &quot;left&quot;<br>)</p><p class="message-paragraph"># 行注释（Up/Down）<br>ra_all &lt;- rowAnnotation(<br>  Regulation = annotation_row_all$Regulation,<br>  col = list(Regulation = regulation_colors_all),<br>  show_annotation_name = FALSE<br>)<br># 绘制热图<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,                              # Z-score标准化后的表达矩阵（行=基因，列=样本）<br>    col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),  # 颜色梯度：紫色(低表达)-白色-红色(高表达)<br>    name = &quot;Gene Expression\n(Z-score)&quot;,             # 图例标题<br>    heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),  # 图例水平显示<br>    show_row_names = TRUE,                           # 显示行名（基因名）<br>    show_column_names = FALSE,                       # 不显示列名（样本名太多会乱）<br>    show_row_dend = FALSE,                           # 不显示行聚类树<br>    show_column_dend = FALSE,                        # 不显示列聚类树<br>    top_annotation = ha_deg,                         # 顶部添加分组注释<br>    column_title_side = &quot;top&quot;,                       # 列标题显示在顶部<br>    column_split = annotation_col_all$Group,         # 按Group（control/LDHAi）分割列<br>    row_split = annotation_row_all$Regulation,           # 按Regulation（Up/Down）分割行<br>    #column_title = TRUE,                             # 显示列标题（分组名）<br>    row_names_gp = gpar(fontsize = 5),               # 行名字体大小<br>    cluster_rows = TRUE,                             # 对行进行聚类<br>    cluster_columns = TRUE                           # 对列进行聚类<br>)</p><p class="message-paragraph"># 保存热图<br>pdf(file.path(out_dir, &quot;heatmap_DEGs.pdf&quot;), width = 10, height = 14)<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)<br>dev.off()</p><p class="message-paragraph"># 在屏幕上显示<br>draw(p_heatmap, <br>     heatmap_legend_side = &quot;bottom&quot;, <br>     annotation_legend_side = &quot;bottom&quot;, <br>     merge_legend = TRUE)</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/05 17:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你的代码有两个问题需要修正：</p><p class="message-paragraph">1. <code class="inline-code">annotation_row_all</code> 使用了 <code class="inline-code">all_deg_genes</code>（所有差异基因），但热图只包含 <code class="inline-code">top_heatmap_genes</code>（100个基因），导致行数不匹配<br>2. 热图中 <code class="inline-code">top_annotation = ha_deg</code> 应该是 <code class="inline-code">ha_all</code></p><p class="message-paragraph">**修正后的完整代码：**</p><pre class="message-code-block"><code>all_deg_genes &lt;- DEG$gene[DEG$change != &quot;Not Sig&quot;]
+DEG_up_sig &lt;- DEG[DEG$change == &quot;Up&quot;, ]
+DEG_down_sig &lt;- DEG[DEG$change == &quot;Down&quot;, ]
+
+DEG_up_sig &lt;- DEG_up_sig[order(DEG_up_sig$FDR), ]
+DEG_down_sig &lt;- DEG_down_sig[order(DEG_down_sig$FDR), ]
+
+top_up_heatmap &lt;- head(DEG_up_sig$gene, 50)
+top_down_heatmap &lt;- head(DEG_down_sig$gene, 50)
+top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)
+top_heatmap_genes &lt;- top_heatmap_genes[top_heatmap_genes %in% rownames(exp)]
+
+cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)
+
+# 提取表达矩阵
+exp_heatmap &lt;- exp[top_heatmap_genes, ]
+
+# 标准化（Z-score）
+exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))
+
+# 注释信息（列：样本分组）
+annotation_col_all &lt;- data.frame(
+  Group = pd$group,
+  row.names = rownames(pd)
+)
+
+# 行注释（标记 Up/Down）- 只针对热图中的基因
+deg_regulation &lt;- DEG[DEG$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;change&quot;)]
+rownames(deg_regulation) &lt;- deg_regulation$gene
+
+annotation_row_all &lt;- data.frame(
+  Regulation = deg_regulation[top_heatmap_genes, &quot;change&quot;],
+  row.names = top_heatmap_genes
+)
+
+# 定义颜色
+group_colors_all &lt;- c(&quot;control&quot; = &quot;#4DAF4A&quot;, &quot;LDHAi&quot; = &quot;#E41A1C&quot;)
+regulation_colors_all &lt;- c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)
+
+# 顶部注释
+ha_all &lt;- HeatmapAnnotation(
+  Group = annotation_col_all$Group,
+  col = list(Group = group_colors_all),
+  show_annotation_name = FALSE,
+  annotation_name_side = &quot;left&quot;
+)
+
+# 行注释（Up/Down）
+ra_all &lt;- rowAnnotation(
+  Regulation = annotation_row_all$Regulation,
+  col = list(Regulation = regulation_colors_all),
+  show_annotation_name = FALSE
+)
+
+# 绘制热图
+p_heatmap &lt;- Heatmap(
+    exp_heatmap_scaled,
+    col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),
+    name = &quot;Gene Expression\n(Z-score)&quot;,
+    heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),
+    show_row_names = TRUE,
+    show_column_names = FALSE,
+    show_row_dend = FALSE,
+    show_column_dend = FALSE,
+    top_annotation = ha_all,                         # 修正：ha_deg → ha_all
+    column_title_side = &quot;top&quot;,
+    column_split = annotation_col_all$Group,
+    row_split = annotation_row_all$Regulation,       # 现在行数匹配了
+    row_names_gp = gpar(fontsize = 5),
+    cluster_rows = TRUE,
+    cluster_columns = TRUE
+)
+
+# 保存热图
+pdf(file.path(out_dir, &quot;heatmap_DEGs.pdf&quot;), width = 10, height = 14)
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)
+dev.off()
+
+# 在屏幕上显示
+draw(p_heatmap, 
+     heatmap_legend_side = &quot;bottom&quot;, 
+     annotation_legend_side = &quot;bottom&quot;, 
+     merge_legend = TRUE)</code></pre><p class="message-paragraph">**主要修改：**<br>1. <code class="inline-code">deg_regulation</code> 筛选改为 <code class="inline-code">top_heatmap_genes</code><br>2. <code class="inline-code">annotation_row_all</code> 使用 <code class="inline-code">top_heatmap_genes</code> 而非 <code class="inline-code">all_deg_genes</code><br>3. <code class="inline-code">top_annotation = ha_all</code> 而非 <code class="inline-code">ha_deg</code></p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title># 相关性网络图 p_corr &lt;- qcorrplot(correlate(data[, 4:11]), type = &quot;lower&quot;, diag = ...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1># 相关性网络图 p_corr &lt;- qcorrplot(correlate(data[, 4:11]), type = &quot;lower&quot;, diag = ...</h1>
+      <p class="selected-session-meta">(no workspace) · 2025/06/09 10:04 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-06-09/_no_workspace__020cb892.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#020cb892-0bdc-45d6-b5b0-ded318c21607">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/06/09 10:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 相关性网络图<br>p_corr &lt;- qcorrplot(correlate(data[, 4:11]), type = &quot;lower&quot;, diag = FALSE) + # Using columns 4:11 for the base heatmap</p><p class="message-paragraph">geom_couple(data = results, aes(colour = .data$pd, size = .data$rd), # Use .data$<br>              curvature = nice_curvature()) +<br>  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(11, &quot;RdBu&quot;)) +<br>  scale_size_manual(values = c(0.3, 1)) +<br>  scale_colour_manual(values=c(&quot;#fe0108&quot;,&quot;#2e4fdb&quot;)) + # Using linkET&#39;s color_pal<br>  guides(color = guide_legend(title = expression(&quot;Pearson&#39;s&quot; ~ italic(&quot;r&quot;)),<br>                             order = 1),<br>         linetype = guide_legend(title = expression(italic(&quot;P&quot;)~&quot;value&quot;), <br>                               order = 2))<br>p_corr。P值大于 0.05 用虚线，小于 0.05 用实线</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/06/09 10:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我看到您想创建一个相关性网络图，其中P值大于0.05的关联用虚线表示，小于0.05的用实线表示。下面我将帮您修改代码来实现这个功能。</p><p class="message-paragraph">在R语言中，我们可以使用<code class="inline-code">linetype</code>美学映射来根据P值设置线条类型（实线或虚线）。我需要修改您的代码，加入这个功能。</p><p class="message-paragraph">您的代码使用了<code class="inline-code">qcorrplot</code>函数绘制相关性热图，并使用<code class="inline-code">geom_couple</code>添加了连接线。我们需要在<code class="inline-code">geom_couple</code>函数中添加<code class="inline-code">linetype</code>映射，根据P值来区分线条类型。</p><p class="message-paragraph">这里是修改后的代码：</p><pre class="message-code-block"><code>p_corr &lt;- qcorrplot(correlate(data[, 4:11]), type = &quot;lower&quot;, diag = FALSE) + # Using columns 4:11 for the base heatmap
+ 
+  geom_couple(data = results, 
+              aes(colour = .data$pd, 
+                  size = .data$rd, 
+                  linetype = .data$pd &gt; 0.05), # 添加linetype根据P值条件
+              curvature = nice_curvature()) +
+  scale_fill_gradientn(colours = RColorBrewer::brewer.pal(11, &quot;RdBu&quot;)) +
+  scale_size_manual(values = c(0.3, 1)) +
+  scale_colour_manual(values=c(&quot;#fe0108&quot;,&quot;#2e4fdb&quot;)) + # Using linkET&#39;s color_pal
+  scale_linetype_manual(values = c(&quot;solid&quot;, &quot;dashed&quot;), # 设置实线和虚线
+                       labels = c(&quot;P &lt; 0.05&quot;, &quot;P &gt; 0.05&quot;)) +
+  guides(color = guide_legend(title = expression(&quot;Pearson&#39;s&quot; ~ italic(&quot;r&quot;)),
+                             order = 1),
+         linetype = guide_legend(title = expression(italic(&quot;P&quot;)~&quot;value&quot;), 
+                               order = 2))</code></pre><p class="message-paragraph">这里的关键修改是：</p><p class="message-paragraph">1. 在<code class="inline-code">geom_couple</code>的<code class="inline-code">aes()</code>函数中添加了<code class="inline-code">linetype = .data$pd &gt; 0.05</code>，这将根据P值是否大于0.05来设置线条类型<br>2. 添加了<code class="inline-code">scale_linetype_manual()</code>函数，设置实线对应P &lt; 0.05，虚线对应P &gt; 0.05</p><p class="message-paragraph">请注意，我假设您的<code class="inline-code">results</code>数据框中的<code class="inline-code">pd</code>列是P值。如果实际列名不同，您需要相应调整代码。</p><p class="message-paragraph">另外，我看到您代码的最后有一个&quot;p_corr。&quot;，这可能是一个语法错误。在R中，我们通常使用<code class="inline-code">print(p_corr)</code>或直接输入<code class="inline-code">p_corr</code>来显示图形。</p><p class="message-paragraph">您可以根据需要进一步调整图形的其他属性，例如图例标题、位置等。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>library(ggplot2) &gt; library(tinyarray) &gt; &gt; # 分别取 UP 和 DOWN 基因 &gt; up_genes &lt;- ro...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>library(ggplot2) &gt; library(tinyarray) &gt; &gt; # 分别取 UP 和 DOWN 基因 &gt; up_genes &lt;- ro...</h1>
+      <p class="selected-session-meta">绘制热图时的错误调试 · 2025/10/01 10:12 · 6 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-10-01/绘制热图时的错误调试_1fddb2bf.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#1fddb2bf-6445-4d70-a723-21634107f6ce">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/10/01 10:12</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(ggplot2)<br>&gt; library(tinyarray)<br>&gt; <br>&gt; # 分别取 UP 和 DOWN 基因<br>&gt; up_genes &lt;- rownames(DEG)[DEG$change == &quot;UP&quot;]<br>&gt; down_genes &lt;- rownames(DEG)[DEG$change == &quot;DOWN&quot;]<br>&gt; <br>&gt; # 按 adj.P.Val 排序，分别取前 50<br>&gt; top_up &lt;- head(up_genes[order(DEG[up_genes, &quot;adj.P.Val&quot;], decreasing = FALSE)], 50)<br>&gt; top_down &lt;- head(down_genes[order(DEG[down_genes, &quot;adj.P.Val&quot;], decreasing = FALSE)], 50)<br>&gt; <br>&gt; # 合并成最终基因列表<br>&gt; top_genes &lt;- c(top_up, top_down)<br>&gt; <br>&gt; # 提取表达矩阵<br>&gt; mat &lt;- exp[top_genes, , drop = FALSE]<br>&gt; <br>&gt; # 去掉 NA<br>&gt; mat &lt;- mat[complete.cases(mat), , drop = FALSE]<br>&gt; <br>&gt; # 如果行数为 1，复制一行避免报错<br>&gt; if (nrow(mat) == 1) {<br>+   mat &lt;- rbind(mat, mat)<br>+   rownames(mat) &lt;- c(rownames(mat)[1], paste0(rownames(mat)[1], &quot;_dup&quot;))<br>+ }<br>&gt; <br>&gt; # 确保行名唯一<br>&gt; rownames(mat) &lt;- make.unique(rownames(mat))<br>&gt; <br>&gt; # 确保数值型矩阵<br>&gt; mat &lt;- as.matrix(mat)<br>&gt; storage.mode(mat) &lt;- &quot;double&quot;<br>&gt; <br>&gt; # group 转 factor<br>&gt; group &lt;- factor(group)<br>&gt; <br>&gt; # 绘制热图<br>&gt; h &lt;- draw_heatmap(mat = mat, group_list = group, n = nrow(mat))<br>Error in <code class="inline-code">.rowNamesDF&lt;-</code>(x, value = value) : invalid &#39;row.names&#39; length</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/10/01 10:12</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">看到您的错误信息，问题出在 <code class="inline-code">draw_heatmap</code> 函数内部处理数据时，行名长度不匹配。让我帮您解决这个问题。</p><p class="message-paragraph">常见的原因和解决方案：</p><p class="message-paragraph">## 问题分析</p><p class="message-paragraph"><code class="inline-code">draw_heatmap</code> 函数可能在内部对数据进行了转换，导致行名长度不匹配。这通常发生在：<br>1. 数据标准化/归一化过程中<br>2. 样本分组信息与表达矩阵列数不匹配</p><p class="message-paragraph">## 解决方案</p><p class="message-paragraph">请尝试以下修正代码：</p><pre class="message-code-block"><code># 1. 首先检查数据维度
+print(paste(&quot;矩阵维度:&quot;, nrow(mat), &quot;行 x&quot;, ncol(mat), &quot;列&quot;))
+print(paste(&quot;分组长度:&quot;, length(group)))
+print(paste(&quot;列名:&quot;, paste(colnames(mat), collapse = &quot;, &quot;)))
+print(paste(&quot;分组:&quot;, paste(as.character(group), collapse = &quot;, &quot;)))
+
+# 2. 确保 group 长度与矩阵列数一致
+if (length(group) != ncol(mat)) {
+  stop(&quot;错误：group 长度 (&quot;, length(group), &quot;) 与矩阵列数 (&quot;, ncol(mat), &quot;) 不匹配！&quot;)
+}
+
+# 3. 确保矩阵列名存在且与 group 对应
+if (is.null(colnames(mat))) {
+  colnames(mat) &lt;- paste0(&quot;Sample_&quot;, seq_len(ncol(mat)))
+}
+
+# 4. 对数据进行 Z-score 标准化（手动处理，避免函数内部问题）
+mat_scaled &lt;- t(scale(t(mat)))
+
+# 5. 替换可能的 NA 值
+mat_scaled[is.na(mat_scaled)] &lt;- 0
+
+# 6. 尝试使用 pheatmap 直接绘图（更稳定）
+library(pheatmap)
+
+# 创建注释数据框
+annotation_col &lt;- data.frame(
+  Group = group,
+  row.names = colnames(mat_scaled)
+)
+
+# 绘制热图
+pheatmap(
+  mat_scaled,
+  annotation_col = annotation_col,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,
+  scale = &quot;none&quot;,  # 已经手动标准化了
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  main = &quot;Top DEGs Heatmap&quot;
+)</code></pre><p class="message-paragraph">## 如果仍想使用 tinyarray::draw_heatmap</p><pre class="message-code-block"><code># 方法1：确保所有参数正确
+h &lt;- draw_heatmap(
+  mat = mat, 
+  group_list = group, 
+  n = nrow(mat),
+  scale = TRUE  # 添加 scale 参数
+)
+
+# 方法2：不指定 n 参数，让函数自动处理
+h &lt;- draw_heatmap(
+  mat = mat, 
+  group_list = group
+)
+
+# 方法3：使用较小的基因数
+h &lt;- draw_heatmap(
+  mat = mat, 
+  group_list = group, 
+  n = min(50, nrow(mat))  # 限制最多50个基因
+)</code></pre><p class="message-paragraph">## 调试建议</p><pre class="message-code-block"><code># 检查关键信息
+str(mat)
+str(group)
+table(group)
+dim(mat)
+length(group)
+
+# 确认没有重复的行名
+any(duplicated(rownames(mat)))
+any(duplicated(colnames(mat)))</code></pre><p class="message-paragraph">请先运行检查代码，确认数据结构是否正确，然后再尝试绘图。如果问题依然存在，请分享检查代码的输出结果，我可以提供更具体的解决方案。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/10/01 10:14</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我要的 Group 的分在一起，而不是一个个展示</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/10/01 10:14</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">明白了！您想要在热图中将同一分组的样本聚集在一起显示，而不是让它们分散。这需要关闭列的聚类，并按分组排序样本。</p><p class="message-paragraph">## 解决方案</p><pre class="message-code-block"><code># 按 group 排序样本
+group_order &lt;- order(group)
+mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 创建注释数据框
+annotation_col &lt;- data.frame(
+  Group = group_ordered,
+  row.names = colnames(mat_ordered)
+)
+
+# 设置分组颜色
+library(RColorBrewer)
+group_colors &lt;- setNames(
+  brewer.pal(length(unique(group_ordered)), &quot;Set1&quot;)[1:length(unique(group_ordered))],
+  levels(factor(group_ordered))
+)
+
+annotation_colors &lt;- list(Group = group_colors)
+
+# 绘制热图 - 关键：cluster_cols = FALSE
+pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  cluster_rows = TRUE,      # 基因聚类
+  cluster_cols = FALSE,     # 样本不聚类，保持分组
+  scale = &quot;none&quot;,
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  border_color = NA,
+  main = &quot;Top DEGs Heatmap (Grouped by Condition)&quot;,
+  fontsize_row = 8,
+  fontsize_col = 10
+)</code></pre><p class="message-paragraph">## 使用 tinyarray::draw_heatmap 的方案</p><pre class="message-code-block"><code># tinyarray 的 draw_heatmap 默认就会按分组聚集样本
+# 关键是确保数据格式正确
+
+# 按 group 排序
+group_order &lt;- order(group)
+mat_ordered &lt;- mat[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 使用 draw_heatmap
+h &lt;- draw_heatmap(
+  mat = mat_ordered, 
+  group_list = group_ordered,
+  cluster_cols = FALSE,  # 关闭列聚类
+  n = nrow(mat_ordered)
+)</code></pre><p class="message-paragraph">## 完整代码示例</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 1. 对数据进行 Z-score 标准化
+mat_scaled &lt;- t(scale(t(mat)))
+mat_scaled[is.na(mat_scaled)] &lt;- 0
+
+# 2. 按分组排序样本
+group_order &lt;- order(group)
+mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 3. 创建注释
+annotation_col &lt;- data.frame(
+  Group = group_ordered,
+  row.names = colnames(mat_ordered)
+)
+
+# 4. 设置颜色
+n_groups &lt;- length(unique(group_ordered))
+if (n_groups &lt;= 2) {
+  group_colors &lt;- c(&quot;Control&quot; = &quot;#3498db&quot;, &quot;Treatment&quot; = &quot;#e74c3c&quot;)
+} else {
+  group_colors &lt;- setNames(
+    brewer.pal(max(3, n_groups), &quot;Set1&quot;)[1:n_groups],
+    unique(as.character(group_ordered))
+  )
+}
+
+annotation_colors &lt;- list(Group = group_colors)
+
+# 5. 绘制热图
+pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_rownames = TRUE,
+  show_colnames = TRUE,
+  cluster_rows = TRUE,       # 基因按表达模式聚类
+  cluster_cols = FALSE,      # 样本不聚类，按分组展示
+  scale = &quot;none&quot;,
+  color = colorRampPalette(c(&quot;#2E86AB&quot;, &quot;white&quot;, &quot;#A23B72&quot;))(100),
+  border_color = NA,
+  gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],  # 在分组间添加间隙
+  main = &quot;Top DEGs Heatmap&quot;,
+  fontsize_row = 6,
+  fontsize_col = 9,
+  angle_col = 45
+)</code></pre><p class="message-paragraph">## 关键参数说明</p><p class="message-paragraph">- **<code class="inline-code">cluster_cols = FALSE</code>**: 关闭列（样本）的聚类分析<br>- **<code class="inline-code">gaps_col</code>**: 在不同分组之间添加分隔线，使分组更清晰<br>- **排序样本**: 使用 <code class="inline-code">order(group)</code> 将同一分组的样本排在一起</p><p class="message-paragraph">这样热图就会按照分组将样本聚集在一起展示，而不是让算法自动聚类打乱分组顺序！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/10/01 10:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我要你把样本不需要一个个体现，直接体现分组即可</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/10/01 10:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">明白了！您想要热图上方只显示分组信息，不显示每个样本的名称。这样可以让热图更简洁，只关注基因表达模式和分组差异。</p><p class="message-paragraph">## 解决方案</p><pre class="message-code-block"><code>library(pheatmap)
+library(RColorBrewer)
+
+# 1. 对数据进行 Z-score 标准化
+mat_scaled &lt;- t(scale(t(mat)))
+mat_scaled[is.na(mat_scaled)] &lt;- 0
+
+# 2. 按分组排序样本
+group_order &lt;- order(group)
+mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 3. 创建注释（只显示分组）
+annotation_col &lt;- data.frame(
+  Group = group_ordered,
+  row.names = colnames(mat_ordered)
+)
+
+# 4. 设置颜色
+n_groups &lt;- length(unique(group_ordered))
+if (n_groups == 2) {
+  group_colors &lt;- c(&quot;#3498db&quot;, &quot;#e74c3c&quot;)
+  names(group_colors) &lt;- levels(factor(group_ordered))
+} else {
+  group_colors &lt;- setNames(
+    brewer.pal(max(3, n_groups), &quot;Set1&quot;)[1:n_groups],
+    levels(factor(group_ordered))
+  )
+}
+
+annotation_colors &lt;- list(Group = group_colors)
+
+# 5. 绘制热图 - 关键：show_colnames = FALSE
+pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_rownames = TRUE,          # 显示基因名
+  show_colnames = FALSE,          # 不显示样本名 ← 关键参数
+  cluster_rows = TRUE,            # 基因聚类
+  cluster_cols = FALSE,           # 样本不聚类
+  scale = &quot;none&quot;,
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  border_color = NA,
+  gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],  # 分组间隙
+  main = &quot;Top DEGs Heatmap&quot;,
+  fontsize_row = 8,
+  annotation_names_col = TRUE,    # 显示注释标签（Group）
+  annotation_legend = TRUE        # 显示分组图例
+)</code></pre><p class="message-paragraph">## 使用 ComplexHeatmap 包（更强大的选项）</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+# 1. 标准化
+mat_scaled &lt;- t(scale(t(mat)))
+mat_scaled[is.na(mat_scaled)] &lt;- 0
+
+# 2. 按分组排序
+group_order &lt;- order(group)
+mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 3. 创建顶部注释（只显示分组颜色条）
+col_ha &lt;- HeatmapAnnotation(
+  Group = group_ordered,
+  col = list(Group = c(&quot;Control&quot; = &quot;#3498db&quot;, &quot;Treatment&quot; = &quot;#e74c3c&quot;)),  # 根据实际分组名调整
+  show_annotation_name = TRUE,
+  annotation_name_side = &quot;left&quot;
+)
+
+# 4. 绘制热图
+Heatmap(
+  mat_ordered,
+  name = &quot;Z-score&quot;,
+  top_annotation = col_ha,
+  show_column_names = FALSE,      # 不显示样本名
+  show_row_names = TRUE,          # 显示基因名
+  cluster_rows = TRUE,
+  cluster_columns = FALSE,
+  col = colorRamp2(c(-2, 0, 2), c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;)),
+  row_names_gp = gpar(fontsize = 8),
+  column_split = group_ordered,   # 按分组分割列
+  column_title_gp = gpar(fontsize = 12),
+  heatmap_legend_param = list(title = &quot;Expression&quot;)
+)</code></pre><p class="message-paragraph">## 简化版（推荐）</p><pre class="message-code-block"><code># 最简洁的代码
+library(pheatmap)
+
+# 标准化和排序
+mat_scaled &lt;- t(scale(t(mat)))
+mat_scaled[is.na(mat_scaled)] &lt;- 0
+group_order &lt;- order(group)
+mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]
+group_ordered &lt;- group[group_order]
+
+# 注释
+annotation_col &lt;- data.frame(Group = group_ordered, row.names = colnames(mat_ordered))
+annotation_colors &lt;- list(Group = c(&quot;Control&quot; = &quot;#4A90E2&quot;, &quot;Treatment&quot; = &quot;#E94B3C&quot;))  # 修改为实际分组名
+
+# 绘图
+pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_colnames = FALSE,          # ← 核心：不显示样本名
+  cluster_cols = FALSE,
+  gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  border_color = NA
+)</code></pre><p class="message-paragraph">## 关键参数</p><p class="message-paragraph">- **<code class="inline-code">show_colnames = FALSE</code>**: 隐藏样本名称<br>- **<code class="inline-code">annotation_col</code>**: 顶部显示分组颜色条<br>- **<code class="inline-code">gaps_col</code>**: 在不同分组之间添加间隙<br>- **<code class="inline-code">cluster_cols = FALSE</code>**: 保持分组顺序</p><p class="message-paragraph">这样热图就只会显示分组信息的颜色条，不会显示每个样本的名称，更加简洁清晰！</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

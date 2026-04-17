@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>想把这个部分symbols &lt;- mapIds( org.Rn.eg.db, keys = entrez_ids, keytype = &quot;ENTREZID...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>想把这个部分symbols &lt;- mapIds( org.Rn.eg.db, keys = entrez_ids, keytype = &quot;ENTREZID...</h1>
+      <p class="selected-session-meta">整合多种ID映射策略的R代码 · 2026/01/06 10:40 · 16 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2026-01-06/整合多种ID映射策略的R代码_18bb066d.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#18bb066d-82c7-4b23-86fb-ecdb08572b3a">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">想把这个部分symbols &lt;- mapIds(<br>    org.Rn.eg.db,<br>    keys = entrez_ids,<br>    keytype = &quot;ENTREZID&quot;,<br>    column = &quot;SYMBOL&quot;,<br>    multiVals = &quot;first&quot;  # 如果一个ID对应多个Symbol，取第一个<br>)<br>也整合进library(AnnotationDbi)<br>library(org.Rn.eg.db)<br>library(org.Hs.eg.db)<br>anno &lt;- data.frame(ID = rownames(exp))</p><p class="message-paragraph">symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, <br>                        keytype = &quot;REFSEQ&quot;, multiVals = &quot;first&quot;)</p><p class="message-paragraph">if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {<br>    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, <br>                            keytype = &quot;ENSEMBL&quot;, multiVals = &quot;first&quot;)<br>}</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我理解了，您想将使用 <code class="inline-code">ENTREZID</code> 的 <code class="inline-code">mapIds</code> 调用也整合到现有的注释转换逻辑中。这样可以形成一个更完善的多重尝试策略：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Rn.eg.db)
+library(org.Hs.eg.db)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 策略1: 尝试 REFSEQ
+symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                        keytype = &quot;REFSEQ&quot;, multiVals = &quot;first&quot;)
+
+# 策略2: 如果 REFSEQ 匹配率低于10%，尝试 ENSEMBL
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;ENSEMBL&quot;, multiVals = &quot;first&quot;)
+}
+
+# 策略3: 如果 ENSEMBL 匹配率仍然低于10%，尝试 ENTREZID
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;ENTREZID&quot;, multiVals = &quot;first&quot;)
+}</code></pre><p class="message-paragraph">这样代码会按照 REFSEQ → ENSEMBL → ENTREZID 的顺序依次尝试，直到找到一个匹配率较高的 keytype。每个策略都使用 <code class="inline-code">multiVals = &quot;first&quot;</code> 来处理一对多的情况。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:42</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">除了这三种还有其他的吗</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:42</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是的，<code class="inline-code">org.Rn.eg.db</code> 还支持其他多种 keytype。可以查看所有可用的选项：</p><pre class="message-code-block"><code>library(org.Rn.eg.db)
+keytypes(org.Rn.eg.db)</code></pre><p class="message-paragraph">常见的其他 keytype 包括：</p><p class="message-paragraph">- **ACCNUM** - GenBank 登录号<br>- **ALIAS** - 基因别名<br>- **ENSEMBLPROT** - Ensembl 蛋白质 ID<br>- **ENSEMBLTRANS** - Ensembl 转录本 ID<br>- **GENENAME** - 完整基因名称<br>- **UNIPROT** - UniProt ID<br>- **PROBEID** - 探针 ID（如果是芯片数据）<br>- **GO** - Gene Ontology ID<br>- **PATH** - KEGG 通路 ID</p><p class="message-paragraph">如果您的数据 ID 格式已知，可以添加更多策略：</p><pre class="message-code-block"><code># 策略4: 尝试 ENSEMBLTRANS (转录本)
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;ENSEMBLTRANS&quot;, multiVals = &quot;first&quot;)
+}
+
+# 策略5: 尝试 ACCNUM (GenBank)
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;ACCNUM&quot;, multiVals = &quot;first&quot;)
+}</code></pre><p class="message-paragraph">具体选择哪些 keytype 取决于您的 <code class="inline-code">rownames(exp)</code> 实际是什么格式的 ID。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">anno &lt;- data.frame(ID = rownames(exp))<br>&gt; <br>&gt; # 策略1: 尝试 REFSEQ<br>&gt; symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, <br>+                         keytype = &quot;REFSEQ&quot;, multiVals = &quot;first&quot;)<br>Error in .testForValidKeys(x, keys, keytype, fks) : <br>  None of the keys entered are valid keys for &#39;REFSEQ&#39;. Please use the keys method to see a listing of valid arguments.</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误说明您的 ID 不是 REFSEQ 格式。需要先查看实际的 ID 格式来确定正确的 keytype：</p><pre class="message-code-block"><code># 查看前几个ID的格式
+head(rownames(exp))
+
+# 或者
+head(anno$ID)</code></pre><p class="message-paragraph">根据 ID 的格式特征来判断：</p><p class="message-paragraph">- **ENSEMBL**: 以 <code class="inline-code">ENSRNOG</code> 开头（大鼠基因）<br>- **ENSEMBLTRANS**: 以 <code class="inline-code">ENSRNOT</code> 开头（大鼠转录本）<br>- **REFSEQ**: 以 <code class="inline-code">NM_</code>, <code class="inline-code">NR_</code>, <code class="inline-code">XM_</code> 等开头<br>- **ENTREZID**: 纯数字，如 <code class="inline-code">12345</code><br>- **SYMBOL**: 基因符号，如 <code class="inline-code">Actb</code>, <code class="inline-code">Gapdh</code><br>- **ACCNUM**: GenBank 登录号</p><p class="message-paragraph">看到 ID 格式后，可以直接从合适的 keytype 开始：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Rn.eg.db)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 根据实际格式选择起始策略
+# 例如如果是 ENSRNOG 开头:
+symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                        keytype = &quot;ENSEMBL&quot;, multiVals = &quot;first&quot;)
+
+# 如果匹配率低，尝试其他格式
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;ENTREZID&quot;, multiVals = &quot;first&quot;)
+}
+
+if (sum(!is.na(symbol_mapping)) &lt; length(symbol_mapping) * 0.1) {
+    symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                            keytype = &quot;REFSEQ&quot;, multiVals = &quot;first&quot;)
+}</code></pre><p class="message-paragraph">请先运行 <code class="inline-code">head(rownames(exp))</code> 看看 ID 格式，我可以帮您确定正确的策略顺序。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:45</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">能不能先出一个判断格式的</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:45</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">可以，这里是一个自动判断ID格式的代码：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Rn.eg.db)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 自动判断ID格式
+detect_id_type &lt;- function(ids) {
+    # 取前几个非NA的ID进行判断
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    # 检测各种格式
+    if (any(grepl(&quot;^ENSRNOG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENSRNOT[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSRNOP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)  # 默认尝试 ACCNUM
+    }
+}
+
+# 检测ID类型
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+# 按检测结果设置尝试顺序
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)  # 默认
+)
+
+# 依次尝试转换
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        # 如果匹配率超过10%，就使用这个结果
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+# 查看转换结果
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)</code></pre><p class="message-paragraph">这个代码会：<br>1. 自动检测ID格式<br>2. 根据检测结果设置最优的尝试顺序<br>3. 依次尝试直到找到匹配率&gt;10%的结果<br>4. 显示每一步的尝试过程和匹配率</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:47</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">也帮我来一个小鼠的</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:47</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，这是小鼠（Mus musculus）版本的代码：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Mm.eg.db)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 自动判断ID格式（小鼠版本）
+detect_id_type &lt;- function(ids) {
+    # 取前几个非NA的ID进行判断
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    # 检测各种格式（小鼠）
+    if (any(grepl(&quot;^ENSMUSG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENSMUST[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSMUSP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)  # 默认尝试 ACCNUM
+    }
+}
+
+# 检测ID类型
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+# 按检测结果设置尝试顺序
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)  # 默认
+)
+
+# 依次尝试转换
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Mm.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        # 如果匹配率超过10%，就使用这个结果
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+# 查看转换结果
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)</code></pre><p class="message-paragraph">主要区别：<br>- 使用 <code class="inline-code">org.Mm.eg.db</code> 而不是 <code class="inline-code">org.Rn.eg.db</code><br>- 检测 Ensembl ID 时匹配 <code class="inline-code">ENSMUSG</code>、<code class="inline-code">ENSMUST</code>、<code class="inline-code">ENSMUSP</code>（小鼠）而不是 <code class="inline-code">ENSRNOG</code>、<code class="inline-code">ENSRNOT</code>、<code class="inline-code">ENSRNOP</code>（大鼠）</p><p class="message-paragraph">其他逻辑完全相同。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:49</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">人的也来一个</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:49</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，这是人类（Homo sapiens）版本的代码：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Hs.eg.db)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 自动判断ID格式（人类版本）
+detect_id_type &lt;- function(ids) {
+    # 取前几个非NA的ID进行判断
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    # 检测各种格式（人类）
+    if (any(grepl(&quot;^ENSG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENST[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)  # 默认尝试 ACCNUM
+    }
+}
+
+# 检测ID类型
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+# 按检测结果设置尝试顺序
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)  # 默认
+)
+
+# 依次尝试转换
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Hs.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        # 如果匹配率超过10%，就使用这个结果
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+# 查看转换结果
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)</code></pre><p class="message-paragraph">主要区别：<br>- 使用 <code class="inline-code">org.Hs.eg.db</code> 而不是 <code class="inline-code">org.Rn.eg.db</code> 或 <code class="inline-code">org.Mm.eg.db</code><br>- 检测 Ensembl ID 时匹配 <code class="inline-code">ENSG</code>、<code class="inline-code">ENST</code>、<code class="inline-code">ENSP</code>（人类）</p><p class="message-paragraph">其他逻辑完全相同。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 10:51</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">然后再加上这个expr_final &lt;- expr[, c(&quot;SYMBOL&quot;, colnames(anno)[-1])] %&gt;% <br>  dplyr::filter(!is.na(SYMBOL) &amp; SYMBOL != &quot;&quot;) %&gt;%      # 过滤行<br>  dplyr::select(SYMBOL, all_of(numeric_cols)) %&gt;%      # 选择列<br>  dplyr::group_by(SYMBOL) %&gt;% <br>  dplyr::summarise(<br>    dplyr::across(everything(), ~ mean(.x, na.rm = TRUE)),<br>    .groups = &quot;drop&quot;<br>  ) %&gt;% <br>  as.data.frame()<br>rownames(expr_final) &lt;- expr_final$SYMBOL<br>expr_final &lt;- expr_final[, -1]<br>colnames(expr_final) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(expr_final))</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 10:51</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，这是整合后的完整代码，包含ID转换和数据处理：</p><p class="message-paragraph">**大鼠版本：**</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Rn.eg.db)
+library(dplyr)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+# 自动判断ID格式
+detect_id_type &lt;- function(ids) {
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    if (any(grepl(&quot;^ENSRNOG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENSRNOT[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSRNOP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)
+    }
+}
+
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)
+)
+
+# 依次尝试转换
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Rn.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)
+
+# 添加SYMBOL到表达矩阵
+expr &lt;- cbind(SYMBOL = symbol_mapping, exp)
+
+# 识别数值列
+numeric_cols &lt;- colnames(exp)
+
+# 数据处理和聚合
+expr_final &lt;- expr %&gt;% 
+  dplyr::filter(!is.na(SYMBOL) &amp; SYMBOL != &quot;&quot;) %&gt;%      
+  dplyr::select(SYMBOL, all_of(numeric_cols)) %&gt;%      
+  dplyr::group_by(SYMBOL) %&gt;% 
+  dplyr::summarise(
+    dplyr::across(everything(), ~ mean(.x, na.rm = TRUE)),
+    .groups = &quot;drop&quot;
+  ) %&gt;% 
+  as.data.frame()
+
+rownames(expr_final) &lt;- expr_final$SYMBOL
+expr_final &lt;- expr_final[, -1]
+colnames(expr_final) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(expr_final))</code></pre><p class="message-paragraph">**小鼠版本：**</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Mm.eg.db)
+library(dplyr)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+detect_id_type &lt;- function(ids) {
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    if (any(grepl(&quot;^ENSMUSG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENSMUST[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSMUSP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)
+    }
+}
+
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)
+)
+
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Mm.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)
+
+expr &lt;- cbind(SYMBOL = symbol_mapping, exp)
+numeric_cols &lt;- colnames(exp)
+
+expr_final &lt;- expr %&gt;% 
+  dplyr::filter(!is.na(SYMBOL) &amp; SYMBOL != &quot;&quot;) %&gt;%      
+  dplyr::select(SYMBOL, all_of(numeric_cols)) %&gt;%      
+  dplyr::group_by(SYMBOL) %&gt;% 
+  dplyr::summarise(
+    dplyr::across(everything(), ~ mean(.x, na.rm = TRUE)),
+    .groups = &quot;drop&quot;
+  ) %&gt;% 
+  as.data.frame()
+
+rownames(expr_final) &lt;- expr_final$SYMBOL
+expr_final &lt;- expr_final[, -1]
+colnames(expr_final) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(expr_final))</code></pre><p class="message-paragraph">**人类版本：**</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Hs.eg.db)
+library(dplyr)
+
+anno &lt;- data.frame(ID = rownames(exp))
+
+detect_id_type &lt;- function(ids) {
+    sample_ids &lt;- head(ids[!is.na(ids)], 10)
+    if (length(sample_ids) == 0) return(&quot;UNKNOWN&quot;)
+    
+    if (any(grepl(&quot;^ENSG[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBL&quot;)
+    } else if (any(grepl(&quot;^ENST[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLTRANS&quot;)
+    } else if (any(grepl(&quot;^ENSP[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENSEMBLPROT&quot;)
+    } else if (any(grepl(&quot;^(NM_|NR_|XM_|XR_)[0-9]+&quot;, sample_ids))) {
+        return(&quot;REFSEQ&quot;)
+    } else if (all(grepl(&quot;^[0-9]+$&quot;, sample_ids))) {
+        return(&quot;ENTREZID&quot;)
+    } else if (any(grepl(&quot;^[A-Z][A-Za-z0-9]+$&quot;, sample_ids))) {
+        return(&quot;SYMBOL&quot;)
+    } else {
+        return(&quot;ACCNUM&quot;)
+    }
+}
+
+detected_type &lt;- detect_id_type(anno$ID)
+cat(&quot;检测到的ID类型:&quot;, detected_type, &quot;\n&quot;)
+
+keytype_order &lt;- switch(detected_type,
+    &quot;ENSEMBL&quot; = c(&quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;ENSEMBLPROT&quot; = c(&quot;ENSEMBLPROT&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),
+    &quot;REFSEQ&quot; = c(&quot;REFSEQ&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;ACCNUM&quot;),
+    &quot;ENTREZID&quot; = c(&quot;ENTREZID&quot;, &quot;ENSEMBL&quot;, &quot;REFSEQ&quot;, &quot;ACCNUM&quot;),
+    &quot;SYMBOL&quot; = c(&quot;SYMBOL&quot;, &quot;ALIAS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;),
+    c(&quot;ACCNUM&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;)
+)
+
+symbol_mapping &lt;- NULL
+for (keytype in keytype_order) {
+    tryCatch({
+        cat(&quot;尝试使用 keytype:&quot;, keytype, &quot;\n&quot;)
+        symbol_mapping &lt;- mapIds(org.Hs.eg.db, keys = anno$ID, column = &quot;SYMBOL&quot;, 
+                                keytype = keytype, multiVals = &quot;first&quot;)
+        match_rate &lt;- sum(!is.na(symbol_mapping)) / length(symbol_mapping)
+        cat(&quot;匹配率:&quot;, round(match_rate * 100, 2), &quot;%\n&quot;)
+        
+        if (match_rate &gt;= 0.1) {
+            cat(&quot;使用 keytype:&quot;, keytype, &quot;进行转换\n&quot;)
+            break
+        }
+    }, error = function(e) {
+        cat(&quot;keytype&quot;, keytype, &quot;失败:&quot;, e$message, &quot;\n&quot;)
+    })
+}
+
+cat(&quot;\n最终匹配率:&quot;, sum(!is.na(symbol_mapping)), &quot;/&quot;, length(symbol_mapping), &quot;\n&quot;)
+
+expr &lt;- cbind(SYMBOL = symbol_mapping, exp)
+numeric_cols &lt;- colnames(exp)
+
+expr_final &lt;- expr %&gt;% 
+  dplyr::filter(!is.na(SYMBOL) &amp; SYMBOL != &quot;&quot;) %&gt;%      
+  dplyr::select(SYMBOL, all_of(numeric_cols)) %&gt;%      
+  dplyr::group_by(SYMBOL) %&gt;% 
+  dplyr::summarise(
+    dplyr::across(everything(), ~ mean(.x, na.rm = TRUE)),
+    .groups = &quot;drop&quot;
+  ) %&gt;% 
+  as.data.frame()
+
+rownames(expr_final) &lt;- expr_final$SYMBOL
+expr_final &lt;- expr_final[, -1]
+colnames(expr_final) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(expr_final))</code></pre><p class="message-paragraph">这样就完成了从ID检测、转换到数据聚合的完整流程。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/06 14:23</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">ENST这种也包括了吗？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/06 14:23</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是的，已经包括了。在人类版本的代码中：</p><p class="message-paragraph">**检测部分：**</p><pre class="message-code-block"><code>} else if (any(grepl(&quot;^ENST[0-9]+$&quot;, sample_ids))) {
+    return(&quot;ENSEMBLTRANS&quot;)</code></pre><p class="message-paragraph">**转换部分：**</p><pre class="message-code-block"><code>&quot;ENSEMBLTRANS&quot; = c(&quot;ENSEMBLTRANS&quot;, &quot;ENSEMBL&quot;, &quot;ENTREZID&quot;, &quot;REFSEQ&quot;),</code></pre><p class="message-paragraph">所以如果检测到 <code class="inline-code">ENST</code> 开头的 ID（如 <code class="inline-code">ENST00000123456</code>），会：<br>1. 识别为 <code class="inline-code">ENSEMBLTRANS</code> 类型<br>2. 首先尝试用 <code class="inline-code">ENSEMBLTRANS</code> 作为 keytype 转换<br>3. 如果失败或匹配率低，依次尝试 <code class="inline-code">ENSEMBL</code>、<code class="inline-code">ENTREZID</code>、<code class="inline-code">REFSEQ</code></p><p class="message-paragraph">类似的：<br>- 大鼠：<code class="inline-code">ENSRNOT</code> → <code class="inline-code">ENSEMBLTRANS</code><br>- 小鼠：<code class="inline-code">ENSMUST</code> → <code class="inline-code">ENSEMBLTRANS</code><br>- 人类：<code class="inline-code">ENST</code> → <code class="inline-code">ENSEMBLTRANS</code></p><p class="message-paragraph">都已包含在内。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

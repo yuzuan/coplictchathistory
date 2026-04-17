@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>library(AnnotationDbi) library(org.Mm.eg.db)</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>library(AnnotationDbi) library(org.Mm.eg.db)</h1>
+      <p class="selected-session-meta">R数据框行数不匹配错误解决方案 · 2025/12/02 21:59 · 8 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-12-02/R数据框行数不匹配错误解决方案_3b69abff.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#3b69abff-4706-4829-88ed-42446378e612">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 21:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(AnnotationDbi)<br>library(org.Mm.eg.db)</p><p class="message-paragraph">anno &lt;- data.frame(ID = exp$V1)</p><p class="message-paragraph">symbol_mapping &lt;- mapIds(org.Mm.eg.db,<br>                         keys = anno$ID,<br>                         column = &quot;SYMBOL&quot;,<br>                         keytype = &quot;ENSEMBL&quot;,<br>                         multiVals = &quot;first&quot;)</p><p class="message-paragraph">anno$SYMBOL &lt;- symbol_mapping<br>#anno$SYMBOL[is.na(anno$SYMBOL)] &lt;- anno$ID[is.na(anno$SYMBOL)]<br>anno &lt;- anno[!is.na(anno$SYMBOL) &amp; anno$SYMBOL != &quot;&quot;, ]</p><p class="message-paragraph">library(dplyr)<br>expr &lt;- as.data.frame(exp)<br>rownames(expr) &lt;- expr[[1]]<br>expr &lt;- expr[, -1]<br>expr$symbol &lt;- anno$SYMBOL<br>Error in <code class="inline-code">$&lt;-.data.frame</code>(<code class="inline-code">*tmp*</code>, symbol, value = c(&quot;Gnai3&quot;, &quot;Pbsn&quot;,  : <br>  replacement has 27720 rows, data has 39184</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 21:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 <code class="inline-code">anno</code> 和 <code class="inline-code">expr</code> 的行数不匹配。在你过滤掉 <code class="inline-code">NA</code> 值后，<code class="inline-code">anno</code> 只剩下 27720 行，而 <code class="inline-code">expr</code> 仍然有 39184 行。</p><p class="message-paragraph">你需要先将 <code class="inline-code">anno</code> 与 <code class="inline-code">expr</code> 进行匹配，而不是直接赋值。以下是修正后的代码：</p><pre class="message-code-block"><code>library(AnnotationDbi)
+library(org.Mm.eg.db)
+library(dplyr)
+
+# 创建表达式数据框
+expr &lt;- as.data.frame(exp)
+rownames(expr) &lt;- expr[[1]]
+expr &lt;- expr[, -1]
+
+# 创建注释映射
+anno &lt;- data.frame(ID = exp$V1)
+symbol_mapping &lt;- mapIds(org.Mm.eg.db,
+                         keys = anno$ID,
+                         column = &quot;SYMBOL&quot;,
+                         keytype = &quot;ENSEMBL&quot;,
+                         multiVals = &quot;first&quot;)
+anno$SYMBOL &lt;- symbol_mapping
+
+# 方法1: 使用匹配的方式添加 symbol（保留所有行）
+expr$symbol &lt;- anno$SYMBOL[match(rownames(expr), anno$ID)]
+
+# 方法2: 如果只想保留有 symbol 的行
+expr$symbol &lt;- anno$SYMBOL[match(rownames(expr), anno$ID)]
+expr &lt;- expr[!is.na(expr$symbol) &amp; expr$symbol != &quot;&quot;, ]</code></pre><p class="message-paragraph">**关键区别**：</p><p class="message-paragraph">- 使用 <code class="inline-code">match(rownames(expr), anno$ID)</code> 来确保按照正确的顺序匹配 SYMBOL<br>- 过滤操作应该在 <code class="inline-code">expr</code> 上进行，而不是单独在 <code class="inline-code">anno</code> 上进行</p><p class="message-paragraph">**如果你想用 SYMBOL 作为行名并合并重复的基因**：</p><pre class="message-code-block"><code># 添加 symbol 并过滤
+expr$symbol &lt;- anno$SYMBOL[match(rownames(expr), anno$ID)]
+expr &lt;- expr[!is.na(expr$symbol) &amp; expr$symbol != &quot;&quot;, ]
+
+# 合并重复的 symbol（取平均值）
+expr &lt;- expr %&gt;%
+  group_by(symbol) %&gt;%
+  summarise(across(everything(), mean)) %&gt;%
+  as.data.frame()
+
+rownames(expr) &lt;- expr$symbol
+expr$symbol &lt;- NULL</code></pre>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 22:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(data.table)<br>exp &lt;- fread(&quot;/Users/yuzuan/Downloads/Downloads/2025_12_01 GSE72737_Dnmt3a_KI_counts_norm.csv.gz&quot;)</p><p class="message-paragraph">library(AnnotationDbi)<br>library(org.Mm.eg.db)</p><p class="message-paragraph">anno &lt;- data.frame(ID = exp$V1)</p><p class="message-paragraph">symbol_mapping &lt;- mapIds(org.Mm.eg.db,<br>                         keys = anno$ID,<br>                         column = &quot;SYMBOL&quot;,<br>                         keytype = &quot;ENSEMBL&quot;,<br>                         multiVals = &quot;first&quot;)</p><p class="message-paragraph">anno$SYMBOL &lt;- symbol_mapping<br>#anno$SYMBOL[is.na(anno$SYMBOL)] &lt;- anno$ID[is.na(anno$SYMBOL)]<br>anno &lt;- anno[!is.na(anno$SYMBOL) &amp; anno$SYMBOL != &quot;&quot;, ]</p><p class="message-paragraph">library(dplyr)<br>expr &lt;- as.data.frame(exp)<br>rownames(expr) &lt;- expr[[1]]<br>expr &lt;- expr[, -1]<br>expr$symbol &lt;- anno$SYMBOL[match(rownames(expr), anno$ID)]<br>expr &lt;- expr[!is.na(expr$symbol) &amp; expr$symbol != &quot;&quot;, ]<br>expr &lt;- expr %&gt;% filter(!is.na(symbol) &amp; symbol != &quot;&quot;)</p><p class="message-paragraph">numeric_cols &lt;- colnames(expr)[sapply(expr, is.numeric)]</p><p class="message-paragraph">expr_final &lt;- expr %&gt;%<br>    dplyr::select(symbol, all_of(numeric_cols)) %&gt;%<br>    group_by(symbol) %&gt;%<br>    summarise(across(everything(), ~ mean(.x, na.rm = TRUE))) %&gt;%<br>    as.data.frame()</p><p class="message-paragraph">rownames(expr_final) &lt;- expr_final$symbol<br>expr_final &lt;- expr_final[, -1]</p><p class="message-paragraph">expr=log2(expr_final + 1)<br>num_samples &lt;- ncol(expr)<br>expr &lt;- expr[apply(expr, 1, function(x) sum(x != 0) &gt;= (num_samples / 2)), ]</p><p class="message-paragraph">exp=expr</p><p class="message-paragraph">pd=GSE72737_GPL17021_sample_anno</p><p class="message-paragraph">pd &lt;- as.data.frame(pd)<br>rownames(pd) &lt;- pd[[1]]<br>pd &lt;- pd[, -1]<br>small &lt;- function(df){<br>    library(tibble)<br>    library(dplyr)<br>    colname &lt;- vector(&quot;character&quot;)<br>    count &lt;- vector(&quot;integer&quot;)<br>    for(i in 1:ncol(df)){<br>        colname[i] = colnames(df)[[i]]<br>        count[i]=nrow(df[!duplicated(df[,i]),])<br>    }<br>    o &lt;- tibble(colname,count) <br>    output=df[,o$count&gt;1]<br>}<br>pd=small(pd)</p><p class="message-paragraph">current_cols &lt;- colnames(exp)<br>idx &lt;- match(current_cols, pd$title)<br>colnames(exp) &lt;- ifelse(is.na(idx), current_cols, pd$geo_accession[idx])</p><p class="message-paragraph">pd$group &lt;- ifelse(grepl(&quot;Cre&quot;, pd$<code class="inline-code">genotype:ch1</code>, ignore.case = TRUE), &quot;Cre&quot;,<br>                   ifelse(grepl(&quot;Mx&quot;, pd$<code class="inline-code">genotype:ch1</code>, ignore.case = TRUE), &quot;Mx&quot;,<br>                          NA))<br>table(pd$group)</p><p class="message-paragraph">pd$group &lt;- gsub(&quot;-|\\+&quot;, &quot;&quot;, pd$<code class="inline-code">genotype:ch1</code>)</p><p class="message-paragraph">sid_post &lt;- pd$geo_accession[pd$group == &quot;cKI_Mx&quot;]<br>sid_pre  &lt;- pd$geo_accession[pd$group == &quot;wt_Mx&quot;]</p><p class="message-paragraph">expM &lt;- exp[, c(sid_post, sid_pre)]<br>group &lt;- rep_by_len(c(&quot;cKI_Mx&quot;, &quot;wt_Mx&quot;), list(sid_post, sid_pre))<br>table(group)<br>group &lt;- c(<br>    rep(&quot;cKI_Mx&quot;, length(sid_post)),<br>    rep(&quot;wt_Mx&quot;, length(sid_pre))<br>)</p><p class="message-paragraph">library(limma)      # 差异分析<br>library(ggplot2)    # 绑图<br>library(pheatmap)   # 热图<br>library(ggrepel)    # 火山图标签</p><p class="message-paragraph">group &lt;- factor(pd$group, levels = c(&quot;cKI_Mx&quot;, &quot;wt_Mx&quot;))<br>design &lt;- model.matrix(~ 0 + group)<br>colnames(design) &lt;- levels(group)<br>fit &lt;- lmFit(expM, design)</p><p class="message-paragraph">contrast &lt;- makeContrasts(cKI_Mx - wt_Mx, levels = design)<br>fit2 &lt;- contrasts.fit(fit, contrast)<br>fit2 &lt;- eBayes(fit2)</p><p class="message-paragraph">DEG &lt;- topTable(fit2, coef = 1, number = Inf, adjust.method = &quot;BH&quot;)<br>DEG$gene &lt;- rownames(DEG)<br>DEG$FDR &lt;- DEG$adj.P.Val</p><p class="message-paragraph"># 添加差异表达标签 (logFC &gt; 1, adj.P.Val &lt; 0.05)<br>DEG$change &lt;- ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &gt; 1, &quot;Up&quot;,<br>                     ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &lt; -1, &quot;Down&quot;, &quot;Not Sig&quot;))<br>DEG &lt;- DEG[, c(&quot;gene&quot;, &quot;logFC&quot;, &quot;AveExpr&quot;, &quot;t&quot;, &quot;P.Value&quot;, &quot;FDR&quot;, &quot;B&quot;, &quot;change&quot;)]<br>table(DEG$change)<br>write.csv(DEG, file.path(out_dir, &quot;DEG_results.csv&quot;), row.names = FALSE)</p><p class="message-paragraph">DEG_sig &lt;- DEG[DEG$change != &quot;Not Sig&quot;, ]<br>write.csv(DEG_sig, file.path(out_dir, &quot;DEG_significant.csv&quot;), row.names = FALSE)<br>cat(&quot;上调基因:&quot;, sum(DEG$change == &quot;Up&quot;), &quot;\n&quot;)<br>cat(&quot;下调基因:&quot;, sum(DEG$change == &quot;Down&quot;), &quot;\n&quot;)</p><p class="message-paragraph">现在我要做三个基因的boxplot和violin图，三个基因分别是Msantd5l，Gm7467， Igkv4-61，请帮我做出相应代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 22:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">以下是绘制三个基因 boxplot 和 violin 图的代码：</p><pre class="message-code-block"><code>library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# 定义要绘制的基因
+genes_of_interest &lt;- c(&quot;Msantd5l&quot;, &quot;Gm7467&quot;, &quot;Igkv4-61&quot;)
+
+# 提取这些基因的表达数据
+expr_subset &lt;- expM[rownames(expM) %in% genes_of_interest, , drop = FALSE]
+
+# 转换为长格式数据
+expr_long &lt;- as.data.frame(t(expr_subset))
+expr_long$sample &lt;- rownames(expr_long)
+expr_long$group &lt;- group
+
+# 转为长格式
+plot_data &lt;- expr_long %&gt;%
+  pivot_longer(cols = all_of(genes_of_interest[genes_of_interest %in% colnames(expr_long)]),
+               names_to = &quot;gene&quot;,
+               values_to = &quot;expression&quot;)
+
+# 设置分组因子顺序
+plot_data$group &lt;- factor(plot_data$group, levels = c(&quot;wt_Mx&quot;, &quot;cKI_Mx&quot;))
+
+# ========== Boxplot ==========
+p_box &lt;- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
+  geom_boxplot(outlier.shape = 21, width = 0.6) +
+  geom_jitter(width = 0.15, size = 1.5, alpha = 0.6) +
+  facet_wrap(~ gene, scales = &quot;free_y&quot;, nrow = 1) +
+  scale_fill_manual(values = c(&quot;wt_Mx&quot; = &quot;#4DAF4A&quot;, &quot;cKI_Mx&quot; = &quot;#E41A1C&quot;)) +
+  labs(x = &quot;Group&quot;, y = &quot;Expression (log2)&quot;, title = &quot;Gene Expression Boxplot&quot;) +
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &quot;none&quot;
+  )
+
+print(p_box)
+ggsave(file.path(out_dir, &quot;boxplot_3genes.pdf&quot;), p_box, width = 9, height = 4)
+
+# ========== Violin plot ==========
+p_violin &lt;- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.15, fill = &quot;white&quot;, outlier.shape = NA) +
+  geom_jitter(width = 0.1, size = 1.5, alpha = 0.6) +
+  facet_wrap(~ gene, scales = &quot;free_y&quot;, nrow = 1) +
+  scale_fill_manual(values = c(&quot;wt_Mx&quot; = &quot;#4DAF4A&quot;, &quot;cKI_Mx&quot; = &quot;#E41A1C&quot;)) +
+  labs(x = &quot;Group&quot;, y = &quot;Expression (log2)&quot;, title = &quot;Gene Expression Violin Plot&quot;) +
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &quot;none&quot;
+  )
+
+print(p_violin)
+ggsave(file.path(out_dir, &quot;violin_3genes.pdf&quot;), p_violin, width = 9, height = 4)
+
+# ========== 可选：添加统计检验 ==========
+library(ggpubr)
+
+p_box_stat &lt;- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
+  geom_boxplot(outlier.shape = 21, width = 0.6) +
+  geom_jitter(width = 0.15, size = 1.5, alpha = 0.6) +
+  facet_wrap(~ gene, scales = &quot;free_y&quot;, nrow = 1) +
+  scale_fill_manual(values = c(&quot;wt_Mx&quot; = &quot;#4DAF4A&quot;, &quot;cKI_Mx&quot; = &quot;#E41A1C&quot;)) +
+  stat_compare_means(method = &quot;t.test&quot;, label = &quot;p.signif&quot;, 
+                     comparisons = list(c(&quot;wt_Mx&quot;, &quot;cKI_Mx&quot;))) +
+  labs(x = &quot;Group&quot;, y = &quot;Expression (log2)&quot;, title = &quot;Gene Expression Boxplot with Statistics&quot;) +
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &quot;none&quot;
+  )
+
+print(p_box_stat)
+ggsave(file.path(out_dir, &quot;boxplot_3genes_stat.pdf&quot;), p_box_stat, width = 9, height = 5)</code></pre><p class="message-paragraph">**代码说明：**</p><p class="message-paragraph">1. **数据准备**：从 <code class="inline-code">expM</code> 中提取三个目标基因，转换为长格式便于 ggplot 绑图</p><p class="message-paragraph">2. **Boxplot**：显示中位数、四分位数和离群点，叠加散点显示样本分布</p><p class="message-paragraph">3. **Violin plot**：显示数据分布密度，内嵌小 boxplot，叠加散点</p><p class="message-paragraph">4. **统计检验**（可选）：使用 <code class="inline-code">ggpubr</code> 包添加 t 检验显著性标记</p><p class="message-paragraph">**注意**：如果某个基因不在 <code class="inline-code">expM</code> 中，代码会自动跳过。你可以先检查基因是否存在：</p><pre class="message-code-block"><code>genes_of_interest[genes_of_interest %in% rownames(expM)]</code></pre>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 22:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">expr_long$group &lt;- group<br>Error in <code class="inline-code">$&lt;-.data.frame</code>(<code class="inline-code">*tmp*</code>, group, value = c(NA, NA, 2L, 2L, 1L,  : <br>  replacement has 9 rows, data has 7</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 22:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 <code class="inline-code">group</code> 向量有 9 个元素，但 <code class="inline-code">expr_long</code> 只有 7 行（可能是因为只有部分样本在 <code class="inline-code">expM</code> 中）。</p><p class="message-paragraph">需要通过样本名匹配来添加 group 信息。修正代码如下：</p><pre class="message-code-block"><code>library(ggplot2)
+library(tidyr)
+library(dplyr)
+
+# 定义要绘制的基因
+genes_of_interest &lt;- c(&quot;Msantd5l&quot;, &quot;Gm7467&quot;, &quot;Igkv4-61&quot;)
+
+# 检查基因是否存在
+genes_found &lt;- genes_of_interest[genes_of_interest %in% rownames(expM)]
+cat(&quot;找到的基因:&quot;, genes_found, &quot;\n&quot;)
+
+# 提取这些基因的表达数据
+expr_subset &lt;- expM[rownames(expM) %in% genes_found, , drop = FALSE]
+
+# 转换为长格式数据
+expr_long &lt;- as.data.frame(t(expr_subset))
+expr_long$sample &lt;- rownames(expr_long)
+
+# 通过样本名匹配 group（从 pd 中获取）
+expr_long$group &lt;- pd$group[match(expr_long$sample, pd$geo_accession)]
+
+# 转为长格式
+plot_data &lt;- expr_long %&gt;%
+  pivot_longer(cols = all_of(genes_found),
+               names_to = &quot;gene&quot;,
+               values_to = &quot;expression&quot;)
+
+# 只保留 cKI_Mx 和 wt_Mx 两组
+plot_data &lt;- plot_data %&gt;% filter(group %in% c(&quot;cKI_Mx&quot;, &quot;wt_Mx&quot;))
+
+# 设置分组因子顺序
+plot_data$group &lt;- factor(plot_data$group, levels = c(&quot;wt_Mx&quot;, &quot;cKI_Mx&quot;))
+
+# ========== Boxplot ==========
+p_box &lt;- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
+  geom_boxplot(outlier.shape = 21, width = 0.6) +
+  geom_jitter(width = 0.15, size = 1.5, alpha = 0.6) +
+  facet_wrap(~ gene, scales = &quot;free_y&quot;, nrow = 1) +
+  scale_fill_manual(values = c(&quot;wt_Mx&quot; = &quot;#4DAF4A&quot;, &quot;cKI_Mx&quot; = &quot;#E41A1C&quot;)) +
+  labs(x = &quot;Group&quot;, y = &quot;Expression (log2)&quot;, title = &quot;Gene Expression Boxplot&quot;) +
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &quot;none&quot;
+  )
+
+print(p_box)
+
+# ========== Violin plot ==========
+p_violin &lt;- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
+  geom_violin(trim = FALSE, alpha = 0.7) +
+  geom_boxplot(width = 0.15, fill = &quot;white&quot;, outlier.shape = NA) +
+  geom_jitter(width = 0.1, size = 1.5, alpha = 0.6) +
+  facet_wrap(~ gene, scales = &quot;free_y&quot;, nrow = 1) +
+  scale_fill_manual(values = c(&quot;wt_Mx&quot; = &quot;#4DAF4A&quot;, &quot;cKI_Mx&quot; = &quot;#E41A1C&quot;)) +
+  labs(x = &quot;Group&quot;, y = &quot;Expression (log2)&quot;, title = &quot;Gene Expression Violin Plot&quot;) +
+  theme_bw() +
+  theme(
+    strip.text = element_text(face = &quot;bold&quot;, size = 12),
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = &quot;none&quot;
+  )
+
+print(p_violin)</code></pre><p class="message-paragraph">**关键修改**：<br>- 使用 <code class="inline-code">pd$group[match(expr_long$sample, pd$geo_accession)]</code> 来正确匹配每个样本对应的分组<br>- 添加了检查基因是否存在的步骤<br>- 过滤只保留需要的两个分组</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 22:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">boxplot_3genes_stat.是什么意思啊</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 22:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"><code class="inline-code">boxplot_3genes_stat</code> 的意思是：</p><p class="message-paragraph">**boxplot** = 箱线图（Box Plot）<br>**3genes** = 3个基因<br>**stat** = statistics（统计检验）</p><p class="message-paragraph">所以 <code class="inline-code">boxplot_3genes_stat.pdf</code> 就是 **&quot;带统计检验的3个基因箱线图&quot;**。</p><p class="message-paragraph">具体来说，这张图除了显示箱线图外，还会在图上添加统计显著性标记：</p><pre class="message-code-block"><code>stat_compare_means(method = &quot;t.test&quot;, label = &quot;p.signif&quot;, 
+                   comparisons = list(c(&quot;wt_Mx&quot;, &quot;cKI_Mx&quot;)))</code></pre><p class="message-paragraph">这行代码会：<br>- 对两组（wt_Mx vs cKI_Mx）进行 **t 检验**<br>- 在图上显示显著性符号：<br>  - <code class="inline-code">ns</code> = 不显著 (p &gt; 0.05)<br>  - <code class="inline-code">*</code> = p &lt; 0.05<br>  - <code class="inline-code">**</code> = p &lt; 0.01<br>  - <code class="inline-code">***</code> = p &lt; 0.001<br>  - <code class="inline-code">****</code> = p &lt; 0.0001</p><p class="message-paragraph">如果你只想要普通的箱线图（不带统计检验），用 <code class="inline-code">boxplot_3genes.pdf</code> 那个就可以了。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>3D slicer 如何安装 github 的插件</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>3D slicer 如何安装 github 的插件</h1>
+      <p class="selected-session-meta">3D Slicer 插件安装指南 · 2025/12/14 13:31 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-12-14/3D_Slicer_插件安装指南_05bb7d05.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#05bb7d05-3b5f-4592-a3c6-625a3a2d6f4f">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/14 13:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">3D slicer 如何安装 github 的插件</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/14 13:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">在 3D Slicer 里安装 GitHub 上的插件，核心是先判断它是不是 **Slicer Extensions（扩展管理器可装）**，还是 **普通 Python 脚本/模块（需要手动放到 Modules 路径）**。下面按最常见情况给你一步步装法。</p><p class="message-paragraph">**1）先确认插件类型（最关键）**<br>- 如果仓库里有 <code class="inline-code">CMakeLists.txt</code>、<code class="inline-code">s4ext</code>、或者写着 “Slicer Extension”，通常是 **扩展**（可能需要编译，或能被扩展管理器获取）。<br>- 如果仓库里有 <code class="inline-code">*.py</code>、<code class="inline-code">*.slicer</code>、<code class="inline-code">ScriptedLoadableModule</code>、<code class="inline-code">Module</code> 目录结构，通常是 **脚本模块**（可手动安装）。<br>- 如果 README 写明 “Install via Extension Manager”，那就是 **扩展管理器安装**（最省事）。</p><p class="message-paragraph">**2）优先用 Slicer 自带 Extension Manager（如果能搜到）**<br>1. 打开 Slicer<br>2. 菜单：<code class="inline-code">View -&gt; Extension Manager</code><br>3. 搜索插件名（或作者/关键词）<br>4. <code class="inline-code">Install</code> → 重启 Slicer</p><p class="message-paragraph">说明：Slicer 的 Extension Manager 通常只提供与“你的 Slicer 版本/Revision”匹配的已构建扩展；GitHub 上有源码不代表一定能在这里直接搜到。</p><p class="message-paragraph">**3）GitHub 仓库是“脚本模块”（最常见的手动装法）**<br>适用：仓库提供了可直接运行的 Scripted module（不需要编译）。</p><p class="message-paragraph">步骤（macOS）：<br>1. 在 GitHub 点 <code class="inline-code">Code -&gt; Download ZIP</code>（或 <code class="inline-code">git clone</code>）<br>2. 解压后确认里面有一个模块主文件夹，例如：<br>   - <code class="inline-code">MyModule/</code><br>     - <code class="inline-code">MyModule.py</code><br>     - <code class="inline-code">Resources/</code> …<br>3. 在 Slicer 里打开：<code class="inline-code">Edit -&gt; Application Settings -&gt; Modules</code><br>4. 在 “Additional module paths” 点击 <code class="inline-code">+</code>，选择 **模块的父目录**（包含 <code class="inline-code">MyModule</code> 文件夹的那个目录，或直接选 <code class="inline-code">MyModule</code> 目录，取决于仓库结构）<br>5. 点 <code class="inline-code">OK</code>，然后重启 Slicer（或 <code class="inline-code">Modules -&gt; Reload and Test</code>，但重启最稳）<br>6. 重启后在模块列表里找该模块（通常在 <code class="inline-code">Modules</code> 下拉里，或按模块名搜索）</p><p class="message-paragraph">常见坑：<br>- 选错路径：要让 Slicer 扫描到 <code class="inline-code">*.py</code> 模块入口文件。<br>- 插件依赖额外 Python 包：需要在 Slicer 的 Python 环境里安装（见第 5 点）。</p><p class="message-paragraph">**4）GitHub 仓库是“编译型扩展”（C++/CLI，需要构建）**<br>适用：包含大量 C++、<code class="inline-code">CMakeLists.txt</code>，README 写 “build as an extension”。</p><p class="message-paragraph">大方向（不展开到每个仓库的具体依赖，因为差异很大）：<br>- 你需要与 Slicer 版本匹配的源码 + CMake + 编译器（macOS 通常是 Xcode Command Line Tools）<br>- 用 Slicer 的 “Extension build” 流程编译出扩展，然后把生成的扩展安装到 Slicer<br>- 很多扩展仓库 README 会给出 <code class="inline-code">Slicer_DIR</code>、<code class="inline-code">SUPERBUILD</code>、<code class="inline-code">CMAKE_BUILD_TYPE</code> 等参数示例</p><p class="message-paragraph">如果你把仓库链接发我，我可以按它的 README 精确给你一套 macOS 可复制粘贴的构建命令。</p><p class="message-paragraph">**5）如果插件需要 pip 依赖（在 Slicer 里装 Python 包）**<br>Slicer 自带 Python，但不是你系统的 Python。通常做法：<br>- Slicer 内：<code class="inline-code">View -&gt; Python Interactor</code><br>- 运行类似（示例）：<br>  - <code class="inline-code">import pip; pip.main([&quot;install&quot;,&quot;package_name&quot;])</code><br>或用 Slicer 官方推荐的方式（有些版本提供 <code class="inline-code">PythonSlicer</code>/<code class="inline-code">slicer.util.pip_install</code> 之类接口，具体以你的 Slicer 版本为准）。</p><p class="message-paragraph">**我需要你补两条信息，才能给你“对应你这个插件”的准确安装步骤：**<br>1. 你的插件 GitHub 链接（或仓库名）<br>2. 你的 Slicer 版本（<code class="inline-code">Help -&gt; About</code> 里的版本号/Revision）</p><p class="message-paragraph">发出来后，我可以判断它属于上面哪一类，并给你最短路径的安装/编译步骤。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

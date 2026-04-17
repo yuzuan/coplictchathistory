@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>这个是我的森林图的代码: # 创建多因素分析结果数据框 multi_results &lt;- data.frame( var = rownames(multi...</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>这个是我的森林图的代码: # 创建多因素分析结果数据框 multi_results &lt;- data.frame( var = rownames(multi...</h1>
+      <p class="selected-session-meta">4_tcga_model · 2025/05/09 15:16 · 1 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-05-09/_no_workspace__c598bf65.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#c598bf65-78c8-4da9-8fe3-b218b0aca3d9">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/05/09 15:17</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个是我的森林图的代码:  # 创建多因素分析结果数据框<br>  multi_results &lt;- data.frame(<br>    var = rownames(multi_summary$coefficients),<br>    HR = round(multi_summary$coefficients[, &quot;exp(coef)&quot;], 2),<br>    HR.95L = round(multi_summary$conf.int[, &quot;lower .95&quot;], 2),<br>    HR.95H = round(multi_summary$conf.int[, &quot;upper .95&quot;], 2),<br>    pvalue = round(multi_summary$coefficients[, &quot;Pr(&gt;|z|)&quot;], 4)<br>  )</p><p class="message-paragraph"># 显示多因素分析结果<br>  print(multi_results)</p><p class="message-paragraph"># 绘制多因素分析的森林图<br>  multi_results$HR_CI &lt;- paste0(multi_results$HR, &quot; (&quot;, <br>                              multi_results$HR.95L, &quot;-&quot;, <br>                              multi_results$HR.95H, &quot;)&quot;)</p><p class="message-paragraph">forest_data_multi &lt;- data.frame(<br>    var = multi_results$var,<br>    hr = multi_results$HR,<br>    lower = multi_results$HR.95L,<br>    upper = multi_results$HR.95H,<br>    pvalue = multi_results$pvalue,<br>    hr_text = multi_results$HR_CI<br>  )</p><p class="message-paragraph"># 创建多因素分析的森林图<br>  ggplot(data=forest_data_multi, aes(y=var, x=hr, xmin=lower, xmax=upper)) +<br>    geom_pointrange() +<br>    geom_vline(xintercept=1, linetype=&quot;dashed&quot;, color=&quot;red&quot;) +<br>    xlab(&quot;Hazard Ratio (95% CI)&quot;) +<br>    ylab(&quot;Variables&quot;) +<br>    ggtitle(&quot;多因素Cox回归分析&quot;) +<br>    theme_bw() +<br>    theme(axis.text.y=element_text(size=12)) +<br>    scale_x_continuous(trans=&#39;log10&#39;) +<br>    annotate(&quot;text&quot;, x=max(forest_data_multi$upper)*1.1, <br>             y=1:nrow(forest_data_multi), <br>             label=paste0(&quot;P=&quot;, forest_data_multi$pvalue), hjust=0)<br>} else {<br>  print(&quot;没有变量在单因素分析中达到统计学显著性&quot;)<br>}<br>但是我想要的效果的代码是如下:# 定义主题：<br>tm &lt;- forest_theme(base_size = 10,<br>                   # 置信区间点形状，线类型/颜色/宽度<br>                   ci_pch = 16,  # 点形状<br>                   ci_col = &quot;red&quot;,<br>                   ci_lty = 1, # 线条类型<br>                   ci_lwd = 1.5, # 线条宽度<br>                   ci_Theight = 0.4, # 在CI的末尾设置T形尾部<br>                   # 参考线宽/类型/颜色<br>                   refline_lwd = 1,<br>                   refline_lty = &quot;dashed&quot;,<br>                   refline_col = &quot;grey20&quot;,<br>                   # 垂直的线宽/类型/颜色<br>                   vertline_lwd = 1,<br>                   vertline_lty = &quot;dashed&quot;,<br>                   vertline_col = &quot;grey20&quot;,<br>                   # 更改填充和边框的摘要颜色<br>                   summary_fill = &quot;red&quot;,<br>                   summary_col = &quot;red&quot;,<br>                   # 脚注字体大小/字形/颜色<br>                   footnote_cex = 0.6,<br>                   footnote_fontface = &quot;italic&quot;,<br>                   footnote_col = &quot;red&quot;)</p><p class="message-paragraph"># 绘图：<br>pdf(&quot;forest_plot05.pdf&quot;, height = 7, width = 10)<br>forest(dt_tmp[,c(1:3, 20:21)],<br>       est = dt_tmp$est,<br>       lower = dt_tmp$low, <br>       upper = dt_tmp$hi,<br>       sizes = dt_tmp$se,<br>       is_summary = c(rep(FALSE, nrow(dt_tmp)-1), TRUE),<br>       ci_column = 4,<br>       ref_line = 1,<br>       arrow_lab = c(&quot;Placebo Better&quot;, &quot;Treatment Better&quot;),<br>       xlim = c(0, 4),<br>       ticks_at = c(0.5, 1, 2, 3),<br>       footnote = &quot;This is the demo data. Please feel free to change\nanything you want.&quot;,<br>       theme = tm)<br>dev.off().请根据我想要的代码效果修改我的森林图代码</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

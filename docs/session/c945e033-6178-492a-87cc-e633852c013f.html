@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>这种要怎么做</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>这种要怎么做</h1>
+      <p class="selected-session-meta">GBM 单细胞 · 2025/12/20 15:30 · 28 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-12-20/GBM_单细胞_c945e033.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#c945e033-6178-492a-87cc-e633852c013f">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 19:25</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这种要怎么做</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 19:25</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我先定位报错对应的单元格内容→把 <code class="inline-code">rank_genes_groups</code> 的 <code class="inline-code">groupby/reference</code> 改成匹配你实际分组（high/low 或 Primary/Recurrent/Normal）→顺手把后面 <code class="inline-code">case_when</code>（pandas 里不存在）那格改成可运行的写法，避免你修完这一处又卡下一处。</p><p class="message-paragraph">我将把报错那格的 <code class="inline-code">groupby</code> 改成你真正的 high/low 分组列，并把 <code class="inline-code">group</code> 列设成有序分类（low→high），同时修正后面会报错的 <code class="inline-code">case_when</code> 写法，保证整段流程能跑通。</p><p class="message-paragraph">已把三处关键点修好：1）按评分生成的 <code class="inline-code">group</code> 列改成有序分类 low/high；2）差异分析改用 <code class="inline-code">groupby=&#39;group&#39;</code>、<code class="inline-code">reference=&#39;low&#39;</code>；3）把 <code class="inline-code">case_when</code> 改成 <code class="inline-code">np.select</code>，避免下一步直接报错。接下来我跑一下出错那一格确认不再报 <code class="inline-code">reference</code> 错。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (7)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 20:26</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这里要怎么改</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 20:26</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我先快速确认 <code class="inline-code">adata.obs</code> 里到底有哪些分组列（<code class="inline-code">primary_status</code>、<code class="inline-code">Group</code> 的取值），这样才能把这一格改成既不报错、又和你后面取 <code class="inline-code">Post-treatment</code> 的代码一致。</p><p class="message-paragraph">我直接把这一格的 <code class="inline-code">reorder_categories(..., inplace=True)</code> 改成 pandas 2 兼容写法（返回新分类后再赋值），顺便把下一格热图用的对象/分组列改正确，避免你修完又立刻碰到下一个 KeyError。</p><p class="message-paragraph">我已经把导致 <code class="inline-code">inplace</code> 报错的地方修掉了；接下来我会直接运行你报错的那一格，确认不再抛 TypeError。</p><p class="message-paragraph">我看到不是普通 Python 异常了，而是内核直接崩溃（多半是底层库/内存问题）。我先把该单元格的输出/错误详情读出来确认，然后再把这格拆成“仅重排分类”和“再做差异分析”两步，方便定位是哪一步导致崩溃。</p><p class="message-paragraph">我先把内核状态恢复：重新运行“导包”和“读取 adata”两格，让 <code class="inline-code">adata</code> 重新存在，然后再运行你刚才这格验证已不再报 <code class="inline-code">inplace</code> 的错。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (9)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">mcp_pylance_mcp_s_pylanceWorkspaceRoots</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">mcp_pylance_mcp_s_pylanceRunCodeSnippet</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个是什么意思啊</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我先把要做的三步写入代办清单，方便跟踪和下一步执行。</p><p class="message-paragraph">进度：已把三步写入代办。下面简短解释警告含义并给出可行改法。</p><p class="message-paragraph">解释（简洁）：<br>- 第一个警告：scanpy 没有找到 dendrogram 数据，会用默认参数计算：如果想自定义布局，先运行 <code class="inline-code">sc.tl.dendrogram(adata_pr, groupby=&#39;primary_status&#39;)</code> 再画图。<br>- 第二个警告：表示你在做差异检验时只计算了某个组（例如你调用时用了 <code class="inline-code">groups=[&#39;Recurrent&#39;]</code>），所以结果里只有 <code class="inline-code">var_group_labels</code> = [&#39;Recurrent&#39;]，但绘图时 <code class="inline-code">groupby</code> 的类别有 <code class="inline-code">[&#39;Primary&#39;,&#39;Recurrent&#39;]</code>，两者不一致导致“Groups are not reordered”。</p><p class="message-paragraph">如何修复（二选一，选最简单的一条）：<br>- 方案 A（推荐，计算所有组的差异）：重新运行差异分析，去掉 <code class="inline-code">groups</code>/<code class="inline-code">reference</code> 限定，计算所有组：<br>  sc.tl.rank_genes_groups(adata_pr, groupby=&#39;primary_status&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;wilcoxon&#39;)<br>  然后直接画：<br>  sc.pl.rank_genes_groups_heatmap(adata_pr, n_genes=30, key=&#39;wilcoxon&#39;, groupby=&#39;primary_status&#39;, show_gene_labels=True)<br>- 方案 B（如果你只想比较 Recurrent vs Primary 并保留只测试 Recurrent）：绘图时指定同样的组（只画 Recurrent），或把 <code class="inline-code">adata_pr.obs[&#39;primary_status&#39;]</code> 的类别调整为只包含被检验的标签。例如在画 heatmap 时：<br>  sc.pl.rank_genes_groups_heatmap(adata_pr, n_genes=30, key=&#39;wilcoxon&#39;, groupby=&#39;primary_status&#39;, groups=[&#39;Recurrent&#39;], show_gene_labels=True)</p><p class="message-paragraph">额外：若想避免 dendrogram 警告并优化顺序，可以在绘图前显式生成 dendrogram：<br>  sc.tl.dendrogram(adata_pr, groupby=&#39;primary_status&#39;)<br>然后再画 heatmap。</p><p class="message-paragraph">需要我现在帮你：1) 检查 <code class="inline-code">adata_pr</code> 中 <code class="inline-code">primary_status</code> 的实际类别并给出建议，还是 2) 直接把 notebook 中对应单元改为方案 A（一键重算所有组并画图）？请选择。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">adata_pr = adataladata.obs I &#39;primary_status&#39;].isin(l&#39;Primary&#39;, &#39;Recurrent&#39;])].copy() adata_pr.obs[&#39;primary_status&#39;] = (adata_pr.obs[&#39;primary_status&#39;].astype(&#39;category&#39;)</p><p class="message-paragraph">•cat. reorder_categories(I&#39;Primary&#39;, &#39;Recurrent&#39;], ordered=True) )</p><p class="message-paragraph">sc.tl.rank_genes_groups(</p><p class="message-paragraph">adata_pr,</p><p class="message-paragraph">groupby=&#39;primary_status&#39;,</p><p class="message-paragraph"># groups=[ &#39;Recurrent&#39;],</p><p class="message-paragraph"># reference=&#39;Primary&#39;， #以 Primary 为参照，比对 Recurrent</p><p class="message-paragraph">method=&#39;wilcoxon&#39;</p><p class="message-paragraph">key_added=&#39;wilcoxon&#39;,是这样吗</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">{<br>  &quot;cells&quot;: [<br>    {<br>      &quot;cell_type&quot;: &quot;markdown&quot;,<br>      &quot;metadata&quot;: {<br>        &quot;language&quot;: &quot;markdown&quot;<br>      },<br>      &quot;source&quot;: [<br>        &quot;修正后的代码（替换出错那格）：&quot;<br>      ]<br>    },<br>    {<br>      &quot;cell_type&quot;: &quot;code&quot;,<br>      &quot;metadata&quot;: {<br>        &quot;language&quot;: &quot;python&quot;<br>      },<br>      &quot;source&quot;: [<br>        &quot;# 选出 Primary 和 Recurrent 的样本并拷贝&quot;,<br>        &quot;adata_pr = adata[adata.obs[&#39;primary_status&#39;].isin([&#39;Primary&#39;, &#39;Recurrent&#39;])].copy()&quot;,<br>        &quot;&quot;,<br>        &quot;# 将 primary_status 设为有序的 category（返回新对象后赋值）&quot;,<br>        &quot;adata_pr.obs[&#39;primary_status&#39;] = (&quot;,<br>        &quot;    adata_pr.obs[&#39;primary_status&#39;]&quot;,<br>        &quot;    .astype(&#39;category&#39;)&quot;,<br>        &quot;    .cat.reorder_categories([&#39;Primary&#39;, &#39;Recurrent&#39;], ordered=True)&quot;,<br>        &quot;)&quot;,<br>        &quot;&quot;,<br>        &quot;# 方案 A：对所有组计算差异（推荐）&quot;,<br>        &quot;sc.tl.rank_genes_groups(&quot;,<br>        &quot;    adata_pr,&quot;,<br>        &quot;    groupby=&#39;primary_status&#39;,&quot;,<br>        &quot;    method=&#39;wilcoxon&#39;,&quot;,<br>        &quot;    key_added=&#39;wilcoxon&#39;&quot;,<br>        &quot;)&quot;,<br>        &quot;&quot;,<br>        &quot;# 方案 B：只比较 Recurrent vs Primary（若只需此对比，取消注释下面两行并注释掉上面）&quot;,<br>        &quot;# sc.tl.rank_genes_groups(adata_pr, groupby=&#39;primary_status&#39;, groups=[&#39;Recurrent&#39;], reference=&#39;Primary&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;wilcoxon&#39;)&quot;<br>      ]<br>    }<br>  ]<br>}</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:37</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是这样改吗</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:37</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是的，思路对。注意两点小修正和建议：</p><p class="message-paragraph">- 修正语法/拼写：把错别字和缺少的逗号改好（<code class="inline-code">adata_pr</code>、<code class="inline-code">adata</code>、<code class="inline-code">method</code> 与 <code class="inline-code">key_added</code> 之间要有逗号）。<br>- 提醒：后面取结果用同一个对象 <code class="inline-code">adata_pr</code>（如 <code class="inline-code">sc.get.rank_genes_groups_df(adata_pr, group=..., key=&#39;wilcoxon&#39;)</code>），并可在画图前运行 <code class="inline-code">sc.tl.dendrogram(adata_pr, groupby=&#39;primary_status&#39;)</code> 去掉警告并优化顺序。</p><p class="message-paragraph">推荐的、已修正的代码：</p><pre class="message-code-block"><code>adata_pr = adata[adata.obs[&#39;primary_status&#39;].isin([&#39;Primary&#39;, &#39;Recurrent&#39;])].copy()
+adata_pr.obs[&#39;primary_status&#39;] = (
+    adata_pr.obs[&#39;primary_status&#39;].astype(&#39;category&#39;)
+    .cat.reorder_categories([&#39;Primary&#39;, &#39;Recurrent&#39;], ordered=True)
+)
+
+# 方案 A：计算所有组（推荐）
+sc.tl.rank_genes_groups(
+    adata_pr,
+    groupby=&#39;primary_status&#39;,
+    method=&#39;wilcoxon&#39;,
+    key_added=&#39;wilcoxon&#39;,
+)
+
+# 如果只想做 Recurrent vs Primary，改用：
+# sc.tl.rank_genes_groups(adata_pr, groupby=&#39;primary_status&#39;, groups=[&#39;Recurrent&#39;], reference=&#39;Primary&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;wilcoxon&#39;)</code></pre><p class="message-paragraph">要我现在帮你把 notebook 里那格替换成上面这段并运行测试吗？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个是 gene的数量吗还是细胞的数量</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这是每个细胞类型（<code class="inline-code">self_annotation</code>）的细胞数，不是基因数。</p><p class="message-paragraph">快速确认命令：<br>- 总细胞数：<code class="inline-code">adata.n_obs</code> 或 <code class="inline-code">adata.shape[0]</code><br>- 总基因数：<code class="inline-code">adata.n_vars</code> 或 <code class="inline-code">adata.shape[1]</code><br>- 你当前的输出来自：<code class="inline-code">adata.obs[&#39;self_annotation&#39;].value_counts()</code>，返回每个类别的细胞计数（Series，Name: count）。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如何查看Macrophage有多少个 gene，且怎么计算有没有差异</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我要把本次任务细分为可追踪的 TODO，并给出可直接运行的代码片段用于统计和差异分析。</p><p class="message-paragraph">进度：已记录三项 TODO（统计基因、子群内差异、宏观 vs 其他差异）。下面给出两格 notebook 风格的内容（说明 + 可直接运行的代码）。请在 notebook 中新建或替换为两个单元并运行。</p><p class="message-paragraph">{<br>  &quot;cells&quot;: [<br>    {<br>      &quot;cell_type&quot;: &quot;markdown&quot;,<br>      &quot;metadata&quot;: {<br>        &quot;language&quot;: &quot;markdown&quot;<br>      },<br>      &quot;source&quot;: [<br>        &quot;目标：\n&quot;,<br>        &quot;- 统计 Macrophage 子集的基因数量（总基因数 与 在至少 N 个细胞中有表达的基因数）。\n&quot;,<br>        &quot;- 计算差异表达：1) Macrophage 内部各子群（如 <code class="inline-code">leiden_sub</code>）之间的差异；2) Macrophage 与其它细胞的差异。\n&quot;,<br>        &quot;注意：差异分析前请确保数据已归一化并适当过滤（例如 <code class="inline-code">sc.pp.normalize_total</code>、<code class="inline-code">sc.pp.log1p</code>、去低表达基因）。&quot;<br>      ]<br>    },<br>    {<br>      &quot;cell_type&quot;: &quot;code&quot;,<br>      &quot;metadata&quot;: {<br>        &quot;language&quot;: &quot;python&quot;<br>      },<br>      &quot;source&quot;: [<br>        &quot;# 1) 子集为 Macrophage（如果已存在 adata_Macro 可跳过）&quot;,<br>        &quot;adata_Macro = adata[adata.obs[&#39;self_annotation&#39;] == &#39;Macrophage&#39;].copy()&quot;,<br>        &quot;print(&#39;Macrophage 细胞数:&#39;, adata_Macro.n_obs)&quot;,<br>        &quot;print(&#39;Macrophage 总基因数 (var):&#39;, adata_Macro.n_vars)&quot;,<br>        &quot;&quot;,<br>        &quot;# 统计在至少 N 个细胞中有表达的基因数（处理稀疏矩阵）&quot;,<br>        &quot;import numpy as np&quot;,<br>        &quot;from scipy import sparse&quot;,<br>        &quot;&quot;,<br>        &quot;def count_expressed_genes(adata_sub, min_cells=1):&quot;,<br>        &quot;    X = adata_sub.X&quot;,<br>        &quot;    if sparse.issparse(X):&quot;,<br>        &quot;        counts_per_gene = np.asarray((X &gt; 0).sum(axis=0)).ravel()&quot;,<br>        &quot;    else:&quot;,<br>        &quot;        counts_per_gene = (X &gt; 0).sum(axis=0)&quot;,<br>        &quot;    return int((counts_per_gene &gt;= min_cells).sum())&quot;,<br>        &quot;&quot;,<br>        &quot;print(&#39;genes expressed in &gt;=1 cell:&#39;, count_expressed_genes(adata_Macro, min_cells=1))&quot;,<br>        &quot;print(&#39;genes expressed in &gt;=5 cells:&#39;, count_expressed_genes(adata_Macro, min_cells=5))&quot;,<br>        &quot;&quot;,<br>        &quot;# 2) 若想在 Macrophage 内部做子群（例如 leiden_sub）差异分析：&quot;,<br>        &quot;if &#39;leiden_sub&#39; in adata_Macro.obs.columns:&quot;,<br>        &quot;    sc.tl.rank_genes_groups(adata_Macro, groupby=&#39;leiden_sub&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_wilcox&#39;)&quot;,<br>        &quot;    # 查看某一子群的 top genes（示例取第一个类别）&quot;,<br>        &quot;    grp = adata_Macro.obs[&#39;leiden_sub&#39;].astype(&#39;category&#39;).cat.categories[0]&quot;,<br>        &quot;    df_grp = sc.get.rank_genes_groups_df(adata_Macro, group=grp, key=&#39;macro_wilcox&#39;)&quot;,<br>        &quot;    print(f&#39;Top DE for subgroup {grp}:&#39;)&quot;,<br>        &quot;    display(df_grp.head())&quot;,<br>        &quot;else:&quot;,<br>        &quot;    print(&#39;adata_Macro 中没有列 \&quot;leiden_sub\&quot;，先运行聚类：sc.tl.leiden(adata_Macro, key_added=\&quot;leiden_sub\&quot;)&#39;)&quot;,<br>        &quot;&quot;,<br>        &quot;# 3) 若想比较 Macrophage vs 其他细胞（在全数据上运行）：&quot;,<br>        &quot;adata.obs[&#39;macro_vs_rest&#39;] = np.where(adata.obs[&#39;self_annotation&#39;] == &#39;Macrophage&#39;, &#39;Macrophage&#39;, &#39;Other&#39;)&quot;,<br>        &quot;sc.tl.rank_genes_groups(adata, groupby=&#39;macro_vs_rest&#39;, groups=[&#39;Macrophage&#39;], reference=&#39;Other&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_vs_rest&#39;)&quot;,<br>        &quot;df_macro = sc.get.rank_genes_groups_df(adata, group=&#39;Macrophage&#39;, key=&#39;macro_vs_rest&#39;)&quot;,<br>        &quot;df_macro_filtered = df_macro[(df_macro.pvals_adj &lt; 0.05) &amp; (abs(df_macro.logfoldchanges) &gt; 0.5)]&quot;,<br>        &quot;print(&#39;Macrophage vs Other: top DEG (filtered):&#39;)&quot;,<br>        &quot;display(df_macro_filtered.head())&quot;,<br>        &quot;&quot;,<br>        &quot;# 保存结果示例：&quot;,<br>        &quot;df_macro.to_csv(&#39;./write/Macrophage_vs_Other_all_DEG.csv&#39;, index=False)&quot;,<br>        &quot;if &#39;macro_wilcox&#39; in adata_Macro.uns.keys():&quot;,<br>        &quot;    sc.get.rank_genes_groups_df(adata_Macro, key=&#39;macro_wilcox&#39;).to_csv(&#39;./write/Macrophage_subgroups_DEG.csv&#39;, index=False)&quot;<br>      ]<br>    }<br>  ]<br>}</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:43</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如何查看Macrophage有多少个 gene，且怎么计算有没有差异</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:43</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">进度：已记录统计基因和差异分析的步骤。下面是为您准备的说明和代码，您可以直接在 Notebook 中添加运行。</p><p class="message-paragraph">&lt;VSCode.Cell language=&quot;markdown&quot;&gt;<br>### Macrophage 基因统计与差异分析<br>1. **基因数量统计**：<br>   - <code class="inline-code">adata_Macro.n_vars</code>：查看该子集包含的总基因数（通常与全数据一致）。<br>   - **表达基因数**：统计在 Macrophage 中至少有 1 个细胞表达的基因。<br>2. **差异分析 (DE)**：<br>   - **子群间差异**：比较 Macrophage 内部不同 <code class="inline-code">leiden_sub</code> 之间的差异。<br>   - **宏观差异**：比较 Macrophage 与全数据中其他所有细胞的差异。<br>&lt;/VSCode.Cell&gt;</p><p class="message-paragraph">&lt;VSCode.Cell language=&quot;python&quot;&gt;<br># 1) 统计基因数量<br>print(f&quot;Macrophage 子集总基因数: {adata_Macro.n_vars}&quot;)</p><p class="message-paragraph"># 计算在 Macrophage 中至少在 1 个细胞中表达的基因数<br>import numpy as np<br>from scipy import sparse</p><p class="message-paragraph">def count_expressed_genes(adata_sub, min_cells=1):<br>    X = adata_sub.X<br>    if sparse.issparse(X):<br>        # 统计每列（基因）非零元素的个数<br>        counts_per_gene = np.asarray((X &gt; 0).sum(axis=0)).ravel()<br>    else:<br>        counts_per_gene = (X &gt; 0).sum(axis=0)<br>    return int((counts_per_gene &gt;= min_cells).sum())</p><p class="message-paragraph">n_expr = count_expressed_genes(adata_Macro, min_cells=1)<br>print(f&quot;在 Macrophage 中至少有表达的基因数: {n_expr}&quot;)</p><p class="message-paragraph"># 2) 计算 Macrophage 内部子群差异 (DE)<br># 假设您已经运行了 sc.tl.leiden(adata_Macro, key_added=&#39;leiden_sub&#39;)<br>if &#39;leiden_sub&#39; in adata_Macro.obs.columns:<br>    print(&quot;\n正在计算 Macrophage 内部子群差异...&quot;)<br>    sc.tl.rank_genes_groups(adata_Macro, groupby=&#39;leiden_sub&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_sub_wilcox&#39;)<br>    # 显示第一个子群的 Top 10 差异基因<br>    sc.pl.rank_genes_groups(adata_Macro, n_genes=20, sharey=False, key=&#39;macro_sub_wilcox&#39;)<br>else:<br>    print(&quot;\n提示：请先运行 leiden 聚类后再计算子群差异。&quot;)</p><p class="message-paragraph"># 3) 计算 Macrophage vs 其他所有细胞的差异<br>print(&quot;\n正在计算 Macrophage vs 其他细胞的差异...&quot;)<br># 在全数据 adata 中标记 Macrophage<br>adata.obs[&#39;is_macro&#39;] = np.where(adata.obs[&#39;self_annotation&#39;] == &#39;Macrophage&#39;, &#39;Macrophage&#39;, &#39;Others&#39;)<br>sc.tl.rank_genes_groups(adata, groupby=&#39;is_macro&#39;, groups=[&#39;Macrophage&#39;], reference=&#39;Others&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_vs_rest&#39;)</p><p class="message-paragraph"># 提取并查看结果表格<br>de_res = sc.get.rank_genes_groups_df(adata, group=&#39;Macrophage&#39;, key=&#39;macro_vs_rest&#39;)<br>print(&quot;Macrophage vs Others 前 5 个显著</p><p class="message-paragraph">上调基因：&quot;)<br>display(de_res.head())<br>&lt;/VSCode.Cell&gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">结合前面的代码修改这部分</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:48</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经结合你前面的 <code class="inline-code">adata_Macro</code> 子集和 <code class="inline-code">leiden_sub</code> 聚类结果，修改了第 10 个单元格的代码。</p><p class="message-paragraph">**修改点说明：**<br>1.  **基因统计**：保留了你之前的函数（并修复了缩进），现在会同时输出总基因数和实际表达的基因数。<br>2.  **子群差异 (DE)**：利用你前面刚算好的 <code class="inline-code">leiden_sub</code> 分组，直接运行 <code class="inline-code">rank_genes_groups</code> 并画出 Top 20 基因图。<br>3.  **宏观差异**：在全数据 <code class="inline-code">adata</code> 中自动创建了 <code class="inline-code">is_macro</code> 列，用来计算 Macrophage 相比于其他所有细胞（Others）的差异基因，并自动保存结果到 <code class="inline-code">./write/Macrophage_vs_Others_DEG.csv</code>。</p><p class="message-paragraph">你可以直接运行这个单元格来查看结果。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:50</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我要计算primary_status的中复发和原发的差异基因</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:50</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经在第 10 个单元格中添加了 **Macrophage 内部 Primary（原发）与 Recurrent（复发）** 的差异分析代码。</p><p class="message-paragraph">**新增逻辑：**<br>1.  **自动检测**：检查 <code class="inline-code">adata_Macro.obs</code> 中是否存在 <code class="inline-code">primary_status</code> 列。<br>2.  **差异计算**：以 <code class="inline-code">Primary</code> 为参照（reference），计算 <code class="inline-code">Recurrent</code> 组的差异基因（使用 Wilcoxon 秩和检验）。<br>3.  **结果展示与保存**：<br>    *   在屏幕上打印前 5 个差异基因。<br>    *   将完整的差异分析列表保存为 <code class="inline-code">./write/Macro_DEG_Recurrent_vs_Primary.csv</code>。</p><p class="message-paragraph">你可以直接运行该单元格，运行结束后在</p><p class="message-paragraph">文件夹下就能找到对应的 CSV 文件了。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 22:51</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">没看到你修改代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 22:51</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">抱歉，可能是我直接更新了现有的单元格，导致你没注意到变化。我已经把 **Primary vs Recurrent** 的差异分析逻辑合并到了你代码中统计基因数量的那一格（即 <code class="inline-code">adata_Macro.obs.to_csv</code> 之后的那个单元格）。</p><p class="message-paragraph">你可以查看 **第 10 个单元格**（ID 为 `#VSC-154a7ced</p><p class="message-paragraph">` 的那一格），现在的完整代码如下：</p><pre class="message-code-block"><code># 1) 统计基因数量
+print(f&quot;Macrophage 子集总基因数: {adata_Macro.n_vars}&quot;)
+
+# 计算在 Macrophage 中至少在 1 个细胞中表达的基因数
+import numpy as np
+from scipy import sparse
+
+def count_expressed_genes(adata_sub, min_cells=1):
+    X = adata_sub.X
+    if sparse.issparse(X):
+        # 统计每列（基因）非零元素的个数
+        counts_per_gene = np.asarray((X &gt; 0).sum(axis=0)).ravel()
+    else:
+        counts_per_gene = (X &gt; 0).sum(axis=0)
+    return int((counts_per_gene &gt;= min_cells).sum())
+
+n_expr = count_expressed_genes(adata_Macro, min_cells=1)
+print(f&quot;在 Macrophage 中至少有表达的基因数: {n_expr}&quot;)
+
+# 2) 计算 Macrophage 内部子群差异 (DE)
+if &#39;leiden_sub&#39; in adata_Macro.obs.columns:
+    print(&quot;\n正在计算 Macrophage 内部子群差异 (leiden_sub)...&quot;)
+    sc.tl.rank_genes_groups(adata_Macro, groupby=&#39;leiden_sub&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_sub_wilcox&#39;)
+    sc.pl.rank_genes_groups(adata_Macro, n_genes=20, sharey=False, key=&#39;macro_sub_wilcox&#39;)
+
+# 3) 计算 Macrophage vs 其他所有细胞的差异
+print(&quot;\n正在计算 Macrophage vs 其他细胞的差异...&quot;)
+adata.obs[&#39;is_macro&#39;] = np.where(adata.obs[&#39;self_annotation&#39;] == &#39;Macrophage&#39;, &#39;Macrophage&#39;, &#39;Others&#39;)
+sc.tl.rank_genes_groups(adata, groupby=&#39;is_macro&#39;, groups=[&#39;Macrophage&#39;], reference=&#39;Others&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_vs_rest&#39;)
+de_res = sc.get.rank_genes_groups_df(adata, group=&#39;Macrophage&#39;, key=&#39;macro_vs_rest&#39;)
+display(de_res.head())
+
+# 4) 【新增】计算 Macrophage 内部 Primary vs Recurrent 的差异
+if &#39;primary_status&#39; in adata_Macro.obs.columns:
+    print(&quot;\n正在计算 Macrophage 内部 Primary vs Recurrent 的差异...&quot;)
+    adata_Macro.obs[&#39;primary_status&#39;] = adata_Macro.obs[&#39;primary_status&#39;].astype(&#39;category&#39;)
+    
+    # 计算差异：以 Primary 为参照，看 Recurrent 的变化
+    sc.tl.rank_genes_groups(
+        adata_Macro, 
+        groupby=&#39;primary_status&#39;, 
+        groups=[&#39;Recurrent&#39;], 
+        reference=&#39;Primary&#39;, 
+        method=&#39;wilcoxon&#39;, 
+        key_added=&#39;macro_recurrent_vs_primary&#39;
+    )
+    
+    # 提取并保存结果
+    de_recurrent = sc.get.rank_genes_groups_df(adata_Macro, group=&#39;Recurrent&#39;, key=&#39;macro_recurrent_vs_primary&#39;)
+    print(&quot;Macrophage: Recurrent vs Primary 差异基因：&quot;)
+    display(de_recurrent.head())
+    de_recurrent.to_csv(&#39;./write/Macro_DEG_Recurrent_vs_Primary.csv&#39;, index=False)
+else:
+    print(&quot;\n提示：未找到 &#39;primary_status&#39; 列。&quot;)
+# 1) 统计基因数量
+print(f&quot;Macrophage 子集总基因数: {adata_Macro.n_vars}&quot;)
+
+# 计算在 Macrophage 中至少在 1 个细胞中表达的基因数
+import numpy as np
+from scipy import sparse
+
+def count_expressed_genes(adata_sub, min_cells=1):
+    X = adata_sub.X
+    if sparse.issparse(X):
+        # 统计每列（基因）非零元素的个数
+        counts_per_gene = np.asarray((X &gt; 0).sum(axis=0)).ravel()
+    else:
+        counts_per_gene = (X &gt; 0).sum(axis=0)
+    return int((counts_per_gene &gt;= min_cells).sum())
+
+n_expr = count_expressed_genes(adata_Macro, min_cells=1)
+print(f&quot;在 Macrophage 中至少有表达的基因数: {n_expr}&quot;)
+
+# 2) 计算 Macrophage 内部子群差异 (DE)
+if &#39;leiden_sub&#39; in adata_Macro.obs.columns:
+    print(&quot;\n正在计算 Macrophage 内部子群差异 (leiden_sub)...&quot;)
+    sc.tl.rank_genes_groups(adata_Macro, groupby=&#39;leiden_sub&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_sub_wilcox&#39;)
+    sc.pl.rank_genes_groups(adata_Macro, n_genes=20, sharey=False, key=&#39;macro_sub_wilcox&#39;)
+
+# 3) 计算 Macrophage vs 其他所有细胞的差异
+print(&quot;\n正在计算 Macrophage vs 其他细胞的差异...&quot;)
+adata.obs[&#39;is_macro&#39;] = np.where(adata.obs[&#39;self_annotation&#39;] == &#39;Macrophage&#39;, &#39;Macrophage&#39;, &#39;Others&#39;)
+sc.tl.rank_genes_groups(adata, groupby=&#39;is_macro&#39;, groups=[&#39;Macrophage&#39;], reference=&#39;Others&#39;, method=&#39;wilcoxon&#39;, key_added=&#39;macro_vs_rest&#39;)
+de_res = sc.get.rank_genes_groups_df(adata, group=&#39;Macrophage&#39;, key=&#39;macro_vs_rest&#39;)
+display(de_res.head())
+
+# 4) 【新增】计算 Macrophage 内部 Primary vs Recurrent 的差异
+if &#39;primary_status&#39; in adata_Macro.obs.columns:
+    print(&quot;\n正在计算 Macrophage 内部 Primary vs Recurrent 的差异...&quot;)
+    adata_Macro.obs[&#39;primary_status&#39;] = adata_Macro.obs[&#39;primary_status&#39;].astype(&#39;category&#39;)
+    
+    # 计算差异：以 Primary 为参照，看 Recurrent 的变化
+    sc.tl.rank_genes_groups(
+        adata_Macro, 
+        groupby=&#39;primary_status&#39;, 
+        groups=[&#39;Recurrent&#39;], 
+        reference=&#39;Primary&#39;, 
+        method=&#39;wilcoxon&#39;, 
+        key_added=&#39;macro_recurrent_vs_primary&#39;
+    )
+    
+    # 提取并保存结果
+    de_recurrent = sc.get.rank_genes_groups_df(adata_Macro, group=&#39;Recurrent&#39;, key=&#39;macro_recurrent_vs_primary&#39;)
+    print(&quot;Macrophage: Recurrent vs Primary 差异基因：&quot;)
+    display(de_recurrent.head())
+    de_recurrent.to_csv(&#39;./write/Macro_DEG_Recurrent_vs_Primary.csv&#39;, index=False)
+else:
+    print(&quot;\n提示：未找到 &#39;primary_status&#39; 列。&quot;)</code></pre><p class="message-paragraph">如果你在编辑器里还是没看到，请尝试刷新一下文件，或者直接运行该单元格即可看到输出结果。如果你在编辑器里还是没看到，请尝试刷新一下文件，或者直接运行该单元格即可看到输出结果。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/20 23:00</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">提取结果表格并显示前几行后保存结果啊</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/20 23:00</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经在代码中补全了**提取、显示并保存**结果表格的逻辑。</p><p class="message-paragraph">现在，第 10 个单元格（`#VSC-154a7ced</p><p class="message-paragraph"><code class="inline-code">）在运行后会执行以下操作：<br>1.  **Macrophage 内部子群 (leiden_sub)**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_subgroups_leiden_DEG.csv<code class="inline-code">。<br>2.  **Macrophage vs 其他细胞**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macrophage_vs_Others_DEG.csv<code class="inline-code">。<br>3.  **Primary vs Recurrent**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_DEG_Recurrent_vs_Primary.csv`。</p><p class="message-paragraph">你可以直接运行该单元格，所有结果都会自动保存到</p><p class="message-paragraph">文件夹下。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/21 15:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">sc.tl.rank_genes_groups(adata, &#39;sample_type&#39;, method=&#39;wilcoxon&#39;, key_added = &quot;wilcoxon&quot;)<br>sc.pl.rank_genes_groups(adata, n_genes=30, sharey=False, key=&quot;wilcoxon&quot;)结果怎么保存</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/21 15:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">要保存 <code class="inline-code">sc.tl.rank_genes_groups</code> 的结果，你可以使用 <code class="inline-code">sc.get.rank_genes_groups_df</code> 函数将结果转换为 Pandas DataFrame，然后使用 <code class="inline-code">.to_csv()</code> 保存。</p><p class="message-paragraph">我已经在</p><p class="message-paragraph">的第 6 个单元格中添加了以下代码：</p><pre class="message-code-block"><code># 提取所有组的差异基因结果并保存
+deg_results = sc.get.rank_genes_groups_df(adata, group=None, key=&#39;wilcoxon&#39;)
+deg_results.to_csv(&#39;./write/All_Groups_sample_type_DEG.csv&#39;, index=False)
+print(&quot;差异分析结果已保存至: ./write/All_Groups_sample_type_DEG.csv&quot;)
+display(deg_results.head())</code></pre><p class="message-paragraph">### 关键点说明：<br>1.  **<code class="inline-code">group=None</code>**: 这会提取所有对比组的结果（例如 <code class="inline-code">Normal</code> 和 <code class="inline-code">Tumor</code>）。如果你只想提取某一特定组（如 <code class="inline-code">Post-treatment</code>），可以将 <code class="inline-code">None</code> 改为对应的组名。<br>2.  **<code class="inline-code">key=&#39;wilcoxon&#39;</code>**: 必须与你在 <code class="inline-code">sc.tl.rank_genes_groups</code> 中设置的 <code class="inline-code">key_added</code> 参数一致。<br>3.  **保存路径**: 结果将保存到</p><p class="message-paragraph">文件夹下的 <code class="inline-code">All_Groups_sample_type_DEG.csv</code>。</p><p class="message-paragraph">你现在可以直接运行该单元格来生成并保存结果文件。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (3)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/21 16:26</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">报错原因是什么</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/21 16:26</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">报错的原因主要有两个：</p><p class="message-paragraph">1.  **基因不在 <code class="inline-code">adata.var_names</code> 中**：<code class="inline-code">sc.tl.rank_genes_groups</code> 默认会使用 <code class="inline-code">adata.raw</code>（如果存在）中的所有基因进行差异分析。你得到的差异基因（如 <code class="inline-code">GPX1</code>, <code class="inline-code">GNB2L1</code> 等）存在于原始数据中，但可能在预处理（如高变基因筛选）时被过滤掉了，因此不在当前的 <code class="inline-code">adata.var_names</code> 中。<br>2.  **<code class="inline-code">use_raw=False</code> 的限制**：在报错的单元格中，你设置了 <code class="inline-code">use_raw=False</code>，这强制 Scanpy 只在当前的 <code class="inline-code">adata.var_names</code> 中查找基因，导致找不到这些差异基因。</p><p class="message-paragraph">此外，我还发现你的代码中存在 **<code class="inline-code">Group</code>** 和 **<code class="inline-code">sample_type</code>** 列名不一致的问题（<code class="inline-code">adata.obs</code> 中似乎只有 <code class="inline-code">sample_type</code> 而没有 <code class="inline-code">Group</code>）。</p><p class="message-paragraph">### 修复方案</p><p class="message-paragraph">我已经对</p><p class="message-paragraph">进行了以下修改：</p><p class="message-paragraph">1.  **修复 KeyError**：在第 10 个单元格中，将 <code class="inline-code">use_raw=False</code> 改为 <code class="inline-code">use_raw=True</code>。这样 Scanpy 就会去 <code class="inline-code">adata.raw</code> 中查找这些基因。<br>2.  **增强列名兼容性**：在提取数据和绘图时，增加了对 <code class="inline-code">Group</code> 列是否存在的检查。如果不存在 <code class="inline-code">Group</code>，则自动使用 <code class="inline-code">sample_type</code>。</p><p class="message-paragraph">**修改后的代码（第 10 个单元格）：**</p><pre class="message-code-block"><code>genes = Crisis_genes.iloc[:25,][&#39;names&#39;].tolist() 
+# 检查 &#39;Group&#39; 是否在 adata.obs 中，如果不在则使用 &#39;sample_type&#39;
+obs_keys = [&quot;self_annotation&quot;, &#39;sample_type&#39;]
+if &#39;Group&#39; in adata.obs.columns:
+    obs_keys.append(&#39;Group&#39;)
+
+df = sc.get.obs_df(adata, genes + obs_keys, use_raw=True) # 改为 True
+df2 = df.melt(id_vars=obs_keys, value_vars=genes)
+df2.head()</code></pre><p class="message-paragraph">**修改后的绘图代码（第 11 个单元格）：**</p><pre class="message-code-block"><code># 自动选择存在的列进行绘图
+hue_col = &#39;Group&#39; if &#39;Group&#39; in df2.columns else &#39;sample_type&#39;
+hue_order = [&#39;Pre-treatment&#39;, &#39;Post-treatment&#39;] if hue_col == &#39;Group&#39; else [&#39;Normal&#39;, &#39;Tumor&#39;]
+
+ax = sns.catplot(
+    x=&quot;self_annotation&quot;, y=&quot;value&quot;, hue=hue_col, kind=&#39;bar&#39;, 
+    hue_# 自动选择存在的列进行绘图
+hue_col = &#39;Group&#39; if &#39;Group&#39; in df2.columns else &#39;sample_type&#39;
+hue_order = [&#39;Pre-treatment&#39;, &#39;Post-treatment&#39;] if hue_col == &#39;Group&#39; else [&#39;Normal&#39;, &#39;Tumor&#39;]
+
+ax = sns.catplot(
+    x=&quot;self_annotation&quot;, y=&quot;value&quot;, hue=hue_col, kind=&#39;bar&#39;, 
+    hue_
+
+order=hue_order, col=&quot;variable&quot;, data=df2, col_wrap=5
+)</code></pre><p class="message-paragraph">你现在可以重新运行这些单元格，报错应该会消失。你现在可以重新运行这些单元格，报错应该会消失。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (9)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">mcp_pylance_mcp_s_pylanceRunCodeSnippet</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>GSE246298_DEG = DEG_tb GSE106090_DEG = DEG_tb</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>GSE246298_DEG = DEG_tb GSE106090_DEG = DEG_tb</h1>
+      <p class="selected-session-meta">绘制 DEG 韦恩图的 R 代码示例 · 2025/12/18 10:42 · 12 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-12-18/绘制_DEG_韦恩图的_R_代码示例_e34d162d.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#e34d162d-c106-43ce-8bba-75efcbe56480">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">GSE246298_DEG = DEG_tb<br>GSE106090_DEG = DEG_tb</p><p class="message-paragraph">library(ggVennDiagram)<br>library(ggplot2)<br>library(dplyr)</p><p class="message-paragraph"># 数据准备<br>genes_GSE246298 &lt;- rownames(GSE246298_DEG[GSE246298_DEG$DEG != &quot;Not_Change&quot;, ])<br>genes_GSE106090 &lt;- rownames(GSE106090_DEG[GSE106090_DEG$DEG != &quot;Not_Change&quot;, ])</p><p class="message-paragraph">gene_list &lt;- list(<br>    GSE246298 = genes_GSE246298,<br>    GSE106090 = genes_GSE106090<br>)</p><p class="message-paragraph"># 提取共同基因<br>common_genes &lt;- intersect(genes_GSE246298, genes_GSE106090)<br>up_GSE246298 &lt;- rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Up&quot;, ])<br>up_GSE106090 &lt;- rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Up&quot;, ])<br>common_up_genes &lt;- intersect(up_GSE246298, up_GSE106090)<br>down_GSE246298 &lt;- rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Down&quot;, ])<br>down_GSE106090 &lt;- rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Down&quot;, ])<br>common_down_genes &lt;- intersect(down_GSE246298, down_GSE106090)<br>length(common_down_genes)<br>length(common_up_genes)。按照这个帮我制作韦恩图p_nature &lt;- ggVennDiagram(<br>    gene_list,<br>    label_alpha = 0,<br>    label = &quot;both&quot;,            # 同时显示数量和百分比<br>    label_size = 6,<br>    label_color = &quot;#2C3E50&quot;,<br>    edge_size = 2,<br>    set_size = 8,              # 数据集名称字体大小<br>    set_color = &quot;#2C3E50&quot;,<br>    show_sets = TRUE<br>) +<br>    scale_fill_gradient(<br>        low = &quot;white&quot;,<br>        high = &quot;#0073C2&quot;,      # 经典蓝色<br>        name = &quot;DEG Count&quot;<br>    ) +<br>    scale_color_manual(values = c(&quot;#2C3E50&quot;, &quot;#2C3E50&quot;)) +<br>    scale_x_continuous(expand = expansion(mult = 0.25)) +<br>    theme_void() +<br>    theme(<br>        legend.position = &quot;right&quot;,<br>        legend.title = element_text(size = 13, face = &quot;bold&quot;),<br>        legend.text = element_text(size = 11),<br>        plot.background = element_rect(fill = &quot;white&quot;, color = NA),<br>        plot.margin = margin(30, 30, 30, 30)<br>    )</p><p class="message-paragraph"># 添加共同基因数量标注<br>p_nature &lt;- p_nature +<br>    annotate(<br>        &quot;text&quot;,<br>        x = Inf, y = -Inf,<br>        label = sprintf(&quot;Common genes: %d&quot;, length(common_genes)),<br>        hjust = 1.05, vjust = -0.8,<br>        size = 5.5,<br>        fontface = &quot;bold.italic&quot;,<br>        color = &quot;#0073C2&quot;<br>    )</p><p class="message-paragraph">ggsave(<br>    filename = file.path(out_dir, &quot;DEG_venn_nature.pdf&quot;),<br>    plot = p_nature,<br>    width = 10,<br>    height = 6.5,<br>    dpi = 300<br>)<br>。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">下面给你一段“按你现有逻辑”可以直接跑的 R 代码，用 <code class="inline-code">ggVennDiagram</code> 画 **GSE246298 vs GSE106090 的 DEG（排除 Not_Change）韦恩图**，并保存为 <code class="inline-code">DEG_venn_nature.pdf</code>。我也把 <code class="inline-code">common_genes/common_up/common_down</code> 的数量一起标注到图上（不改变你的主体样式）。</p><p class="message-paragraph">&gt; 关键注意：你开头写的  <br>&gt; <code class="inline-code">GSE246298_DEG = DEG_tb</code> 和 <code class="inline-code">GSE106090_DEG = DEG_tb</code> 会把两个对象指向同一个表，最后两组基因会完全一样，韦恩图就没意义。请确保它们是两张不同的 DEG 表。</p><pre class="message-code-block"><code>library(ggVennDiagram)
+library(ggplot2)
+library(dplyr)
+
+## 1) 确保 out_dir 存在
+out_dir &lt;- &quot;results&quot;  # 你也可以换成自己的路径
+if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+
+## 2) 数据准备（假设两张表行名是基因名，且有一列 DEG: Up/Down/Not_Change）
+stopifnot(&quot;DEG&quot; %in% colnames(GSE246298_DEG), &quot;DEG&quot; %in% colnames(GSE106090_DEG))
+
+genes_GSE246298 &lt;- rownames(GSE246298_DEG[GSE246298_DEG$DEG != &quot;Not_Change&quot;, , drop = FALSE])
+genes_GSE106090 &lt;- rownames(GSE106090_DEG[GSE106090_DEG$DEG != &quot;Not_Change&quot;, , drop = FALSE])
+
+## 去重/去空，避免集合计算异常
+genes_GSE246298 &lt;- unique(na.omit(genes_GSE246298))
+genes_GSE106090 &lt;- unique(na.omit(genes_GSE106090))
+
+gene_list &lt;- list(
+  GSE246298 = genes_GSE246298,
+  GSE106090 = genes_GSE106090
+)
+
+## 3) 共同基因（全部DEG / Up / Down）
+common_genes &lt;- intersect(genes_GSE246298, genes_GSE106090)
+
+up_GSE246298 &lt;- unique(na.omit(rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Up&quot;, , drop = FALSE])))
+up_GSE106090 &lt;- unique(na.omit(rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Up&quot;, , drop = FALSE])))
+common_up_genes &lt;- intersect(up_GSE246298, up_GSE106090)
+
+down_GSE246298 &lt;- unique(na.omit(rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Down&quot;, , drop = FALSE])))
+down_GSE106090 &lt;- unique(na.omit(rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Down&quot;, , drop = FALSE])))
+common_down_genes &lt;- intersect(down_GSE246298, down_GSE106090)
+
+length(common_down_genes)
+length(common_up_genes)
+
+## 4) 画韦恩图（按你给的“nature风格”）
+p_nature &lt;- ggVennDiagram(
+  gene_list,
+  label_alpha = 0,
+  label = &quot;both&quot;,            # 同时显示数量和百分比
+  label_size = 6,
+  label_color = &quot;#2C3E50&quot;,
+  edge_size = 2,
+  set_size = 8,
+  set_color = &quot;#2C3E50&quot;,
+  show_sets = TRUE
+) +
+  scale_fill_gradient(
+    low = &quot;white&quot;,
+    high = &quot;#0073C2&quot;,
+    name = &quot;DEG Count&quot;
+  ) +
+  scale_color_manual(values = c(&quot;#2C3E50&quot;, &quot;#2C3E50&quot;)) +
+  scale_x_continuous(expand = expansion(mult = 0.25)) +
+  theme_void() +
+  theme(
+    legend.position = &quot;right&quot;,
+    legend.title = element_text(size = 13, face = &quot;bold&quot;),
+    legend.text = element_text(size = 11),
+    plot.background = element_rect(fill = &quot;white&quot;, color = NA),
+    plot.margin = margin(30, 30, 30, 30)
+  ) +
+  annotate(
+    &quot;text&quot;,
+    x = Inf, y = -Inf,
+    label = sprintf(
+      &quot;Common genes: %d\nCommon Up: %d\nCommon Down: %d&quot;,
+      length(common_genes), length(common_up_genes), length(common_down_genes)
+    ),
+    hjust = 1.05, vjust = -0.8,
+    size = 5.5,
+    fontface = &quot;bold.italic&quot;,
+    color = &quot;#0073C2&quot;
+  )
+
+## 5) 保存
+ggsave(
+  filename = file.path(out_dir, &quot;DEG_venn_nature.pdf&quot;),
+  plot = p_nature,
+  width = 10,
+  height = 6.5,
+  dpi = 300
+)</code></pre><p class="message-paragraph">如果你还想再分别画 **Up-only 的韦恩图** 和 **Down-only 的韦恩图**（各存一个 PDF），我也可以按同样风格给你补两段最小改动版本。你更希望输出 1 张总图，还是 3 张（All/Up/Down）？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">共同common_up_genes和common_down_genes的韦恩图。还有这两个合并起来的 common_direction_genes的韦恩图</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">下面给你直接可跑的 3 张韦恩图代码（同你之前 <code class="inline-code">p_nature</code> 的风格）：</p><p class="message-paragraph">1) **Up 基因集（两队列之间）** 的韦恩图  <br>2) **Down 基因集（两队列之间）** 的韦恩图  <br>3) **把 Up+Down 合并、但保留方向一致性** 的“common_direction_genes”韦恩图（用“基因|方向”做集合，避免 Up/Down 混在一起）</p><pre class="message-code-block"><code>library(ggVennDiagram)
+library(ggplot2)
+library(dplyr)
+
+## 输出目录
+out_dir &lt;- &quot;results&quot;
+if (!dir.exists(out_dir)) dir.create(out_dir, recursive = TRUE)
+
+## 取 Up / Down
+up_GSE246298   &lt;- unique(na.omit(rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Up&quot;,   , drop = FALSE])))
+up_GSE106090   &lt;- unique(na.omit(rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Up&quot;,   , drop = FALSE])))
+down_GSE246298 &lt;- unique(na.omit(rownames(GSE246298_DEG[GSE246298_DEG$DEG == &quot;Down&quot;, , drop = FALSE])))
+down_GSE106090 &lt;- unique(na.omit(rownames(GSE106090_DEG[GSE106090_DEG$DEG == &quot;Down&quot;, , drop = FALSE])))
+
+common_up_genes   &lt;- intersect(up_GSE246298, up_GSE106090)
+common_down_genes &lt;- intersect(down_GSE246298, down_GSE106090)
+
+## 一个复用的“nature 风格”函数
+make_venn_nature &lt;- function(gene_list, note_label) {
+  ggVennDiagram(
+    gene_list,
+    label_alpha = 0,
+    label = &quot;both&quot;,
+    label_size = 6,
+    label_color = &quot;#2C3E50&quot;,
+    edge_size = 2,
+    set_size = 8,
+    set_color = &quot;#2C3E50&quot;,
+    show_sets = TRUE
+  ) +
+    scale_fill_gradient(low = &quot;white&quot;, high = &quot;#0073C2&quot;, name = &quot;DEG Count&quot;) +
+    scale_color_manual(values = c(&quot;#2C3E50&quot;, &quot;#2C3E50&quot;)) +
+    scale_x_continuous(expand = expansion(mult = 0.25)) +
+    theme_void() +
+    theme(
+      legend.position = &quot;right&quot;,
+      legend.title = element_text(size = 13, face = &quot;bold&quot;),
+      legend.text = element_text(size = 11),
+      plot.background = element_rect(fill = &quot;white&quot;, color = NA),
+      plot.margin = margin(30, 30, 30, 30)
+    ) +
+    annotate(
+      &quot;text&quot;,
+      x = Inf, y = -Inf,
+      label = note_label,
+      hjust = 1.05, vjust = -0.8,
+      size = 5.5,
+      fontface = &quot;bold.italic&quot;,
+      color = &quot;#0073C2&quot;
+    )
+}
+
+## 1) Up 的韦恩图
+gene_list_up &lt;- list(
+  GSE246298_Up = up_GSE246298,
+  GSE106090_Up = up_GSE106090
+)
+p_up &lt;- make_venn_nature(
+  gene_list_up,
+  sprintf(&quot;Common Up genes: %d&quot;, length(common_up_genes))
+)
+ggsave(file.path(out_dir, &quot;DEG_venn_up_nature.pdf&quot;), p_up, width = 10, height = 6.5, dpi = 300)
+
+## 2) Down 的韦恩图
+gene_list_down &lt;- list(
+  GSE246298_Down = down_GSE246298,
+  GSE106090_Down = down_GSE106090
+)
+p_down &lt;- make_venn_nature(
+  gene_list_down,
+  sprintf(&quot;Common Down genes: %d&quot;, length(common_down_genes))
+)
+ggsave(file.path(out_dir, &quot;DEG_venn_down_nature.pdf&quot;), p_down, width = 10, height = 6.5, dpi = 300)
+
+## 3) 合并 Up+Down，但要求方向一致（用“gene|Up/Down”编码）
+dir_GSE246298 &lt;- c(paste0(up_GSE246298, &quot;|Up&quot;), paste0(down_GSE246298, &quot;|Down&quot;))
+dir_GSE106090 &lt;- c(paste0(up_GSE106090, &quot;|Up&quot;), paste0(down_GSE106090, &quot;|Down&quot;))
+
+common_direction_labels &lt;- intersect(dir_GSE246298, dir_GSE106090)
+common_direction_genes &lt;- unique(sub(&quot;\\|.*$&quot;, &quot;&quot;, common_direction_labels))
+
+gene_list_direction &lt;- list(
+  GSE246298_Direction = dir_GSE246298,
+  GSE106090_Direction = dir_GSE106090
+)
+p_direction &lt;- make_venn_nature(
+  gene_list_direction,
+  sprintf(&quot;Common direction genes: %d&quot;, length(common_direction_genes))
+)
+ggsave(file.path(out_dir, &quot;DEG_venn_direction_nature.pdf&quot;), p_direction, width = 10, height = 6.5, dpi = 300)
+
+## 如果你还想导出基因列表：
+# write.table(common_up_genes,   file.path(out_dir, &quot;common_up_genes.txt&quot;),   quote=FALSE, row.names=FALSE, col.names=FALSE)
+# write.table(common_down_genes, file.path(out_dir, &quot;common_down_genes.txt&quot;), quote=FALSE, row.names=FALSE, col.names=FALSE)
+# write.table(common_direction_genes, file.path(out_dir, &quot;common_direction_genes.txt&quot;), quote=FALSE, row.names=FALSE, col.names=FALSE)</code></pre><p class="message-paragraph">你确认一下：你的 <code class="inline-code">DEG</code> 列取值是不是严格等于 <code class="inline-code">&quot;Up&quot; / &quot;Down&quot; / &quot;Not_Change&quot;</code>（大小写/下划线一致）？如果不一致，我可以帮你把筛选条件改成更稳健的写法（比如忽略大小写或兼容 “Not change/NS”等）。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:54</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">韦恩图GSE 那个标签太大了，显示不完全</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:54</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你这个情况一般有两类原因：**标签文字太长**（比如你现在用的 <code class="inline-code">GSE246298_Up</code> / <code class="inline-code">GSE106090_Down</code>），以及 **ggplot 默认会裁剪面板外的文字**。下面给你两种最小改法，通常一起用就能彻底解决。</p><p class="message-paragraph">**改法 A：把集合名字缩短 + 字体变小（推荐，最直接）**<br>把 <code class="inline-code">gene_list_up / down / direction</code> 的名字改短一点，例如：</p><pre class="message-code-block"><code>gene_list_up &lt;- list(
+  `246298 Up` = up_GSE246298,
+  `106090 Up` = up_GSE106090
+)
+
+gene_list_down &lt;- list(
+  `246298 Down` = down_GSE246298,
+  `106090 Down` = down_GSE106090
+)
+
+gene_list_direction &lt;- list(
+  `246298 Dir` = dir_GSE246298,
+  `106090 Dir` = dir_GSE106090
+)</code></pre><p class="message-paragraph">然后把你函数里的 <code class="inline-code">set_size</code> 调小（比如 5 或 6）：</p><pre class="message-code-block"><code>set_size = 5</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**改法 B：不裁剪文字 + 给画布留更多空白（防止“显示不全”）**<br>在你 <code class="inline-code">make_venn_nature()</code> 里加上 <code class="inline-code">coord_cartesian(clip = &quot;off&quot;)</code>，并把边距/expand 再放大一点：</p><pre class="message-code-block"><code>make_venn_nature &lt;- function(gene_list, note_label) {
+  ggVennDiagram(
+    gene_list,
+    label_alpha = 0,
+    label = &quot;both&quot;,
+    label_size = 6,
+    label_color = &quot;#2C3E50&quot;,
+    edge_size = 2,
+    set_size = 5,              # &lt;- 调小
+    set_color = &quot;#2C3E50&quot;,
+    show_sets = TRUE
+  ) +
+    scale_fill_gradient(low = &quot;white&quot;, high = &quot;#0073C2&quot;, name = &quot;DEG Count&quot;) +
+    scale_color_manual(values = c(&quot;#2C3E50&quot;, &quot;#2C3E50&quot;)) +
+    scale_x_continuous(expand = expansion(mult = 0.40)) +   # &lt;- 放大
+    scale_y_continuous(expand = expansion(mult = 0.40)) +   # &lt;- 放大
+    coord_cartesian(clip = &quot;off&quot;) +                         # &lt;- 关键：不裁剪
+    theme_void() +
+    theme(
+      legend.position = &quot;right&quot;,
+      legend.title = element_text(size = 13, face = &quot;bold&quot;),
+      legend.text = element_text(size = 11),
+      plot.background = element_rect(fill = &quot;white&quot;, color = NA),
+      plot.margin = margin(50, 70, 50, 70)                  # &lt;- 边距加大
+    ) +
+    annotate(
+      &quot;text&quot;,
+      x = Inf, y = -Inf,
+      label = note_label,
+      hjust = 1.05, vjust = -0.8,
+      size = 5.5,
+      fontface = &quot;bold.italic&quot;,
+      color = &quot;#0073C2&quot;
+    )
+}</code></pre><p class="message-paragraph">如果你仍然觉得挤，可以再把 <code class="inline-code">ggsave()</code> 的宽度稍微加大，比如 <code class="inline-code">width = 11</code> 或 <code class="inline-code">12</code>。</p><p class="message-paragraph">你现在的标签具体是用的哪一套名字：<code class="inline-code">GSE246298_Up</code> 这种长标签，还是纯 <code class="inline-code">GSE246298</code>？我可以按你当前那段代码给你一份“完全替换即可运行”的最终版。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">选出common_up和 down分别排前 10 的基因组成火山基因</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">下面给你一套“从 <code class="inline-code">common_up_genes</code> 和 <code class="inline-code">common_down_genes</code> 各取前 10 个基因，合并成火山图标注基因 <code class="inline-code">volcano_genes</code>”的 R 代码。默认用 **两套数据共同信息综合排序**：先按两数据的平均 $|logFC|$ 由大到小，再按两数据里更显著的 P（更小）排序。</p><p class="message-paragraph">&gt; 假设你的 <code class="inline-code">GSE246298_DEG</code> / <code class="inline-code">GSE106090_DEG</code> 里至少有 <code class="inline-code">logFC</code> +（<code class="inline-code">adj.P.Val</code> 或 <code class="inline-code">padj</code> 或 <code class="inline-code">P.Value</code> 之一）。如果列名不同，我这段会自动匹配常见写法。</p><pre class="message-code-block"><code>library(dplyr)
+
+## 把 rownames 变成 gene 列，方便 join
+to_gene_df &lt;- function(df) {
+  df %&gt;% tibble::rownames_to_column(&quot;gene&quot;)
+}
+
+## 自动找列名
+pick_col &lt;- function(df, candidates) {
+  hit &lt;- intersect(candidates, colnames(df))
+  if (length(hit) == 0) stop(&quot;缺少列: &quot;, paste(candidates, collapse = &quot;/&quot;))
+  hit[1]
+}
+
+deg1 &lt;- to_gene_df(GSE246298_DEG)
+deg2 &lt;- to_gene_df(GSE106090_DEG)
+
+lfc1 &lt;- pick_col(deg1, c(&quot;logFC&quot;, &quot;log2FoldChange&quot;, &quot;avg_log2FC&quot;))
+lfc2 &lt;- pick_col(deg2, c(&quot;logFC&quot;, &quot;log2FoldChange&quot;, &quot;avg_log2FC&quot;))
+p1   &lt;- pick_col(deg1, c(&quot;adj.P.Val&quot;, &quot;padj&quot;, &quot;FDR&quot;, &quot;p_val_adj&quot;, &quot;P.Value&quot;, &quot;pvalue&quot;, &quot;p_val&quot;))
+p2   &lt;- pick_col(deg2, c(&quot;adj.P.Val&quot;, &quot;padj&quot;, &quot;FDR&quot;, &quot;p_val_adj&quot;, &quot;P.Value&quot;, &quot;pvalue&quot;, &quot;p_val&quot;))
+
+## 只取需要的列并合并
+m &lt;- deg1 %&gt;%
+  select(gene, lfc_1 = all_of(lfc1), p_1 = all_of(p1)) %&gt;%
+  inner_join(
+    deg2 %&gt;% select(gene, lfc_2 = all_of(lfc2), p_2 = all_of(p2)),
+    by = &quot;gene&quot;
+  )
+
+## （可选但推荐）方向一致性检查：
+## common_up 要求两边 logFC 都 &gt; 0；common_down 要求两边 logFC 都 &lt; 0
+top10_common_up &lt;- m %&gt;%
+  filter(gene %in% common_up_genes, lfc_1 &gt; 0, lfc_2 &gt; 0) %&gt;%
+  mutate(
+    mean_abs_lfc = (abs(lfc_1) + abs(lfc_2)) / 2,
+    best_p = pmin(p_1, p_2, na.rm = TRUE)
+  ) %&gt;%
+  arrange(desc(mean_abs_lfc), best_p) %&gt;%
+  slice_head(n = 10)
+
+top10_common_down &lt;- m %&gt;%
+  filter(gene %in% common_down_genes, lfc_1 &lt; 0, lfc_2 &lt; 0) %&gt;%
+  mutate(
+    mean_abs_lfc = (abs(lfc_1) + abs(lfc_2)) / 2,
+    best_p = pmin(p_1, p_2, na.rm = TRUE)
+  ) %&gt;%
+  arrange(desc(mean_abs_lfc), best_p) %&gt;%
+  slice_head(n = 10)
+
+volcano_genes &lt;- unique(c(top10_common_up$gene, top10_common_down$gene))
+
+top10_common_up$gene
+top10_common_down$gene
+volcano_genes
+length(volcano_genes)   # 通常是 20（除非有重复）</code></pre><p class="message-paragraph">如果你接下来要“画火山图并标注这些 <code class="inline-code">volcano_genes</code>”，我可以按你想用的那张数据集来画：  <br>你是要用 **GSE246298** 画火山图标注，还是用 **GSE106090**，还是两张都画一张各自标注同一组 <code class="inline-code">volcano_genes</code>？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">logFC AveExpr t ÷ P.Value 수 adj.P.Val B 수 DEG</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你这串列名看起来就是 **limma** 的标准输出（外加你自己加的 <code class="inline-code">DEG</code> 列）：</p><p class="message-paragraph">- <code class="inline-code">logFC</code>：log2 fold change（火山图 x 轴用它）<br>- <code class="inline-code">P.Value</code>：原始 P 值<br>- <code class="inline-code">adj.P.Val</code>：多重校正后的 P 值（通常火山图 y 轴更推荐用它）<br>- <code class="inline-code">AveExpr / t / B</code>：limma 的统计量（做火山图一般不必用）<br>- <code class="inline-code">DEG</code>：你自己分的 <code class="inline-code">Up/Down/Not_Change</code>（用来筛 common_up/down）</p><p class="message-paragraph">所以你之前要“选 common_up/down 各前 10 个基因”，我的那段代码 **可以直接用**，因为我优先匹配的就是 <code class="inline-code">logFC</code> 和 <code class="inline-code">adj.P.Val</code>，找不到才会退到 <code class="inline-code">P.Value</code>。</p><p class="message-paragraph">如果你想显式指定（最稳、最不容易匹配错），就这样写即可：</p><pre class="message-code-block"><code>lfc1 &lt;- &quot;logFC&quot;
+lfc2 &lt;- &quot;logFC&quot;
+p1   &lt;- &quot;adj.P.Val&quot;   # 或者改成 &quot;P.Value&quot;
+p2   &lt;- &quot;adj.P.Val&quot;   # 或者改成 &quot;P.Value&quot;</code></pre><p class="message-paragraph">然后后面 <code class="inline-code">select(gene, lfc_1 = all_of(lfc1), p_1 = all_of(p1))</code> 那套逻辑不变。</p><p class="message-paragraph">如果你现在的列名里出现了奇怪字符（比如你发的 “÷ / 수” 这种，可能是复制时编码问题），先跑一句确认真实列名：</p><pre class="message-code-block"><code>colnames(GSE246298_DEG)
+colnames(GSE106090_DEG)</code></pre><p class="message-paragraph">把输出贴我，我可以帮你把“选前10 + 画火山图标注”完全对齐到你真实列名（用 <code class="inline-code">adj.P.Val</code> 还是 <code class="inline-code">P.Value</code> 也一起确认）。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/18 10:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">[1] &quot;logFC&quot;     &quot;AveExpr&quot;   &quot;t&quot;         &quot;P.Value&quot;   &quot;adj.P.Val&quot; &quot;B&quot;         &quot;DEG&quot;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/18 10:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">很好，你的列名就是标准 limma：<code class="inline-code">logFC</code> 和 <code class="inline-code">adj.P.Val</code> 都齐全。下面给你一段“**严格用这两个列**”来从 <code class="inline-code">common_up_genes</code>、<code class="inline-code">common_down_genes</code> **各选前 10 个**并合并成“火山图标注基因集”的代码（排序规则：两数据集的平均 $|logFC|$ 越大越靠前；同时更显著（两者中更小的 <code class="inline-code">adj.P.Val</code>）优先）。</p><pre class="message-code-block"><code>library(dplyr)
+library(tibble)
+
+## 1) 变成带 gene 列的数据框
+deg1 &lt;- GSE246298_DEG %&gt;% rownames_to_column(&quot;gene&quot;)
+deg2 &lt;- GSE106090_DEG %&gt;% rownames_to_column(&quot;gene&quot;)
+
+## 2) 合并两套数据的 logFC + adj.P.Val（只保留共有基因）
+m &lt;- deg1 %&gt;%
+  select(gene, logFC_1 = logFC, adjP_1 = adj.P.Val) %&gt;%
+  inner_join(
+    deg2 %&gt;% select(gene, logFC_2 = logFC, adjP_2 = adj.P.Val),
+    by = &quot;gene&quot;
+  )
+
+## 3) common_up / common_down 各取前10（方向一致：两边logFC同号）
+top10_common_up &lt;- m %&gt;%
+  filter(gene %in% common_up_genes, logFC_1 &gt; 0, logFC_2 &gt; 0) %&gt;%
+  mutate(
+    mean_abs_logFC = (abs(logFC_1) + abs(logFC_2)) / 2,
+    best_adjP = pmin(adjP_1, adjP_2, na.rm = TRUE)
+  ) %&gt;%
+  arrange(desc(mean_abs_logFC), best_adjP) %&gt;%
+  slice_head(n = 10)
+
+top10_common_down &lt;- m %&gt;%
+  filter(gene %in% common_down_genes, logFC_1 &lt; 0, logFC_2 &lt; 0) %&gt;%
+  mutate(
+    mean_abs_logFC = (abs(logFC_1) + abs(logFC_2)) / 2,
+    best_adjP = pmin(adjP_1, adjP_2, na.rm = TRUE)
+  ) %&gt;%
+  arrange(desc(mean_abs_logFC), best_adjP) %&gt;%
+  slice_head(n = 10)
+
+## 4) 合并成火山图要标注的基因集
+volcano_genes &lt;- unique(c(top10_common_up$gene, top10_common_down$gene))
+
+## 查看结果
+top10_common_up$gene
+top10_common_down$gene
+volcano_genes
+length(volcano_genes)   # 通常=20</code></pre><p class="message-paragraph">如果你希望“前10”的定义改成 **按显著性（best adj.P.Val 最小）优先**，或只按 **某一个数据集**（比如只用 GSE246298 的 <code class="inline-code">abs(logFC)</code> 排序），告诉我你想用哪种规则，我给你对应的一行 <code class="inline-code">arrange()</code> 替换版。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

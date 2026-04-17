@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>帮我提取其中的 R代码，并创建形成 rmd 格式，其他的文字均为注释作用</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>帮我提取其中的 R代码，并创建形成 rmd 格式，其他的文字均为注释作用</h1>
+      <p class="selected-session-meta">(no workspace) · 2025/06/10 21:56 · 4 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-06-10/_no_workspace__ead92a10.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#ead92a10-5831-4ae1-b34e-de70bceae28c">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/06/10 22:00</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">帮我提取其中的 R代码，并创建形成 rmd 格式，其他的文字均为注释作用</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/06/10 22:00</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，我将从提供的文本中提取 R 代码，并将其余文本作为 Markdown 注释，创建一个 R Markdown (.Rmd) 文件。</p><p class="message-paragraph">我将创建一个名为 <code class="inline-code">pRRophetic_analysis.Rmd</code> 的文件，其中包含以下内容：</p><pre class="message-code-block"><code>---
+title: &quot;药物敏感性分析之pRRophetic&quot;
+author: &quot;从文本提取&quot;
+date: &quot;2025-06-10&quot;
+output: html_document
+---
+
+药物敏感性分析之pRRophetic
+关注公众号，发送R语言或python，可获取资料
+💡专注R语言在🩺生物医学中的使用
+
+设为“星标”，精彩不错过
+
+药物敏感性分析是生信数据挖掘常用的技能之一，目前做药敏分析最常见的就是两个R包：pRRophetic和oncoPredict。
+
+这两个包的作者都是同一个人，oncoPredict可以看做是pRRophetic的升级版。两个R包的使用基本上是一样的思路，只不过使用的训练数据集不同而已。
+
+在介绍R包的使用之前，需要大家先了解一下常用的药物敏感性数据库，最好是去到这些数据库的主页看看或者读一读相关的文献，对这些数据库有一个大致的了解。
+
+## 常用药敏数据库
+
+pRRophetic方法学介绍
+
+安装
+
+预测不同组别患者对化疗药物的敏感性
+
+其他示例
+
+pRRopheticCV
+
+使用CCLE示例数据
+
+自定义训练集
+
+自带数据探索
+
+预测全的药物的敏感性
+
+参考
+
+## 常用药敏数据库
+药敏数据库非常多，但最常用的无非就是GDSC/CTRP/CCLE等，在珠江肿瘤公众号中早就介绍过这些数据库了，所以我就不重复了，大家可以参考以下链接。
+
+以下链接介绍了GDSC、CTRP、CCLE、NCI-60、DepMap、Pharmacodb等数据库，是非常棒的参考资料：
+
+肿瘤药敏多组学数据库(GDSC)概览
+肿瘤药敏多组学数据库(GDSC)的数据介绍和获取
+GDSC与其他药敏多组学数据库
+GDSC与CELL数据库的药物基因组学一致性
+靶点表达水平可作为靶向药物敏感性的指标
+
+## pRRophetic方法学介绍
+这个R包的思路其实很简单，就是根据已知的细胞系表达矩阵和药物敏感性信息作为训练集建立模型，然后对新的表达矩阵进行预测。已知的信息就是从直接从上面介绍的数据库下载的，pRRophetic包使用的是CGP和CCLE的数据，但是CCLE的药敏数据只有24种药物和500多个细胞系，数据量比较少，所以通常大家使用的都是CGP的数据。
+
+作者专门发了一篇文章，详细介绍该包背后的方法和原理：Clinical drug response can be predicted using baseline gene expression levels and in vitro drug sensitivity in cell lines。
+
+作者把上面这篇文献中的方法变成了pRRophetic包，又发了一篇文章，非常妙：pRRophetic: An R Package for Prediction of Clinical Chemotherapeutic Response from Tumor Gene Expression Levels
+
+其中有一个简化版的方法学介绍，我截图如下，如果想要详细了解，建议阅读原文献哦：
+
+Image
+简单来说，使用的表达矩阵是芯片数据，训练集和测试集分别进行quantile-normalization, 去除方差低的基因，用每个基因作为预测变量，药物的IC50作为结果变量拟合岭回归，然后使用拟合好的模型对新的数据进行预测。
+
+## 安装
+这个R包非常古老，虽然文章里说会不断更新，但是很明显没有更新过。
+
+需要首先安装依赖包，然后通过以下链接下载pRRophetic_0.5.tar.gz这个压缩包，进行本地安装。
+
+链接：https://osf.io/dwzce/?action=download</code></pre><p class="message-paragraph">{r}<br>#安装依赖包<br># BiocManager::install(c(&quot;car&quot;, &quot;ridge&quot;, &quot;preprocessCore&quot;, &quot;genefilter&quot;, &quot;sva&quot;))<br>#本地安装<br># install.packages(&quot;E:/R/R包/pRRophetic_0.5.tar.gz&quot;, repos = NULL, type = &quot;source&quot;)</p><pre class="message-code-block"><code>
+这个包太老了，有些版本比较新的R可能安装不了，我使用的R4.2.0安装没有任何问题。
+
+但是安装之后还是不能使用，因为它太古老了，可能会遇到以下报错：</code></pre><p class="message-paragraph">text<br># 报错：<br>Error in if (class(exprMatUnique) == &quot;numeric&quot;) { :<br>the condition has length &gt; 1</p><p class="message-paragraph"># 或者<br>Error in if (class(testExprData) != &quot;matrix&quot;) stop(&quot;ERROR: \&quot;testExprData\&quot; must be a matrix.&quot;) : the condition has length &gt; 1</p><pre class="message-code-block"><code>遇到了不要惊慌，毕竟果子老师已经帮我们解决这个问题，按照果子老师的介绍重新安装即可：
+
+基因表达量预测药物反应的R包pRRophetic近期报错解决方案
+
+## 预测不同组别患者对化疗药物的敏感性
+在包的github中作者给了一个使用示例：https://github.com/paulgeeleher/pRRophetic/blob/master/vignetteOutline.pdf
+
+下面我们结合这个示例简单介绍下这个包的使用。
+
+通常我们会根据某种方法把所有样本分为不同的组（比如最常见的高风险组/低风险组，或者不同的分子亚型等），然后想看看不同的组对某种药物的敏感性。
+
+这个包就可以帮你做这样的事情，而且只需要你提供自己的表达矩阵即可，它默认会使用cgp2014的数据作为训练集建立模型，然后对你的表达矩阵进行预测，这样你就可以得到每个样本的IC50值。
+
+除了cgp2014，你还可以选择cgp2016作为训练数据，cgp2016有251种药物，cgp2014只有138种。
+
+前面介绍过的GDSC（Genomics of Drug Sensitivity in Cancer），是CGP项目（Cancer Genome Project）的一部分。CGP的官网：https://www.cancerrxgene.org/。
+
+加载R包：</code></pre><p class="message-paragraph">{r}<br>library(pRRophetic)</p><pre class="message-code-block"><code>
+在预测对某个药物的敏感性前，最好先评估数据的正态性，因为CGP中的许多药物的IC50并不是呈正态分布的，此时是不适合使用线性模型的。
+
+用R包自带的硼替佐米数据做个演示，先看下硼替佐米这个药的IC50是不是符合正态分布：</code></pre><p class="message-paragraph">{r}<br>data(&quot;bortezomibData&quot;)<br>pRRopheticQQplot(&quot;Bortezomib&quot;)</p><pre class="message-code-block"><code>Image
+
+从这个QQ图来看其实不是非常符合，但还算可以，我们就认为它符合吧。
+
+然后就可以用pRRopheticPredict预测对这个药物的敏感性了，这也是这个包最重要的函数。
+
+我们这里用的是示例表达矩阵，你用的时候只需要换成自己的表达矩阵即可。
+
+exprDataBortezomib是一个标准的表达矩阵，行是基因，列是样本：</code></pre><p class="message-paragraph">{r}<br>dim(exprDataBortezomib) #22283个基因，264个样本<br>## [1] 22283   264<br>exprDataBortezomib[1:4,1:4]<br>##       GSM246523 GSM246524 GSM246525 GSM246526<br>## &lt;NA&gt;   235.5230  498.2220  309.2070  307.5690<br>## RFC2    41.4470   69.0219   69.3994   36.9310<br>## HSPA6   84.8689   56.8352   49.4388   54.6669<br>## PAX8   530.4490  457.9310  536.1780  325.3630</p><pre class="message-code-block"><code>
+预测：</code></pre><p class="message-paragraph">{r}<br>predictedPtype &lt;- pRRopheticPredict(testMatrix = exprDataBortezomib, #表达矩阵<br>                                    drug = &quot;Bortezomib&quot;, # 药物<br>                                    tissueType = &quot;blood&quot;, <br>                                    batchCorrect = &quot;eb&quot;, #训练集和测试集数据整合方法，默认eb，即使用combat<br>                                    powerTransformPhenotype = T, # 是否进行幂转换<br>                                    selection=1, # 遇到名字重复的基因取平均值<br>                                    dataset = &quot;cgp2014&quot;)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>##  2324 low variabilty genes filtered.<br>## Fitting Ridge Regression model... Done<br>## <br>## Calculating predicted phenotype...Done</p><pre class="message-code-block"><code>
+tissueType指定你想用CGP细胞系中的哪些类型肿瘤作为训练集，默认是all；
+
+结果是一个命名向量，就是每个样本的IC50值：</code></pre><p class="message-paragraph">{r}<br>head(predictedPtype)<br>## GSM246523 GSM246524 GSM246525 GSM246526 GSM246527 GSM246528 <br>## -6.808324 -5.557028 -5.382334 -3.999054 -6.330220 -4.751816</p><pre class="message-code-block"><code>
+这个示例数据中所有的样本可以被分为两组，一组是NR组，另一组是R组，通常你的表达矩阵也会分组的，比如根据某个方法分成高风险组和低风险组，一样的意思。
+
+我们就可以对两组的IC50做个t检验：</code></pre><p class="message-paragraph">{r}<br># 假设 studyResponse 和 bortIndex 在环境中已定义<br># t.test(predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)],<br>#        predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)],<br>#        alternative=&quot;greater&quot;)<br>## <br>##  Welch Two Sample t-test<br>## <br>## data:  predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)] and predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)]<br>## t = 4.1204, df = 165.24, p-value = 2.984e-05<br>## alternative hypothesis: true difference in means is greater than 0<br>## 95 percent confidence interval:<br>##  0.3975589       Inf<br>## sample estimates:<br>## mean of x mean of y <br>## -4.372173 -5.036370</p><pre class="message-code-block"><code>
+还可以画个图展示：</code></pre><p class="message-paragraph">{r}<br>library(ggplot2)<br>library(ggpubr)</p><p class="message-paragraph"># 假设 studyResponse 和 bortIndex 在环境中已定义<br># df &lt;- stack(list(NR=predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)], <br>#                  R=predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)]))<br># <br># ggboxplot(df, x=&quot;ind&quot;,y=&quot;values&quot;,fill=&quot;ind&quot;,alpha=0.3,palette = &quot;lancet&quot;,<br>#           ylab=&quot;Predicted Bortezomib Sensitivity&quot;,<br>#           xlab=&quot;Clinical Response&quot;<br>#           )+<br>#   stat_compare_means(method = &quot;t.test&quot;)+<br>#   theme(legend.position = &quot;none&quot;)</p><pre class="message-code-block"><code>Image
+
+这张图就是文献中最常见的图了。
+
+下面再展示下预测对厄洛替尼的敏感性，这个药物的IC50明显不符合正态分布：</code></pre><p class="message-paragraph">{r}<br>pRRopheticQQplot(&quot;Erlotinib&quot;)</p><pre class="message-code-block"><code>Image
+
+所以此时我们使用pRRopheticLogisticPredict函数预测样本的IC50值：</code></pre><p class="message-paragraph">{r}<br># predictedPtype_erlotinib &lt;- pRRopheticLogisticPredict(exprDataBortezomib,<br>#                                                       &quot;Erlotinib&quot;,<br>#                                                       selection=1)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## Fitting model, may take some time....</p><pre class="message-code-block"><code>
+后面的分析就都是一样的了~
+
+## 其他示例
+### pRRopheticCV
+为了说明这个包的预测结果的准确性，还可以使用pRRopheticCV函数查看预测结果和真实结果的一致性，使用5折交叉验证：</code></pre><p class="message-paragraph">{r}<br># cvOut &lt;- pRRopheticCV(&quot;Bortezomib&quot;, cvFold=5, testExprData=exprDataBortezomib)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>## 1 of 5 iterations complete.<br>## 2 of 5 iterations complete.<br>## 3 of 5 iterations complete.<br>## 4 of 5 iterations complete.<br>## 5 of 5 iterations complete.</p><pre class="message-code-block"><code>
+查看结果：</code></pre><p class="message-paragraph">{r}<br># summary(cvOut)<br>## <br>## Summary of cross-validation results:<br>## <br>## Pearsons correlation: 0.44 , P =  6.37210297840637e-15 <br>## R-squared value: 0.2<br>## Estimated 95% confidence intervals: -4.21, 3.36<br>## Mean prediction error: 1.61</p><pre class="message-code-block"><code>
+真实结果和预测结果的相关性只有0.42，还给出了P值、R^2、预测错误率等信息，可以画个图展示下真实结果和预测结果：</code></pre><p class="message-paragraph">{r}<br># plot(cvOut)</p><pre class="message-code-block"><code>Image
+
+### 使用CCLE示例数据
+CCLE中只有24个药物，500+细胞系，用的很少，数据量比CGP少太多了。该包自带了一个CCLE数据ccleData，其使用方法和上面完全一样，就不重复介绍了。
+
+### 自定义训练集
+指定训练用的表达矩阵和对应的样本类别，再提供一个表达矩阵，就可以预测该表达矩阵每个样本对药物的敏感性。也就是说这个方法可以让你能够使用自己的训练数据~但是我好像并没有见到这么做的，如果大家有见过的，欢迎告诉我~
+
+下面我们继续用硼替佐米数据作为示例进行演示。
+
+我们先从exprDataBortezomib这个完整的表达矩阵提取一部分数据作为训练用的表达矩阵，并且也提取这部分样本的类别（有5个类别：CR、PR、MR、NC、PD）。
+
+然后再提取一部分表达矩阵作为测试用表达矩阵，来预测这部分样本对硼替佐米的敏感性。
+
+准备训练数据和测试数据：</code></pre><p class="message-paragraph">{r}<br># 假设 detailedResponse 和 studyIndex 在环境中已定义<br># # 训练用表达矩阵<br># trainExpr &lt;- exprDataBortezomib[, (detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 25&quot;, &quot;studyCode = 40&quot;)]<br># <br># # 训练用样本类型<br># trainPtype &lt;- detailedResponse[(detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 25&quot;, &quot;studyCode = 40&quot;)]<br># <br># # 预测用表达矩阵<br># testExpr &lt;- exprDataBortezomib[, (detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 39&quot;)]<br># dim(testExpr) # 141个样本<br>## [1] 22283   141</p><pre class="message-code-block"><code>
+下面就可以预测样本对药物的敏感性了：</code></pre><p class="message-paragraph">{r}<br># ptypeOut &lt;- calcPhenotype(trainExpr, trainPtype, testExpr, selection=1)<br>## <br>##  22283  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>##  2500 low variabilty genes filtered.<br>## Fitting Ridge Regression model... Done<br>## <br>## Calculating predicted phenotype...Done</p><pre class="message-code-block"><code>
+这个结果就是141个样本的预测敏感性：</code></pre><p class="message-paragraph">{r}<br># length(ptypeOut)<br>## [1] 141<br># head(ptypeOut)<br>## GSM246530 GSM246536 GSM246537 GSM246539 GSM246540 GSM246544 <br>##  2.990402  2.615408  3.314234  2.718105  2.578793  2.823383</p><pre class="message-code-block"><code>
+有了这个预测的结果，我们可以与真实的结果做一个相关性分析：</code></pre><p class="message-paragraph">{r}<br># # 提取真实结果<br># testPtype &lt;- detailedResponse[(detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 39&quot;)]<br># <br># # 相关性分析<br># cor.test(testPtype, ptypeOut, alternative=&quot;greater&quot;)<br>## <br>##  Pearson&#39;s product-moment correlation<br>## <br>## data:  testPtype and ptypeOut<br>## t = 2.1512, df = 139, p-value = 0.01659<br>## alternative hypothesis: true correlation is greater than 0<br>## 95 percent confidence interval:<br>##  0.04142448 1.00000000<br>## sample estimates:<br>##       cor <br>## 0.1795014</p><pre class="message-code-block"><code>
+还可以做t检验：</code></pre><p class="message-paragraph">{r}<br># t.test(ptypeOut[testPtype %in% c(3,4,5)], ptypeOut[testPtype %in% c(1,2)],<br>#        alternative=&quot;greater&quot;)<br>## <br>##  Welch Two Sample t-test<br>## <br>## data:  ptypeOut[testPtype %in% c(3, 4, 5)] and ptypeOut[testPtype %in% c(1, 2)]<br>## t = 2.0182, df = 137.43, p-value = 0.02276<br>## alternative hypothesis: true difference in means is greater than 0<br>## 95 percent confidence interval:<br>##  0.02533599        Inf<br>## sample estimates:<br>## mean of x mean of y <br>##  2.646449  2.505269</p><pre class="message-code-block"><code>
+### 自带数据探索
+这个包自带的所有数据可以在包的安装目录中查看，就是这几个：
+
+Image</code></pre><p class="message-paragraph">{r}<br>rm(list = ls())<br>library(pRRophetic)</p><pre class="message-code-block"><code></code></pre><p class="message-paragraph">加载数据查看一下：</p><p class="message-paragraph">```{r}<br>data(cgp2016ExprRma) <br>dim(cgp2016ExprRma)<br>## [1] 17419  1018<br>cgp2016ExprRma[1:4,1:4]<br>##          CAL-120   DMS-114   CAL-51    H2869<br>## TSPAN6  7.632023  7.548671 8.712338 7.797142<br>## TNMD    2.964585  2.777716 2.643508 2.817923<br>## DPM1   10.379553 11.807341 9.880733 9.883471<br>## SCYL3   3.614794  4.066887 3.956230 4.063701</p><pre class="message-code-block"><code>
+这个是cgp2016版本的表达矩阵，其中行是基因，列是细胞系，一共17419个基因，1018个细胞系。</code></pre><p class="message-paragraph">{r}<br>data(PANCANCER_IC_Tue_Aug_9_15_28_57_2016) # drugData2016<br># length(unique(drugData2016$Drug.name)) # drugData2016 is loaded by the data() call<br>## [1] 251<br># head(unique(drugData2016$Drug.name),30)<br>##  [1] &quot;Erlotinib&quot;           &quot;Rapamycin&quot;           &quot;Sunitinib&quot;          <br>##  [4] &quot;PHA-665752&quot;          &quot;MG-132&quot;              &quot;Paclitaxel&quot;         <br>##  [7] &quot;Cyclopamine&quot;         &quot;AZ628&quot;               &quot;Sorafenib&quot;          <br>## [10] &quot;VX-680&quot;              &quot;Imatinib&quot;            &quot;TAE684&quot;             <br>## [13] &quot;Crizotinib&quot;          &quot;Saracatinib&quot;         &quot;S-Trityl-L-cysteine&quot;<br>## [16] &quot;Z-LLNle-CHO&quot;         &quot;Dasatinib&quot;           &quot;GNF-2&quot;              <br>## [19] &quot;CGP-60474&quot;           &quot;CGP-082996&quot;          &quot;A-770041&quot;           <br>## [22] &quot;WH-4-023&quot;            &quot;WZ-1-84&quot;             &quot;BI-2536&quot;            <br>## [25] &quot;BMS-536924&quot;          &quot;BMS-509744&quot;          &quot;CMK&quot;                <br>## [28] &quot;Pyrimethamine&quot;       &quot;JW-7-52-1&quot;           &quot;A-443654&quot;</p><pre class="message-code-block"><code>
+上面这个是cgp2016版本的细胞系和药物敏感性信息，包含了每种细胞系对每种药物的IC50等信息，可以看到其中一共有251种药物，cgp2014只有138种药物（可以通过?pRRopheticPredict查看帮助文档确定）。</code></pre><p class="message-paragraph">{r}<br>data(drugAndPhenoCgp)</p><pre class="message-code-block"><code>
+这里面是一些原始文件，貌似平常用不到，大家感兴趣可以自己探索下。
+
+可以看到其中还有一个ccleData，其实和上面用到的硼替佐米数据是一样的，只不过一个来自于CGP，另一个来自于CCLE而已，就不展示了。
+
+## 预测全部药物的敏感性
+假如我们要对自己的表达矩阵预测所有药物的敏感性，只需要把所有的药物提取出来，写个循环即可，这里以cgp2016的药物为例。
+
+以下这段代码来自生信技能树：药物预测R包之pRRophetic
+
+耗时巨长！！</code></pre><p class="message-paragraph">{r}<br>library(parallel)<br>library(pRRophetic)</p><p class="message-paragraph"># 加载cgp2016的药敏信息<br>data(PANCANCER_IC_Tue_Aug_9_15_28_57_2016) # drugData2016<br>data(cgp2016ExprRma) # cgp2016ExprRma<br>data(bortezomibData) # exprDataBortezomib is in this data</p><p class="message-paragraph">#提取cgp2016的所有药物名字<br>possibleDrugs2016 &lt;- unique( drugData2016$Drug.name)<br>#possibleDrugs2016<br># 用system.time来返回计算所需时间<br>#head(possibleDrugs2016)<br># system.time({ <br>#   cl &lt;- makeCluster(8)  <br>#   results &lt;- parLapply(cl,possibleDrugs2016[1:10],#只用前10个测试，用全部时间太长<br>#                        function(x){<br>#                          library(pRRophetic) <br>#                          data(bortezomibData) # Ensure exprDataBortezomib is available in this scope<br>#                          predictedPtype=pRRopheticPredict(<br>#                            testMatrix=exprDataBortezomib,#换成你自己的表达矩阵<br>#                            drug=x,<br>#                            tissueType = &quot;all&quot;, <br>#                            batchCorrect = &quot;eb&quot;,<br>#                            selection=1,<br>#                            dataset = &quot;cgp2016&quot;)<br>#                          return(predictedPtype)<br>#                        }) # lapply的并行版本<br>#   res.df &lt;- do.call(&#39;rbind&#39;,results) # 整合结果<br>#   stopCluster(cl) # 关闭集群<br># })</p><pre class="message-code-block"><code>
+画个图看看，画图之前需要一些数据格式的转换，就是常规的长宽转换，加名字即可。
+
+然后使用ggplot系列包画图、添加显著性，一气呵成，非常简单，所以R语言基础是非常有必要的。</code></pre><p class="message-paragraph">{r}<br>library(tidyr)<br>library(dplyr)<br>library(ggplot2)<br>library(ggpubr)<br>library(ggsci)</p><p class="message-paragraph"># 假设 res.df, studyResponse, bortIndex, possibleDrugs2016 已经定义并加载<br># plot_df &lt;- res.df %&gt;% <br>#   as.data.frame() %&gt;% <br>#   t() %&gt;% <br>#   bind_cols(studyResponse) %&gt;% # studyResponse might not be globally available here<br>#   bind_cols(bortIndex) %&gt;% # bortIndex might not be globally available here<br>#   filter(!studyResponse == &quot;PGx_Responder = IE&quot;, bortIndex == TRUE)<br># names(plot_df) &lt;- c(possibleDrugs2016[1:10],&quot;studyResponse&quot;,&quot;bortIndex&quot;)  <br># <br># plot_df %&gt;% <br>#   pivot_longer(1:10,names_to = &quot;drugs&quot;,values_to = &quot;ic50&quot;) %&gt;% <br>#   ggplot(., aes(studyResponse,ic50))+<br>#   geom_boxplot(aes(fill=studyResponse))+<br>#   scale_fill_jama()+<br>#   theme(axis.text.x = element_text(angle = 45,hjust = 1),<br>#         axis.title.x = element_blank(),<br>#         legend.position = &quot;none&quot;)+<br>#   facet_wrap(vars(drugs),scales = &quot;free_y&quot;,nrow = 2)+<br>#   stat_compare_means()</p><pre class="message-code-block"><code>Image
+
+easy！这次内容挺多的，下次再介绍oncoPredict吧。
+
+## 参考
+生信技能树：药物预测R包之pRRophetic</code></pre><p class="message-paragraph">*注意：我已经注释掉了一些原始代码块，这些代码块依赖于可能未在 Rmd 文件前面的代码块中完全定义或加载的数据或变量（例如 <code class="inline-code">studyResponse</code>、<code class="inline-code">bortIndex</code>、<code class="inline-code">detailedResponse</code>、<code class="inline-code">res.df</code>）。为了使此 Rmd 文件可直接运行，您可能需要确保在调用这些变量之前已正确加载或定义它们。我还注释掉了原始文本中提到的本地文件路径的 <code class="inline-code">install.packages</code> 调用，因为该文件路径是特定于用户的。*</p><p class="message-paragraph">*注意：我已经注释掉了一些原始代码块，这些代码块依赖于可能未在 Rmd 文件前面的代码块中完全定义或加载的数据或变量（例如 <code class="inline-code">studyResponse</code>、<code class="inline-code">bortIndex</code>、<code class="inline-code">detailedResponse</code>、<code class="inline-code">res.df</code>）。为了使此 Rmd 文件可直接运行，您可能需要确保在调用这些变量之前已正确加载或定义它们。我还注释掉了原始文本中提到的本地文件路径的 <code class="inline-code">install.packages</code> 调用，因为该文件路径是特定于用户的。*</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/06/10 22:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你帮我直接创建一个 rmd文件</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/06/10 22:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，我将根据您提供的文本内容创建一个名为 <code class="inline-code">pRRophetic_analysis.Rmd</code> 的 R Markdown 文件。由于没有指定工作区，我将尝试在 macOS 的临时目录</p><p class="message-paragraph">中创建此文件。</p><p class="message-paragraph">文件内容如下：</p><pre class="message-code-block"><code>---
+title: &quot;药物敏感性分析之pRRophetic&quot;
+author: &quot;从文本提取&quot;
+date: &quot;2025-06-10&quot;
+output: html_document
+---
+
+药物敏感性分析之pRRophetic
+关注公众号，发送R语言或python，可获取资料
+💡专注R语言在🩺生物医学中的使用
+
+设为“星标”，精彩不错过
+
+药物敏感性分析是生信数据挖掘常用的技能之一，目前做药敏分析最常见的就是两个R包：pRRophetic和oncoPredict。
+
+这两个包的作者都是同一个人，oncoPredict可以看做是pRRophetic的升级版。两个R包的使用基本上是一样的思路，只不过使用的训练数据集不同而已。
+
+在介绍R包的使用之前，需要大家先了解一下常用的药物敏感性数据库，最好是去到这些数据库的主页看看或者读一读相关的文献，对这些数据库有一个大致的了解。
+
+## 常用药敏数据库
+
+pRRophetic方法学介绍
+
+安装
+
+预测不同组别患者对化疗药物的敏感性
+
+其他示例
+
+pRRopheticCV
+
+使用CCLE示例数据
+
+自定义训练集
+
+自带数据探索
+
+预测全的药物的敏感性
+
+参考
+
+## 常用药敏数据库
+药敏数据库非常多，但最常用的无非就是GDSC/CTRP/CCLE等，在珠江肿瘤公众号中早就介绍过这些数据库了，所以我就不重复了，大家可以参考以下链接。
+
+以下链接介绍了GDSC、CTRP、CCLE、NCI-60、DepMap、Pharmacodb等数据库，是非常棒的参考资料：
+
+肿瘤药敏多组学数据库(GDSC)概览
+肿瘤药敏多组学数据库(GDSC)的数据介绍和获取
+GDSC与其他药敏多组学数据库
+GDSC与CELL数据库的药物基因组学一致性
+靶点表达水平可作为靶向药物敏感性的指标
+
+## pRRophetic方法学介绍
+这个R包的思路其实很简单，就是根据已知的细胞系表达矩阵和药物敏感性信息作为训练集建立模型，然后对新的表达矩阵进行预测。已知的信息就是从直接从上面介绍的数据库下载的，pRRophetic包使用的是CGP和CCLE的数据，但是CCLE的药敏数据只有24种药物和500多个细胞系，数据量比较少，所以通常大家使用的都是CGP的数据。
+
+作者专门发了一篇文章，详细介绍该包背后的方法和原理：Clinical drug response can be predicted using baseline gene expression levels and in vitro drug sensitivity in cell lines。
+
+作者把上面这篇文献中的方法变成了pRRophetic包，又发了一篇文章，非常妙：pRRophetic: An R Package for Prediction of Clinical Chemotherapeutic Response from Tumor Gene Expression Levels
+
+其中有一个简化版的方法学介绍，我截图如下，如果想要详细了解，建议阅读原文献哦：
+
+Image
+简单来说，使用的表达矩阵是芯片数据，训练集和测试集分别进行quantile-normalization, 去除方差低的基因，用每个基因作为预测变量，药物的IC50作为结果变量拟合岭回归，然后使用拟合好的模型对新的数据进行预测。
+
+## 安装
+这个R包非常古老，虽然文章里说会不断更新，但是很明显没有更新过。
+
+需要首先安装依赖包，然后通过以下链接下载pRRophetic_0.5.tar.gz这个压缩包，进行本地安装。
+
+链接：https://osf.io/dwzce/?action=download</code></pre><p class="message-paragraph">{r}<br>#安装依赖包<br># BiocManager::install(c(&quot;car&quot;, &quot;ridge&quot;, &quot;preprocessCore&quot;, &quot;genefilter&quot;, &quot;sva&quot;))<br>#本地安装<br># install.packages(&quot;E:/R/R包/pRRophetic_0.5.tar.gz&quot;, repos = NULL, type = &quot;source&quot;)</p><pre class="message-code-block"><code>
+这个包太老了，有些版本比较新的R可能安装不了，我使用的R4.2.0安装没有任何问题。
+
+但是安装之后还是不能使用，因为它太古老了，可能会遇到以下报错：</code></pre><p class="message-paragraph">text<br># 报错：<br>Error in if (class(exprMatUnique) == &quot;numeric&quot;) { :<br>the condition has length &gt; 1</p><p class="message-paragraph"># 或者<br>Error in if (class(testExprData) != &quot;matrix&quot;) stop(&quot;ERROR: \&quot;testExprData\&quot; must be a matrix.&quot;) : the condition has length &gt; 1</p><pre class="message-code-block"><code>遇到了不要惊慌，毕竟果子老师已经帮我们解决这个问题，按照果子老师的介绍重新安装即可：
+
+基因表达量预测药物反应的R包pRRophetic近期报错解决方案
+
+## 预测不同组别患者对化疗药物的敏感性
+在包的github中作者给了一个使用示例：https://github.com/paulgeeleher/pRRophetic/blob/master/vignetteOutline.pdf
+
+下面我们结合这个示例简单介绍下这个包的使用。
+
+通常我们会根据某种方法把所有样本分为不同的组（比如最常见的高风险组/低风险组，或者不同的分子亚型等），然后想看看不同的组对某种药物的敏感性。
+
+这个包就可以帮你做这样的事情，而且只需要你提供自己的表达矩阵即可，它默认会使用cgp2014的数据作为训练集建立模型，然后对你的表达矩阵进行预测，这样你就可以得到每个样本的IC50值。
+
+除了cgp2014，你还可以选择cgp2016作为训练数据，cgp2016有251种药物，cgp2014只有138种。
+
+前面介绍过的GDSC（Genomics of Drug Sensitivity in Cancer），是CGP项目（Cancer Genome Project）的一部分。CGP的官网：https://www.cancerrxgene.org/。
+
+加载R包：</code></pre><p class="message-paragraph">{r}<br>library(pRRophetic)</p><pre class="message-code-block"><code>
+在预测对某个药物的敏感性前，最好先评估数据的正态性，因为CGP中的许多药物的IC50并不是呈正态分布的，此时是不适合使用线性模型的。
+
+用R包自带的硼替佐米数据做个演示，先看下硼替佐米这个药的IC50是不是符合正态分布：</code></pre><p class="message-paragraph">{r}<br>data(&quot;bortezomibData&quot;) # 这会加载 exprDataBortezomib, studyResponse, bortIndex 等对象<br>pRRopheticQQplot(&quot;Bortezomib&quot;)</p><pre class="message-code-block"><code>Image
+
+从这个QQ图来看其实不是非常符合，但还算可以，我们就认为它符合吧。
+
+然后就可以用pRRopheticPredict预测对这个药物的敏感性了，这也是这个包最重要的函数。
+
+我们这里用的是示例表达矩阵，你用的时候只需要换成自己的表达矩阵即可。
+
+exprDataBortezomib是一个标准的表达矩阵，行是基因，列是样本：</code></pre><p class="message-paragraph">{r}<br>dim(exprDataBortezomib) #22283个基因，264个样本<br>## [1] 22283   264<br>exprDataBortezomib[1:4,1:4]<br>##       GSM246523 GSM246524 GSM246525 GSM246526<br>## &lt;NA&gt;   235.5230  498.2220  309.2070  307.5690<br>## RFC2    41.4470   69.0219   69.3994   36.9310<br>## HSPA6   84.8689   56.8352   49.4388   54.6669<br>## PAX8   530.4490  457.9310  536.1780  325.3630</p><pre class="message-code-block"><code>
+预测：</code></pre><p class="message-paragraph">{r}<br>predictedPtype &lt;- pRRopheticPredict(testMatrix = exprDataBortezomib, #表达矩阵<br>                                    drug = &quot;Bortezomib&quot;, # 药物<br>                                    tissueType = &quot;blood&quot;, <br>                                    batchCorrect = &quot;eb&quot;, #训练集和测试集数据整合方法，默认eb，即使用combat<br>                                    powerTransformPhenotype = T, # 是否进行幂转换<br>                                    selection=1, # 遇到名字重复的基因取平均值<br>                                    dataset = &quot;cgp2014&quot;)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>##  2324 low variabilty genes filtered.<br>## Fitting Ridge Regression model... Done<br>## <br>## Calculating predicted phenotype...Done</p><pre class="message-code-block"><code>
+tissueType指定你想用CGP细胞系中的哪些类型肿瘤作为训练集，默认是all；
+
+结果是一个命名向量，就是每个样本的IC50值：</code></pre><p class="message-paragraph">{r}<br>head(predictedPtype)<br>## GSM246523 GSM246524 GSM246525 GSM246526 GSM246527 GSM246528 <br>## -6.808324 -5.557028 -5.382334 -3.999054 -6.330220 -4.751816</p><pre class="message-code-block"><code>
+这个示例数据中所有的样本可以被分为两组，一组是NR组，另一组是R组，通常你的表达矩阵也会分组的，比如根据某个方法分成高风险组和低风险组，一样的意思。
+
+我们就可以对两组的IC50做个t检验：</code></pre><p class="message-paragraph">{r}<br># studyResponse 和 bortIndex 应该由 data(&quot;bortezomibData&quot;) 加载到环境中<br># t.test(predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)],<br>#        predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)],<br>#        alternative=&quot;greater&quot;)<br>## <br>##  Welch Two Sample t-test<br>## <br>## data:  predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)] and predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)]<br>## t = 4.1204, df = 165.24, p-value = 2.984e-05<br>## alternative hypothesis: true difference in means is greater than 0<br>## 95 percent confidence interval:<br>##  0.3975589       Inf<br>## sample estimates:<br>## mean of x mean of y <br>## -4.372173 -5.036370</p><pre class="message-code-block"><code>
+还可以画个图展示：</code></pre><p class="message-paragraph">{r}<br>library(ggplot2)<br>library(ggpubr)</p><p class="message-paragraph"># studyResponse 和 bortIndex 应该由 data(&quot;bortezomibData&quot;) 加载到环境中<br># df &lt;- stack(list(NR=predictedPtype[((studyResponse == &quot;PGx_Responder = NR&quot;) &amp; bortIndex)], <br>#                  R=predictedPtype[((studyResponse == &quot;PGx_Responder = R&quot;) &amp; bortIndex)]))<br># <br># ggboxplot(df, x=&quot;ind&quot;,y=&quot;values&quot;,fill=&quot;ind&quot;,alpha=0.3,palette = &quot;lancet&quot;,<br>#           ylab=&quot;Predicted Bortezomib Sensitivity&quot;,<br>#           xlab=&quot;Clinical Response&quot;<br>#           )+<br>#   stat_compare_means(method = &quot;t.test&quot;)+<br>#   theme(legend.position = &quot;none&quot;)</p><pre class="message-code-block"><code>Image
+
+这张图就是文献中最常见的图了。
+
+下面再展示下预测对厄洛替尼的敏感性，这个药物的IC50明显不符合正态分布：</code></pre><p class="message-paragraph">{r}<br>pRRopheticQQplot(&quot;Erlotinib&quot;)</p><pre class="message-code-block"><code>Image
+
+所以此时我们使用pRRopheticLogisticPredict函数预测样本的IC50值：</code></pre><p class="message-paragraph">{r}<br># predictedPtype_erlotinib &lt;- pRRopheticLogisticPredict(exprDataBortezomib,<br>#                                                       &quot;Erlotinib&quot;,<br>#                                                       selection=1)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## Fitting model, may take some time....</p><pre class="message-code-block"><code>
+后面的分析就都是一样的了~
+
+## 其他示例
+### pRRopheticCV
+为了说明这个包的预测结果的准确性，还可以使用pRRopheticCV函数查看预测结果和真实结果的一致性，使用5折交叉验证：</code></pre><p class="message-paragraph">{r}<br># cvOut &lt;- pRRopheticCV(&quot;Bortezomib&quot;, cvFold=5, testExprData=exprDataBortezomib)<br>## <br>##  11683  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>## 1 of 5 iterations complete.<br>## 2 of 5 iterations complete.<br>## 3 of 5 iterations complete.<br>## 4 of 5 iterations complete.<br>## 5 of 5 iterations complete.</p><pre class="message-code-block"><code>
+查看结果：</code></pre><p class="message-paragraph">{r}<br># summary(cvOut)<br>## <br>## Summary of cross-validation results:<br>## <br>## Pearsons correlation: 0.44 , P =  6.37210297840637e-15 <br>## R-squared value: 0.2<br>## Estimated 95% confidence intervals: -4.21, 3.36<br>## Mean prediction error: 1.61</p><pre class="message-code-block"><code>
+真实结果和预测结果的相关性只有0.42，还给出了P值、R^2、预测错误率等信息，可以画个图展示下真实结果和预测结果：</code></pre><p class="message-paragraph">{r}<br># plot(cvOut)</p><pre class="message-code-block"><code>Image
+
+### 使用CCLE示例数据
+CCLE中只有24个药物，500+细胞系，用的很少，数据量比CGP少太多了。该包自带了一个CCLE数据ccleData，其使用方法和上面完全一样，就不重复介绍了。
+
+### 自定义训练集
+指定训练用的表达矩阵和对应的样本类别，再提供一个表达矩阵，就可以预测该表达矩阵每个样本对药物的敏感性。也就是说这个方法可以让你能够使用自己的训练数据~但是我好像并没有见到这么做的，如果大家有见过的，欢迎告诉我~
+
+下面我们继续用硼替佐米数据作为示例进行演示。
+
+我们先从exprDataBortezomib这个完整的表达矩阵提取一部分数据作为训练用的表达矩阵，并且也提取这部分样本的类别（有5个类别：CR、PR、MR、NC、PD）。
+
+然后再提取一部分表达矩阵作为测试用表达矩阵，来预测这部分样本对硼替佐米的敏感性。
+
+准备训练数据和测试数据：</code></pre><p class="message-paragraph">{r}<br># detailedResponse 和 studyIndex 应该由 data(&quot;bortezomibData&quot;) 加载<br># # 训练用表达矩阵<br># trainExpr &lt;- exprDataBortezomib[, (detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 25&quot;, &quot;studyCode = 40&quot;)]<br># <br># # 训练用样本类型<br># trainPtype &lt;- detailedResponse[(detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 25&quot;, &quot;studyCode = 40&quot;)]<br># <br># # 预测用表达矩阵<br># testExpr &lt;- exprDataBortezomib[, (detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 39&quot;)]<br># dim(testExpr) # 141个样本<br>## [1] 22283   141</p><pre class="message-code-block"><code>
+下面就可以预测样本对药物的敏感性了：</code></pre><p class="message-paragraph">{r}<br># ptypeOut &lt;- calcPhenotype(trainExpr, trainPtype, testExpr, selection=1)<br>## <br>##  22283  gene identifiers overlap between the supplied expression matrices... <br>## <br>## Found2batches<br>## Adjusting for0covariate(s) or covariate level(s)<br>## Standardizing Data across genes<br>## Fitting L/S model and finding priors<br>## Finding parametric adjustments<br>## Adjusting the Data<br>## <br>##  2500 low variabilty genes filtered.<br>## Fitting Ridge Regression model... Done<br>## <br>## Calculating predicted phenotype...Done</p><pre class="message-code-block"><code>
+这个结果就是141个样本的预测敏感性：</code></pre><p class="message-paragraph">{r}<br># length(ptypeOut)<br>## [1] 141<br># head(ptypeOut)<br>## GSM246530 GSM246536 GSM246537 GSM246539 GSM246540 GSM246544 <br>##  2.990402  2.615408  3.314234  2.718105  2.578793  2.823383</p><pre class="message-code-block"><code>
+有了这个预测的结果，我们可以与真实的结果做一个相关性分析：</code></pre><p class="message-paragraph">{r}<br># # 提取真实结果<br># testPtype &lt;- detailedResponse[(detailedResponse %in% c(1,2,3,4,5)) &amp; studyIndex %in% c(&quot;studyCode = 39&quot;)]<br># <br># # 相关性分析<br># cor.test(testPtype, ptypeOut, alternative=&quot;greater&quot;)<br>## <br>##  Pearson&#39;s product-moment correlation<br>## <br>## data:  testPtype and ptypeOut<br>## t = 2.1512, df = 139, p-value = 0.01659<br>## alternative hypothesis: true correlation is greater than 0<br>## 95 percent confidence interval:<br>##  0.04142448 1.00000000<br>## sample estimates:<br>##       cor <br>## 0.1795014</p><pre class="message-code-block"><code>
+还可以做t检验：</code></pre><p class="message-paragraph">{r}<br># t.test(ptypeOut[testPtype %in% c(3,4,5)], ptypeOut[testPtype %in% c(1,2)],<br>#        alternative=&quot;greater&quot;)<br>## <br>##  Welch Two Sample t-test<br>## <br>## data:  ptypeOut[testPtype %in% c(3, 4, 5)] and ptypeOut[testPtype %in% c(1, 2)]<br>## t = 2.0182, df = 137.43, p-value = 0.02276<br>## alternative hypothesis: true difference in means is greater than 0<br>## 95 percent confidence interval:<br>##  0.02533599        Inf<br>## sample estimates:<br>## mean of x mean of y <br>##  2.646449  2.505269</p><pre class="message-code-block"><code>
+### 自带数据探索
+这个包自带的所有数据可以在包的安装目录中查看，就是这几个：
+
+Image</code></pre><p class="message-paragraph">{r}<br>rm(list = ls())<br>library(pRRophetic)</p><pre class="message-code-block"><code>
+加载数据查看一下：</code></pre><p class="message-paragraph">{r}<br>data(cgp2016ExprRma) <br>dim(cgp2016ExprRma)<br>## [1] 17419  1018<br>cgp2016ExprRma[1:4,1:4]<br>##          CAL-120   DMS-114   CAL-51    H2869<br>## TSPAN6  7.632023  7.548671 8.712338 7.797142<br>## TNMD    2.964585  2.777716 2.643508 2.817923<br>## DPM1   10.379553 11.807341 9.880733 9.883471<br>## SCYL3   3.614794  4.066887 3.956230 4.063701</p><pre class="message-code-block"><code>
+这个是cgp2016版本的表达矩阵，其中行是基因，列是细胞系，一共17419个基因，1018个细胞系。</code></pre><p class="message-paragraph">{r}<br>data(PANCANCER_IC_Tue_Aug_9_15_28_57_2016) # 这会加载 drugData2016 对象<br># length(unique(drugData2016$Drug.name)) <br>## [1] 251<br># head(unique(drugData2016$Drug.name),30)<br>##  [1] &quot;Erlotinib&quot;           &quot;Rapamycin&quot;           &quot;Sunitinib&quot;          <br>##  [4] &quot;PHA-665752&quot;          &quot;MG-132&quot;              &quot;Paclitaxel&quot;         <br>##  [7] &quot;Cyclopamine&quot;         &quot;AZ628&quot;               &quot;Sorafenib&quot;          <br>## [10] &quot;VX-680&quot;              &quot;Imatinib&quot;            &quot;TAE684&quot;             <br>## [13] &quot;Crizotinib&quot;          &quot;Saracatinib&quot;         &quot;S-Trityl-L-cysteine&quot;<br>## [16] &quot;Z-LLNle-CHO&quot;         &quot;Dasatinib&quot;           &quot;GNF-2&quot;              <br>## [19] &quot;CGP-60474&quot;           &quot;CGP-082996&quot;          &quot;A-770041&quot;           <br>## [22] &quot;WH-4-023&quot;            &quot;WZ-1-84&quot;             &quot;BI-2536&quot;            <br>## [25] &quot;BMS-536924&quot;          &quot;BMS-509744&quot;          &quot;CMK&quot;                <br>## [28] &quot;Pyrimethamine&quot;       &quot;JW-7-52-1&quot;           &quot;A-443654&quot;</p><pre class="message-code-block"><code>
+上面这个是cgp2016版本的细胞系和药物敏感性信息，包含了每种细胞系对每种药物的IC50等信息，可以看到其中一共有251种药物，cgp2014只有138种药物（可以通过?pRRopheticPredict查看帮助文档确定）。</code></pre><p class="message-paragraph">{r}<br>data(drugAndPhenoCgp)</p><pre class="message-code-block"><code>
+这里面是一些原始文件，貌似平常用不到，大家感兴趣可以自己探索下。
+
+可以看到其中还有一个ccleData，其实和上面用到的硼替佐米数据是一样的，只不过一个来自于CGP，另一个来自于CCLE而已，就不展示了。
+
+## 预测全部药物的敏感性
+假如我们要对自己的表达矩阵预测所有药物的敏感性，只需要把所有的药物提取出来，写个循环即可，这里以cgp2016的药物为例。
+
+以下这段代码来自生信技能树：药物预测R包之pRRophetic
+
+耗时巨长！！</code></pre><p class="message-paragraph">{r}<br>library(parallel)<br>library(pRRophetic)</p><p class="message-paragraph"># 加载cgp2016的药敏信息<br>data(PANCANCER_IC_Tue_Aug_9_15_28_57_2016) # loads drugData2016<br>data(cgp2016ExprRma) # loads cgp2016ExprRma<br>data(bortezomibData) # loads exprDataBortezomib, studyResponse, bortIndex etc.</p><p class="message-paragraph">#提取cgp2016的所有药物名字<br>possibleDrugs2016 &lt;- unique(drugData2016$Drug.name) <br>#possibleDrugs2016<br># 用system.time来返回计算所需时间<br>#head(possibleDrugs2016)<br># system.time({ <br>#   cl &lt;- makeCluster(8)  <br>#   results &lt;- parLapply(cl,possibleDrugs2016[1:10],#只用前10个测试，用全部时间太长<br>#                        function(x){<br>#                          library(pRRophetic) <br>#                          # data(bortezomibData) # exprDataBortezomib is already loaded<br>#                          predictedPtype=pRRopheticPredict(<br>#                            testMatrix=exprDataBortezomib,#换成你自己的表达矩阵<br>#                            drug=x,<br>#                            tissueType = &quot;all&quot;, <br>#                            batchCorrect = &quot;eb&quot;,<br>#                            selection=1,<br>#                            dataset = &quot;cgp2016&quot;)<br>#                          return(predictedPtype)<br>#                        }) # lapply的并行版本<br>#   res.df &lt;- do.call(&#39;rbind&#39;,results) # 整合结果<br>#   stopCluster(cl) # 关闭集群<br># })</p><pre class="message-code-block"><code>
+画个图看看，画图之前需要一些数据格式的转换，就是常规的长宽转换，加名字即可。
+
+然后使用ggplot系列包画图、添加显著性，一气呵成，非常简单，所以R语言基础是非常有必要的。</code></pre><p class="message-paragraph">{r}<br>library(tidyr)<br>library(dplyr)<br>library(ggplot2)<br>library(ggpubr)<br>library(ggsci)</p><p class="message-paragraph"># 假设 res.df (来自上面的并行计算), studyResponse, bortIndex, possibleDrugs2016 已经定义并加载<br># plot_df &lt;- res.df %&gt;% <br>#   as.data.frame() %&gt;% <br>#   t() %&gt;% <br>#   bind_cols(studyResponse) %&gt;% <br>#   bind_cols(bortIndex) %&gt;% <br>#   filter(!studyResponse == &quot;PGx_Responder = IE&quot;, bortIndex == TRUE)<br># names(plot_df) &lt;- c(possibleDrugs2016[1:10],&quot;studyResponse&quot;,&quot;bortIndex&quot;)  <br># <br># plot_df %&gt;% <br>#   pivot_longer(1:10,names_to = &quot;drugs&quot;,values_to = &quot;ic50&quot;) %&gt;% <br>#   ggplot(., aes(studyResponse,ic50))+<br>#   geom_boxplot(aes(fill=studyResponse))+<br>#   scale_fill_jama()+<br>#   theme(axis.text.x = element_text(angle = 45,hjust = 1),<br>#         axis.title.x = element_blank(),<br>#         legend.position = &quot;none&quot;)+<br>#   facet_wrap(vars(drugs),scales = &quot;free_y&quot;,nrow = 2)+<br>#   stat_compare_means()</p><pre class="message-code-block"><code>Image
+
+easy！这次内容挺多的，下次再介绍oncoPredict吧。
+
+## 参考
+生信技能树：药物预测R包之pRRophetic</code></pre>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>

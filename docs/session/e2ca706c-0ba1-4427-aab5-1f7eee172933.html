@@ -1,0 +1,1136 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>为什么我用阿里云服务器部署的打不开呢，这个是运行日志</title>
+  <link rel="stylesheet" href="../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>为什么我用阿里云服务器部署的打不开呢，这个是运行日志</h1>
+      <p class="selected-session-meta">阿里云服务器部署问题分析与解决方案 · 2025/12/06 15:26 · 60 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../sessions/2025-12-06/阿里云服务器部署问题分析与解决方案_e2ca706c.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#e2ca706c-0ba1-4427-aab5-1f7eee172933">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 15:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">为什么我用阿里云服务器部署的打不开呢，这个是运行日志</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 15:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我看到日志文件很长，让我继续读取更多内容来查看是否有更多错误信息：</p><p class="message-paragraph">根据日志分析，我发现了问题所在。**您的服务器实际上已经成功启动并正常运行了**，但存在一个主要问题：</p><p class="message-paragraph">## 问题分析</p><p class="message-paragraph">### ✅ 服务器已成功启动<br>从日志可以看到：<br>- <code class="inline-code">🌍 正在启动服务器...</code><br>- <code class="inline-code">💾 数据库初始化成功</code><br>- <code class="inline-code">🚀 服务器启动成功！！！！</code><br>- HTTP 请求正常返回（登录、注册等接口返回 200）</p><p class="message-paragraph">### ❌ 主要问题：**网络无法访问 Telegram 频道**</p><p class="message-paragraph">所有搜索频道的请求都出现了 <code class="inline-code">timeout of 30000ms exceeded</code> 错误，这说明：</p><p class="message-paragraph">**阿里云服务器无法访问 Telegram API**（应用是从 Telegram 频道搜索资源的）</p><p class="message-paragraph">## 原因</p><p class="message-paragraph">1. **国内网络限制**：中国大陆的服务器无法直接访问 Telegram 服务<br>2. **阿里云出口 IP 被限制**：即使配置了代理，阿里云的出口 IP 可能被 Telegram 封锁</p><p class="message-paragraph">## 解决方案</p><p class="message-paragraph">### 方案一：配置代理（推荐）<br>在应用配置中设置 HTTP/SOCKS5 代理，让请求通过代理服务器访问 Telegram：</p><pre class="message-code-block"><code># 在环境变量或配置文件中设置
+HTTP_PROXY=http://代理地址:端口
+HTTPS_PROXY=http://代理地址:端口</code></pre><p class="message-paragraph">### 方案二：使用海外服务器<br>将应用部署到香港、新加坡、日本等可以正常访问 Telegram 的地区的服务器。</p><p class="message-paragraph">### 方案三：配置 Cloudflare Workers<br>使用 Cloudflare Workers 作为反向代理来中转 Telegram API 请求。</p><p class="message-paragraph">---</p><p class="message-paragraph">**总结**：您的应用本身没有问题，前端页面应该是可以正常打开的。如果前端也打不开，请检查：<br>1. 阿里云安全组是否开放了应用端口（如 80/443 或 3000）<br>2. 服务器防火墙设置<br>3. 访问地址是否正确（IP:端口 或 域名）</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 15:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">阿里云如何打开应用端口80/443 或 3000</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 15:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 阿里云开放端口教程</p><p class="message-paragraph">### 方法一：通过阿里云控制台配置安全组</p><p class="message-paragraph">1. **登录阿里云控制台**<br>   - 访问 https://ecs.console.aliyun.com</p><p class="message-paragraph">2. **找到安全组**<br>   - 左侧菜单：**网络与安全** → **安全组**<br>   - 或者进入实例详情页 → 点击 **安全组** 标签</p><p class="message-paragraph">3. **配置入方向规则**<br>   - 点击安全组 → **管理规则** → **入方向** → **手动添加**</p><p class="message-paragraph">添加以下规则：</p><p class="message-paragraph">| 授权策略 | 优先级 | 协议类型 | 端口范围 | 授权对象 |<br>   |---------|-------|---------|---------|---------|<br>   | 允许 | 1 | TCP | 80/80 | 0.0.0.0/0 |<br>   | 允许 | 1 | TCP | 443/443 | 0.0.0.0/0 |<br>   | 允许 | 1 | TCP | 3000/3000 | 0.0.0.0/0 |</p><p class="message-paragraph">4. **保存规则**</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：服务器内部防火墙设置</p><p class="message-paragraph">如果服务器内部有防火墙，也需要开放端口：</p><p class="message-paragraph">**Ubuntu/Debian (ufw):**</p><pre class="message-code-block"><code>sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+sudo ufw allow 3000/tcp
+sudo ufw reload</code></pre><p class="message-paragraph">**CentOS/RHEL (firewalld):**</p><pre class="message-code-block"><code>sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
+sudo firewall-cmd --permanent --add-port=3000/tcp
+sudo firewall-cmd --reload</code></pre><p class="message-paragraph">**CentOS 6 (iptables):**</p><pre class="message-code-block"><code>sudo iptables -I INPUT -p tcp --dport 80 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 443 -j ACCEPT
+sudo iptables -I INPUT -p tcp --dport 3000 -j ACCEPT
+sudo service iptables save</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 验证端口是否开放</p><p class="message-paragraph">在本地电脑执行：</p><pre class="message-code-block"><code># 检测端口是否开放
+telnet 你的服务器IP 3000
+
+# 或者用 nc
+nc -zv 你的服务器IP 3000</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 快速检查清单</p><p class="message-paragraph">- [x] 阿里云安全组入方向规则已添加<br>- [x] 服务器防火墙已放行端口<br>- [x] 应用确实在监听该端口（<code class="inline-code">netstat -tlnp | grep 3000</code>）<br>- [x] 应用监听地址是 <code class="inline-code">0.0.0.0</code> 而不是 <code class="inline-code">127.0.0.1</code></p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 15:45</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如何用服务器部署飞牛 os</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 15:45</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 飞牛OS (fnOS) 部署指南</p><p class="message-paragraph">飞牛OS 是一款国产 NAS 操作系统，主要有两种部署方式：</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式一：物理机安装（推荐）</p><p class="message-paragraph">飞牛OS 设计为直接安装在物理机上作为 NAS 系统使用。</p><p class="message-paragraph">**1. 下载镜像**<br>- 官网：https://www.fnnas.com<br>- 下载最新的 ISO 镜像文件</p><p class="message-paragraph">**2. 制作启动盘**</p><pre class="message-code-block"><code># macOS/Linux 使用 dd 命令
+sudo dd if=fnos-xxx.iso of=/dev/sdX bs=4M status=progress
+
+# 或使用 balenaEtcher、Rufus 等工具</code></pre><p class="message-paragraph">**3. 安装步骤**<br>- U盘启动 → 选择安装磁盘 → 等待安装完成<br>- 安装完成后通过浏览器访问 <code class="inline-code">http://NAS的IP:5666</code></p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式二：虚拟机安装</p><p class="message-paragraph">**VMware/Proxmox/ESXi 安装：**</p><p class="message-paragraph">1. 创建虚拟机：<br>   - 类型：Linux 64位<br>   - 内存：至少 4GB（推荐 8GB+）<br>   - 硬盘：系统盘 32GB + 数据盘若干<br>   - 网络：桥接模式</p><p class="message-paragraph">2. 挂载 ISO 镜像启动安装</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式三：Docker 部署（仅部分服务）</p><p class="message-paragraph">飞牛OS 本身不支持 Docker 部署，但你可以在云服务器上用 Docker 部署类似的 NAS 服务：</p><p class="message-paragraph">**替代方案 - CasaOS（轻量 NAS 系统）：**</p><pre class="message-code-block"><code>curl -fsSL https://get.casaos.io | sudo bash</code></pre><p class="message-paragraph">**替代方案 - Nextcloud（私有云盘）：**</p><pre class="message-code-block"><code>docker run -d \
+  --name nextcloud \
+  -p 8080:80 \
+  -v nextcloud_data:/var/www/html \
+  nextcloud</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 阿里云服务器注意事项</p><p class="message-paragraph">⚠️ **云服务器不太适合部署飞牛OS**，原因：</p><p class="message-paragraph">1. **飞牛OS 是完整操作系统**，需要裸机安装，不是应用程序<br>2. **云服务器无法直接安装第三方OS**（除非使用自定义镜像）<br>3. **存储成本高**：NAS 需要大容量存储，云盘价格昂贵</p><p class="message-paragraph">---</p><p class="message-paragraph">### 推荐方案</p><p class="message-paragraph">| 需求 | 推荐方案 |<br>|-----|---------|<br>| 家用 NAS | 物理机安装飞牛OS / 群晖 |<br>| 云端文件同步 | Nextcloud / Seafile |<br>| 轻量 NAS 体验 | CasaOS / OpenMediaVault |<br>| 影音媒体库 | Jellyfin / Plex |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 如果一定要在云服务器上体验</p><p class="message-paragraph">可以使用 **Proxmox VE** 虚拟化方案：</p><pre class="message-code-block"><code># 1. 在阿里云安装 Proxmox VE（需要自定义镜像）
+# 2. 在 Proxmox 中创建虚拟机
+# 3. 在虚拟机中安装飞牛OS</code></pre><p class="message-paragraph">但这种方式性能损耗较大，成本也高，**不推荐**。</p><p class="message-paragraph">---</p><p class="message-paragraph">你的具体使用场景是什么？我可以给你更针对性的建议。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 15:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 在环境变量或配置文件中设置<br>HTTP_PROXY=http://代理地址:端口<br>HTTPS_PROXY=http://代理地址:端口这个怎么做呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 15:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 配置 HTTP/HTTPS 代理方法</p><p class="message-paragraph">根据你的部署方式，有几种配置代理的方法：</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法一：Docker 环境变量配置（推荐）</p><p class="message-paragraph">如果你是用 Docker 部署的，在 <code class="inline-code">docker-compose.yml</code> 中添加：</p><pre class="message-code-block"><code>version: &#39;3&#39;
+services:
+  your-app:
+    image: your-image
+    environment:
+      - HTTP_PROXY=http://代理IP:端口
+      - HTTPS_PROXY=http://代理IP:端口
+      - http_proxy=http://代理IP:端口
+      - https_proxy=http://代理IP:端口
+      # 如果代理需要认证
+      # - HTTP_PROXY=http://用户名:密码@代理IP:端口</code></pre><p class="message-paragraph">或者用 <code class="inline-code">docker run</code> 命令：</p><pre class="message-code-block"><code>docker run -d \
+  -e HTTP_PROXY=http://代理IP:端口 \
+  -e HTTPS_PROXY=http://代理IP:端口 \
+  -e http_proxy=http://代理IP:端口 \
+  -e https_proxy=http://代理IP:端口 \
+  your-image</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：修改应用配置文件</p><p class="message-paragraph">如果应用有 <code class="inline-code">.env</code> 配置文件，直接编辑：</p><pre class="message-code-block"><code># 进入容器或服务器
+vi /app/config/env  # 根据实际路径
+
+# 添加以下内容
+HTTP_PROXY=http://代理IP:端口
+HTTPS_PROXY=http://代理IP:端口</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方法三：系统环境变量（Linux）</p><pre class="message-code-block"><code># 临时生效（当前会话）
+export HTTP_PROXY=http://代理IP:端口
+export HTTPS_PROXY=http://代理IP:端口
+export http_proxy=http://代理IP:端口
+export https_proxy=http://代理IP:端口
+
+# 永久生效 - 添加到 ~/.bashrc 或 /etc/environment
+echo &#39;export HTTP_PROXY=http://代理IP:端口&#39; &gt;&gt; ~/.bashrc
+echo &#39;export HTTPS_PROXY=http://代理IP:端口&#39; &gt;&gt; ~/.bashrc
+source ~/.bashrc</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 代理服务推荐</p><p class="message-paragraph">如果你没有代理服务器，可以考虑：</p><p class="message-paragraph">| 方案 | 说明 |<br>|-----|------|<br>| **自建代理** | 在香港/海外服务器搭建 |<br>| **机场服务** | 购买现成的代理服务 |<br>| **Cloudflare Workers** | 免费搭建反向代理 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 示例：完整的 docker-compose.yml</p><pre class="message-code-block"><code>version: &#39;3&#39;
+services:
+  cloud-saver:
+    image: your-cloud-saver-image
+    ports:
+      - &quot;3000:3000&quot;
+    environment:
+      - HTTP_PROXY=http://192.168.1.100:7890
+      - HTTPS_PROXY=http://192.168.1.100:7890
+      - http_proxy=http://192.168.1.100:7890
+      - https_proxy=http://192.168.1.100:7890
+      - NO_PROXY=localhost,127.0.0.1
+    volumes:
+      - ./config:/app/config
+      - ./data:/app/data
+    restart: unless-stopped</code></pre><p class="message-paragraph">然后重启服务：</p><pre class="message-code-block"><code>docker-compose down
+docker-compose up -d</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 验证代理是否生效</p><p class="message-paragraph">进入容器测试：</p><pre class="message-code-block"><code>docker exec -it 容器名 sh
+
+# 测试能否访问 Telegram
+curl -I https://api.telegram.org
+# 或
+wget --spider https://t.me</code></pre><p class="message-paragraph">如果返回 200 或有响应，说明代理配置成功。</p><p class="message-paragraph">---</p><p class="message-paragraph">你现在有可用的代理服务器吗？如果没有，我可以教你如何搭建一个。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 15:49</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我现在是云服务器部署的宝塔面板上 docker 上安装的cloudsaver，公网 ip 为8.152.203.38</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 15:49</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 在宝塔面板 Docker 中配置 CloudSaver 代理</p><p class="message-paragraph">### 第一步：查看当前容器配置</p><p class="message-paragraph">1. **登录宝塔面板** → **Docker** → **容器**<br>2. 找到 CloudSaver 容器，记下容器名称</p><p class="message-paragraph">或者 SSH 登录服务器执行：</p><pre class="message-code-block"><code>docker ps | grep -i cloud</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 第二步：配置代理（两种方式）</p><p class="message-paragraph">#### 方式 A：通过宝塔面板配置</p><p class="message-paragraph">1. **Docker** → **容器** → 找到 CloudSaver 容器<br>2. 点击 **编辑** 或 **环境变量**<br>3. 添加环境变量：</p><pre class="message-code-block"><code>   HTTP_PROXY=http://代理IP:端口
+   HTTPS_PROXY=http://代理IP:端口
+   http_proxy=http://代理IP:端口
+   https_proxy=http://代理IP:端口</code></pre><p class="message-paragraph">4. **重启容器**</p><p class="message-paragraph">#### 方式 B：命令行配置</p><pre class="message-code-block"><code># 1. 停止并删除旧容器（数据会保留在挂载目录）
+docker stop cloudsaver容器名
+docker rm cloudsaver容器名
+
+# 2. 重新创建带代理的容器
+docker run -d \
+  --name cloudsaver \
+  -p 3000:3000 \
+  -e HTTP_PROXY=http://代理IP:端口 \
+  -e HTTPS_PROXY=http://代理IP:端口 \
+  -e http_proxy=http://代理IP:端口 \
+  -e https_proxy=http://代理IP:端口 \
+  -v /原来的配置目录:/app/config \
+  -v /原来的数据目录:/app/data \
+  --restart unless-stopped \
+  镜像名称</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 第三步：开放端口访问</p><p class="message-paragraph">你的公网 IP 是 <code class="inline-code">8.152.203.38</code>，需要确保端口开放：</p><p class="message-paragraph">#### 1. 阿里云安全组<br>- 登录阿里云控制台 → ECS → 安全组<br>- 添加入方向规则：**TCP 3000 端口**，来源 <code class="inline-code">0.0.0.0/0</code></p><p class="message-paragraph">#### 2. 宝塔防火墙<br>- 宝塔面板 → **安全** → **防火墙**<br>- 放行端口：**3000**</p><p class="message-paragraph">#### 3. 系统防火墙</p><pre class="message-code-block"><code># 查看防火墙状态
+firewall-cmd --state
+
+# 开放 3000 端口
+firewall-cmd --permanent --add-port=3000/tcp
+firewall-cmd --reload</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 第四步：访问测试</p><p class="message-paragraph">配置完成后访问：</p><pre class="message-code-block"><code>http://8.152.203.38:3000</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### ⚠️ 关键问题：你需要一个代理服务器</p><p class="message-paragraph">从之前的日志看，CloudSaver 需要访问 Telegram，但国内服务器无法直连。</p><p class="message-paragraph">**你有代理服务器吗？** 如果没有，有几个选择：</p><p class="message-paragraph">| 方案 | 说明 | 成本 |<br>|-----|------|-----|<br>| 购买机场服务 | 最简单，获取 HTTP 代理地址 | ￥10-50/月 |<br>| 自建代理 | 在香港/海外买个服务器搭建 | ￥30-100/月 |<br>| 换海外服务器 | 直接把 CloudSaver 部署到海外 | ￥30-100/月 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 临时方案：使用免费代理测试</p><p class="message-paragraph">⚠️ **仅供测试，不建议长期使用**</p><p class="message-paragraph">如果你暂时想测试，可以用一些公开代理（不稳定）：</p><pre class="message-code-block"><code># 示例（可能已失效）
+HTTP_PROXY=http://代理地址:端口</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**请告诉我：**<br>1. 你现在有可用的代理服务器/机场吗？<br>2. 如果没有，需要我教你搭建或推荐方案吗？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 开放 3000 端口<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# firewall-cmd --permanent --add-port=3000/tcp<br>Warning: ALREADY_ENABLED: 3000:tcp<br>success<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# firewall-cmd --reload</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:41</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">很好！端口 3000 已经开放了（显示 <code class="inline-code">ALREADY_ENABLED</code> 说明之前就已经配置过了）。</p><p class="message-paragraph">现在检查一下服务状态：</p><pre class="message-code-block"><code># 1. 确认 Docker 容器正在运行
+docker ps
+
+# 2. 查看容器监听的端口
+docker ps --format &quot;table {{.Names}}\t{{.Ports}}&quot;
+
+# 3. 确认 3000 端口在监听
+netstat -tlnp | grep 3000</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 测试访问</p><p class="message-paragraph">在浏览器打开：</p><pre class="message-code-block"><code>http://8.152.203.38:3000</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 如果还是打不开，检查阿里云安全组</p><p class="message-paragraph">这是最常见的问题！系统防火墙开了不够，**阿里云安全组也必须开**：</p><p class="message-paragraph">1. 登录 [阿里云控制台](https://ecs.console.aliyun.com)<br>2. 找到你的 ECS 实例<br>3. 点击 **安全组** → **配置规则**<br>4. **入方向** → **手动添加**：<br>   - 授权策略：允许<br>   - 协议类型：TCP<br>   - 端口范围：3000/3000<br>   - 授权对象：0.0.0.0/0<br>5. 保存</p><p class="message-paragraph">---</p><p class="message-paragraph">执行上面的检查命令，把结果发给我看看，我帮你排查。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:42</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Welcome to Alibaba Cloud Elastic Compute Service !</p><p class="message-paragraph">Last login: Fri Dec 5 22:34:25 +0800 2025 from 47.96.60.214<br>The current terminal create by BT-Panel.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 查看防火墙状态<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# firewall-cmd --state<br>running<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 开放 3000 端口<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# firewall-cmd --permanent --add-port=3000/tcp<br>Warning: ALREADY_ENABLED: 3000:tcp<br>success<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# firewall-cmd --reload<br>success<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 确认 Docker 容器正在运行<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker ps<br>CONTAINER ID   IMAGE                                    COMMAND                  CREATED         STATUS       PORTS                                                                                                  NAMES<br>1fe8f12d0b49   ghcr.io/jiangrui1994/cloudsaver:latest   &quot;/app/docker-entrypo…&quot;   6 hours ago     Up 4 hours   0.0.0.0:8008-&gt;8008/tcp, :::8008-&gt;8008/tcp                                                              cloud-saver<br>0a023bc6b8cf   homeassistant/home-assistant             &quot;/init&quot;                  6 months ago    Up 4 hours                                                                                                          homeassistant<br>18ce2973004f   nextcloud                                &quot;/entrypoint.sh apac…&quot;   6 months ago    Up 4 hours   127.0.0.1:20-&gt;20/tcp, 80/tcp                                                                           nextcloud<br>2a4caad46baf   xhofe/alist:latest-ffmpeg                &quot;/entrypoint.sh&quot;         11 months ago   Up 4 hours   0.0.0.0:5244-&gt;5244/tcp, :::5244-&gt;5244/tcp, 5245/tcp                                                    alist<br>544fa63d84c8   yanyuwangluo/qinglong:2.11.3             &quot;./docker/docker-ent…&quot;   11 months ago   Up 4 hours   0.0.0.0:5700-5701-&gt;5700-5701/tcp, :::5700-5701-&gt;5700-5701/tcp                                          qinglong<br>5aa4b75b5c1d   xiaoyaliu/alist:latest                   &quot;/entrypoint.sh /opt…&quot;   11 months ago   Up 4 hours   0.0.0.0:2345-2347-&gt;2345-2347/tcp, :::2345-2347-&gt;2345-2347/tcp, 0.0.0.0:5678-&gt;80/tcp, :::5678-&gt;80/tcp   xiaoya<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 2. 查看容器监听的端口<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker ps --format &quot;table {{.Names}}\t{{.Ports}}&quot;<br>NAMES           PORTS<br>cloud-saver     0.0.0.0:8008-&gt;8008/tcp, :::8008-&gt;8008/tcp<br>homeassistant   <br>nextcloud       127.0.0.1:20-&gt;20/tcp, 80/tcp<br>alist           0.0.0.0:5244-&gt;5244/tcp, :::5244-&gt;5244/tcp, 5245/tcp<br>qinglong        0.0.0.0:5700-5701-&gt;5700-5701/tcp, :::5700-5701-&gt;5700-5701/tcp<br>xiaoya          0.0.0.0:2345-2347-&gt;2345-2347/tcp, :::2345-2347-&gt;2345-2347/tcp, 0.0.0.0:5678-&gt;80/tcp, :::5678-&gt;80/tcp<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 3. 确认 3000 端口在监听<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# netstat -tlnp | grep 3000</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:42</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">找到问题了！🎯</p><p class="message-paragraph">## 问题原因</p><p class="message-paragraph">CloudSaver 容器的端口是 **8008**，不是 3000！</p><pre class="message-code-block"><code>cloud-saver     0.0.0.0:8008-&gt;8008/tcp</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">## 解决方案</p><p class="message-paragraph">### 直接访问正确端口</p><p class="message-paragraph">在浏览器打开：</p><pre class="message-code-block"><code>http://8.152.203.38:8008</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 确保 8008 端口已开放</p><pre class="message-code-block"><code># 系统防火墙开放 8008
+firewall-cmd --permanent --add-port=8008/tcp
+firewall-cmd --reload</code></pre><p class="message-paragraph">**同时检查阿里云安全组**是否开放了 **8008** 端口！</p><p class="message-paragraph">---</p><p class="message-paragraph">### 验证端口监听</p><pre class="message-code-block"><code>netstat -tlnp | grep 8008</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">试试访问 <code class="inline-code">http://8.152.203.38:8008</code>，应该就能打开了！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:50</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">https://github.com/jiangrui1994/cloudsaver.我要如何部署到我的云服务器上呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:50</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## CloudSaver 部署到阿里云服务器完整教程</p><p class="message-paragraph">根据官方文档，以下是完整的部署步骤：</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法一：Docker 单容器部署（推荐）</p><p class="message-paragraph">通过 SSH 或宝塔终端执行：</p><pre class="message-code-block"><code># 1. 创建数据目录
+mkdir -p /opt/cloudsaver/data
+mkdir -p /opt/cloudsaver/config
+
+# 2. 运行容器
+docker run -d \
+  -p 8008:8008 \
+  -v /opt/cloudsaver/data:/app/data \
+  -v /opt/cloudsaver/config:/app/config \
+  --name cloud-saver \
+  --restart unless-stopped \
+  jiangrui1994/cloudsaver:latest</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：Docker Compose 部署</p><pre class="message-code-block"><code># 1. 创建目录
+mkdir -p /opt/cloudsaver &amp;&amp; cd /opt/cloudsaver
+
+# 2. 创建 docker-compose.yml
+cat &gt; docker-compose.yml &lt;&lt; &#39;EOF&#39;
+version: &quot;3&quot;
+services:
+  cloudsaver:
+    image: jiangrui1994/cloudsaver:latest
+    container_name: cloud-saver
+    ports:
+      - &quot;8008:8008&quot;
+    volumes:
+      - ./data:/app/data
+      - ./config:/app/config
+    restart: unless-stopped
+EOF
+
+# 3. 启动
+docker-compose up -d</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 部署后配置</p><p class="message-paragraph">#### 1. 开放端口</p><p class="message-paragraph">**阿里云安全组**（必须）：<br>- 登录阿里云控制台 → ECS → 安全组 → 入方向添加：<br>  - 端口：**8008**<br>  - 协议：TCP<br>  - 来源：0.0.0.0/0</p><p class="message-paragraph">**服务器防火墙**：</p><pre class="message-code-block"><code>firewall-cmd --permanent --add-port=8008/tcp
+firewall-cmd --reload</code></pre><p class="message-paragraph">#### 2. 访问地址</p><pre class="message-code-block"><code>http://你的公网IP:8008</code></pre><p class="message-paragraph">例如：<code class="inline-code">http://8.152.203.38:8008</code></p><p class="message-paragraph">---</p><p class="message-paragraph">### 默认注册码</p><p class="message-paragraph">| 用户类型 | 注册码 |<br>|---------|-------|<br>| 管理员 | <code class="inline-code">230713</code> |<br>| 普通用户 | <code class="inline-code">9527</code> |</p><p class="message-paragraph">---</p><p class="message-paragraph">### ⚠️ 重要提醒：配置代理</p><p class="message-paragraph">由于 CloudSaver 需要访问 Telegram 搜索资源，**国内服务器必须配置代理**！</p><pre class="message-code-block"><code># 停止旧容器
+docker stop cloud-saver &amp;&amp; docker rm cloud-saver
+
+# 带代理重新部署
+docker run -d \
+  -p 8008:8008 \
+  -v /opt/cloudsaver/data:/app/data \
+  -v /opt/cloudsaver/config:/app/config \
+  -e HTTP_PROXY=http://代理IP:端口 \
+  -e HTTPS_PROXY=http://代理IP:端口 \
+  -e http_proxy=http://代理IP:端口 \
+  -e https_proxy=http://代理IP:端口 \
+  --name cloud-saver \
+  --restart unless-stopped \
+  jiangrui1994/cloudsaver:latest</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 常用管理命令</p><pre class="message-code-block"><code># 查看日志
+docker logs -f cloud-saver
+
+# 重启容器
+docker restart cloud-saver
+
+# 停止容器
+docker stop cloud-saver
+
+# 更新版本
+docker pull jiangrui1994/cloudsaver:latest
+docker stop cloud-saver &amp;&amp; docker rm cloud-saver
+# 然后重新运行 docker run 命令</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 你已经部署过了</p><p class="message-paragraph">根据之前的信息，你的 CloudSaver 已经在运行：<br>- 容器名：<code class="inline-code">cloud-saver</code><br>- 端口：<code class="inline-code">8008</code><br>- 访问地址：<code class="inline-code">http://8.152.203.38:8008</code></p><p class="message-paragraph">现在的问题是**搜索功能超时**，因为无法访问 Telegram。你需要配置代理或使用海外服务器。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Welcome to Alibaba Cloud Elastic Compute Service !</p><p class="message-paragraph">Last login: Fri Dec 5 22:34:25 +0800 2025 from 47.96.60.214<br>The current terminal create by BT-Panel.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 创建数据目录<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/data<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/config<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 2. 运行容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>Unable to find image &#39;jiangrui1994/cloudsaver:latest&#39; locally<br>latest: Pulling from jiangrui1994/cloudsaver<br>Digest: sha256:941827ef866e691e118b0ceef43f4723d3fee1fb9054e069fae558493938348e<br>Status: Downloaded newer image for jiangrui1994/cloudsaver:latest<br>docker: Error response from daemon: Conflict. The container name &quot;/cloud-saver&quot; is already in use by container &quot;1fe8f12d0b49f1b21f75cb17d0ee05a50acc3d0ae19b6db902ecc1372cdc3ae7&quot;. You have to remove (or rename) that container to be able to reuse that name.<br>See &#39;docker run --help&#39;.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]#</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">容器名已存在，因为你之前已经部署过了。有两个选择：</p><p class="message-paragraph">---</p><p class="message-paragraph">### 选项 1：继续使用现有容器（推荐）</p><p class="message-paragraph">你的 CloudSaver 已经在运行了，直接访问即可：</p><pre class="message-code-block"><code>http://8.152.203.38:8008</code></pre><p class="message-paragraph">查看容器状态：</p><pre class="message-code-block"><code>docker ps | grep cloud-saver</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 选项 2：删除旧容器重新部署</p><p class="message-paragraph">如果想重新部署（比如更新版本或修改配置）：</p><pre class="message-code-block"><code># 停止并删除旧容器
+docker stop cloud-saver
+docker rm cloud-saver
+
+# 重新运行
+docker run -d \
+  -p 8008:8008 \
+  -v /opt/cloudsaver/data:/app/data \
+  -v /opt/cloudsaver/config:/app/config \
+  --name cloud-saver \
+  --restart unless-stopped \
+  jiangrui1994/cloudsaver:latest</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 如果需要配置代理一起部署</p><pre class="message-code-block"><code># 停止并删除旧容器
+docker stop cloud-saver
+docker rm cloud-saver
+
+# 带代理重新部署（替换成你的代理地址）
+docker run -d \
+  -p 8008:8008 \
+  -v /opt/cloudsaver/data:/app/data \
+  -v /opt/cloudsaver/config:/app/config \
+  -e HTTP_PROXY=http://你的代理IP:端口 \
+  -e HTTPS_PROXY=http://你的代理IP:端口 \
+  --name cloud-saver \
+  --restart unless-stopped \
+  jiangrui1994/cloudsaver:latest</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">你现在想怎么做？直接用现有的还是重新部署？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:55</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你的代理IP:端口这个应该怎么填</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:55</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 代理 IP 和端口的获取方式</p><p class="message-paragraph">你需要先有一个代理服务器，才能填写代理地址。以下是几种获取方式：</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式一：使用机场服务（最简单）</p><p class="message-paragraph">如果你有订阅机场（VPN/代理服务），通常可以获取 HTTP 代理地址：</p><p class="message-paragraph">1. 打开你的代理客户端（如 Clash、V2rayN、Shadowrocket 等）<br>2. 查看设置中的 **HTTP 代理端口**<br>3. 格式通常是：<code class="inline-code">http://127.0.0.1:7890</code></p><p class="message-paragraph">**但是！** 这个本地代理在云服务器上用不了，你需要：<br>- 在云服务器上也安装代理客户端，或<br>- 使用机场提供的**直连代理地址**（部分机场提供）</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式二：自建代理服务器（推荐）</p><p class="message-paragraph">在香港/海外服务器上搭建代理，然后云服务器连接它：</p><p class="message-paragraph">**1. 购买海外 VPS**（香港、新加坡等）<br>- 推荐：腾讯云香港、阿里云香港、Vultr、搬瓦工等<br>- 约 ￥30-50/月</p><p class="message-paragraph">**2. 在海外 VPS 上安装代理**</p><p class="message-paragraph">安装 [3x-ui](https://github.com/MHSanaei/3x-ui)（一键脚本）：</p><pre class="message-code-block"><code>bash &lt;(curl -Ls https://raw.githubusercontent.com/mhsanaei/3x-ui/master/install.sh)</code></pre><p class="message-paragraph">或安装 Squid HTTP 代理：</p><pre class="message-code-block"><code># Ubuntu/Debian
+apt update &amp;&amp; apt install squid -y
+
+# 配置允许你的阿里云IP访问
+echo &quot;acl aliyun src 8.152.203.38&quot; &gt;&gt; /etc/squid/squid.conf
+echo &quot;http_access allow aliyun&quot; &gt;&gt; /etc/squid/squid.conf
+systemctl restart squid</code></pre><p class="message-paragraph">**3. 填写代理地址**</p><pre class="message-code-block"><code>HTTP_PROXY=http://海外VPS的IP:3128</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方式三：Cloudflare Workers 代理（免费）</p><p class="message-paragraph">创建一个 Cloudflare Worker 来代理 Telegram 请求，但配置较复杂。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方式四：直接换海外服务器部署（最省事）</p><p class="message-paragraph">把 CloudSaver 直接部署到香港/海外服务器，就不需要代理了：</p><p class="message-paragraph">| 服务商 | 地区 | 价格 |<br>|-------|-----|------|<br>| 腾讯云轻量 | 香港 | ￥32/月起 |<br>| 阿里云轻量 | 香港 | ￥24/月起 |<br>| Vultr | 日本/新加坡 | $5/月起 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 你的情况建议</p><p class="message-paragraph">**如果你有机场：**<br>告诉我你用的是什么客户端（Clash/V2rayN/其他），我教你怎么在服务器上配置。</p><p class="message-paragraph">**如果没有机场：**<br>最简单的方案是买一台香港轻量服务器，直接把 CloudSaver 部署到那里。</p><p class="message-paragraph">---</p><p class="message-paragraph">**你现在有机场/代理服务吗？还是需要我推荐方案？**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我现在有一个订阅了机场，如何查到呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 如何从机场获取代理地址</p><p class="message-paragraph">### 第一步：确认你使用的客户端</p><p class="message-paragraph">常见的代理客户端有：</p><p class="message-paragraph">| 客户端 | 平台 |<br>|-------|-----|<br>| Clash Verge / ClashX | Mac |<br>| Clash for Windows | Windows |<br>| V2rayN | Windows |<br>| Shadowrocket | iOS |<br>| Quantumult X | iOS |<br>| Surge | Mac/iOS |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 第二步：查看 HTTP 代理端口</p><p class="message-paragraph">#### Clash 系列（Clash Verge / ClashX / CFW）</p><p class="message-paragraph">1. 打开 Clash 客户端<br>2. 查看 **端口设置**：<br>   - 混合端口（Mixed Port）：通常是 <code class="inline-code">7890</code><br>   - HTTP 端口：通常是 <code class="inline-code">7890</code><br>3. 代理地址就是：<code class="inline-code">http://127.0.0.1:7890</code></p><p class="message-paragraph">#### V2rayN</p><p class="message-paragraph">1. 打开 V2rayN<br>2. 主界面底部会显示：<code class="inline-code">本地HTTP代理: 127.0.0.1:10809</code><br>3. 代理地址：<code class="inline-code">http://127.0.0.1:10809</code></p><p class="message-paragraph">---</p><p class="message-paragraph">### ⚠️ 重要问题</p><p class="message-paragraph">**本地代理（127.0.0.1）无法直接给云服务器用！**</p><p class="message-paragraph">你的机场客户端运行在你的电脑上，阿里云服务器无法连接到你电脑的 127.0.0.1。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 解决方案</p><p class="message-paragraph">#### 方案 A：在云服务器上安装代理客户端</p><p class="message-paragraph">在阿里云服务器上安装 Clash，使用你的机场订阅：</p><pre class="message-code-block"><code># 1. 下载 Clash
+cd /opt
+wget https://github.com/Dreamacro/clash/releases/download/v1.18.0/clash-linux-amd64-v1.18.0.gz
+gzip -d clash-linux-amd64-v1.18.0.gz
+mv clash-linux-amd64-v1.18.0 clash
+chmod +x clash
+
+# 2. 创建配置目录
+mkdir -p ~/.config/clash
+
+# 3. 下载你的机场订阅配置（替换成你的订阅链接）
+wget -O ~/.config/clash/config.yaml &quot;你的机场订阅链接&quot;
+
+# 4. 运行 Clash
+./clash -d ~/.config/clash</code></pre><p class="message-paragraph">然后代理地址就是：</p><pre class="message-code-block"><code>HTTP_PROXY=http://127.0.0.1:7890</code></pre><p class="message-paragraph">#### 方案 B：使用机场的直连节点（如果有）</p><p class="message-paragraph">有些机场提供直接可用的 HTTP 代理地址，格式如：</p><pre class="message-code-block"><code>http://xxx.example.com:8080</code></pre><p class="message-paragraph">登录你的机场面板查看是否有提供。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 请告诉我</p><p class="message-paragraph">1. **你用的是什么客户端？**（Clash/V2rayN/其他）<br>2. **能否登录机场官网查看订阅链接？**</p><p class="message-paragraph">有了订阅链接，我可以教你在服务器上配置。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我的是 surge</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 从 Surge 获取代理信息并配置到云服务器</p><p class="message-paragraph">### 方法一：查看 Surge 订阅链接</p><p class="message-paragraph">1. 打开 **Surge** → **配置** → **配置列表**<br>2. 找到你正在使用的配置，点击 **ℹ️** 或 **详情**<br>3. 查看 **托管配置 URL**（这就是你的订阅链接）</p><p class="message-paragraph">或者在 Surge 配置文件中找到类似这样的链接：</p><pre class="message-code-block"><code>#!MANAGED-CONFIG https://xxx.example.com/surge?token=xxx</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：在云服务器安装 Clash 使用订阅</p><p class="message-paragraph">拿到订阅链接后，在阿里云服务器上执行：</p><pre class="message-code-block"><code># 1. 安装 Clash
+cd /opt
+wget https://github.com/Dreamacro/clash/releases/download/v1.18.0/clash-linux-amd64-v1.18.0.gz
+gzip -d clash-linux-amd64-v1.18.0.gz
+mv clash-linux-amd64-v1.18.0 clash
+chmod +x clash
+
+# 2. 创建配置目录
+mkdir -p /root/.config/clash
+
+# 3. 下载订阅配置（把下面链接换成你的）
+# 注意：Surge 订阅可能需要转换成 Clash 格式
+wget -O /root/.config/clash/config.yaml &quot;你的订阅链接&quot;
+
+# 4. 后台运行 Clash
+nohup /opt/clash -d /root/.config/clash &gt; /opt/clash.log 2&gt;&amp;1 &amp;
+
+# 5. 检查是否运行成功
+curl -x http://127.0.0.1:7890 https://www.google.com -I</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### ⚠️ Surge 订阅转换</p><p class="message-paragraph">Surge 格式和 Clash 格式不同，可能需要转换。使用在线转换工具：</p><p class="message-paragraph">**订阅转换地址：**</p><pre class="message-code-block"><code>https://sub.xeton.dev
+https://acl4ssr-sub.github.io</code></pre><p class="message-paragraph">操作步骤：<br>1. 打开转换网站<br>2. 粘贴你的 Surge 订阅链接<br>3. 选择 **转换目标：Clash**<br>4. 点击生成，获得新的 Clash 订阅链接<br>5. 用这个新链接在服务器上配置</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法三：一键脚本安装（更简单）</p><pre class="message-code-block"><code># 使用 ShellClash 一键脚本
+export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;&amp; wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh &amp;&amp; bash /tmp/install.sh &amp;&amp; source /etc/profile &amp;&gt; /dev/null</code></pre><p class="message-paragraph">安装完成后：<br>1. 输入 <code class="inline-code">clash</code> 进入管理菜单<br>2. 选择 **导入订阅链接**<br>3. 粘贴你的订阅链接（转换后的 Clash 格式）<br>4. 启动 Clash</p><p class="message-paragraph">---</p><p class="message-paragraph">### 配置完成后，重新部署 CloudSaver</p><pre class="message-code-block"><code># 停止旧容器
+docker stop cloud-saver &amp;&amp; docker rm cloud-saver
+
+# 带代理启动
+docker run -d \
+  -p 8008:8008 \
+  -v /opt/cloudsaver/data:/app/data \
+  -v /opt/cloudsaver/config:/app/config \
+  -e HTTP_PROXY=http://127.0.0.1:7890 \
+  -e HTTPS_PROXY=http://127.0.0.1:7890 \
+  -e http_proxy=http://127.0.0.1:7890 \
+  -e https_proxy=http://127.0.0.1:7890 \
+  --network host \
+  --name cloud-saver \
+  --restart unless-stopped \
+  jiangrui1994/cloudsaver:latest</code></pre><p class="message-paragraph">&gt; 注意：使用 <code class="inline-code">--network host</code> 让容器可以访问宿主机的 127.0.0.1:7890</p><p class="message-paragraph">---</p><p class="message-paragraph">**你能找到 Surge 的订阅链接吗？** 找到后我帮你一步步配置。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 19:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Welcome to Alibaba Cloud Elastic Compute Service !</p><p class="message-paragraph">Last login: Fri Dec 5 22:34:25 +0800 2025 from 47.96.60.214<br>The current terminal create by BT-Panel.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 创建数据目录<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/data<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/config<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 2. 运行容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>Unable to find image &#39;jiangrui1994/cloudsaver:latest&#39; locally<br>latest: Pulling from jiangrui1994/cloudsaver<br>Digest: sha256:941827ef866e691e118b0ceef43f4723d3fee1fb9054e069fae558493938348e<br>Status: Downloaded newer image for jiangrui1994/cloudsaver:latest<br>docker: Error response from daemon: Conflict. The container name &quot;/cloud-saver&quot; is already in use by container &quot;1fe8f12d0b49f1b21f75cb17d0ee05a50acc3d0ae19b6db902ecc1372cdc3ae7&quot;. You have to remove (or rename) that container to be able to reuse that name.<br>See &#39;docker run --help&#39;.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 停止旧容器<br>docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 带代理启动<br>docker run -d \<br>  -p 8008:8008 \<br>  -v /opt/cloudsaver/data:/app/data \<br>  -v /opt/cloudsaver/config:/app/config \<br>  -e HTTP_PROXY=http://127.0.0.1:7890 \<br>  -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>  -e http_proxy=http://127.0.0.1:7890 \<br>  -e https_proxy=http://127.0.0.1:7890 \<br>  --network host \<br>  --name cloud-saver \<br>  --restart unless-stopped \<br>  jiangrui1994/cloudsaver:latest<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>54f1f06a174acbcec4f0aad9f9001e355d401799457f807073191a208d286086<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>0e9deaad928a528dfd236d337905b2f71cb36ac9e4faa9afba75ee42a323695a<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]#</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 19:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">容器已启动！但是现在还需要**在服务器上安装 Clash 代理**，否则 <code class="inline-code">127.0.0.1:7890</code> 是连不上的。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 下一步：在服务器上安装 Clash</p><p class="message-paragraph">执行以下命令：</p><pre class="message-code-block"><code># 1. 安装 ShellClash（一键脚本）
+export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;&amp; wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh &amp;&amp; bash /tmp/install.sh &amp;&amp; source /etc/profile &amp;&gt; /dev/null</code></pre><p class="message-paragraph">安装过程中：<br>- 选择安装到</p><p class="message-paragraph">目录<br>- 选择安装为 **root 用户**</p><p class="message-paragraph">安装完成后，输入 <code class="inline-code">clash</code> 进入管理菜单。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 配置订阅</p><p class="message-paragraph">在 Clash 管理菜单中：</p><p class="message-paragraph">1. 选择 **6 - 导入配置文件**<br>2. 选择 **1 - 在线生成Clash配置文件**<br>3. 粘贴你的**订阅链接**（需要先转换成 Clash 格式）</p><p class="message-paragraph">**订阅转换：**<br>1. 打开 https://sub.xeton.dev<br>2. 粘贴你的 Surge 订阅链接<br>3. 客户端选择 **Clash**<br>4. 点击生成，复制新链接</p><p class="message-paragraph">---</p><p class="message-paragraph">### 验证代理是否工作</p><pre class="message-code-block"><code># 检查 Clash 是否运行
+netstat -tlnp | grep 7890
+
+# 测试代理是否能访问外网
+curl -x http://127.0.0.1:7890 https://www.google.com -I</code></pre><p class="message-paragraph">如果返回 <code class="inline-code">HTTP/2 200</code>，说明代理配置成功！</p><p class="message-paragraph">---</p><p class="message-paragraph">### 检查 CloudSaver 状态</p><pre class="message-code-block"><code># 查看容器日志
+docker logs -f cloud-saver --tail 50</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**先执行第一步安装 ShellClash，然后告诉我结果。**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:01</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Welcome to Alibaba Cloud Elastic Compute Service !</p><p class="message-paragraph">Last login: Fri Dec 5 22:34:25 +0800 2025 from 47.96.60.214<br>The current terminal create by BT-Panel.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 创建数据目录<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/data<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/config<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 2. 运行容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>Unable to find image &#39;jiangrui1994/cloudsaver:latest&#39; locally<br>latest: Pulling from jiangrui1994/cloudsaver<br>Digest: sha256:941827ef866e691e118b0ceef43f4723d3fee1fb9054e069fae558493938348e<br>Status: Downloaded newer image for jiangrui1994/cloudsaver:latest<br>docker: Error response from daemon: Conflict. The container name &quot;/cloud-saver&quot; is already in use by container &quot;1fe8f12d0b49f1b21f75cb17d0ee05a50acc3d0ae19b6db902ecc1372cdc3ae7&quot;. You have to remove (or rename) that container to be able to reuse that name.<br>See &#39;docker run --help&#39;.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 停止旧容器<br>docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 带代理启动<br>docker run -d \<br>  -p 8008:8008 \<br>  -v /opt/cloudsaver/data:/app/data \<br>  -v /opt/cloudsaver/config:/app/config \<br>  -e HTTP_PROXY=http://127.0.0.1:7890 \<br>  -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>  -e http_proxy=http://127.0.0.1:7890 \<br>  -e https_proxy=http://127.0.0.1:7890 \<br>  --network host \<br>  --name cloud-saver \<br>  --restart unless-stopped \<br>  jiangrui1994/cloudsaver:latest<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>54f1f06a174acbcec4f0aad9f9001e355d401799457f807073191a208d286086<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>0e9deaad928a528dfd236d337905b2f71cb36ac9e4faa9afba75ee42a323695a<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 安装 ShellClash（一键脚本）<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;&amp; wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh &amp;&amp; bash /tmp/install.sh &amp;&amp; source /etc/profile &amp;&gt; /dev/null<br>***********************************************<br>**                 欢迎使用                  **<br>**                ShellCrash                 **<br>**                             by  Juewuy    **<br>***********************************************<br>-----------------------------------------------<br>请选择想要安装的版本：<br> 1 公测版(推荐)<br> 2 稳定版<br> 3 开发版<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>最新版本：<br>-----------------------------------------------<br>如遇问题请加TG群反馈： t.me/ShellClash <br>支持各种基于openwrt的路由器设备<br>支持Debian、Centos等标准Linux系统<br>-----------------------------------------------<br>注意：安装ShellCrash至少需要预留约1MB的磁盘空间<br> 1 在/etc目录下安装(适合root用户)<br> 2 在/usr/share目录下安装(适合Linux系统)<br> 3 在当前用户目录下安装(适合非root用户)<br> 4 在外置存储中安装<br> 5 手动设置安装目录<br> 0 退出安装<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>目标目录/etc空间剩余：16G<br>确认安装？(1/0) &gt; 1<br>-----------------------------------------------<br>开始从服务器获取安装文件！<br>-----------------------------------------------<br>-=O#- #   #     #                                                                                       <br>curl: (28) Connection timed out after 5000 milliseconds<br>文件下载失败！<br>请参考 https://github.com/juewuy/ShellCrash/blob/master/README_CN.md<br>使用其他安装源重新安装！<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]#</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:01</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">下载超时了，换一个安装源试试：</p><pre class="message-code-block"><code># 使用 GitHub 代理源安装
+export url=&#39;https://gh.jwsc.eu.org/master&#39; &amp;&amp; bash -c &quot;$(curl -kfsSl $url/install.sh)&quot; &amp;&amp; source /etc/profile &amp;&gt; /dev/null</code></pre><p class="message-paragraph">如果还是超时，试试这个：</p><pre class="message-code-block"><code># 使用 GitCode 源
+export url=&#39;https://gitcode.net/mzz2017/ShellCrash/-/raw/master&#39; &amp;&amp; bash -c &quot;$(curl -kfsSl $url/install.sh)&quot; &amp;&amp; source /etc/profile &amp;&gt; /dev/null</code></pre><p class="message-paragraph">或者手动下载安装：</p><pre class="message-code-block"><code># 手动下载 Clash 核心
+cd /opt
+wget https://mirror.ghproxy.com/https://github.com/Dreamacro/clash/releases/download/v1.18.0/clash-linux-amd64-v1.18.0.gz
+
+# 如果上面还是超时，用这个国内源
+wget https://ghproxy.net/https://github.com/Dreamacro/clash/releases/download/v1.18.0/clash-linux-amd64-v1.18.0.gz
+
+# 解压
+gzip -d clash-linux-amd64-v1.18.0.gz
+mv clash-linux-amd64-v1.18.0 clash
+chmod +x clash
+
+# 创建配置目录
+mkdir -p /root/.config/clash</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**先试试第一个命令，把结果发给我。**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Welcome to Alibaba Cloud Elastic Compute Service !</p><p class="message-paragraph">Last login: Fri Dec 5 22:34:25 +0800 2025 from 47.96.60.214<br>The current terminal create by BT-Panel.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 创建数据目录<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/data<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# mkdir -p /opt/cloudsaver/config<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 2. 运行容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>Unable to find image &#39;jiangrui1994/cloudsaver:latest&#39; locally<br>latest: Pulling from jiangrui1994/cloudsaver<br>Digest: sha256:941827ef866e691e118b0ceef43f4723d3fee1fb9054e069fae558493938348e<br>Status: Downloaded newer image for jiangrui1994/cloudsaver:latest<br>docker: Error response from daemon: Conflict. The container name &quot;/cloud-saver&quot; is already in use by container &quot;1fe8f12d0b49f1b21f75cb17d0ee05a50acc3d0ae19b6db902ecc1372cdc3ae7&quot;. You have to remove (or rename) that container to be able to reuse that name.<br>See &#39;docker run --help&#39;.<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 停止旧容器<br>docker stop cloud-saver &amp;&amp; docker rm cloud-saver</p><p class="message-paragraph"># 带代理启动<br>docker run -d \<br>  -p 8008:8008 \<br>  -v /opt/cloudsaver/data:/app/data \<br>  -v /opt/cloudsaver/config:/app/config \<br>  -e HTTP_PROXY=http://127.0.0.1:7890 \<br>  -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>  -e http_proxy=http://127.0.0.1:7890 \<br>  -e https_proxy=http://127.0.0.1:7890 \<br>  --network host \<br>  --name cloud-saver \<br>  --restart unless-stopped \<br>  jiangrui1994/cloudsaver:latest<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>54f1f06a174acbcec4f0aad9f9001e355d401799457f807073191a208d286086<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>0e9deaad928a528dfd236d337905b2f71cb36ac9e4faa9afba75ee42a323695a<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 安装 ShellClash（一键脚本）<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;&amp; wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh &amp;&amp; bash /tmp/install.sh &amp;&amp; source /etc/profile &amp;&gt; /dev/null<br>***********************************************<br>**                 欢迎使用                  **<br>**                ShellCrash                 **<br>**                             by  Juewuy    **<br>***********************************************<br>-----------------------------------------------<br>请选择想要安装的版本：<br> 1 公测版(推荐)<br> 2 稳定版<br> 3 开发版<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>最新版本：<br>-----------------------------------------------<br>如遇问题请加TG群反馈： t.me/ShellClash <br>支持各种基于openwrt的路由器设备<br>支持Debian、Centos等标准Linux系统<br>-----------------------------------------------<br>注意：安装ShellCrash至少需要预留约1MB的磁盘空间<br> 1 在/etc目录下安装(适合root用户)<br> 2 在/usr/share目录下安装(适合Linux系统)<br> 3 在当前用户目录下安装(适合非root用户)<br> 4 在外置存储中安装<br> 5 手动设置安装目录<br> 0 退出安装<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>目标目录/etc空间剩余：16G<br>确认安装？(1/0) &gt; 1<br>-----------------------------------------------<br>开始从服务器获取安装文件！<br>-----------------------------------------------<br>-=O#- #   #     #                                                                                       <br>curl: (28) Connection timed out after 5000 milliseconds<br>文件下载失败！<br>请参考 https://github.com/juewuy/ShellCrash/blob/master/README_CN.md<br>使用其他安装源重新安装！<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 使用 GitHub 代理源安装<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# export url=&#39;https://gh.jwsc.eu.org/master&#39; &amp;&amp; bash -c &quot;$(curl -kfsSl $url/install.sh)&quot; &amp;&amp; source /etc/profile &amp;&gt; /dev/null<br>***********************************************<br>**                 欢迎使用                  **<br>**                ShellCrash                 **<br>**                             by  Juewuy    **<br>***********************************************<br>-----------------------------------------------<br>请选择想要安装的版本：<br> 1 公测版(推荐)<br> 2 稳定版<br> 3 开发版<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>最新版本：1.9.2beta7<br>-----------------------------------------------<br>如遇问题请加TG群反馈： t.me/ShellClash <br>支持各种基于openwrt的路由器设备<br>支持Debian、Centos等标准Linux系统<br>-----------------------------------------------<br>注意：安装ShellCrash至少需要预留约1MB的磁盘空间<br> 1 在/etc目录下安装(适合root用户)<br> 2 在/usr/share目录下安装(适合Linux系统)<br> 3 在当前用户目录下安装(适合非root用户)<br> 4 在外置存储中安装<br> 5 手动设置安装目录<br> 0 退出安装<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>目标目录/etc空间剩余：16G<br>确认安装？(1/0) &gt; 1<br>-----------------------------------------------<br>开始从服务器获取安装文件！<br>-----------------------------------------------<br>################################################################################################## 100.0%<br>-----------------------------------------------<br>开始解压文件！<br>-----------------------------------------------<br>ShellCrash 已经安装成功!<br>-----------------------------------------------<br>输入 crash 命令即可管理！！！<br>-----------------------------------------------<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# crash<br>-----------------------------------------------<br>欢迎使用ShellCrash！            版本：1.9.2beta7<br>服务没有运行（纯净模式），未设置开机启动！<br>TG频道：https://t.me/ShellClash<br>-----------------------------------------------<br>-----------------------------------------------<br> 欢迎使用ShellCrash新手引导！ <br>-----------------------------------------------<br>请先选择你的使用环境： <br>(你之后依然可以在设置中更改各种配置)<br>-----------------------------------------------<br> 1 路由设备配置局域网透明代理<br> 2 Linux设备仅配置本机代理<br>-----------------------------------------------<br>请输入对应数字 &gt; 后面要怎么做</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">安装成功！继续操作：</p><p class="message-paragraph">### 步骤 1：选择本机代理模式</p><p class="message-paragraph">输入 **2** 然后回车（因为你是 Linux 服务器，只需要本机代理）</p><pre class="message-code-block"><code>请输入对应数字 &gt; 2</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 2：选择代理核心</p><p class="message-paragraph">接下来会让你选择核心，选择 **1 Clash内核**：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 1</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 3：导入订阅</p><p class="message-paragraph">完成后会进入主菜单，选择 **6 - 导入配置文件**</p><p class="message-paragraph">然后选择 **1 - 在线生成Clash配置文件**</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 4：转换你的 Surge 订阅</p><p class="message-paragraph">**先不要操作**，你需要先把 Surge 订阅转换成 Clash 格式：</p><p class="message-paragraph">1. 打开浏览器访问：https://sub.xeton.dev<br>2. 在 **订阅链接** 处粘贴你的 Surge 订阅链接<br>3. **客户端** 选择 **Clash**<br>4. 点击 **生成订阅链接**<br>5. **复制生成的新链接**</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 5：粘贴订阅链接</p><p class="message-paragraph">回到服务器终端，粘贴转换后的 Clash 订阅链接</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 6：启动服务</p><p class="message-paragraph">导入成功后，选择 **1 - 启动/重启服务**</p><p class="message-paragraph">---</p><p class="message-paragraph">**现在先输入 2 选择本机代理模式，然后一步步来。遇到问题截图给我。**</p><p class="message-paragraph">你的 Surge 订阅链接能找到吗？在 Surge 的 **配置** → **配置列表** → 点击配置文件的 **ℹ️** 查看托管 URL。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">先选择你的使用环境： <br>(你之后依然可以在设置中更改各种配置)<br>-----------------------------------------------<br> 1 路由设备配置局域网透明代理<br> 2 Linux设备仅配置本机代理<br>-----------------------------------------------<br>请输2<br>-----------------------------------------------<br>当前设备未找到根证书文件<br>-----------------------------------------------<br>是否下载并安装根证书？(1/0) &gt; 1<br>-----------------------------------------------<br>正在连接服务器获取安装文件…………<br>       -=O#-    #     #      #                                                                          <br>-----------------------------------------------<br>mv: missing destination file operand after &#39;/tmp/ShellCrash/ca-certificates.crt&#39;<br>Try &#39;mv --help&#39; for more information.<br>证书安装成功！<br>-----------------------------------------------<br>是否开启公网访问Dashboard面板及socks服务？<br>注意当前设备必须有公网IP才能从公网正常访问<br>此功能会增加暴露风险请谨慎使用！<br>vps设备可能还需要额外在服务商后台开启相关端口<br>现在开启？(1/0) &gt; 1这样对吗</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:04</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是的，操作正确！继续输入 **1** 开启公网访问。</p><pre class="message-code-block"><code>现在开启？(1/0) &gt; 1</code></pre><p class="message-paragraph">然后继续跟着提示操作：</p><p class="message-paragraph">1. **选择代理核心** → 输入 **1**（Clash 内核）<br>2. 等待下载完成</p><p class="message-paragraph">完成后会进入主菜单，你会看到类似这样的界面：</p><pre class="message-code-block"><code>-----------------------------------------------
+ 1 启动/重启服务
+ 2 停止服务  
+ 3 ....
+ 6 导入配置文件
+ ...
+-----------------------------------------------</code></pre><p class="message-paragraph">到了主菜单后，选择 **6 导入配置文件**，然后告诉我接下来显示什么。</p><p class="message-paragraph">---</p><p class="message-paragraph">**同时**，你现在可以去获取订阅链接：</p><p class="message-paragraph">1. 打开 Mac 上的 **Surge**<br>2. 点击菜单栏 Surge 图标 → **配置** → **配置列表**  <br>3. 找到你正在用的配置，右键或点击 **ℹ️**<br>4. 复制 **托管配置 URL**（类似 <code class="inline-code">https://xxx.com/surge?token=xxx</code>）</p><p class="message-paragraph">拿到订阅链接后告诉我，我帮你转换成 Clash 格式。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:05</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在开启？(1/0) &gt; 1<br>请先设置面板访问秘钥 &gt; Yuzuan9407an <br>请先修改Socks服务端口(1-65535) &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:05</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">设置 Socks 端口，输入 **7891**（或者直接回车用默认值）：</p><pre class="message-code-block"><code>请先修改Socks服务端口(1-65535) &gt; 7891</code></pre><p class="message-paragraph">然后继续按提示操作，接下来应该会让你选择代理内核，选择 **1**（Clash 内核）。</p><p class="message-paragraph">---</p><p class="message-paragraph">**继续操作，把后续显示的内容发给我。**</p><p class="message-paragraph">同时记得去 Surge 里找订阅链接！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">vps设备可能还需要额外在服务商后台开启相关端口<br>现在开启？(1/0) &gt; 1<br>请先设置面板访问秘钥 &gt; Yuzuan9407an <br>请先修改Socks服务端口(1-65535) &gt; 7891<br>请先设置Socks服务密码(账号默认为crash) &gt; yuzuan9407an<br>-----------------------------------------------<br>启用推荐的自动任务配置？这包括：<br>-----------------------------------------------<br>每隔10分钟自动保存面板配置<br>服务启动后自动同步ntp时间<br>在每周3的3点整更新订阅并重启服务<br>-----------------------------------------------<br>是否启用？(1/0) &gt; 1<br>任务【运行时每10分钟自动保存面板配置】添加成功！<br>任务【服务启动后自动同步ntp时间】添加成功！<br>任务【在每周3的3点整更新订阅并重启服务】添加成功！<br>-----------------------------------------------<br>是否导入配置文件？(这是运行前的最后一步)<br>你必须拥有一份配置文件才能运行服务！<br>-----------------------------------------------<br>现在开始导入？(1/0) &gt; 1<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">很好！现在输入 **1** 在线生成配置文件：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 1</code></pre><p class="message-paragraph">然后会让你输入订阅链接。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 现在去获取你的订阅链接</p><p class="message-paragraph">在 Mac 上打开 **Surge**：</p><p class="message-paragraph">1. 点击菜单栏的 Surge 图标<br>2. **配置** → **编辑配置** 或 **配置列表**<br>3. 查看配置文件顶部，找类似这样的行：</p><pre class="message-code-block"><code>   #!MANAGED-CONFIG https://xxx.example.com/surge?token=xxxx</code></pre><p class="message-paragraph">4. 复制 <code class="inline-code">https://</code> 开头的链接</p><p class="message-paragraph">**或者**登录你的**机场官网**，找到订阅链接（通常在&quot;我的订阅&quot;或&quot;使用教程&quot;页面）。</p><p class="message-paragraph">---</p><p class="message-paragraph">拿到链接后：</p><p class="message-paragraph">1. 打开 https://sub.xeton.dev<br>2. 粘贴订阅链接<br>3. 客户端选择 **Clash**<br>4. 点击生成<br>5. 复制新链接</p><p class="message-paragraph">然后把新链接粘贴到服务器终端。</p><p class="message-paragraph">---</p><p class="message-paragraph">**你能找到订阅链接吗？** 告诉我你机场的名字，我可以帮你指导怎么找。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">请输入对应数字 &gt; 1<br>-----------------------------------------------<br> 欢迎使用在线生成配置文件功能！<br>-----------------------------------------------<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第1个链接或对应数字选项 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在需要你的订阅链接了。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 获取订阅链接的方法</p><p class="message-paragraph">**方法 1：从机场官网获取**</p><p class="message-paragraph">1. 登录你的机场官网（购买订阅的网站）<br>2. 找到 **我的订阅** 或 **使用教程** 页面<br>3. 找到 **Clash** 或 **通用订阅** 链接并复制</p><p class="message-paragraph">**方法 2：从 Surge 配置获取**</p><p class="message-paragraph">1. 打开 Surge → 菜单栏点击 Surge 图标<br>2. **配置** → **打开 Profiles 文件夹**<br>3. 用文本编辑器打开你的配置文件（.conf）<br>4. 第一行找 <code class="inline-code">#!MANAGED-CONFIG https://xxx...</code> 后面的链接</p><p class="message-paragraph">---</p><p class="message-paragraph">### 如果你有链接了</p><p class="message-paragraph">**直接粘贴**到终端即可，例如：</p><pre class="message-code-block"><code>请直接输入第1个链接或对应数字选项 &gt; https://你的订阅链接</code></pre><p class="message-paragraph">如果是 Surge 格式的链接，可以直接用，ShellClash 会自动转换。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 如果链接需要手动转换</p><p class="message-paragraph">1. 打开 https://sub.xeton.dev<br>2. 粘贴你的原始订阅链接<br>3. 目标类型选 **Clash**<br>4. 点击生成并复制新链接<br>5. 粘贴到终端</p><p class="message-paragraph">---</p><p class="message-paragraph">**把你的订阅链接发给我（可以打码敏感部分），或者直接粘贴到终端试试看。**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第1个链接或对应数字选项 &gt; https://sub.store/download/collection/mysurge<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第2个链接或对应数字选项 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，订阅链接已输入！现在输入 **1** 开始生成配置文件：</p><pre class="message-code-block"><code>请直接输入第2个链接或对应数字选项 &gt; 1</code></pre><p class="message-paragraph">如果你只有一个订阅链接，直接输入 **1** 就会开始生成配置文件。</p><p class="message-paragraph">---</p><p class="message-paragraph">等待生成完成后，会提示你启动服务。继续把结果发给我！</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">rk mode<br>54f1f06a174acbcec4f0aad9f9001e355d401799457f807073191a208d286086<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 停止旧容器<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker stop cloud-saver &amp;&amp; docker rm cloud-saver<br>cloud-saver<br>cloud-saver<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# <br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 带代理启动<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# docker run -d \<br>&gt;   -p 8008:8008 \<br>&gt;   -v /opt/cloudsaver/data:/app/data \<br>&gt;   -v /opt/cloudsaver/config:/app/config \<br>&gt;   -e HTTP_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e HTTPS_PROXY=http://127.0.0.1:7890 \<br>&gt;   -e http_proxy=http://127.0.0.1:7890 \<br>&gt;   -e https_proxy=http://127.0.0.1:7890 \<br>&gt;   --network host \<br>&gt;   --name cloud-saver \<br>&gt;   --restart unless-stopped \<br>&gt;   jiangrui1994/cloudsaver:latest<br>WARNING: Published ports are discarded when using host network mode<br>0e9deaad928a528dfd236d337905b2f71cb36ac9e4faa9afba75ee42a323695a<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 1. 安装 ShellClash（一键脚本）<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# export url=&#39;https://fastly.jsdelivr.net/gh/juewuy/ShellCrash@master&#39; &amp;&amp; wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh &amp;&amp; bash /tmp/install.sh &amp;&amp; source /etc/profile &amp;&gt; /dev/null<br>***********************************************<br>**                 欢迎使用                  **<br>**                ShellCrash                 **<br>**                             by  Juewuy    **<br>***********************************************<br>-----------------------------------------------<br>请选择想要安装的版本：<br> 1 公测版(推荐)<br> 2 稳定版<br> 3 开发版<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>最新版本：<br>-----------------------------------------------<br>如遇问题请加TG群反馈： t.me/ShellClash <br>支持各种基于openwrt的路由器设备<br>支持Debian、Centos等标准Linux系统<br>-----------------------------------------------<br>注意：安装ShellCrash至少需要预留约1MB的磁盘空间<br> 1 在/etc目录下安装(适合root用户)<br> 2 在/usr/share目录下安装(适合Linux系统)<br> 3 在当前用户目录下安装(适合非root用户)<br> 4 在外置存储中安装<br> 5 手动设置安装目录<br> 0 退出安装<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>目标目录/etc空间剩余：16G<br>确认安装？(1/0) &gt; 1<br>-----------------------------------------------<br>开始从服务器获取安装文件！<br>-----------------------------------------------<br>-=O#- #   #     #                                                                                       <br>curl: (28) Connection timed out after 5000 milliseconds<br>文件下载失败！<br>请参考 https://github.com/juewuy/ShellCrash/blob/master/README_CN.md<br>使用其他安装源重新安装！<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 使用 GitHub 代理源安装<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# export url=&#39;https://gh.jwsc.eu.org/master&#39; &amp;&amp; bash -c &quot;$(curl -kfsSl $url/install.sh)&quot; &amp;&amp; source /etc/profile &amp;&gt; /dev/null<br>***********************************************<br>**                 欢迎使用                  **<br>**                ShellCrash                 **<br>**                             by  Juewuy    **<br>***********************************************<br>-----------------------------------------------<br>请选择想要安装的版本：<br> 1 公测版(推荐)<br> 2 稳定版<br> 3 开发版<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>最新版本：1.9.2beta7<br>-----------------------------------------------<br>如遇问题请加TG群反馈： t.me/ShellClash <br>支持各种基于openwrt的路由器设备<br>支持Debian、Centos等标准Linux系统<br>-----------------------------------------------<br>注意：安装ShellCrash至少需要预留约1MB的磁盘空间<br> 1 在/etc目录下安装(适合root用户)<br> 2 在/usr/share目录下安装(适合Linux系统)<br> 3 在当前用户目录下安装(适合非root用户)<br> 4 在外置存储中安装<br> 5 手动设置安装目录<br> 0 退出安装<br>-----------------------------------------------<br>请输入相应数字 &gt; 1<br>目标目录/etc空间剩余：16G<br>确认安装？(1/0) &gt; 1<br>-----------------------------------------------<br>开始从服务器获取安装文件！<br>-----------------------------------------------<br>################################################################################################## 100.0%<br>-----------------------------------------------<br>开始解压文件！<br>-----------------------------------------------<br>ShellCrash 已经安装成功!<br>-----------------------------------------------<br>输入 crash 命令即可管理！！！<br>-----------------------------------------------<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# crash<br>-----------------------------------------------<br>欢迎使用ShellCrash！            版本：1.9.2beta7<br>服务没有运行（纯净模式），未设置开机启动！<br>TG频道：https://t.me/ShellClash<br>-----------------------------------------------<br>-----------------------------------------------<br> 欢迎使用ShellCrash新手引导！ <br>-----------------------------------------------<br>请先选择你的使用环境： <br>(你之后依然可以在设置中更改各种配置)<br>-----------------------------------------------<br> 1 路由设备配置局域网透明代理<br> 2 Linux设备仅配置本机代理<br>-----------------------------------------------<br>请输2<br>-----------------------------------------------<br>当前设备未找到根证书文件<br>-----------------------------------------------<br>是否下载并安装根证书？(1/0) &gt; 1<br>-----------------------------------------------<br>正在连接服务器获取安装文件…………<br>       -=O#-    #     #      #                                                                          <br>-----------------------------------------------<br>mv: missing destination file operand after &#39;/tmp/ShellCrash/ca-certificates.crt&#39;<br>Try &#39;mv --help&#39; for more information.<br>证书安装成功！<br>-----------------------------------------------<br>是否开启公网访问Dashboard面板及socks服务？<br>注意当前设备必须有公网IP才能从公网正常访问<br>此功能会增加暴露风险请谨慎使用！<br>vps设备可能还需要额外在服务商后台开启相关端口<br>现在开启？(1/0) &gt; 1<br>请先设置面板访问秘钥 &gt; Yuzuan9407an <br>请先修改Socks服务端口(1-65535) &gt; 7891<br>请先设置Socks服务密码(账号默认为crash) &gt; yuzuan9407an<br>-----------------------------------------------<br>启用推荐的自动任务配置？这包括：<br>-----------------------------------------------<br>每隔10分钟自动保存面板配置<br>服务启动后自动同步ntp时间<br>在每周3的3点整更新订阅并重启服务<br>-----------------------------------------------<br>是否启用？(1/0) &gt; 1<br>任务【运行时每10分钟自动保存面板配置】添加成功！<br>任务【服务启动后自动同步ntp时间】添加成功！<br>任务【在每周3的3点整更新订阅并重启服务】添加成功！<br>-----------------------------------------------<br>是否导入配置文件？(这是运行前的最后一步)<br>你必须拥有一份配置文件才能运行服务！<br>-----------------------------------------------<br>现在开始导入？(1/0) &gt; 1<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt; 1<br>-----------------------------------------------<br> 欢迎使用在线生成配置文件功能！<br>-----------------------------------------------<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第1个链接或对应数字选项 &gt; https://sub.store/download/collection/mysurge<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第2个链接或对应数字选项 &gt; 1<br>-----------------------------------------------<br>链接地址为：https://sub.jwsc.eu.org/sub?target=clash&amp;ua=clash&amp;insert=true&amp;new_name=true&amp;scv=true&amp;udp=true&amp;exclude=&amp;include=&amp;url=https%3A%2F%2Fsub.store%2Fdownload%2Fcollection%2Fmysurge&amp;config=https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash.ini<br>可以手动复制该链接到浏览器打开并查看数据是否正常！<br>################################################################################################## 100.0%<br>################################################################################################## 100.0%<br>/etc/ShellCrash/start.sh: line 336: [: : integer expression expected<br>配置文件获取失败！<br>尝试使用其他服务器获取配置！<br>正在重试第1次/共3次！<br>-----------------------------------------------<br>链接地址为：https://sub.d1.mk/sub?target=clash&amp;diyua=clash&amp;insert=true&amp;new_name=true&amp;scv=true&amp;udp=true&amp;exclude=&amp;include=&amp;url=https%3A%2F%2Fsub.store%2Fdownload%2Fcollection%2Fmysurge&amp;config=https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash.ini<br>可以手动复制该链接到浏览器打开并查看数据是否正常！<br>################################################################################################## 100.0%<br>-----------------------------------------------<br>获取到了配置文件【/tmp/ShellCrash/clash_config.yaml】，但似乎并不包含正确的节点信息！<br>-----------------------------------------------<br>请尝试使用6-2或者6-3的方式生成配置文件！<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">订阅链接转换失败了，因为 <code class="inline-code">sub.store</code> 是本地 Sub-Store 服务的链接，服务器无法访问。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 解决方案：手动转换订阅链接</p><p class="message-paragraph">**步骤 1：在你的 Mac 上获取原始节点链接**</p><p class="message-paragraph">你的 Sub-Store 是在本地运行的，需要从机场官网获取原始订阅链接：</p><p class="message-paragraph">1. 登录你的**机场官网**<br>2. 找到 **订阅链接** 页面<br>3. 复制 **Clash** 或 **通用/V2ray** 订阅链接（不是 Surge 专用的）</p><p class="message-paragraph">---</p><p class="message-paragraph">**步骤 2：在线转换**</p><p class="message-paragraph">1. 打开浏览器访问：https://sub.xeton.dev<br>2. **订阅链接**：粘贴机场给的原始链接<br>3. **客户端**：选择 **Clash**<br>4. 点击 **生成订阅链接**<br>5. 复制生成的新链接</p><p class="message-paragraph">---</p><p class="message-paragraph">**步骤 3：重新导入**</p><p class="message-paragraph">在服务器上输入 **1** 重新开始：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 1</code></pre><p class="message-paragraph">然后粘贴**转换后的新链接**。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 或者尝试方法 2：直接获取完整配置</p><p class="message-paragraph">输入 **2** 选择在线获取完整配置文件：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 2</code></pre><p class="message-paragraph">然后粘贴你机场的原始 Clash 订阅链接（如果机场提供的话）。</p><p class="message-paragraph">---</p><p class="message-paragraph">**请告诉我：**<br>1. 你的机场叫什么名字？<br>2. 能否登录机场官网找到原始订阅链接？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:14</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:14</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，拿到订阅链接了！现在在服务器上操作：</p><p class="message-paragraph">### 输入 2 获取完整配置文件</p><pre class="message-code-block"><code>请输入对应数字 &gt; 2</code></pre><p class="message-paragraph">然后粘贴这个链接：</p><pre class="message-code-block"><code>https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">或者如果还在配置文件管理菜单，先输入 **1**（在线生成），然后直接粘贴链接，最后输入 **1** 生成。</p><p class="message-paragraph">---</p><p class="message-paragraph">**把执行结果发给我看看！**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:15</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">请直接输入第1个链接或对应数字选项 &gt; https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第2个链接或对应数字选项 &gt; 1<br>-----------------------------------------------<br>链接地址为：https://sub.d1.mk/sub?target=clash&amp;diyua=clash&amp;insert=true&amp;new_name=true&amp;scv=true&amp;udp=true&amp;exclude=&amp;include=&amp;url=https%3A%2F%2Fsub.store%2Fdownload%2Fcollection%2Fmysurge|https%3A%2F%2Ffcsblka.fcsubcn.cc%3A2096%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D7ff4b316c589c8425a28561671322da4|https%3A%2F%2Ffcsblka.fcsubcn.cc%3A2096%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D7ff4b316c589c8425a28561671322da4|https%3A%2F%2Fft-jtm8f0eo.tutunode.com%2Fgateway%2Ffeitu%3Ftoken%3Da45c8557e7e4a186d0204923b72b6d1a&amp;config=https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash.ini<br>可以手动复制该链接到浏览器打开并查看数据是否正常！<br>################################################################################################## 100.0%<br>-----------------------------------------------<br>获取到了配置文件【/tmp/ShellCrash/clash_config.yaml】，但似乎并不包含正确的节点信息！<br>-----------------------------------------------<br>请尝试使用6-2或者6-3的方式生成配置文件！<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt; 2<br>-----------------------------------------------<br>仅限导入完整的配置文件链接！！！<br>-----------------------------------------------<br>注意：此功能不兼容“跳过证书验证”功能，部分老旧<br>设备可能出现x509报错导致节点不通<br>你也可以搭配在线订阅转换网站或者自建SubStore使用<br>-----------------------------------------------<br>0 返回上级菜单<br>-----------------------------------------------<br>请输入完整链接 &gt; https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a<br>-----------------------------------------------<br>请检查输入的链接是否正确：<br>https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a<br>确认导入配置文件？原配置文件将被备份![1/0] &gt; 1<br>-----------------------------------------------<br>链接地址为：https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a<br>可以手动复制该链接到浏览器打开并查看数据是否正常！<br>-=O=-     #     #     #      #                                                                          <br>-----------------------------------------------<br>获取到了配置文件【/tmp/ShellCrash/clash_config.yaml】，但似乎并不包含正确的节点信息！<br>-----------------------------------------------<br>请尝试使用6-2或者6-3的方式生成配置文件！<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:15</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">订阅链接返回的格式不是 Clash 格式，需要先转换。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 1：在浏览器中转换订阅</p><p class="message-paragraph">1. 打开浏览器访问：**https://sub.xeton.dev**</p><p class="message-paragraph">2. 填写：<br>   - **订阅链接**：<code class="inline-code">https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a</code><br>   - **客户端**：选择 **Clash**</p><p class="message-paragraph">3. 点击 **生成订阅链接**</p><p class="message-paragraph">4. **复制生成的新链接**（会是一个很长的链接）</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 2：用新链接导入</p><p class="message-paragraph">在服务器上输入 **2**：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 2</code></pre><p class="message-paragraph">然后粘贴**转换后的新链接**。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 或者试试机场的 Clash 专用链接</p><p class="message-paragraph">登录你的机场官网（飞兔/TuTu），查看是否有专门的 **Clash 订阅链接**，通常格式是：<br>- <code class="inline-code">https://xxx.com/clash?token=xxx</code><br>- 或者带有 <code class="inline-code">&amp;flag=clash</code> 参数</p><p class="message-paragraph">---</p><p class="message-paragraph">**你先去 https://sub.xeton.dev 转换一下，把转换后的链接发给我。**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:17</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt; 1<br>-----------------------------------------------<br> 欢迎使用在线生成配置文件功能！<br>-----------------------------------------------<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第1个链接或对应数字选项 &gt; https://sub.xeton.dev/sub?sub?target=clash&amp;url=https%3A%2F%2Fft-jtm8f0eo.tutunode.com%2Fgateway%2Ffeitu%3Ftoken%3Da45c8557e7e4a186d0204923b72b6d1a<br>-----------------------------------------------<br>本功能依赖第三方在线subconverter服务实现，脚本本身不提供任何代理服务！<br>严禁使用本脚本从事任何非法活动，否则一切后果请自负！<br>-----------------------------------------------<br>支持批量(&lt;=99)导入订阅链接、分享链接<br>-----------------------------------------------<br> 1 开始生成配置文件（原文件将被备份）<br> 2 设置节点过滤关键字 <br> 3 设置节点筛选关键字 <br> 4 选取在线配置规则模版<br> 5 选取在线生成服务器<br> 0 撤销输入并返回上级菜单<br>-----------------------------------------------<br>请直接输入第2个链接或对应数字选项 &gt; 1<br>-----------------------------------------------<br>链接地址为：https://sub.d1.mk/sub?target=clash&amp;diyua=clash&amp;insert=true&amp;new_name=true&amp;scv=true&amp;udp=true&amp;exclude=&amp;include=&amp;url=https%3A%2F%2Fsub.store%2Fdownload%2Fcollection%2Fmysurge|https%3A%2F%2Ffcsblka.fcsubcn.cc%3A2096%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D7ff4b316c589c8425a28561671322da4|https%3A%2F%2Ffcsblka.fcsubcn.cc%3A2096%2Fapi%2Fv1%2Fclient%2Fsubscribe%3Ftoken%3D7ff4b316c589c8425a28561671322da4|https%3A%2F%2Fft-jtm8f0eo.tutunode.com%2Fgateway%2Ffeitu%3Ftoken%3Da45c8557e7e4a186d0204923b72b6d1a|https%3A%2F%2Fsub.xeton.dev%2Fsub%3Fsub%3Ftarget%3Dclash%26url%3Dhttps%3A%2F%2Fft-jtm8f0eo.tutunode.com%2Fgateway%2Ffeitu%3Ftoken%3Da45c8557e7e4a186d0204923b72b6d1a&amp;config=https://github.com/juewuy/ShellCrash/raw/master/rules/ShellClash.ini<br>可以手动复制该链接到浏览器打开并查看数据是否正常！<br>################################################################################################## 100.0%<br>-----------------------------------------------<br>获取到了配置文件【/tmp/ShellCrash/clash_config.yaml】，但似乎并不包含正确的节点信息！<br>-----------------------------------------------<br>请尝试使用6-2或者6-3的方式生成配置文件！<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:17</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">链接格式有问题，而且它把之前的错误链接都累加了。我们需要清除重新开始。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 1：先退出重新进入</p><p class="message-paragraph">输入 **0** 返回上级菜单，然后输入 **0** 退出，再重新执行 <code class="inline-code">crash</code>：</p><pre class="message-code-block"><code># 退出
+0
+
+# 重新进入
+crash</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 2：正确转换订阅链接</p><p class="message-paragraph">在你的 Mac 浏览器上：</p><p class="message-paragraph">1. 打开 **https://sub.xeton.dev**<br>2. 在 **订阅链接** 框中只粘贴这一个链接：</p><pre class="message-code-block"><code>   https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a</code></pre><p class="message-paragraph">3. **客户端** 选择 **Clash**<br>4. 点击 **生成订阅链接** 按钮<br>5. 复制下方生成的**定制订阅链接**（不是短链接）</p><p class="message-paragraph">生成的链接应该类似：</p><pre class="message-code-block"><code>https://sub.xeton.dev/sub?target=clash&amp;url=https%3A%2F%2Fft-jtm8f0eo.tutunode.com%2Fgateway%2Ffeitu%3Ftoken%3Da45c8557e7e4a186d0204923b72b6d1a&amp;config=...</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 步骤 3：使用方法 2 直接导入</p><p class="message-paragraph">在服务器上：</p><pre class="message-code-block"><code>crash</code></pre><p class="message-paragraph">进入主菜单后：<br>1. 选择 **6 - 导入配置文件**<br>2. 选择 **2 - 在线获取完整配置文件**<br>3. 粘贴转换后的完整链接</p><p class="message-paragraph">---</p><p class="message-paragraph">**或者试试这个：** 直接用机场的 Clash 链接格式（加参数）：</p><pre class="message-code-block"><code>https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a&amp;flag=clash</code></pre><p class="message-paragraph">把这个链接用**方法 2** 导入试试。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:18</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">立即启动服务？(1/0) &gt; -----------------------------------------------<br>欢迎使用ShellCrash！            版本：1.9.2beta7<br>服务没有运行（Redir模式），未设置开机启动！<br>TG频道：https://t.me/ShellClash<br>-----------------------------------------------<br> 1 启动/重启服务<br> 2 内核功能设置<br> 3 停止内核服务<br> 4 内核启动设置<br> 5 配置自动任务<br> 6 导入配置文件<br> 7 内核进阶设置<br> 8 其他工具<br> 9 更新/卸载<br>-----------------------------------------------<br> 0 退出脚本<br>请输入对应数字 &gt; -----------------------------------------------<br>请输入正确的字母或数字！<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 重新进入<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# crash</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:18</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">好的，现在你在主菜单了。输入 **6** 导入配置文件：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 6</code></pre><p class="message-paragraph">然后选择 **2** 在线获取完整配置文件：</p><pre class="message-code-block"><code>请输入对应数字 &gt; 2</code></pre><p class="message-paragraph">然后粘贴这个链接（加了 clash 参数）：</p><pre class="message-code-block"><code>https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a&amp;flag=clash</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**把结果发给我！**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">请尝试使用6-2或者6-3的方式生成配置文件！<br>-----------------------------------------------<br> ShellCrash配置文件管理<br>-----------------------------------------------<br> 1 在线生成配置文件<br> 2 在线获取完整配置文件<br> 3 本地生成providers配置文件<br> 4 本地上传完整配置文件<br> 5 设置自动更新<br> 6 自定义配置文件<br> 7 更新配置文件<br> 8 还原配置文件<br> 9 自定义浏览器UA  <br>-----------------------------------------------<br>请输入对应数字 &gt; # 退出<br>0</p><p class="message-paragraph"># 重新进入<br>crash-----------------------------------------------<br>请输入正确的字母或数字！<br>-----------------------------------------------<br>很好！现在只需要执行启动就可以愉快的使用了！<br>-----------------------------------------------<br>立即启动服务？(1/0) &gt; -----------------------------------------------<br>欢迎使用ShellCrash！            版本：1.9.2beta7<br>服务没有运行（Redir模式），未设置开机启动！<br>TG频道：https://t.me/ShellClash<br>-----------------------------------------------<br> 1 启动/重启服务<br> 2 内核功能设置<br> 3 停止内核服务<br> 4 内核启动设置<br> 5 配置自动任务<br> 6 导入配置文件<br> 7 内核进阶设置<br> 8 其他工具<br> 9 更新/卸载<br>-----------------------------------------------<br> 0 退出脚本<br>请输入对应数字 &gt; -----------------------------------------------<br>请输入正确的字母或数字！<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# # 重新进入<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# crash6<br>bash: crash6: command not found<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# 6<br>bash: 6: command not found<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]# 0<br>bash: 0: command not found<br>[root@iZ2ze2akiqjocw13a2w19vZ ~]#</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你已经退出了 ShellClash 菜单。现在重新进入：</p><pre class="message-code-block"><code>crash</code></pre><p class="message-paragraph">然后按顺序操作：</p><p class="message-paragraph">1. 输入 **6**（导入配置文件）<br>2. 输入 **2**（在线获取完整配置文件）<br>3. 粘贴链接：<code class="inline-code">https://ft-jtm8f0eo.tutunode.com/gateway/feitu?token=a45c8557e7e4a186d0204923b72b6d1a&amp;flag=clash</code></p><p class="message-paragraph">---</p><p class="message-paragraph">**执行 <code class="inline-code">crash</code> 后把界面发给我。**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">vscode如何连接我的云服务器呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## VS Code 连接云服务器教程</p><p class="message-paragraph">### 方法一：使用 Remote-SSH 扩展（推荐）</p><p class="message-paragraph">#### 1. 安装扩展</p><p class="message-paragraph">在 VS Code 中安装 **Remote - SSH** 扩展：<br>- 按 <code class="inline-code">Cmd+Shift+X</code> 打开扩展商店<br>- 搜索 <code class="inline-code">Remote - SSH</code><br>- 安装 Microsoft 官方的扩展</p><p class="message-paragraph">#### 2. 配置 SSH 连接</p><p class="message-paragraph">按 <code class="inline-code">Cmd+Shift+P</code>，输入 <code class="inline-code">Remote-SSH: Connect to Host...</code>，选择 **Add New SSH Host**</p><p class="message-paragraph">输入：</p><pre class="message-code-block"><code>ssh root@8.152.203.38</code></pre><p class="message-paragraph">选择保存到 <code class="inline-code">~/.ssh/config</code></p><p class="message-paragraph">#### 3. 连接服务器</p><p class="message-paragraph">- 按 <code class="inline-code">Cmd+Shift+P</code> → <code class="inline-code">Remote-SSH: Connect to Host...</code><br>- 选择 <code class="inline-code">8.152.203.38</code><br>- 输入服务器密码<br>- 等待连接完成</p><p class="message-paragraph">#### 4. 打开文件夹</p><p class="message-paragraph">连接成功后，点击 **打开文件夹**，输入路径如：</p><pre class="message-code-block"><code>/opt/cloudsaver</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：配置免密登录（可选，更方便）</p><p class="message-paragraph">在你的 Mac 终端执行：</p><pre class="message-code-block"><code># 生成 SSH 密钥（如果没有的话）
+ssh-keygen -t rsa -b 4096
+
+# 复制公钥到服务器
+ssh-copy-id root@8.152.203.38</code></pre><p class="message-paragraph">之后连接就不需要输入密码了。</p><p class="message-paragraph">---</p><p class="message-paragraph">### SSH 配置文件参考</p><p class="message-paragraph">编辑 <code class="inline-code">~/.ssh/config</code>，添加：</p><pre class="message-code-block"><code>Host aliyun
+    HostName 8.152.203.38
+    User root
+    Port 22</code></pre><p class="message-paragraph">之后在 VS Code 中可以直接选择 <code class="inline-code">aliyun</code> 连接。</p><p class="message-paragraph">---</p><p class="message-paragraph">连接成功后，你可以：<br>- 直接在 VS Code 中编辑服务器文件<br>- 打开终端执行命令（`<code class="inline-code"> Ctrl+</code> ``）<br>- 继续配置 ShellClash</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">服务器密码怎么看呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 查看/重置阿里云服务器密码</p><p class="message-paragraph">### 方法一：在阿里云控制台重置密码</p><p class="message-paragraph">如果你忘记了密码，可以重置：</p><p class="message-paragraph">1. 登录 [阿里云控制台](https://ecs.console.aliyun.com)<br>2. 找到你的 ECS 实例<br>3. 点击 **更多** → **密码/密钥** → **重置实例密码**<br>4. 设置新密码<br>5. **重启实例**使密码生效</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：在宝塔面板查看</p><p class="message-paragraph">如果你是通过宝塔面板登录的，宝塔面板本身有 SSH 终端功能：</p><p class="message-paragraph">1. 登录宝塔面板<br>2. 左侧菜单 → **终端**<br>3. 直接使用，不需要密码</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法三：检查购买时的信息</p><p class="message-paragraph">- 查看购买服务器时阿里云发送的**短信/邮件**<br>- 里面可能包含初始密码</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法四：使用 SSH 密钥登录（推荐）</p><p class="message-paragraph">如果你之前设置过密钥：</p><p class="message-paragraph">1. 阿里云控制台 → ECS → **网络与安全** → **密钥对**<br>2. 下载私钥文件（<code class="inline-code">.pem</code>）<br>3. 在 Mac 上配置：</p><pre class="message-code-block"><code># 将私钥放到 ~/.ssh/ 目录
+mv ~/Downloads/your-key.pem ~/.ssh/
+chmod 400 ~/.ssh/your-key.pem
+
+# 配置 SSH
+echo &quot;
+Host aliyun
+    HostName 8.152.203.38
+    User root
+    IdentityFile ~/.ssh/your-key.pem
+&quot; &gt;&gt; ~/.ssh/config</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">### 最简单的方法</p><p class="message-paragraph">既然你已经能通过**宝塔面板的终端**操作服务器，说明宝塔已经有权限了。</p><p class="message-paragraph">你可以：<br>1. 在宝塔终端中重置 root 密码：</p><pre class="message-code-block"><code>   passwd root</code></pre><p class="message-paragraph">2. 输入两次新密码<br>3. 然后用新密码连接 VS Code</p><p class="message-paragraph">---</p><p class="message-paragraph">**你是通过宝塔面板登录的对吧？** 直接在宝塔终端执行 <code class="inline-code">passwd root</code> 设置一个新密码最快。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/06 20:33</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">发生了系统错误 (EACCES: permission denied, open &#39;/etc/ssh/ssh_config&#39;)</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/06 20:33</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 VS Code 尝试读取本地 SSH 配置文件但没有权限。</p><p class="message-paragraph">### 解决方法</p><p class="message-paragraph">在 Mac 终端中执行：</p><pre class="message-code-block"><code># 修复 SSH 配置文件权限
+sudo chmod 644 /etc/ssh/ssh_config
+
+# 确保 .ssh 目录权限正确
+mkdir -p ~/.ssh
+chmod 700 ~/.ssh</code></pre><p class="message-paragraph">然后重新在 VS Code 中连接。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 或者手动配置 SSH</p><pre class="message-code-block"><code># 创建/编辑用户级 SSH 配置
+nano ~/.ssh/config</code></pre><p class="message-paragraph">添加：</p><pre class="message-code-block"><code>Host aliyun
+    HostName 8.152.203.38
+    User root
+    Port 22</code></pre><p class="message-paragraph">保存后（<code class="inline-code">Ctrl+X</code> → <code class="inline-code">Y</code> → 回车）</p><p class="message-paragraph">设置权限：</p><pre class="message-code-block"><code>chmod 600 ~/.ssh/config</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">然后在 VS Code 中：<br>1. <code class="inline-code">Cmd+Shift+P</code> → <code class="inline-code">Remote-SSH: Connect to Host...</code><br>2. 选择 <code class="inline-code">aliyun</code></p><p class="message-paragraph">**试试看！**</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/07 09:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">vscode的 coplict 如何切换账号</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/07 09:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## VS Code Copilot 切换账号</p><p class="message-paragraph">### 方法一：从状态栏切换</p><p class="message-paragraph">1. 点击 VS Code 右下角的 **GitHub Copilot 图标**（笑脸或齿轮）<br>2. 选择 **Sign Out** 或 **注销**<br>3. 重新点击图标，选择 **Sign in to GitHub**<br>4. 在浏览器中登录新的 GitHub 账号</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法二：从命令面板切换</p><p class="message-paragraph">1. 按 <code class="inline-code">Cmd+Shift+P</code><br>2. 输入 <code class="inline-code">GitHub Copilot: Sign Out</code><br>3. 再输入 <code class="inline-code">GitHub Copilot: Sign In</code><br>4. 在浏览器中授权新账号</p><p class="message-paragraph">---</p><p class="message-paragraph">### 方法三：从账号设置切换</p><p class="message-paragraph">1. 点击左下角的 **账号图标**（头像）<br>2. 选择当前 GitHub 账号 → **Sign Out**<br>3. 重新登录新账号</p><p class="message-paragraph">---</p><p class="message-paragraph">### 验证切换成功</p><p class="message-paragraph">切换后，按 <code class="inline-code">Cmd+Shift+P</code> 输入 <code class="inline-code">GitHub Copilot: Diagnostic Info</code>，查看当前登录的账号信息。</p><p class="message-paragraph">---</p><p class="message-paragraph">**你是想切换到其他 GitHub 账号吗？** 按上面的方法操作即可。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../assets/session.js"></script>
+</body>
+</html>
