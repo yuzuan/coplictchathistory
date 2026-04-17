@@ -1,5 +1,25 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- Sidebar view now supports `Workspace -> Session` and `Workspace -> Date -> Session` layouts.
+- Added toolbar and settings switches for grouping sessions by workspace or date.
+- Sync now generates a local-first `docs/` web UI with a two-pane session browser and standalone session pages.
+- Added `Copilot Chat Sync: Open Web UI` to open the generated `docs/index.html` directly.
+- Web UI supports URL query overrides for `groupBy`, `workspaceViewMode`, `theme`, and `sessionId`.
+- Added `scripts/preview.js` for local mock-data preview of generated pages.
+
+### Changed
+- **Chat UI rewrite**: Session page message rendering now matches VS Code Copilot chat panel style.
+  - Replaced emoji icons (🤖👤) with inline SVG (Copilot sparkle + user silhouette).
+  - Compact typography: body 14px, sender 13px, timestamp 12px (was 28/24/17px).
+  - Removed heavy card shadows; messages separated by 1px border lines.
+  - Code blocks: 6px border-radius, `--code-bg` variable, 13px monospace font.
+  - Tool calls: compact 12px expandable pill with border.
+  - Container max-width narrowed from 1680px to 900px.
+  - Added `--code-bg` and `--user-turn-bg` CSS custom properties for light/dark themes.
+
 ## [0.3.0] - 2025-04-16
 
 ### Changed
