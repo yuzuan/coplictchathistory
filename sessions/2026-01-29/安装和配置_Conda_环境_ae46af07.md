@@ -6,13 +6,16 @@
 | Workspace | 安装和配置 Conda 环境 |
 | Start | 2026/01/29 00:44 |
 | End | 2026/01/29 00:53 |
-| Messages | 18 |
+| Messages | 19 |
 
 ---
 
 ### 👤 User <sub>2026/01/29 00:44</sub>
 
 将这个安装我的 sc conda环境
+
+### 🤖 Copilot <sub>2026/01/29 00:44</sub>
+
 
 ### 👤 User <sub>2026/01/29 00:46</sub>
 

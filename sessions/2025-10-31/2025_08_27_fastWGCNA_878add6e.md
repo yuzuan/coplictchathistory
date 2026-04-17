@@ -6,7 +6,7 @@
 | Workspace | 2025_08_27 fastWGCNA |
 | Start | 2025/10/31 18:58 |
 | End | 2025/10/31 22:59 |
-| Messages | 36 |
+| Messages | 39 |
 
 ---
 
@@ -727,13 +727,22 @@ Error in .plotOrderedColorSubplot(order = order, colors = colors, rowLabels = ro
 
 @agent 重试
 
+### 🤖 Copilot <sub>2025/10/31 19:29</sub>
+
+
 ### 👤 User <sub>2025/10/31 19:32</sub>
 
 @agent 继续: "是否继续迭代？"
 
+### 🤖 Copilot <sub>2025/10/31 19:32</sub>
+
+
 ### 👤 User <sub>2025/10/31 19:33</sub>
 
 帮我根据WGCNA_deubiquitination_survival.Rmd这个代码写一个关于OV.R的 WCGNA 的代码，OV 主要是卵巢癌和普通组织的表达矩阵，其中 GTEX 开头的是 normal，TCGA 开头的 tumor
+
+### 🤖 Copilot <sub>2025/10/31 19:33</sub>
+
 
 ### 👤 User <sub>2025/10/31 19:35</sub>
 
