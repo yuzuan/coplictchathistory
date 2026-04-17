@@ -6,7 +6,7 @@
 | Workspace | Ensembl ID转换中的网络连接错误处理 |
 | Start | 2025/10/26 23:30 |
 | End | 2025/10/27 00:11 |
-| Messages | 21 |
+| Messages | 20 |
 
 ---
 
@@ -1351,9 +1351,6 @@ ids_to_symbol <- function(ids,
 ### 👤 User <sub>2025/10/27 00:11</sub>
 
 是否这部分也可以加到offline_id_mapping.R里面去呢
-
-### 🤖 Copilot <sub>2025/10/27 00:11</sub>
-
 
 ### 👤 User <sub>2025/10/27 00:11</sub>
 

@@ -6,7 +6,7 @@
 | Workspace | Havana ID to Gene Symbol Conversion Update |
 | Start | 2025/10/27 07:30 |
 | End | 2025/10/27 11:14 |
-| Messages | 18 |
+| Messages | 17 |
 
 ---
 
@@ -63,9 +63,6 @@ print(res)
 ### 👤 User <sub>2025/10/27 07:37</sub>
 
 强制转为 SYMBOL 而不是保留原始 ID
-
-### 🤖 Copilot <sub>2025/10/27 07:37</sub>
-
 
 ### 👤 User <sub>2025/10/27 10:52</sub>
 

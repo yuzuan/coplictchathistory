@@ -6,7 +6,7 @@
 | Workspace | Paper2Poster |
 | Start | 2025/11/08 14:45 |
 | End | 2025/11/08 18:29 |
-| Messages | 42 |
+| Messages | 41 |
 
 ---
 
@@ -389,9 +389,6 @@ which soffice
 ### 👤 User <sub>2025/11/08 15:22</sub>
 
 我的系统当前已经安装了LibreOffice :
-
-### 🤖 Copilot <sub>2025/11/08 15:22</sub>
-
 
 ### 👤 User <sub>2025/11/08 15:41</sub>
 

@@ -6,7 +6,7 @@
 | Workspace | GBM 单细胞 |
 | Start | 2025/11/30 21:54 |
 | End | 2025/12/07 22:20 |
-| Messages | 126 |
+| Messages | 123 |
 
 ---
 
@@ -96,9 +96,6 @@ Next actionable steps:
 ### 👤 User <sub>2025/11/30 22:38</sub>
 
 Run python integrate_scRNA_datasets.py (ensure celltypist downloads its model once and the write/ directory exists).
-
-### 🤖 Copilot <sub>2025/11/30 22:38</sub>
-
 
 ### 👤 User <sub>2025/11/30 22:39</sub>
 
@@ -624,9 +621,6 @@ BiocManager::install(c("clusterProfiler", "org.Hs.eg.db", "enrichplot", "DOSE"))
 
 @agent 继续: "是否继续迭代？"
 
-### 🤖 Copilot <sub>2025/12/01 16:01</sub>
-
-
 ### 👤 User <sub>2025/12/01 16:01</sub>
 
 @agent 重试
@@ -665,9 +659,6 @@ Notebook
 ### 👤 User <sub>2025/12/01 16:06</sub>
 
 帮我选择sc2Conda环境
-
-### 🤖 Copilot <sub>2025/12/01 16:06</sub>
-
 
 ### 👤 User <sub>2025/12/01 16:07</sub>
 
