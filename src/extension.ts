@@ -11,11 +11,15 @@ import { ensureRepo, commitAndPush, GitConfig } from './git';
 import { SessionTreeProvider } from './treeView';
 import { showPreview } from './preview';
 import { parseHtmlTranscript } from './htmlImporter';
+import { generateSiteFiles, SiteSessionSource } from './site';
 
 let syncTimer: ReturnType<typeof setInterval> | undefined;
 let pendingSyncTimer: ReturnType<typeof setTimeout> | undefined;
 let outputChannel: vscode.OutputChannel;
 let treeProvider: SessionTreeProvider;
+
+type SessionGroupBy = 'workspace' | 'date';
+type WorkspaceViewMode = 'flat' | 'byDate';
 
 interface SyncFile {
   relativePath: string;
@@ -34,6 +38,7 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.window.registerTreeDataProvider('copilotChatSync.sessions', treeProvider),
   );
+  void updateViewContext();
 
   // Register commands
   context.subscriptions.push(
@@ -41,6 +46,9 @@ export function activate(context: vscode.ExtensionContext) {
     vscode.commands.registerCommand('copilotChatSync.exportAll', () => exportAll()),
     vscode.commands.registerCommand('copilotChatSync.configure', () => configure()),
     vscode.commands.registerCommand('copilotChatSync.refreshSessions', () => treeProvider.refresh()),
+    vscode.commands.registerCommand('copilotChatSync.openWebUi', () => openWebUi()),
+    vscode.commands.registerCommand('copilotChatSync.changeSessionGroupBy', () => changeSessionGroupBy()),
+    vscode.commands.registerCommand('copilotChatSync.changeWorkspaceViewMode', () => changeWorkspaceViewMode()),
     vscode.commands.registerCommand('copilotChatSync.previewSession', (session: ChatSession) => showPreview(session, context)),
     vscode.commands.registerCommand('copilotChatSync.exportSession', (session: ChatSession) => exportSingleSession(session)),
     vscode.commands.registerCommand('copilotChatSync.search', () => searchHistory()),
@@ -59,7 +67,25 @@ export function activate(context: vscode.ExtensionContext) {
   // Watch for config changes
   context.subscriptions.push(
     vscode.workspace.onDidChangeConfiguration(e => {
-      if (e.affectsConfiguration('copilotChatSync')) {
+      if (e.affectsConfiguration('copilotChatSync.sessionGroupBy')) {
+        void updateViewContext();
+        treeProvider.refresh({ reload: false });
+      }
+
+      if (e.affectsConfiguration('copilotChatSync.workspaceViewMode')) {
+        treeProvider.refresh({ reload: false });
+      }
+
+      if (e.affectsConfiguration('copilotChatSync.maxSessionsInView')) {
+        treeProvider.refresh();
+      }
+
+      if (
+        e.affectsConfiguration('copilotChatSync.autoSync') ||
+        e.affectsConfiguration('copilotChatSync.repoPath') ||
+        e.affectsConfiguration('copilotChatSync.remoteUrl') ||
+        e.affectsConfiguration('copilotChatSync.syncIntervalMinutes')
+      ) {
         restartAutoSync();
       }
     })
@@ -89,6 +115,8 @@ interface ExtConfig {
   syncIntervalMinutes: number;
   includeToolCalls: boolean;
   defaultExportFormat: 'markdown' | 'json' | 'html';
+  sessionGroupBy: SessionGroupBy;
+  workspaceViewMode: WorkspaceViewMode;
 }
 
 function getConfig(): ExtConfig {
@@ -100,7 +128,17 @@ function getConfig(): ExtConfig {
     syncIntervalMinutes: c.get('syncIntervalMinutes', 5),
     includeToolCalls: c.get('includeToolCalls', false),
     defaultExportFormat: c.get('defaultExportFormat', 'markdown') as 'markdown' | 'json' | 'html',
+    sessionGroupBy: parseSessionGroupBy(c.get<string>('sessionGroupBy', 'workspace')),
+    workspaceViewMode: parseWorkspaceViewMode(c.get<string>('workspaceViewMode', 'flat')),
   };
+}
+
+function parseSessionGroupBy(value: string | undefined): SessionGroupBy {
+  return value === 'date' ? 'date' : 'workspace';
+}
+
+function parseWorkspaceViewMode(value: string | undefined): WorkspaceViewMode {
+  return value === 'byDate' ? 'byDate' : 'flat';
 }
 
 // --- Commands ---
@@ -189,6 +227,96 @@ async function exportSingleSession(session: ChatSession) {
   const outPath = path.join(folder[0].fsPath, filename);
   fs.writeFileSync(outPath, content, 'utf-8');
   vscode.window.showInformationMessage(`Exported: ${filename}`);
+}
+
+async function openWebUi() {
+  const config = getConfig();
+
+  if (!config.repoPath) {
+    const choice = await vscode.window.showWarningMessage(
+      'Copilot Chat Sync: No repository path configured.',
+      'Configure Now'
+    );
+    if (choice === 'Configure Now') {
+      await configure();
+    }
+    return;
+  }
+
+  const indexPath = path.join(config.repoPath, 'docs', 'index.html');
+
+  if (!fs.existsSync(indexPath)) {
+    await vscode.window.withProgress(
+      { location: vscode.ProgressLocation.Notification, title: 'Generating Copilot Chat web UI...' },
+      async () => {
+        await doSync(config);
+      }
+    );
+    treeProvider.refresh();
+  }
+
+  if (!fs.existsSync(indexPath)) {
+    vscode.window.showErrorMessage('Copilot Chat Sync: Failed to generate docs/index.html');
+    return;
+  }
+
+  await vscode.env.openExternal(vscode.Uri.file(indexPath));
+}
+
+async function changeSessionGroupBy() {
+  const config = getConfig();
+  const pick = await vscode.window.showQuickPick([
+    {
+      label: 'Workspace',
+      description: 'Default view grouped by workspace',
+      value: 'workspace' as SessionGroupBy,
+      picked: config.sessionGroupBy === 'workspace',
+    },
+    {
+      label: 'Date',
+      description: 'Group sessions by date',
+      value: 'date' as SessionGroupBy,
+      picked: config.sessionGroupBy === 'date',
+    },
+  ], {
+    placeHolder: 'Select how chat sessions are grouped',
+  });
+
+  if (!pick || pick.value === config.sessionGroupBy) {
+    return;
+  }
+
+  await vscode.workspace
+    .getConfiguration('copilotChatSync')
+    .update('sessionGroupBy', pick.value, vscode.ConfigurationTarget.Global);
+}
+
+async function changeWorkspaceViewMode() {
+  const config = getConfig();
+  const pick = await vscode.window.showQuickPick([
+    {
+      label: 'Workspace / Session',
+      description: 'Show sessions directly under each workspace',
+      value: 'flat' as WorkspaceViewMode,
+      picked: config.workspaceViewMode === 'flat',
+    },
+    {
+      label: 'Workspace / Date / Session',
+      description: 'Group sessions by date inside each workspace',
+      value: 'byDate' as WorkspaceViewMode,
+      picked: config.workspaceViewMode === 'byDate',
+    },
+  ], {
+    placeHolder: 'Select workspace tree layout',
+  });
+
+  if (!pick || pick.value === config.workspaceViewMode) {
+    return;
+  }
+
+  await vscode.workspace
+    .getConfiguration('copilotChatSync')
+    .update('workspaceViewMode', pick.value, vscode.ConfigurationTarget.Global);
 }
 
 async function searchHistory() {
@@ -313,6 +441,7 @@ async function doSync(config: ExtConfig) {
 
   const sessionFiles = findAllTranscripts();
   const files: SyncFile[] = [];
+  const siteSources: SiteSessionSource[] = [];
 
   log(`Discovered ${sessionFiles.length} session files`);
 
@@ -320,16 +449,21 @@ async function doSync(config: ExtConfig) {
     const session = parseStoredSession(sessionFile);
     if (!session || session.messages.length === 0) { continue; }
 
-    const relPath = sessionToRelativePath(session);
+    const relPath = normalizeRelativePath(path.join('sessions', sessionToRelativePath(session)));
     const markdown = sessionToMarkdown(session, { includeToolCalls: config.includeToolCalls });
 
     // Always update (content may have changed for active sessions)
     files.push({
-      relativePath: path.join('sessions', relPath),
+      relativePath: relPath,
       content: markdown,
       sessionStartTime: session.startTime,
       sessionDate: getSessionDateKey(session.startTime),
       workspaceName: session.workspaceName,
+    });
+
+    siteSources.push({
+      session,
+      markdownRelativePath: relPath,
     });
   }
 
@@ -338,13 +472,24 @@ async function doSync(config: ExtConfig) {
     return;
   }
 
-  pruneObsoleteSessionFiles(config.repoPath, files);
+  for (const file of generateSiteFiles(siteSources)) {
+    files.push({
+      relativePath: normalizeRelativePath(file.relativePath),
+      content: file.content,
+    });
+  }
 
-  // Generate index
+  // Generate index files
   files.push({
     relativePath: 'README.md',
     content: generateIndex(files),
   });
+  files.push({
+    relativePath: 'sessions/README.md',
+    content: generateSessionsIndex(files),
+  });
+
+  pruneObsoleteGeneratedFiles(config.repoPath, files);
 
   const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
   const result = await commitAndPush(
@@ -370,6 +515,10 @@ function generateIndex(files: SyncFile[]): string {
   lines.push(`> Auto-synced by [copilot-chat-sync](https://github.com/yuzuan/coplictchathistory)`);
   lines.push(`> Last updated: ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`);
   lines.push('');
+  lines.push('## Web UI');
+  lines.push('');
+  lines.push('- Open the generated web UI: [docs/index.html](docs/index.html)');
+  lines.push('');
   lines.push('## Sessions');
   lines.push('');
   lines.push('| Date | Workspace | File |');
@@ -384,6 +533,55 @@ function generateIndex(files: SyncFile[]): string {
     const date = f.sessionDate || extractSessionDateFromPath(f.relativePath);
     const workspace = f.workspaceName || extractWorkspaceFromFilename(name);
     lines.push(`| ${date} | ${workspace} | [${name}](${f.relativePath}) |`);
+  }
+
+  return lines.join('\n');
+}
+
+/**
+ * Generate sessions/README.md — reverse-chronological listing grouped by date.
+ * GitHub renders this when visiting the sessions/ directory.
+ */
+function generateSessionsIndex(files: SyncFile[]): string {
+  const sessionFiles = files
+    .filter(f => f.relativePath.startsWith('sessions/') && f.relativePath !== 'sessions/README.md')
+    .sort(compareSessionFilesDesc);
+
+  // Group by date
+  const byDate = new Map<string, SyncFile[]>();
+  for (const f of sessionFiles) {
+    const date = f.sessionDate || extractSessionDateFromPath(f.relativePath);
+    const group = byDate.get(date);
+    if (group) {
+      group.push(f);
+    } else {
+      byDate.set(date, [f]);
+    }
+  }
+
+  // Dates already in desc order (sessionFiles sorted desc)
+  const dates = [...byDate.keys()];
+
+  const lines: string[] = [];
+  lines.push('# Chat Sessions');
+  lines.push('');
+  lines.push(`> ${sessionFiles.length} sessions · Last updated: ${new Date().toLocaleString('zh-CN', { timeZone: 'Asia/Shanghai' })}`);
+  lines.push('');
+
+  for (const date of dates) {
+    const group = byDate.get(date)!;
+    lines.push(`## ${date}`);
+    lines.push('');
+    lines.push('| Workspace | File |');
+    lines.push('|-----------|------|');
+    for (const f of group) {
+      const name = path.basename(f.relativePath, '.md');
+      const workspace = f.workspaceName || extractWorkspaceFromFilename(name);
+      // Relative link from sessions/ to sessions/YYYY-MM-DD/file.md
+      const relLink = f.relativePath.replace(/^sessions\//, '');
+      lines.push(`| ${workspace} | [${name}](${relLink}) |`);
+    }
+    lines.push('');
   }
 
   return lines.join('\n');
@@ -431,19 +629,21 @@ function toSortTime(iso: string | undefined): number {
   return Number.isNaN(time) ? 0 : time;
 }
 
-function pruneObsoleteSessionFiles(repoPath: string, files: SyncFile[]): void {
-  const sessionsDir = path.join(repoPath, 'sessions');
-  if (!fs.existsSync(sessionsDir)) {
-    return;
+function pruneObsoleteGeneratedFiles(repoPath: string, files: SyncFile[]): void {
+  for (const relativeDir of ['sessions', 'docs/session', 'docs/data', 'docs/assets']) {
+    const dirPath = path.join(repoPath, ...relativeDir.split('/'));
+    if (!fs.existsSync(dirPath)) {
+      continue;
+    }
+
+    const expected = new Set(
+      files
+        .filter(file => file.relativePath === relativeDir || file.relativePath.startsWith(`${relativeDir}/`))
+        .map(file => normalizeRelativePath(file.relativePath))
+    );
+
+    pruneDirectory(dirPath, relativeDir, expected);
   }
-
-  const expected = new Set(
-    files
-      .filter(file => file.relativePath.startsWith('sessions/'))
-      .map(file => normalizeRelativePath(file.relativePath))
-  );
-
-  pruneDirectory(sessionsDir, 'sessions', expected);
 }
 
 function pruneDirectory(dirPath: string, relativeDir: string, expected: Set<string>): boolean {
@@ -509,6 +709,15 @@ function restartAutoSync() {
   if (config.autoSync && config.repoPath) {
     startAutoSync(config);
   }
+}
+
+async function updateViewContext() {
+  const config = getConfig();
+  await vscode.commands.executeCommand(
+    'setContext',
+    'copilotChatSync.groupByWorkspace',
+    config.sessionGroupBy === 'workspace',
+  );
 }
 
 function scheduleSync(reason: string) {
