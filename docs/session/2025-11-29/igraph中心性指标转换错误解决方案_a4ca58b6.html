@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>deg_genes &lt;- DEG_sig$gene &gt; &gt; # 初始化STRINGdb (9606 = human, 10090 = mouse) &gt; #...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>deg_genes &lt;- DEG_sig$gene &gt; &gt; # 初始化STRINGdb (9606 = human, 10090 = mouse) &gt; #...</h1>
+      <p class="selected-session-meta">igraph中心性指标转换错误解决方案 · 2025/11/29 08:53 · 22 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-11-29/igraph中心性指标转换错误解决方案_a4ca58b6.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#a4ca58b6-d7df-462e-9e3a-ef31bc93d403">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 08:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">deg_genes &lt;- DEG_sig$gene<br>&gt; <br>&gt; # 初始化STRINGdb (9606 = human, 10090 = mouse)<br>&gt; # 根据你的物种修改species参数<br>&gt; string_db &lt;- STRINGdb$new(version = &quot;11.5&quot;, <br>+                           species = 9606,  # 人类<br>+                           score_threshold = 400,  # 中等置信度<br>+                           input_directory = output_dir)<br>&gt; <br>&gt; # 将基因映射到STRING ID<br>&gt; deg_mapped &lt;- string_db$map(data.frame(gene = deg_genes), &quot;gene&quot;, removeUnmappedRows = TRUE)<br>Warning:  we couldn&#39;t map to STRING 12% of your identifiers&gt; cat(&quot;成功映射基因数:&quot;, nrow(deg_mapped), &quot;/&quot;, length(deg_genes), &quot;\n&quot;)<br>成功映射基因数: 2610 / 2961 <br>&gt; <br>&gt; # 获取PPI网络<br>&gt; if(nrow(deg_mapped) &gt; 0) {<br>+     <br>+     # 获取互作关系<br>+     interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)<br>+     <br>+     # 保存互作关系<br>+     write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)<br>+     <br>+     # 绘制PPI网络图<br>+     pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)<br>+     string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])<br>+     dev.off()<br>+     <br>+     # ============================================<br>+     # 5. 使用igraph计算Hub基因<br>+     # ============================================<br>+     <br>+     if(nrow(interactions) &gt; 0) {<br>+         <br>+         # 创建igraph网络对象<br>+         # 将STRING_id转换回基因名<br>+         id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)<br>+         <br>+         interactions$from_gene &lt;- id_to_gene[interactions$from]<br>+         interactions$to_gene &lt;- id_to_gene[interactions$to]<br>+         <br>+         # 移除NA<br>+         interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]<br>+         <br>+         # 创建网络<br>+         g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)<br>+         <br>+         # 计算多种中心性指标<br>+         hub_analysis &lt;- data.frame(<br>+             gene = V(g)$name,<br>+             degree = degree(g),<br>+             betweenness = betweenness(g),<br>+             closeness = closeness(g),<br>+             eigenvector = eigen_centrality(g)$vector<br>+         )<br>+         <br>+         # 按degree排序<br>+         hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]<br>+         <br>+         # 保存hub基因分析结果<br>+         write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)<br>+         <br>+         # 显示Top 20 Hub基因<br>+         cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)<br>+         print(head(hub_analysis, 20))<br>+         <br>+         # 提取Top Hub基因<br>+         top_hub_genes &lt;- head(hub_analysis, 10)<br>+         <br>+         # ============================================<br>+         # 6. Hub基因可视化<br>+         # ============================================<br>+         <br>+         # Hub基因柱状图<br>+         p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +<br>+             geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +<br>+             coord_flip() +<br>+             theme_bw() +<br>+             labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +<br>+             theme(plot.title = element_text(hjust = 0.5))<br>+         <br>+         print(p_hub)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)<br>+         <br>+         # Hub基因网络图<br>+         # 提取包含top hub基因的子网络<br>+         top_hub_names &lt;- head(hub_analysis$gene, 10)<br>+         neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) neighbors(g, x)$name))<br>+         subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))<br>+         <br>+         # 限制节点数量<br>+         if(length(subnet_nodes) &gt; 100) {<br>+             subnet_nodes &lt;- subnet_nodes[1:100]<br>+         }<br>+         <br>+         g_sub &lt;- induced_subgraph(g, subnet_nodes)<br>+         <br>+         # 设置节点属性<br>+         V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)<br>+         V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)<br>+         V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)<br>+         <br>+         # 绘制网络<br>+         pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)<br>+         set.seed(123)<br>+         plot(g_sub, <br>+              layout = layout_with_fr(g_sub),<br>+              vertex.label = V(g_sub)$name,<br>+              vertex.label.color = &quot;black&quot;,<br>+              edge.color = &quot;grey70&quot;,<br>+              edge.width = 0.5,<br>+              main = &quot;Hub Genes PPI Network&quot;)<br>+         legend(&quot;bottomright&quot;, <br>+                legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),<br>+                fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),<br>+                border = NA)<br>+         dev.off()<br>+         <br>+         # ============================================<br>+         # 7. Hub基因热图<br>+         # ============================================<br>+         <br>+         # 提取hub基因的表达矩阵<br>+         hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))<br>+         <br>+         if(length(hub_genes_in_exp) &gt; 0) {<br>+             exp_hub &lt;- exp[hub_genes_in_exp, ]<br>+             exp_hub_scaled &lt;- t(scale(t(exp_hub)))<br>+             <br>+             p_hub_heatmap &lt;- pheatmap(exp_hub_scaled,<br>+                                       scale = &quot;none&quot;,<br>+                                       cluster_rows = TRUE,<br>+                                       cluster_cols = TRUE,<br>+                                       show_rownames = TRUE,<br>+                                       show_colnames = FALSE,<br>+                                       annotation_col = annotation_col,<br>+                                       annotation_colors = ann_colors,<br>+                                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                                       main = &quot;Expression of Top Hub Genes&quot;,<br>+                                       fontsize = 10)<br>+             <br>+             pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)<br>+             print(p_hub_heatmap)<br>+             dev.off()<br>+         }<br>+         <br>+     } else {<br>+         cat(&quot;没有找到蛋白互作关系\n&quot;)<br>+     }<br>+     <br>+ } else {<br>+     cat(&quot;基因映射失败，请检查基因名格式\n&quot;)<br>+ }<br>Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors) : <br>  cannot coerce class ‘&quot;degree&quot;’ to a data.frame</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 08:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 <code class="inline-code">igraph</code> 包的 <code class="inline-code">degree()</code> 函数返回的是一个特殊的 &quot;degree&quot; 类对象，而不是普通的数值向量。需要将其转换为普通数值。</p><p class="message-paragraph">问题出在这一行代码：</p><pre class="message-code-block"><code>hub_analysis &lt;- data.frame(
+    gene = V(g)$name,
+    degree = degree(g),  # 这里返回的是 &quot;degree&quot; 类对象
+    betweenness = betweenness(g),
+    closeness = closeness(g),
+    eigenvector = eigen_centrality(g)$vector
+)</code></pre><p class="message-paragraph">**解决方法**：使用 <code class="inline-code">as.numeric()</code> 或 <code class="inline-code">as.vector()</code> 将 <code class="inline-code">degree()</code> 的结果转换为普通数值向量：</p><pre class="message-code-block"><code>hub_analysis &lt;- data.frame(
+    gene = V(g)$name,
+    degree = as.numeric(degree(g)),
+    betweenness = as.numeric(betweenness(g)),
+    closeness = as.numeric(closeness(g)),
+    eigenvector = as.numeric(eigen_centrality(g)$vector)
+)</code></pre><p class="message-paragraph">**完整修改后的代码段**：</p><pre class="message-code-block"><code># 计算多种中心性指标
+hub_analysis &lt;- data.frame(
+    gene = V(g)$name,
+    degree = as.numeric(degree(g)),
+    betweenness = as.numeric(betweenness(g)),
+    closeness = as.numeric(closeness(g)),
+    eigenvector = as.numeric(eigen_centrality(g)$vector)
+)</code></pre><p class="message-paragraph">这个问题通常出现在较新版本的 <code class="inline-code">igraph</code> 包中，它为中心性指标添加了专门的类。通过显式转换为数值类型，可以确保这些值能够正确地放入 <code class="inline-code">data.frame</code> 中。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 08:54</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Error in data.frame(gene = V(g)$name, degree = as.numeric(degree(g)),  : <br>  &#39;list&#39; object cannot be coerced to type &#39;double&#39;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 08:54</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误说明 <code class="inline-code">eigen_centrality(g)$vector</code> 返回的是一个列表而不是向量。需要用 <code class="inline-code">unlist()</code> 来处理。</p><p class="message-paragraph">**修正后的代码**：</p><pre class="message-code-block"><code># 计算多种中心性指标
+deg_values &lt;- degree(g)
+bet_values &lt;- betweenness(g)
+clo_values &lt;- closeness(g)
+eig_values &lt;- eigen_centrality(g)$vector
+
+hub_analysis &lt;- data.frame(
+    gene = V(g)$name,
+    degree = as.numeric(deg_values),
+    betweenness = as.numeric(bet_values),
+    closeness = as.numeric(clo_values),
+    eigenvector = as.numeric(unlist(eig_values))
+)</code></pre><p class="message-paragraph">或者更简洁的写法：</p><pre class="message-code-block"><code># 计算多种中心性指标
+hub_analysis &lt;- data.frame(
+    gene = names(V(g)),
+    degree = as.vector(degree(g)),
+    betweenness = as.vector(betweenness(g)),
+    closeness = as.vector(closeness(g)),
+    eigenvector = unlist(eigen_centrality(g)$vector)
+)</code></pre><p class="message-paragraph">**如果仍有问题**，可以尝试更保守的方法：</p><pre class="message-code-block"><code># 分步计算，避免类型问题
+gene_names &lt;- V(g)$name
+n_genes &lt;- length(gene_names)
+
+hub_analysis &lt;- data.frame(
+    gene = gene_names,
+    stringsAsFactors = FALSE
+)
+
+hub_analysis$degree &lt;- as.vector(degree(g))
+hub_analysis$betweenness &lt;- as.vector(betweenness(g))
+hub_analysis$closeness &lt;- as.vector(closeness(g))
+
+# eigen_centrality 特殊处理
+eig_result &lt;- eigen_centrality(g)
+hub_analysis$eigenvector &lt;- as.vector(eig_result$vector)</code></pre><p class="message-paragraph">这种分步赋值的方式可以更好地处理不同函数返回的各种数据类型。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 08:55</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">+     top_heatmap_genes &lt;- sig_genes<br>+ }<br>&gt; <br>&gt; # 提取表达矩阵<br>&gt; exp_heatmap &lt;- exp[top_heatmap_genes, ]<br>&gt; <br>&gt; # 标准化（Z-score）<br>&gt; exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>&gt; <br>&gt; # 注释信息<br>&gt; annotation_col &lt;- data.frame(<br>+     Group = pd$group,<br>+     row.names = rownames(pd)<br>+ )<br>&gt; <br>&gt; # 颜色设置<br>&gt; ann_colors &lt;- list(<br>+     Group = c(Normal = &quot;#4DAF4A&quot;, Tumor = &quot;#E41A1C&quot;)<br>+ )<br>&gt; <br>&gt; # 绘制热图<br>&gt; p_heatmap &lt;- pheatmap(exp_heatmap_scaled,<br>+                       scale = &quot;none&quot;,<br>+                       clustering_method = &quot;complete&quot;,<br>+                       cluster_rows = TRUE,<br>+                       cluster_cols = TRUE,<br>+                       show_rownames = ifelse(length(top_heatmap_genes) &lt;= 50, TRUE, FALSE),<br>+                       show_colnames = FALSE,<br>+                       annotation_col = annotation_col,<br>+                       annotation_colors = ann_colors,<br>+                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                       main = &quot;Heatmap of Differentially Expressed Genes&quot;,<br>+                       fontsize = 10,<br>+                       fontsize_row = 6)<br>Error in hclust(d, method = method) : must have n &gt;= 2 objects to cluster<br>&gt; View(top_genes)<br>&gt; obj &lt;- download_GEO(&quot;GSE83452&quot;, out_dir = &quot;test/00_GEO_data_GSE83452&quot;)<br>INFO [2025-11-29 08:13:42] Step1: Download GEO data ...<br>INFO [2025-11-29 08:13:42] Querying dataset: GSE83452 ...<br>	- Use local curl<br>	- Found 1 GPL<br>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100 38.9M  100 38.9M    0     0  1834k      0  0:00:21  0:00:21 --:--:-- 4915k<br>	- Processing GPL16686 ...<br>	- Found 231 samples, 43 metas.<br>	- Writting sample_anno to test/00_GEO_data_GSE83452/GSE83452_GPL16686_sample_anno.csv <br>	- Normalize between arrays ...<br>	- Successed, file save to test/00_GEO_data_GSE83452/GSE83452_GPL16686_raw.RData <br>INFO [2025-11-29 08:14:35] Step2: Annotate probe GPL16686 ...<br>INFO [2025-11-29 08:14:35] Use AnnoProbe annotation file ...<br>	- Can&#39;t find annotation table in AnnoProbe.<br>INFO [2025-11-29 08:14:35] Download online annotation file ...<br>Can&#39;t find online annotation table. Please download annotation table manually:<br>	https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL16686<br>Error in anno_GEO_online(expM, GPL, out_dir = out_dir, symbol_name = symbol_name,  :</p><p class="message-paragraph">In addition: Warning message:<br>In download.file(soft_url, destfile = soft_file, quiet = TRUE) :<br>  cannot open URL &#39;https://ftp.ncbi.nlm.nih.gov/geo/platforms/GPL16nnn/GPL16686/annot/GPL16686.annot.gz&#39;: HTTP status was &#39;404 Not Found&#39;<br>&gt; rm(list = ls())<br>&gt; load(&quot;~/Desktop/2025_08_10 fastGEO/test/00_GEO_data_GSE83452/GSE83452_GPL16686_raw.RData&quot;)<br>&gt; exp &lt;- GSE83452_GPL16686$expM<br>&gt; View(exp)<br>&gt; url &lt;- &quot;https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?view=data&amp;acc=GPL16686&amp;id=17306&amp;db=GeoDb_blob94&quot;<br>&gt; anno_tb_url &lt;- read_GPL_url(url, out_dir = &quot;test/GPL21827&quot;)<br>	Processing: GPL16686 ...<br>	File downloaded successfully!<br>	Found annotation column: GB_ACC <br>	New annotation file save to: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/fastGEO/data/anno_obj.RData <br>&gt; hd(anno_tb_url[[1]])<br>Type: data.frame  Dim: 53981 × 2 <br>        ID    SYMBOL<br>1 16657436   DDX11L1<br>2 16657440          <br>3 16657445          <br>4 16657447          <br>5 16657450 LINC01000<br>&gt; View(exp)<br>&gt; anno=anno_tb_url$GPL16686<br>&gt; View(anno)<br>&gt; anno &lt;- anno[!(is.na(anno$SYMBOL) | anno$SYMBOL == &quot;&quot;), ]<br>&gt; anno &lt;- anno[anno$SYMBOL != &quot;---&quot;, ]<br>&gt; View(anno)<br>&gt; common_ids &lt;- intersect(rownames(exp), anno$ID)<br>&gt; exp_filtered &lt;- exp[common_ids, ]<br>&gt; exp_df &lt;- as.data.frame(exp_filtered)<br>&gt; exp_df$ID &lt;- rownames(exp_filtered)<br>&gt; exp_df &lt;- merge(exp_df, anno[, c(&quot;ID&quot;, &quot;SYMBOL&quot;)], by = &quot;ID&quot;)<br>&gt; exp_df$ID &lt;- NULL<br>&gt; if (any(duplicated(exp_df$SYMBOL))) {<br>+     expr &lt;- aggregate(. ~ SYMBOL, data = exp_df, FUN = mean, na.rm = TRUE)<br>+      rownames(expr) &lt;- expr$SYMBOL<br>+     expr$SYMBOL &lt;- NULL<br>+  } else {<br>+      rownames(exp_df) &lt;- exp_df$SYMBOL<br>+      expr &lt;- exp_df[, !colnames(exp_df) %in% &quot;SYMBOL&quot;]<br>+  }<br>&gt; View(expr)<br>&gt; exp=expr<br>&gt; out_dir &lt;- &quot;test/00_GEO_data_GSE83452&quot;<br>&gt; write_csv(cbind(RowName = rownames(exp), exp), file.path(out_dir, &quot;exp.csv&quot;))</p><p class="message-paragraph">&gt; rm(list = ls())<br>&gt; obj &lt;- download_GEO(&quot;GSE15605&quot;, out_dir = &quot;test/00_GEO_data_GSE15605&quot;)<br>Find local annotation file, will be used preferably!<br>INFO [2025-11-29 08:33:03] Step1: Download GEO data ...<br>INFO [2025-11-29 08:33:03] Querying dataset: GSE15605 ...<br>	- Use local curl<br>	- Found 1 GPL<br>  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current<br>                                 Dload  Upload   Total   Spent    Left  Speed<br>100 17.2M  100 17.2M    0     0  2153k      0  0:00:08  0:00:08 --:--:-- 3273k<br>	- Processing GPL570 ...<br>	- Found 74 samples, 47 metas.<br>	- Writting sample_anno to test/00_GEO_data_GSE15605/GSE15605_GPL570_sample_anno.csv <br>	- Normalize between arrays ...<br>	- Successed, file save to test/00_GEO_data_GSE15605/GSE15605_GPL570_raw.RData <br>INFO [2025-11-29 08:33:25] Step2: Annotate probe GPL570 ...<br>INFO [2025-11-29 08:33:25] Use built-in annotation file ...<br>- All porbes matched!<br>- All porbes annotated!<br>INFO [2025-11-29 08:33:25] Removing duplicated genes by method: max ...<br>INFO [2025-11-29 08:33:31] Done.<br>&gt; exp &lt;- GSE15605_GPL16686$expM<br>Error: object &#39;GSE15605_GPL16686&#39; not found<br>&gt; exp &lt;- obj$expM<br>&gt; pd &lt;- obj$sample_anno<br>&gt; <br>&gt; small &lt;- function(df){<br>+     library(tibble)<br>+     library(dplyr)<br>+     colname &lt;- vector(&quot;character&quot;)<br>+     count &lt;- vector(&quot;integer&quot;)<br>+     for(i in 1:ncol(df)){<br>+         colname[i] = colnames(df)[[i]]<br>+         count[i]=nrow(df[!duplicated(df[,i]),])<br>+     }<br>+     o &lt;- tibble(colname,count) <br>+     output=df[,o$count&gt;1]<br>+ }<br>&gt; pd=small(pd)<br>&gt; out_dir &lt;- &quot;test/00_GEO_data_GSE15605&quot;<br>&gt; write_csv(cbind(RowName = rownames(exp), exp), file.path(out_dir, &quot;exp.csv&quot;))<br>&gt; write_csv(cbind(RowName = rownames(pd),  pd),  file.path(out_dir, &quot;pd.csv&quot;))</p><p class="message-paragraph">&gt; View(exp)<br>&gt; View(pd)<br>&gt; pd$group &lt;- ifelse(<br>+     pd$source_name_ch1 == &quot;Frozen tip of melanoma excision&quot;,<br>+     &quot;Normal&quot;,<br>+     &quot;Tumor&quot;<br>+ )<br>&gt; library(limma)      # 差异分析<br>&gt; library(ggplot2)    # 绑图<br>&gt; library(pheatmap)   # 热图<br>&gt; library(ggrepel)    # 火山图标签<br>&gt; library(STRINGdb)   # PPI分析<br>&gt; library(igraph)     # 网络分析<br>&gt; <br>&gt; # 设置保存路径<br>&gt; output_dir &lt;- out_dir<br>&gt; <br>&gt; # 设置分组因子，Tumor vs Normal<br>&gt; group &lt;- factor(pd$group, levels = c(&quot;Normal&quot;, &quot;Tumor&quot;))<br>&gt; <br>&gt; # 构建设计矩阵<br>&gt; design &lt;- model.matrix(~ 0 + group)<br>&gt; colnames(design) &lt;- levels(group)<br>&gt; <br>&gt; # 拟合模型<br>&gt; fit &lt;- lmFit(exp, design)<br>&gt; <br>&gt; # 设置对比：Tumor vs Normal<br>&gt; contrast &lt;- makeContrasts(Tumor - Normal, levels = design)<br>&gt; fit2 &lt;- contrasts.fit(fit, contrast)<br>&gt; fit2 &lt;- eBayes(fit2)<br>&gt; <br>&gt; # 获取差异分析结果<br>&gt; DEG &lt;- topTable(fit2, coef = 1, number = Inf, adjust.method = &quot;BH&quot;)<br>&gt; DEG$gene &lt;- rownames(DEG)<br>&gt; DEG$FDR &lt;- DEG$adj.P.Val<br>&gt; # 添加差异表达标签 (logFC &gt; 1, adj.P.Val &lt; 0.05)<br>&gt; DEG$change &lt;- ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &gt; 1, &quot;Up&quot;,<br>+                      ifelse(DEG$adj.P.Val &lt; 0.05 &amp; DEG$logFC &lt; -1, &quot;Down&quot;, &quot;Not Sig&quot;))<br>&gt; DEG &lt;- DEG[, c(&quot;gene&quot;, &quot;logFC&quot;, &quot;AveExpr&quot;, &quot;t&quot;, &quot;P.Value&quot;, &quot;FDR&quot;, &quot;B&quot;, &quot;change&quot;)]<br>&gt; table(DEG$change)</p><p class="message-paragraph">Down Not Sig      Up <br>   1951   16532    1010 <br>&gt; <br>&gt; # 保存差异分析结果<br>&gt; write.csv(DEG, file.path(output_dir, &quot;DEG_results.csv&quot;), row.names = FALSE)<br>&gt; <br>&gt; # 筛选显著差异基因<br>&gt; DEG_sig &lt;- DEG[DEG$change != &quot;Not Sig&quot;, ]<br>&gt; write.csv(DEG_sig, file.path(output_dir, &quot;DEG_significant.csv&quot;), row.names = FALSE)<br>&gt; <br>&gt; cat(&quot;总基因数:&quot;, nrow(DEG), &quot;\n&quot;)<br>总基因数: 19493 <br>&gt; cat(&quot;上调基因:&quot;, sum(DEG$change == &quot;Up&quot;), &quot;\n&quot;)<br>上调基因: 1010 <br>&gt; cat(&quot;下调基因:&quot;, sum(DEG$change == &quot;Down&quot;), &quot;\n&quot;)<br>下调基因: 1951 <br>&gt; top_genes &lt;- DEG[DEG$change != &quot;Not Sig&quot;, ]<br>&gt; top_genes &lt;- top_genes[order(abs(top_genes$logFC), decreasing = TRUE), ][1:20, ]<br>&gt; <br>&gt; # 火山图 - 使用FDR替代adj.P.Val<br>&gt; p_volcano &lt;- ggplot(DEG, aes(x = logFC, y = -log10(FDR), color = change)) +<br>+     geom_point(alpha = 0.6, size = 1.5) +<br>+     scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>+     geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>+     geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>+     theme_bw() +<br>+     labs(x = &quot;log2 Fold Change&quot;, <br>+          y = &quot;-log10(FDR)&quot;, <br>+          title = &quot;Volcano Plot: Tumor vs Normal&quot;,<br>+          color = &quot;Expression&quot;) +<br>+     theme(plot.title = element_text(hjust = 0.5),<br>+           legend.position = &quot;right&quot;) +<br>+     geom_text_repel(data = top_genes,<br>+                     aes(label = gene),<br>+                     size = 3,<br>+                     max.overlaps = 20,<br>+                     show.legend = FALSE)<br>&gt; <br>&gt; print(p_volcano)<br>&gt; ggsave(file.path(output_dir, &quot;volcano_plot.pdf&quot;), p_volcano, width = 8, height = 6)<br>&gt; ggsave(file.path(output_dir, &quot;volcano_plot.png&quot;), p_volcano, width = 8, height = 6, dpi = 300)<br>&gt; print(p_volcano)<br>&gt; ggsave(file.path(output_dir, &quot;volcano_plot.pdf&quot;), p_volcano, width = 8, height = 6)<br>&gt; ggsave(file.path(output_dir, &quot;volcano_plot.png&quot;), p_volcano, width = 8, height = 6, dpi = 300)<br>&gt; library(ComplexHeatmap)<br>Loading required package: grid<br>========================================<br>ComplexHeatmap version 2.22.0<br>Bioconductor page: http://bioconductor.org/packages/ComplexHeatmap/<br>Github page: https://github.com/jokergoo/ComplexHeatmap<br>Documentation: http://jokergoo.github.io/ComplexHeatmap-reference</p><p class="message-paragraph">If you use it in published research, please cite either one:<br>- Gu, Z. Complex Heatmap Visualization. iMeta 2022.<br>- Gu, Z. Complex heatmaps reveal patterns and correlations in multidimensional <br>    genomic data. Bioinformatics 2016.</p><p class="message-paragraph">The new InteractiveComplexHeatmap package can directly export static <br>complex heatmaps into an interactive Shiny app with zero effort. Have a try!</p><p class="message-paragraph">This message can be suppressed by:<br>  suppressPackageStartupMessages(library(ComplexHeatmap))<br>========================================<br>! pheatmap() has been masked by ComplexHeatmap::pheatmap(). Most of the arguments<br>   in the original pheatmap() are identically supported in the new function. You <br>   can still use the original function by explicitly calling pheatmap::pheatmap().</p><p class="message-paragraph">Attaching package: ‘ComplexHeatmap’</p><p class="message-paragraph">The following object is masked from ‘package:pheatmap’:</p><p class="message-paragraph">pheatmap</p><p class="message-paragraph">&gt; library(circlize)<br>========================================<br>circlize version 0.4.16<br>CRAN page: https://cran.r-project.org/package=circlize<br>Github page: https://github.com/jokergoo/circlize<br>Documentation: https://jokergoo.github.io/circlize_book/book/</p><p class="message-paragraph">If you use it in published research, please cite:<br>Gu, Z. circlize implements and enhances circular visualization<br>  in R. Bioinformatics 2014.</p><p class="message-paragraph">This message can be suppressed by:<br>  suppressPackageStartupMessages(library(circlize))<br>========================================</p><p class="message-paragraph">Attaching package: ‘circlize’</p><p class="message-paragraph">The following object is masked from ‘package:igraph’:</p><p class="message-paragraph">degree</p><p class="message-paragraph">&gt; <br>&gt; # 准备表达矩阵<br>&gt; heatmap_genes &lt;- c(UP, DOWN)<br>Error: object &#39;UP&#39; not found<br>&gt; View(DEG)<br>&gt; # 获取Up和Down基因，各取TOP50（按FDR排序）<br>&gt; DEG_up &lt;- DEG[DEG$change == &quot;Up&quot; &amp; DEG$gene %in% rownames(exp), ]<br>&gt; DEG_up &lt;- DEG_up[order(DEG_up$FDR), ]<br>&gt; UP &lt;- head(DEG_up$gene, 50)<br>&gt; <br>&gt; DEG_down &lt;- DEG[DEG$change == &quot;Down&quot; &amp; DEG$gene %in% rownames(exp), ]<br>&gt; DEG_down &lt;- DEG_down[order(DEG_down$FDR), ]<br>&gt; DOWN &lt;- head(DEG_down$gene, 50)<br>&gt; <br>&gt; cat(&quot;上调基因数:&quot;, length(UP), &quot;\n&quot;)<br>上调基因数: 50 <br>&gt; cat(&quot;下调基因数:&quot;, length(DOWN), &quot;\n&quot;)<br>下调基因数: 50 <br>&gt; <br>&gt; # 加载ComplexHeatmap<br>&gt; library(ComplexHeatmap)<br>&gt; library(circlize)<br>&gt; <br>&gt; # 准备表达矩阵<br>&gt; heatmap_genes &lt;- c(UP, DOWN)<br>&gt; exp_heatmap &lt;- exp[heatmap_genes, ]<br>&gt; exp_scale &lt;- t(scale(t(exp_heatmap)))<br>&gt; <br>&gt; # 列注释（样本分组）<br>&gt; annotation_col &lt;- data.frame(<br>+     Group = pd$group,<br>+     row.names = rownames(pd)<br>+ )<br>&gt; <br>&gt; # 行注释（基因上下调）<br>&gt; annotation_row &lt;- data.frame(<br>+     gene_class = c(rep(&quot;Up&quot;, length(UP)), rep(&quot;Down&quot;, length(DOWN))),<br>+     row.names = heatmap_genes<br>+ )<br>&gt; <br>&gt; # 顶部注释<br>&gt; ha &lt;- HeatmapAnnotation(<br>+     Group = annotation_col$Group,<br>+     col = list(Group = c(&quot;control&quot; = &quot;#2fa1dd&quot;, &quot;experimental&quot; = &quot;#f87669&quot;)),<br>+     annotation_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1)<br>+ )<br>&gt; <br>&gt; # 绑制热图<br>&gt; pdf(file = file.path(output_dir, &quot;heatmap_top50_DEG.pdf&quot;), width = 10, height = 12)<br>&gt; p &lt;- Heatmap(exp_scale,<br>+              col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),<br>+              name = &quot;Gene Expression\n(Z-score)&quot;,<br>+              heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),<br>+              show_row_names = T,<br>+              row_names_side = &quot;right&quot;,<br>+              row_names_gp = gpar(fontsize = 6),<br>+              show_column_names = F,<br>+              show_row_dend = F,<br>+              show_column_dend = F,<br>+              top_annotation = ha,<br>+              column_title_side = &quot;top&quot;,<br>+              column_split = annotation_col$Group,<br>+              row_split = annotation_row$gene_class,<br>+              column_title = NULL,<br>+              cluster_column_slices = F,<br>+              border = T)<br>&gt; draw(p, heatmap_legend_side = &quot;bottom&quot;, annotation_legend_side = &quot;bottom&quot;, merge_legend = TRUE)<br>Error: Group: cannot map colors to some of the levels: Normal<br>&gt; # 顶部注释<br>&gt; ha &lt;- HeatmapAnnotation(<br>+     Group = annotation_col$Group,<br>+     col = list(Group = c(&quot;Normal&quot; = &quot;#2fa1dd&quot;, &quot;Tumor&quot; = &quot;#f87669&quot;)),<br>+     annotation_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1)<br>+ )<br>&gt; <br>&gt; # 绑制热图<br>&gt; pdf(file = file.path(output_dir, &quot;heatmap_top50_DEG.pdf&quot;), width = 10, height = 12)<br>&gt; p &lt;- Heatmap(exp_scale,<br>+              col = colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100),<br>+              name = &quot;Gene Expression\n(Z-score)&quot;,<br>+              heatmap_legend_param = list(direction = &quot;horizontal&quot;, nrow = 1),<br>+              show_row_names = T,<br>+              row_names_side = &quot;right&quot;,<br>+              row_names_gp = gpar(fontsize = 6),<br>+              show_column_names = F,<br>+              show_row_dend = F,<br>+              show_column_dend = F,<br>+              top_annotation = ha,<br>+              column_title_side = &quot;top&quot;,<br>+              column_split = annotation_col$Group,<br>+              row_split = annotation_row$gene_class,<br>+              column_title = NULL,<br>+              cluster_column_slices = F,<br>+              border = T)<br>&gt; draw(p, heatmap_legend_side = &quot;bottom&quot;, annotation_legend_side = &quot;bottom&quot;, merge_legend = TRUE)<br>&gt; dev.off()<br>RStudioGD <br>        2 <br>&gt; <br>&gt; # 同时保存png<br>&gt; png(file.path(output_dir, &quot;heatmap_top50_DEG.png&quot;), width = 10, height = 12, units = &quot;in&quot;, res = 300)<br>&gt; draw(p, heatmap_legend_side = &quot;bottom&quot;, annotation_legend_side = &quot;bottom&quot;, merge_legend = TRUE)<br>&gt; dev.off()<br>RStudioGD <br>        2 <br>&gt; deg_genes &lt;- DEG_sig$gene<br>&gt; <br>&gt; # 初始化STRINGdb (9606 = human, 10090 = mouse)<br>&gt; # 根据你的物种修改species参数<br>&gt; string_db &lt;- STRINGdb$new(version = &quot;11.5&quot;, <br>+                           species = 9606,  # 人类<br>+                           score_threshold = 400,  # 中等置信度<br>+                           input_directory = output_dir)<br>&gt; <br>&gt; # 将基因映射到STRING ID<br>&gt; deg_mapped &lt;- string_db$map(data.frame(gene = deg_genes), &quot;gene&quot;, removeUnmappedRows = TRUE)<br>trying URL &#39;https://stringdb-downloads.org/download/protein.aliases.v11.5/9606.protein.aliases.v11.5.txt.gz&#39;<br>Content type &#39;application/octet-stream&#39; length 21726816 bytes (20.7 MB)<br>==================================================<br>downloaded 20.7 MB</p><p class="message-paragraph">trying URL &#39;https://stringdb-downloads.org/download/protein.info.v11.5/9606.protein.info.v11.5.txt.gz&#39;<br>Content type &#39;application/octet-stream&#39; length 1901833 bytes (1.8 MB)<br>==================================================<br>downloaded 1.8 MB</p><p class="message-paragraph">Warning:  we couldn&#39;t map to STRING 12% of your identifiers&gt; cat(&quot;成功映射基因数:&quot;, nrow(deg_mapped), &quot;/&quot;, length(deg_genes), &quot;\n&quot;)<br>成功映射基因数: 2610 / 2961 <br>&gt; <br>&gt; # 获取PPI网络<br>&gt; if(nrow(deg_mapped) &gt; 0) {<br>+     <br>+     # 获取互作关系<br>+     interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)<br>+     <br>+     # 保存互作关系<br>+     write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)<br>+     <br>+     # 绘制PPI网络图<br>+     pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)<br>+     string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])<br>+     dev.off()<br>+     <br>+     # ============================================<br>+     # 5. 使用igraph计算Hub基因<br>+     # ============================================<br>+     <br>+     if(nrow(interactions) &gt; 0) {<br>+         <br>+         # 创建igraph网络对象<br>+         # 将STRING_id转换回基因名<br>+         id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)<br>+         <br>+         interactions$from_gene &lt;- id_to_gene[interactions$from]<br>+         interactions$to_gene &lt;- id_to_gene[interactions$to]<br>+         <br>+         # 移除NA<br>+         interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]<br>+         <br>+         # 创建网络<br>+         g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)<br>+         <br>+         # 计算多种中心性指标<br>+         hub_analysis &lt;- data.frame(<br>+             gene = V(g)$name,<br>+             degree = degree(g),<br>+             betweenness = betweenness(g),<br>+             closeness = closeness(g),<br>+             eigenvector = eigen_centrality(g)$vector<br>+         )<br>+         <br>+         # 按degree排序<br>+         hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]<br>+         <br>+         # 保存hub基因分析结果<br>+         write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)<br>+         <br>+         # 显示Top 20 Hub基因<br>+         cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)<br>+         print(head(hub_analysis, 20))<br>+         <br>+         # 提取Top Hub基因<br>+         top_hub_genes &lt;- head(hub_analysis, 10)<br>+         <br>+         # ============================================<br>+         # 6. Hub基因可视化<br>+         # ============================================<br>+         <br>+         # Hub基因柱状图<br>+         p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +<br>+             geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +<br>+             coord_flip() +<br>+             theme_bw() +<br>+             labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +<br>+             theme(plot.title = element_text(hjust = 0.5))<br>+         <br>+         print(p_hub)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)<br>+         <br>+         # Hub基因网络图<br>+         # 提取包含top hub基因的子网络<br>+         top_hub_names &lt;- head(hub_analysis$gene, 10)<br>+         neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) neighbors(g, x)$name))<br>+         subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))<br>+         <br>+         # 限制节点数量<br>+         if(length(subnet_nodes) &gt; 100) {<br>+             subnet_nodes &lt;- subnet_nodes[1:100]<br>+         }<br>+         <br>+         g_sub &lt;- induced_subgraph(g, subnet_nodes)<br>+         <br>+         # 设置节点属性<br>+         V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)<br>+         V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)<br>+         V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)<br>+         <br>+         # 绘制网络<br>+         pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)<br>+         set.seed(123)<br>+         plot(g_sub, <br>+              layout = layout_with_fr(g_sub),<br>+              vertex.label = V(g_sub)$name,<br>+              vertex.label.color = &quot;black&quot;,<br>+              edge.color = &quot;grey70&quot;,<br>+              edge.width = 0.5,<br>+              main = &quot;Hub Genes PPI Network&quot;)<br>+         legend(&quot;bottomright&quot;, <br>+                legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),<br>+                fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),<br>+                border = NA)<br>+         dev.off()<br>+         <br>+         # ============================================<br>+         # 7. Hub基因热图<br>+         # ============================================<br>+         <br>+         # 提取hub基因的表达矩阵<br>+         hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))<br>+         <br>+         if(length(hub_genes_in_exp) &gt; 0) {<br>+             exp_hub &lt;- exp[hub_genes_in_exp, ]<br>+             exp_hub_scaled &lt;- t(scale(t(exp_hub)))<br>+             <br>+             p_hub_heatmap &lt;- pheatmap(exp_hub_scaled,<br>+                                       scale = &quot;none&quot;,<br>+                                       cluster_rows = TRUE,<br>+                                       cluster_cols = TRUE,<br>+                                       show_rownames = TRUE,<br>+                                       show_colnames = FALSE,<br>+                                       annotation_col = annotation_col,<br>+                                       annotation_colors = ann_colors,<br>+                                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                                       main = &quot;Expression of Top Hub Genes&quot;,<br>+                                       fontsize = 10)<br>+             <br>+             pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)<br>+             print(p_hub_heatmap)<br>+             dev.off()<br>+         }<br>+         <br>+     } else {<br>+         cat(&quot;没有找到蛋白互作关系\n&quot;)<br>+     }<br>+     <br>+ } else {<br>+     cat(&quot;基因映射失败，请检查基因名格式\n&quot;)<br>+ }<br>trying URL &#39;https://stringdb-downloads.org/download/protein.links.v11.5/9606.protein.links.v11.5.txt.gz&#39;<br>Content type &#39;application/octet-stream&#39; length 72718210 bytes (69.3 MB)<br>==================================================<br>downloaded 69.3 MB</p><p class="message-paragraph">Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors) : <br>  cannot coerce class ‘&quot;degree&quot;’ to a data.frame<br>&gt; # 准备差异基因列表<br>&gt; deg_genes &lt;- DEG_sig$gene<br>&gt; <br>&gt; # 初始化STRINGdb (9606 = human, 10090 = mouse)<br>&gt; # 根据你的物种修改species参数<br>&gt; string_db &lt;- STRINGdb$new(version = &quot;11.5&quot;, <br>+                           species = 9606,  # 人类<br>+                           score_threshold = 400,  # 中等置信度<br>+                           input_directory = output_dir)<br>&gt; <br>&gt; # 将基因映射到STRING ID<br>&gt; deg_mapped &lt;- string_db$map(data.frame(gene = deg_genes), &quot;gene&quot;, removeUnmappedRows = TRUE)<br>Warning:  we couldn&#39;t map to STRING 12% of your identifiers&gt; cat(&quot;成功映射基因数:&quot;, nrow(deg_mapped), &quot;/&quot;, length(deg_genes), &quot;\n&quot;)<br>成功映射基因数: 2610 / 2961 <br>&gt; <br>&gt; # 获取PPI网络<br>&gt; if(nrow(deg_mapped) &gt; 0) {<br>+     <br>+     # 获取互作关系<br>+     interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)<br>+     <br>+     # 保存互作关系<br>+     write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)<br>+     <br>+     # 绘制PPI网络图<br>+     pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)<br>+     string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])<br>+     dev.off()<br>+     <br>+     # ============================================<br>+     # 5. 使用igraph计算Hub基因<br>+     # ============================================<br>+     <br>+     if(nrow(interactions) &gt; 0) {<br>+         <br>+         # 创建igraph网络对象<br>+         # 将STRING_id转换回基因名<br>+         id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)<br>+         <br>+         interactions$from_gene &lt;- id_to_gene[interactions$from]<br>+         interactions$to_gene &lt;- id_to_gene[interactions$to]<br>+         <br>+         # 移除NA<br>+         interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]<br>+         <br>+         # 创建网络<br>+         g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)<br>+         <br>+         # 计算多种中心性指标<br>+         hub_analysis &lt;- data.frame(<br>+             gene = V(g)$name,<br>+             degree = degree(g),<br>+             betweenness = betweenness(g),<br>+             closeness = closeness(g),<br>+             eigenvector = eigen_centrality(g)$vector<br>+         )<br>+         <br>+         # 按degree排序<br>+         hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]<br>+         <br>+         # 保存hub基因分析结果<br>+         write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)<br>+         <br>+         # 显示Top 20 Hub基因<br>+         cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)<br>+         print(head(hub_analysis, 20))<br>+         <br>+         # 提取Top Hub基因<br>+         top_hub_genes &lt;- head(hub_analysis, 10)<br>+         <br>+         # ============================================<br>+         # 6. Hub基因可视化<br>+         # ============================================<br>+         <br>+         # Hub基因柱状图<br>+         p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +<br>+             geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +<br>+             coord_flip() +<br>+             theme_bw() +<br>+             labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +<br>+             theme(plot.title = element_text(hjust = 0.5))<br>+         <br>+         print(p_hub)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)<br>+         <br>+         # Hub基因网络图<br>+         # 提取包含top hub基因的子网络<br>+         top_hub_names &lt;- head(hub_analysis$gene, 10)<br>+         neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) neighbors(g, x)$name))<br>+         subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))<br>+         <br>+         # 限制节点数量<br>+         if(length(subnet_nodes) &gt; 100) {<br>+             subnet_nodes &lt;- subnet_nodes[1:100]<br>+         }<br>+         <br>+         g_sub &lt;- induced_subgraph(g, subnet_nodes)<br>+         <br>+         # 设置节点属性<br>+         V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)<br>+         V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)<br>+         V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)<br>+         <br>+         # 绘制网络<br>+         pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)<br>+         set.seed(123)<br>+         plot(g_sub, <br>+              layout = layout_with_fr(g_sub),<br>+              vertex.label = V(g_sub)$name,<br>+              vertex.label.color = &quot;black&quot;,<br>+              edge.color = &quot;grey70&quot;,<br>+              edge.width = 0.5,<br>+              main = &quot;Hub Genes PPI Network&quot;)<br>+         legend(&quot;bottomright&quot;, <br>+                legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),<br>+                fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),<br>+                border = NA)<br>+         dev.off()<br>+         <br>+         # ============================================<br>+         # 7. Hub基因热图<br>+         # ============================================<br>+         <br>+         # 提取hub基因的表达矩阵<br>+         hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))<br>+         <br>+         if(length(hub_genes_in_exp) &gt; 0) {<br>+             exp_hub &lt;- exp[hub_genes_in_exp, ]<br>+             exp_hub_scaled &lt;- t(scale(t(exp_hub)))<br>+             <br>+             p_hub_heatmap &lt;- pheatmap(exp_hub_scaled,<br>+                                       scale = &quot;none&quot;,<br>+                                       cluster_rows = TRUE,<br>+                                       cluster_cols = TRUE,<br>+                                       show_rownames = TRUE,<br>+                                       show_colnames = FALSE,<br>+                                       annotation_col = annotation_col,<br>+                                       annotation_colors = ann_colors,<br>+                                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                                       main = &quot;Expression of Top Hub Genes&quot;,<br>+                                       fontsize = 10)<br>+             <br>+             pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)<br>+             print(p_hub_heatmap)<br>+             dev.off()<br>+         }<br>+         <br>+     } else {<br>+         cat(&quot;没有找到蛋白互作关系\n&quot;)<br>+     }<br>+     <br>+ } else {<br>+     cat(&quot;基因映射失败，请检查基因名格式\n&quot;)<br>+ }<br>Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors) : <br>  cannot coerce class ‘&quot;degree&quot;’ to a data.frame<br>&gt; if(nrow(deg_mapped) &gt; 0) {<br>+     <br>+     # 获取互作关系<br>+     interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)<br>+     <br>+     # 保存互作关系<br>+     write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)<br>+     <br>+     # 绘制PPI网络图<br>+     pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)<br>+     string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])<br>+     dev.off()<br>+     <br>+     # ============================================<br>+     # 5. 使用igraph计算Hub基因<br>+     # ============================================<br>+     <br>+     if(nrow(interactions) &gt; 0) {<br>+         <br>+         # 创建igraph网络对象<br>+         # 将STRING_id转换回基因名<br>+         id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)<br>+         <br>+         interactions$from_gene &lt;- id_to_gene[interactions$from]<br>+         interactions$to_gene &lt;- id_to_gene[interactions$to]<br>+         <br>+         # 移除NA<br>+         interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]<br>+         <br>+         # 创建网络<br>+         g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)<br>+         <br>+         # 计算多种中心性指标<br>+         # 计算多种中心性指标<br>+         hub_analysis &lt;- data.frame(<br>+             gene = V(g)$name,<br>+             degree = as.numeric(degree(g)),<br>+             betweenness = as.numeric(betweenness(g)),<br>+             closeness = as.numeric(closeness(g)),<br>+             eigenvector = as.numeric(eigen_centrality(g)$vector)<br>+         )<br>+         <br>+         # 按degree排序<br>+         hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]<br>+         <br>+         # 保存hub基因分析结果<br>+         write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)<br>+         <br>+         # 显示Top 20 Hub基因<br>+         cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)<br>+         print(head(hub_analysis, 20))<br>+         <br>+         # 提取Top Hub基因<br>+         top_hub_genes &lt;- head(hub_analysis, 10)<br>+         <br>+         # ============================================<br>+         # 6. Hub基因可视化<br>+         # ============================================<br>+         <br>+         # Hub基因柱状图<br>+         p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +<br>+             geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +<br>+             coord_flip() +<br>+             theme_bw() +<br>+             labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +<br>+             theme(plot.title = element_text(hjust = 0.5))<br>+         <br>+         print(p_hub)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)<br>+         <br>+         # Hub基因网络图<br>+         # 提取包含top hub基因的子网络<br>+         top_hub_names &lt;- head(hub_analysis$gene, 10)<br>+         neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) neighbors(g, x)$name))<br>+         subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))<br>+         <br>+         # 限制节点数量<br>+         if(length(subnet_nodes) &gt; 100) {<br>+             subnet_nodes &lt;- subnet_nodes[1:100]<br>+         }<br>+         <br>+         g_sub &lt;- induced_subgraph(g, subnet_nodes)<br>+         <br>+         # 设置节点属性<br>+         V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)<br>+         V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)<br>+         V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)<br>+         <br>+         # 绘制网络<br>+         pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)<br>+         set.seed(123)<br>+         plot(g_sub, <br>+              layout = layout_with_fr(g_sub),<br>+              vertex.label = V(g_sub)$name,<br>+              vertex.label.color = &quot;black&quot;,<br>+              edge.color = &quot;grey70&quot;,<br>+              edge.width = 0.5,<br>+              main = &quot;Hub Genes PPI Network&quot;)<br>+         legend(&quot;bottomright&quot;, <br>+                legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),<br>+                fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),<br>+                border = NA)<br>+         dev.off()<br>+         <br>+         # ============================================<br>+         # 7. Hub基因热图<br>+         # ============================================<br>+         <br>+         # 提取hub基因的表达矩阵<br>+         hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))<br>+         <br>+         if(length(hub_genes_in_exp) &gt; 0) {<br>+             exp_hub &lt;- exp[hub_genes_in_exp, ]<br>+             exp_hub_scaled &lt;- t(scale(t(exp_hub)))<br>+             <br>+             p_hub_heatmap &lt;- pheatmap(exp_hub_scaled,<br>+                                       scale = &quot;none&quot;,<br>+                                       cluster_rows = TRUE,<br>+                                       cluster_cols = TRUE,<br>+                                       show_rownames = TRUE,<br>+                                       show_colnames = FALSE,<br>+                                       annotation_col = annotation_col,<br>+                                       annotation_colors = ann_colors,<br>+                                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                                       main = &quot;Expression of Top Hub Genes&quot;,<br>+                                       fontsize = 10)<br>+             <br>+             pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)<br>+             print(p_hub_heatmap)<br>+             dev.off()<br>+         }<br>+         <br>+     } else {<br>+         cat(&quot;没有找到蛋白互作关系\n&quot;)<br>+     }<br>+     <br>+ } else {<br>+     cat(&quot;基因映射失败，请检查基因名格式\n&quot;)<br>+ }<br>Error in data.frame(gene = V(g)$name, degree = as.numeric(degree(g)),  : <br>  &#39;list&#39; object cannot be coerced to type &#39;double&#39;<br>&gt; # 获取PPI网络<br>&gt; if(nrow(deg_mapped) &gt; 0) {<br>+     <br>+     # 获取互作关系<br>+     interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)<br>+     <br>+     # 保存互作关系<br>+     write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)<br>+     <br>+     # 绘制PPI网络图<br>+     pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)<br>+     string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])<br>+     dev.off()<br>+     <br>+     # ============================================<br>+     # 5. 使用igraph计算Hub基因<br>+     # ============================================<br>+     <br>+     if(nrow(interactions) &gt; 0) {<br>+         <br>+         # 创建igraph网络对象<br>+         # 将STRING_id转换回基因名<br>+         id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)<br>+         <br>+         interactions$from_gene &lt;- id_to_gene[interactions$from]<br>+         interactions$to_gene &lt;- id_to_gene[interactions$to]<br>+         <br>+         # 移除NA<br>+         interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]<br>+         <br>+         # 创建网络<br>+         g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)<br>+         <br>+         # 计算多种中心性指标<br>+         # 计算多种中心性指标<br>+         # 计算多种中心性指标<br>+         hub_analysis &lt;- data.frame(<br>+             gene = names(V(g)),<br>+             degree = as.vector(degree(g)),<br>+             betweenness = as.vector(betweenness(g)),<br>+             closeness = as.vector(closeness(g)),<br>+             eigenvector = unlist(eigen_centrality(g)$vector)<br>+         )<br>+         <br>+         # 按degree排序<br>+         hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]<br>+         <br>+         # 保存hub基因分析结果<br>+         write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)<br>+         <br>+         # 显示Top 20 Hub基因<br>+         cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)<br>+         print(head(hub_analysis, 20))<br>+         <br>+         # 提取Top Hub基因<br>+         top_hub_genes &lt;- head(hub_analysis, 10)<br>+         <br>+         # ============================================<br>+         # 6. Hub基因可视化<br>+         # ============================================<br>+         <br>+         # Hub基因柱状图<br>+         p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +<br>+             geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +<br>+             coord_flip() +<br>+             theme_bw() +<br>+             labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +<br>+             theme(plot.title = element_text(hjust = 0.5))<br>+         <br>+         print(p_hub)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)<br>+         ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)<br>+         <br>+         # Hub基因网络图<br>+         # 提取包含top hub基因的子网络<br>+         top_hub_names &lt;- head(hub_analysis$gene, 10)<br>+         neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) neighbors(g, x)$name))<br>+         subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))<br>+         <br>+         # 限制节点数量<br>+         if(length(subnet_nodes) &gt; 100) {<br>+             subnet_nodes &lt;- subnet_nodes[1:100]<br>+         }<br>+         <br>+         g_sub &lt;- induced_subgraph(g, subnet_nodes)<br>+         <br>+         # 设置节点属性<br>+         V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)<br>+         V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)<br>+         V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)<br>+         <br>+         # 绘制网络<br>+         pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)<br>+         set.seed(123)<br>+         plot(g_sub, <br>+              layout = layout_with_fr(g_sub),<br>+              vertex.label = V(g_sub)$name,<br>+              vertex.label.color = &quot;black&quot;,<br>+              edge.color = &quot;grey70&quot;,<br>+              edge.width = 0.5,<br>+              main = &quot;Hub Genes PPI Network&quot;)<br>+         legend(&quot;bottomright&quot;, <br>+                legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),<br>+                fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),<br>+                border = NA)<br>+         dev.off()<br>+         <br>+         # ============================================<br>+         # 7. Hub基因热图<br>+         # ============================================<br>+         <br>+         # 提取hub基因的表达矩阵<br>+         hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))<br>+         <br>+         if(length(hub_genes_in_exp) &gt; 0) {<br>+             exp_hub &lt;- exp[hub_genes_in_exp, ]<br>+             exp_hub_scaled &lt;- t(scale(t(exp_hub)))<br>+             <br>+             p_hub_heatmap &lt;- pheatmap(exp_hub_scaled,<br>+                                       scale = &quot;none&quot;,<br>+                                       cluster_rows = TRUE,<br>+                                       cluster_cols = TRUE,<br>+                                       show_rownames = TRUE,<br>+                                       show_colnames = FALSE,<br>+                                       annotation_col = annotation_col,<br>+                                       annotation_colors = ann_colors,<br>+                                       color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),<br>+                                       main = &quot;Expression of Top Hub Genes&quot;,<br>+                                       fontsize = 10)<br>+             <br>+             pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)<br>+             print(p_hub_heatmap)<br>+             dev.off()<br>+         }<br>+         <br>+     } else {<br>+         cat(&quot;没有找到蛋白互作关系\n&quot;)<br>+     }<br>+     <br>+ } else {<br>+     cat(&quot;基因映射失败，请检查基因名格式\n&quot;)<br>+ }<br>Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors) : <br>  cannot coerce class ‘&quot;degree&quot;’ to a data.frame</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 08:55</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">问题是 <code class="inline-code">circlize</code> 包的 <code class="inline-code">degree</code> 函数遮盖了 <code class="inline-code">igraph</code> 的 <code class="inline-code">degree</code> 函数。您需要显式调用 <code class="inline-code">igraph::degree()</code>。</p><p class="message-paragraph">**解决方法**：</p><pre class="message-code-block"><code># 计算多种中心性指标 - 使用 igraph:: 前缀避免函数冲突
+hub_analysis &lt;- data.frame(
+    gene = V(g)$name,
+    stringsAsFactors = FALSE
+)
+
+hub_analysis$degree &lt;- as.vector(igraph::degree(g))
+hub_analysis$betweenness &lt;- as.vector(igraph::betweenness(g))
+hub_analysis$closeness &lt;- as.vector(igraph::closeness(g))
+hub_analysis$eigenvector &lt;- as.vector(igraph::eigen_centrality(g)$vector)</code></pre><p class="message-paragraph">您在加载包的时候看到了这个警告：</p><pre class="message-code-block"><code>Attaching package: &#39;circlize&#39;
+
+The following object is masked from &#39;package:igraph&#39;:
+
+    degree</code></pre><p class="message-paragraph">这说明 <code class="inline-code">circlize::degree</code> 遮盖了 <code class="inline-code">igraph::degree</code>。</p><p class="message-paragraph">**完整修正后的代码段**：</p><pre class="message-code-block"><code># 创建网络
+g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)
+
+# 计算多种中心性指标 - 显式使用 igraph:: 前缀
+gene_names &lt;- V(g)$name
+
+hub_analysis &lt;- data.frame(
+    gene = gene_names,
+    degree = as.vector(igraph::degree(g)),
+    betweenness = as.vector(igraph::betweenness(g)),
+    closeness = as.vector(igraph::closeness(g)),
+    eigenvector = as.vector(igraph::eigen_centrality(g)$vector),
+    stringsAsFactors = FALSE
+)
+
+# 按degree排序
+hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]</code></pre><p class="message-paragraph">**关键修改**：<br>- <code class="inline-code">degree(g)</code> → <code class="inline-code">igraph::degree(g)</code><br>- <code class="inline-code">betweenness(g)</code> → <code class="inline-code">igraph::betweenness(g)</code><br>- <code class="inline-code">closeness(g)</code> → <code class="inline-code">igraph::closeness(g)</code><br>- <code class="inline-code">eigen_centrality(g)</code> → <code class="inline-code">igraph::eigen_centrality(g)</code></p><p class="message-paragraph">这样可以确保调用的是 <code class="inline-code">igraph</code> 包的函数而不是 <code class="inline-code">circlize</code> 包的同名函数。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 08:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = stringsAsFactors) : <br>  cannot coerce class ‘&quot;degree&quot;’ to a data.frame</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 08:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已修复代码。问题是 <code class="inline-code">circlize</code> 包的 <code class="inline-code">degree</code> 函数遮盖了 <code class="inline-code">igraph</code> 的 <code class="inline-code">degree</code> 函数。</p><p class="message-paragraph">**主要修改**：<br>- <code class="inline-code">degree(g)</code> → <code class="inline-code">igraph::degree(g)</code><br>- <code class="inline-code">betweenness(g)</code> → <code class="inline-code">igraph::betweenness(g)</code><br>- <code class="inline-code">closeness(g)</code> → <code class="inline-code">igraph::closeness(g)</code><br>- <code class="inline-code">eigen_centrality(g)</code> → <code class="inline-code">igraph::eigen_centrality(g)</code><br>- <code class="inline-code">names(V(g))</code> → <code class="inline-code">V(g)$name</code><br>- 添加 <code class="inline-code">stringsAsFactors = FALSE</code></p><p class="message-paragraph">现在可以重新运行代码了。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 08:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">直接整理出一个完整的代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 08:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这是整理后的完整代码（去除了控制台的 <code class="inline-code">+</code> 符号）：</p><pre class="message-code-block"><code>if(nrow(deg_mapped) &gt; 0) {
+    
+    # 获取互作关系
+    interactions &lt;- string_db$get_interactions(deg_mapped$STRING_id)
+    
+    # 保存互作关系
+    write.csv(interactions, file.path(output_dir, &quot;PPI_interactions.csv&quot;), row.names = FALSE)
+    
+    # 绘制PPI网络图
+    pdf(file.path(output_dir, &quot;PPI_network_STRING.pdf&quot;), width = 12, height = 12)
+    string_db$plot_network(deg_mapped$STRING_id[1:min(200, nrow(deg_mapped))])
+    dev.off()
+    
+    # ============================================
+    # 5. 使用igraph计算Hub基因
+    # ============================================
+    
+    if(nrow(interactions) &gt; 0) {
+        
+        # 创建igraph网络对象
+        # 将STRING_id转换回基因名
+        id_to_gene &lt;- setNames(deg_mapped$gene, deg_mapped$STRING_id)
+        
+        interactions$from_gene &lt;- id_to_gene[interactions$from]
+        interactions$to_gene &lt;- id_to_gene[interactions$to]
+        
+        # 移除NA
+        interactions_clean &lt;- interactions[!is.na(interactions$from_gene) &amp; !is.na(interactions$to_gene), ]
+        
+        # 创建网络
+        g &lt;- graph_from_data_frame(interactions_clean[, c(&quot;from_gene&quot;, &quot;to_gene&quot;)], directed = FALSE)
+        
+        # 计算多种中心性指标 - 使用 igraph:: 前缀避免与 circlize 包冲突
+        hub_analysis &lt;- data.frame(
+            gene = V(g)$name,
+            degree = as.vector(igraph::degree(g)),
+            betweenness = as.vector(igraph::betweenness(g)),
+            closeness = as.vector(igraph::closeness(g)),
+            eigenvector = as.vector(igraph::eigen_centrality(g)$vector),
+            stringsAsFactors = FALSE
+        )
+        
+        # 按degree排序
+        hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]
+        
+        # 保存hub基因分析结果
+        write.csv(hub_analysis, file.path(output_dir, &quot;hub_genes_analysis.csv&quot;), row.names = FALSE)
+        
+        # 显示Top 20 Hub基因
+        cat(&quot;\n========== Top 20 Hub Genes (by Degree) ==========\n&quot;)
+        print(head(hub_analysis, 20))
+        
+        # 提取Top Hub基因
+        top_hub_genes &lt;- head(hub_analysis, 10)
+        
+        # ============================================
+        # 6. Hub基因可视化
+        # ============================================
+        
+        # Hub基因柱状图
+        p_hub &lt;- ggplot(head(hub_analysis, 20), aes(x = reorder(gene, degree), y = degree)) +
+            geom_bar(stat = &quot;identity&quot;, fill = &quot;#E41A1C&quot;, alpha = 0.8) +
+            coord_flip() +
+            theme_bw() +
+            labs(x = &quot;Gene&quot;, y = &quot;Degree&quot;, title = &quot;Top 20 Hub Genes (by Degree)&quot;) +
+            theme(plot.title = element_text(hjust = 0.5))
+        
+        print(p_hub)
+        ggsave(file.path(output_dir, &quot;hub_genes_barplot.pdf&quot;), p_hub, width = 8, height = 6)
+        ggsave(file.path(output_dir, &quot;hub_genes_barplot.png&quot;), p_hub, width = 8, height = 6, dpi = 300)
+        
+        # Hub基因网络图
+        # 提取包含top hub基因的子网络
+        top_hub_names &lt;- head(hub_analysis$gene, 10)
+        neighbors_list &lt;- unlist(lapply(top_hub_names, function(x) igraph::neighbors(g, x)$name))
+        subnet_nodes &lt;- unique(c(top_hub_names, neighbors_list))
+        
+        # 限制节点数量
+        if(length(subnet_nodes) &gt; 100) {
+            subnet_nodes &lt;- subnet_nodes[1:100]
+        }
+        
+        g_sub &lt;- induced_subgraph(g, subnet_nodes)
+        
+        # 设置节点属性
+        V(g_sub)$color &lt;- ifelse(V(g_sub)$name %in% top_hub_names, &quot;#E41A1C&quot;, &quot;#377EB8&quot;)
+        V(g_sub)$size &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 15, 8)
+        V(g_sub)$label.cex &lt;- ifelse(V(g_sub)$name %in% top_hub_names, 0.8, 0.5)
+        
+        # 绘制网络
+        pdf(file.path(output_dir, &quot;hub_genes_network.pdf&quot;), width = 12, height = 12)
+        set.seed(123)
+        plot(g_sub, 
+             layout = layout_with_fr(g_sub),
+             vertex.label = V(g_sub)$name,
+             vertex.label.color = &quot;black&quot;,
+             edge.color = &quot;grey70&quot;,
+             edge.width = 0.5,
+             main = &quot;Hub Genes PPI Network&quot;)
+        legend(&quot;bottomright&quot;, 
+               legend = c(&quot;Hub Gene&quot;, &quot;Other Gene&quot;),
+               fill = c(&quot;#E41A1C&quot;, &quot;#377EB8&quot;),
+               border = NA)
+        dev.off()
+        
+        # ============================================
+        # 7. Hub基因热图
+        # ============================================
+        
+        # 提取hub基因的表达矩阵
+        hub_genes_in_exp &lt;- intersect(top_hub_genes$gene, rownames(exp))
+        
+        if(length(hub_genes_in_exp) &gt; 0) {
+            exp_hub &lt;- exp[hub_genes_in_exp, ]
+            exp_hub_scaled &lt;- t(scale(t(exp_hub)))
+            
+            p_hub_heatmap &lt;- pheatmap::pheatmap(exp_hub_scaled,
+                                      scale = &quot;none&quot;,
+                                      cluster_rows = TRUE,
+                                      cluster_cols = TRUE,
+                                      show_rownames = TRUE,
+                                      show_colnames = FALSE,
+                                      annotation_col = annotation_col,
+                                      annotation_colors = ann_colors,
+                                      color = colorRampPalette(c(&quot;#377EB8&quot;, &quot;white&quot;, &quot;#E41A1C&quot;))(100),
+                                      main = &quot;Expression of Top Hub Genes&quot;,
+                                      fontsize = 10)
+            
+            pdf(file.path(output_dir, &quot;hub_genes_heatmap.pdf&quot;), width = 10, height = 6)
+            print(p_hub_heatmap)
+            dev.off()
+        }
+        
+    } else {
+        cat(&quot;没有找到蛋白互作关系\n&quot;)
+    }
+    
+} else {
+    cat(&quot;基因映射失败，请检查基因名格式\n&quot;)
+}</code></pre><p class="message-paragraph">**主要修改点**：<br>1. 去除了所有 <code class="inline-code">+</code> 符号<br>2. <code class="inline-code">degree()</code>, <code class="inline-code">betweenness()</code>, <code class="inline-code">closeness()</code>, <code class="inline-code">eigen_centrality()</code> 都添加了 <code class="inline-code">igraph::</code> 前缀<br>3. <code class="inline-code">neighbors()</code> 也添加了 <code class="inline-code">igraph::</code> 前缀<br>4. <code class="inline-code">pheatmap()</code> 添加了 <code class="inline-code">pheatmap::</code> 前缀（因为 ComplexHeatmap 也有同名函数）</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:02</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Error: object &#39;ann_colors&#39; not found</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:02</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误是因为 <code class="inline-code">ann_colors</code> 变量未定义。需要在热图代码之前添加 <code class="inline-code">ann_colors</code> 的定义。</p><p class="message-paragraph">已修复。添加了 <code class="inline-code">annotation_col</code> 和 <code class="inline-code">ann_colors</code> 的定义，并将 <code class="inline-code">pheatmap</code> 改为 <code class="inline-code">pheatmap::pheatmap</code> 以避免与 ComplexHeatmap 的冲突。</p><p class="message-paragraph">现在代码中包含了：</p><pre class="message-code-block"><code>annotation_col &lt;- data.frame(
+    Group = pd$group,
+    row.names = rownames(pd)
+)
+ann_colors &lt;- list(
+    Group = c(Normal = &quot;#4DAF4A&quot;, Tumor = &quot;#E41A1C&quot;)
+)</code></pre><p class="message-paragraph">请重新运行代码。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">把这个代码整理一下</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">代码已整理完成，主要修改：</p><p class="message-paragraph">1. **去除了所有 <code class="inline-code">+</code> 符号** - 这些是 R 控制台的续行符号<br>2. **添加了 <code class="inline-code">igraph::</code> 前缀** - 避免与 <code class="inline-code">circlize</code> 包的函数冲突<br>3. **使用 <code class="inline-code">pheatmap::pheatmap</code>** - 避免与 <code class="inline-code">ComplexHeatmap</code> 的冲突<br>4. **修正了缩进格式** - 使代码更易读</p><p class="message-paragraph">现在可以直接复制运行了。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">能不能同意一下 hub 基因也取 top50</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已将 Hub 基因统一改为 Top 50，修改内容包括：</p><p class="message-paragraph">1. **显示和提取**：<code class="inline-code">top_hub_genes &lt;- head(hub_analysis, 50)</code><br>2. **柱状图**：<code class="inline-code">head(hub_analysis, 50)</code> 和标题改为 &quot;Top 50 Hub Genes&quot;<br>3. **网络图**：<code class="inline-code">top_hub_names &lt;- head(hub_analysis$gene, 50)</code></p><p class="message-paragraph">现在所有 Hub 基因相关的分析都使用 Top 50 了。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_multiReplaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">热图的风格也和上面的热图的风格一直</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已将 Hub 基因热图的风格统一为与上面差异基因热图一致，主要修改：</p><p class="message-paragraph">1. **使用 ComplexHeatmap** 替代 pheatmap<br>2. **颜色方案一致**：<code class="inline-code">colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100)</code><br>3. **分组注释颜色一致**：<code class="inline-code">Normal = &quot;#2fa1dd&quot;, Tumor = &quot;#f87669&quot;</code><br>4. **图例位置一致**：底部水平显示<br>5. **按分组拆分列**：<code class="inline-code">column_split = annotation_col_hub$Group</code><br>6. **边框和字体设置一致**<br>7. **同时保存 PDF 和 PNG**</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:15</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这边 top 基因改为 up 和 down 的各 10</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:15</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已修改火山图的 top 基因标注，现在分别从 Up 和 Down 基因中各取 logFC 绝对值最大的 10 个进行标注（共 20 个），同时删除了重复的保存代码。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_replaceString</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/29 09:57</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">plot_heatmap_DEG(expM, DEG_tb, group, out_name = &quot;test/00_GEO_data_GSE184000/heatmap&quot;)<br>Error in expM[rownames(DEG_tb), ] : subscript out of bounds</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/29 09:57</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 <code class="inline-code">DEG_tb</code> 中的基因名（行名）在 <code class="inline-code">expM</code> 表达矩阵中找不到。这通常发生在以下情况：</p><p class="message-paragraph">1. **基因名格式不一致** - DEG 表的基因名和表达矩阵的行名不匹配<br>2. **DEG 表没有行名** - 基因名可能在列中而不是行名</p><p class="message-paragraph">**解决方法**：</p><pre class="message-code-block"><code># 检查两者的基因名
+head(rownames(expM))
+head(rownames(DEG_tb))
+
+# 如果 DEG_tb 的基因名在 gene 列而不是行名
+if(&quot;gene&quot; %in% colnames(DEG_tb)) {
+    rownames(DEG_tb) &lt;- DEG_tb$gene
+}
+
+# 确保只使用在表达矩阵中存在的基因
+common_genes &lt;- intersect(rownames(DEG_tb), rownames(expM))
+cat(&quot;共有基因数:&quot;, length(common_genes), &quot;\n&quot;)
+
+# 筛选 DEG_tb 只保留在 expM 中存在的基因
+DEG_tb_filtered &lt;- DEG_tb[common_genes, ]
+
+# 然后再调用函数
+plot_heatmap_DEG(expM, DEG_tb_filtered, group, out_name = &quot;test/00_GEO_data_GSE184000/heatmap&quot;)</code></pre><p class="message-paragraph">**或者快速检查问题**：</p><pre class="message-code-block"><code># 查看有多少基因能匹配上
+sum(rownames(DEG_tb) %in% rownames(expM))
+
+# 查看前几个不匹配的基因
+head(rownames(DEG_tb)[!rownames(DEG_tb) %in% rownames(expM)])</code></pre><p class="message-paragraph">如果发现基因名完全不匹配，可能需要检查数据来源，或者 <code class="inline-code">DEG_tb</code> 的行名是否正确设置了。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

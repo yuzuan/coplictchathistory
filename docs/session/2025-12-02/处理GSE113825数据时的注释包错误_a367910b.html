@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>library(oligo) &gt; path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot; &gt; cel_files ...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>library(oligo) &gt; path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot; &gt; cel_files ...</h1>
+      <p class="selected-session-meta">处理GSE113825数据时的注释包错误 · 2025/12/02 17:28 · 26 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-12-02/处理GSE113825数据时的注释包错误_a367910b.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#a367910b-6f0a-400e-8d84-a6f180fe09c0">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(oligo)<br>&gt; path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;<br>&gt; cel_files &lt;- list.files(path, pattern = &quot;\\.[cC][eE][lL]\\.gz$&quot;, full.names = TRUE)<br>&gt; raw_data &lt;- read.celfiles(cel_files)<br>Loading required package: pd.oelncrnas520855f<br>Attempting to obtain &#39;pd.oelncrnas520855f&#39; from BioConductor website.<br>Checking to see if your internet connection works...<br>&#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.<br>Replacement repositories:<br>    CRAN: https://mirrors.tuna.tsinghua.edu.cn/CRAN/<br>Package &#39;pd.oelncrnas520855f&#39; was not found in the BioConductor repository.<br>The &#39;pdInfoBuilder&#39; package can often be used in situations like this.<br>Error in read.celfiles(cel_files) : <br>  The annotation package, pd.oelncrnas520855f, could not be loaded.</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误表明您使用的是一个自定义芯片平台（OElncRNAs520855F），Bioconductor 没有提供对应的注释包 <code class="inline-code">pd.oelncrnas520855f</code>。这种情况在使用非标准或自定义芯片时很常见。</p><p class="message-paragraph">## 解决方案</p><p class="message-paragraph">### 方案一：使用 pdInfoBuilder 自己构建注释包</p><p class="message-paragraph">如果您有芯片的设计文件（CDF、probe tab 等），可以用 <code class="inline-code">pdInfoBuilder</code> 构建：</p><pre class="message-code-block"><code># 安装 pdInfoBuilder
+if (!requireNamespace(&quot;BiocManager&quot;, quietly = TRUE))
+    install.packages(&quot;BiocManager&quot;)
+BiocManager::install(&quot;pdInfoBuilder&quot;)</code></pre><p class="message-paragraph">但这需要芯片厂商提供的设计文件，比较复杂。</p><p class="message-paragraph">### 方案二：使用 affy 包作为替代（推荐尝试）</p><pre class="message-code-block"><code>library(affy)
+path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;
+raw_data &lt;- ReadAffy(celfile.path = path)</code></pre><p class="message-paragraph">### 方案三：检查 GEO 是否提供处理过的数据</p><p class="message-paragraph">对于 GSE113825，可以直接下载已处理的表达矩阵：</p><pre class="message-code-block"><code>library(GEOquery)
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE)
+expr_data &lt;- exprs(gse[[1]])</code></pre><p class="message-paragraph">### 方案四：联系芯片厂商或查找注释文件</p><p class="message-paragraph">1. 查看 GEO 页面 (https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE113825) 是否有提供自定义的 CDF 文件<br>2. 检查是否有补充文件中包含注释信息</p><p class="message-paragraph">### 方案五：使用 oligo 的低级函数读取</p><pre class="message-code-block"><code>library(affxparser)
+# 先读取 CEL 文件头信息查看芯片类型
+cel_header &lt;- readCelHeader(cel_files[1])
+print(cel_header)</code></pre><p class="message-paragraph">---</p><p class="message-paragraph">**建议您先尝试方案三**，因为 GEO 通常会提供处理好的表达矩阵，可以省去芯片注释的问题：</p><pre class="message-code-block"><code># 安装 GEOquery
+BiocManager::install(&quot;GEOquery&quot;)
+
+library(GEOquery)
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE, destdir = &quot;/Users/yuzuan/Downloads&quot;)
+# 查看数据结构
+show(gse)
+# 获取表达矩阵
+expr_matrix &lt;- exprs(gse[[1]])</code></pre><p class="message-paragraph">您想尝试哪种方案？如果您告诉我您的具体分析目标，我可以给出更针对性的建议。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:30</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(oligo)<br>path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;<br>cel_files &lt;- list.files(path, pattern = &quot;\\.[cC][eE][lL]\\.gz$&quot;, full.names = TRUE)<br>raw_data &lt;- read.celfiles(cel_files)<br>exprSet &lt;- rma(raw_data)<br>exp &lt;- exprs(exprSet)<br>colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))改这个</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:30</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">您想修改这段 R 代码。根据之前的错误，问题在于缺少注释包。我建议改用 <code class="inline-code">GEOquery</code> 方案来获取数据：</p><pre class="message-code-block"><code># 方案一：使用 GEOquery 直接获取处理好的数据（推荐）
+library(GEOquery)
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE, destdir = &quot;/Users/yuzuan/Downloads&quot;)
+exprSet &lt;- gse[[1]]
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))
+
+# 方案二：如果必须用 oligo 读取 CEL 文件，尝试使用 affy 包
+library(affy)
+path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;
+raw_data &lt;- ReadAffy(celfile.path = path)
+exprSet &lt;- rma(raw_data)
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))</code></pre><p class="message-paragraph">**说明：**<br>- **方案一**：直接从 GEO 下载已处理的表达矩阵，绕过注释包问题<br>- **方案二**：用 <code class="inline-code">affy</code> 包替代 <code class="inline-code">oligo</code>，有时能读取 oligo 无法处理的芯片</p><p class="message-paragraph">如果方案二也报错，说明这个芯片确实是自定义平台，建议使用方案一。</p><p class="message-paragraph">您需要我帮您运行测试哪个方案可行吗？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(affy)<br>&gt; path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;<br>&gt; raw_data &lt;- ReadAffy(celfile.path = path)<br>&gt; exprSet &lt;- rma(raw_data)<br>Error: unable to find an inherited method for function ‘rma’ for signature ‘object = &quot;AffyBatch&quot;’<br>&gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个错误是因为 <code class="inline-code">affy</code> 和 <code class="inline-code">oligo</code> 包之间的冲突。<code class="inline-code">rma</code> 函数在两个包中都有定义。请尝试以下修复：</p><pre class="message-code-block"><code># 方法一：明确使用 affy 包的 rma
+library(affy)
+path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;
+raw_data &lt;- ReadAffy(celfile.path = path)
+exprSet &lt;- affy::rma(raw_data)  # 明确指定使用 affy 包的 rma
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))</code></pre><p class="message-paragraph">如果上面还有问题，尝试重新启动 R 会话：</p><pre class="message-code-block"><code># 方法二：重启 R 后只加载 affy（不加载 oligo）
+# 先重启 R 会话，然后运行：
+library(affy)
+path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;
+raw_data &lt;- ReadAffy(celfile.path = path)
+exprSet &lt;- rma(raw_data)
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))</code></pre><p class="message-paragraph">**或者直接用 GEOquery（最简单的方案）：**</p><pre class="message-code-block"><code>library(GEOquery)
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE)
+exprSet &lt;- gse[[1]]
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))</code></pre><p class="message-paragraph">建议您**重启 R 会话**后再尝试，因为之前加载的 <code class="inline-code">oligo</code> 包可能导致函数冲突。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:32</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(affy)<br>&gt; path &lt;- &quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;<br>&gt; raw_data &lt;- ReadAffy(celfile.path = path)<br>&gt; exprSet &lt;- affy::rma(raw_data)  # 明确指定使用 affy 包的 rma<br>&#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see &#39;help(&quot;repositories&quot;, package = &quot;BiocManager&quot;)&#39; for details.<br>Replacement repositories:<br>    CRAN: https://mirrors.tuna.tsinghua.edu.cn/CRAN/<br>Error in getCdfInfo(object) : <br>  Could not obtain CDF environment, problems encountered:<br>Specified environment does not contain OElncRNAs520855F<br>Library - package oelncrnas520855fcdf not installed<br>Bioconductor - oelncrnas520855fcdf not available</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:32</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个芯片是自定义平台，标准方法都无法处理。**最佳方案是使用 GEOquery 直接获取处理好的数据**：</p><pre class="message-code-block"><code># 重启 R 会话后运行
+library(GEOquery)
+
+# 直接从 GEO 下载已处理的表达矩阵
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE)
+exprSet &lt;- gse[[1]]
+exp &lt;- exprs(exprSet)
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))
+
+# 查看数据
+head(exp[, 1:5])
+dim(exp)</code></pre><p class="message-paragraph">这个方案的优点：<br>1. **绑过 CDF 注释包问题** - GEO 上已经有作者处理好的标准化数据<br>2. **包含完整注释信息** - 可以通过 <code class="inline-code">fData(exprSet)</code> 获取探针注释<br>3. **简单快捷** - 不需要安装任何自定义包</p><p class="message-paragraph">如果您确实需要从原始 CEL 文件处理，那就需要从芯片厂商获取 CDF 文件并自己构建注释包，这个过程比较复杂。对于大多数分析目的，GEOquery 获取的数据已经足够。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:33</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE)<br>Found 2 file(s)<br>GSE113825-GPL22516_series_matrix.txt.gz<br>GSE113825-GPL22517_series_matrix.txt.gz<br>&gt; exprSet &lt;- gse[[1]]<br>&gt; exp &lt;- exprs(exprSet)<br>&gt; colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))<br>&gt; <br>&gt; # 查看数据<br>&gt; head(exp[, 1:5])<br>     GSM3120640 GSM3120641 GSM3120642 GSM3120643 GSM3120644<br>&gt; dim(exp)<br>[1]  0 10</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:33</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">数据维度是 <code class="inline-code">[1] 0 10</code>，说明这个 series matrix 文件中没有表达数据（只有元数据）。这个 GEO 数据集的表达矩阵可能在补充文件中。</p><p class="message-paragraph">让我们检查一下并尝试获取实际数据：</p><pre class="message-code-block"><code># 查看两个平台的数据
+gse &lt;- getGEO(&quot;GSE113825&quot;, GSEMatrix = TRUE)
+
+# 检查第一个平台
+dim(exprs(gse[[1]]))  # GPL22516
+dim(exprs(gse[[2]]))  # GPL22517
+
+# 如果都是空的，需要下载补充文件
+# 获取补充文件
+getGEOSuppFiles(&quot;GSE113825&quot;, baseDir = &quot;/Users/yuzuan/Downloads&quot;)</code></pre><pre class="message-code-block"><code># 查看下载的补充文件
+list.files(&quot;/Users/yuzuan/Downloads/GSE113825&quot;, full.names = TRUE)</code></pre><p class="message-paragraph">如果补充文件中有处理好的表达矩阵（通常是 txt 或 xlsx 格式），可以直接读取：</p><pre class="message-code-block"><code># 假设有 txt 格式的表达矩阵
+exp &lt;- read.table(&quot;/Users/yuzuan/Downloads/GSE113825/GSE113825_xxx.txt.gz&quot;, 
+                  header = TRUE, row.names = 1, sep = &quot;\t&quot;)</code></pre><p class="message-paragraph">**请先运行上面的代码，告诉我：**<br>1. <code class="inline-code">dim(exprs(gse[[2]]))</code> 的结果<br>2. 补充文件列表中有哪些文件</p><p class="message-paragraph">这样我可以帮您找到正确的数据来源。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:34</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我只要GPL22516</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:34</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">明白，GPL22516 平台的 series matrix 没有表达数据。需要下载补充文件：</p><pre class="message-code-block"><code># 下载补充文件
+getGEOSuppFiles(&quot;GSE113825&quot;, baseDir = &quot;/Users/yuzuan/Downloads&quot;)
+
+# 查看下载了哪些文件
+list.files(&quot;/Users/yuzuan/Downloads/GSE113825&quot;, full.names = TRUE)</code></pre><p class="message-paragraph">运行后告诉我有哪些文件，我帮您读取正确的表达矩阵。</p><p class="message-paragraph">或者如果您已经有 <code class="inline-code">GSE113825_RAW</code> 文件夹中的 CEL 文件，可以查看 GEO 页面是否提供了 CDF 文件：</p><pre class="message-code-block"><code># 查看 RAW 文件夹中有什么
+list.files(&quot;/Users/yuzuan/Downloads/GSE113825_RAW&quot;)</code></pre><p class="message-paragraph">请把结果发给我。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">getGEOSuppFiles(&quot;GSE113825&quot;, baseDir = &quot;/Users/yuzuan/Downloads&quot;)<br>trying URL &#39;https://ftp.ncbi.nlm.nih.gov/geo/series/GSE113nnn/GSE113825/suppl//GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz?tool=geoquery&#39;<br>Content type &#39;application/x-gzip&#39; length 17353662 bytes (16.5 MB)<br>==================================================<br>downloaded 16.5 MB</p><p class="message-paragraph">trying URL &#39;https://ftp.ncbi.nlm.nih.gov/geo/series/GSE113nnn/GSE113825/suppl//GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz?tool=geoquery&#39;<br>Content type &#39;application/x-gzip&#39; length 4243590 bytes (4.0 MB)<br>==================================================<br>downloaded 4.0 MB</p><p class="message-paragraph">trying URL &#39;https://ftp.ncbi.nlm.nih.gov/geo/series/GSE113nnn/GSE113825/suppl//GSE113825_RAW.tar?tool=geoquery&#39;<br>Content type &#39;application/x-tar&#39; length 350873600 bytes (334.6 MB)<br>==================================================<br>downloaded 334.6 MB</p><p class="message-paragraph">size isdir mode<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz  17353662 FALSE  644<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz                       4243590 FALSE  644<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_RAW.tar                                                            350873600 FALSE  644<br>                                                                                                                             mtime<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz 2025-12-02 17:34:25<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz                     2025-12-02 17:34:28<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_RAW.tar                                                            2025-12-02 17:35:04<br>                                                                                                                             ctime<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz 2025-12-02 17:34:25<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz                     2025-12-02 17:34:28<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_RAW.tar                                                            2025-12-02 17:35:04<br>                                                                                                                             atime uid gid<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz 2025-12-02 17:34:21 501  20<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz                     2025-12-02 17:34:25 501  20<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_RAW.tar                                                            2025-12-02 17:34:28 501  20<br>                                                                                                                uname grname<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz yuzuan  staff<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz                     yuzuan  staff<br>/Users/yuzuan/Downloads/GSE113825/GSE113825_RAW.tar                                                            yuzuan  staff</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">太好了！已经有处理好的表达矩阵了。使用 **Gene Level** 的文件：</p><pre class="message-code-block"><code># 读取基因水平的标准化数据
+exp &lt;- read.table(&quot;/Users/yuzuan/Downloads/GSE113825/GSE113825_Gene_Level-Normalized.SST-RMA-GENE-FULL.TXT.gz&quot;,
+                  header = TRUE, row.names = 1, sep = &quot;\t&quot;, check.names = FALSE)
+
+# 查看数据
+dim(exp)
+head(exp[, 1:5])
+
+# 整理列名（如果需要简化样本名）
+colnames(exp) &lt;- sub(&quot;_.*&quot;, &quot;&quot;, colnames(exp))</code></pre><p class="message-paragraph">这个文件就是作者已经用 SST-RMA 方法标准化好的表达矩阵，可以直接用于后续分析。</p><p class="message-paragraph">如果您需要 **Exon Level**（外显子水平）的数据，用这个：</p><pre class="message-code-block"><code>exp_exon &lt;- read.table(&quot;/Users/yuzuan/Downloads/GSE113825/GSE113825_Exon_Level-Normalized.SST-RMA-ALT-SPLICE-SST-DABG_-_Group_1.TXT.gz&quot;,
+                       header = TRUE, row.names = 1, sep = &quot;\t&quot;, check.names = FALSE)</code></pre>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在需要转注释 ID 为基因啊</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">需要将探针 ID 转换为基因名。让我们先看看数据的 ID 格式：</p><pre class="message-code-block"><code># 查看行名格式
+head(rownames(exp), 20)</code></pre><p class="message-paragraph">然后根据 GPL22516 平台获取注释信息：</p><pre class="message-code-block"><code># 方法一：从 GEO 获取平台注释
+library(GEOquery)
+gpl &lt;- getGEO(&quot;GPL22516&quot;)
+annot &lt;- Table(gpl)
+
+# 查看注释表结构
+head(annot)
+colnames(annot)</code></pre><p class="message-paragraph">运行后告诉我：<br>1. <code class="inline-code">head(rownames(exp), 20)</code> 的结果（探针ID格式）<br>2. <code class="inline-code">colnames(annot)</code> 的结果（注释表有哪些列）</p><p class="message-paragraph">这样我可以帮您写出正确的 ID 转换代码。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:37</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(GEOquery)<br>&gt; gpl &lt;- getGEO(&quot;GPL22516&quot;)<br>Using locally cached version of GPL22516 found here:<br>/var/folders/xr/pllbgtl13_jch0_n05ymlrbc0000gn/T//RtmpPxNAa2/GPL22516.soft.gz <br>&gt; annot &lt;- Table(gpl)<br>&gt; <br>&gt; # 查看注释表结构<br>&gt; head(annot)<br>data frame with 0 columns and 0 rows<br>&gt; colnames(annot)<br>character(0)</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:37</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">注释表是空的。让我们换一种方法：</p><pre class="message-code-block"><code># 删除缓存，重新下载
+gpl &lt;- getGEO(&quot;GPL22516&quot;, destdir = &quot;/Users/yuzuan/Downloads&quot;, AnnotGPL = TRUE)
+annot &lt;- Table(gpl)
+colnames(annot)
+head(annot)</code></pre><p class="message-paragraph">如果还是空的，尝试直接查看表达矩阵的探针ID格式，然后从其他来源获取注释：</p><pre class="message-code-block"><code># 查看探针 ID 格式
+head(rownames(exp), 20)</code></pre><p class="message-paragraph">请把结果发给我，我来判断如何进行注释转换。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:38</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">注释的 GPL文件在/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:38</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">很好，有本地注释文件了！直接读取：</p><pre class="message-code-block"><code># 读取注释文件
+annot &lt;- read.csv(&quot;/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz&quot;,
+                  header = TRUE, stringsAsFactors = FALSE)
+
+# 查看注释表结构
+head(annot)
+colnames(annot)
+
+# 查看表达矩阵的探针ID
+head(rownames(exp), 10)</code></pre><p class="message-paragraph">运行后把 <code class="inline-code">colnames(annot)</code> 和 <code class="inline-code">head(annot)</code> 的结果发给我，我帮您写 ID 转换代码。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">annot &lt;- read.csv(&quot;/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz&quot;,<br>+                   header = TRUE, stringsAsFactors = FALSE)<br>&gt; <br>&gt; # 查看注释表结构<br>&gt; head(annot)<br>        X..create_date.Mon.Jul.06.12.49.08.PDT.2015<br>1                      #%chip_type=OElncRNAs520855F<br>2                   #%lib_set_name=OElncRNAs520855F<br>3                              #%lib_set_version=r1<br>4                     #%genome-species=Homo sapiens<br>5                             #%genome-version=hg38<br>6 #%netaffx-annotation-data-type=transcript_cluster<br>&gt; colnames(annot)<br>[1] &quot;X..create_date.Mon.Jul.06.12.49.08.PDT.2015&quot;<br>&gt; <br>&gt; # 查看表达矩阵的探针ID<br>&gt; head(rownames(exp), 10)<br> [1] &quot;AFFX-BkGr-GC03_st&quot; &quot;AFFX-BkGr-GC04_st&quot; &quot;AFFX-BkGr-GC05_st&quot; &quot;AFFX-BkGr-GC06_st&quot; &quot;AFFX-BkGr-GC07_st&quot; &quot;AFFX-BkGr-GC08_st&quot; &quot;AFFX-BkGr-GC09_st&quot;<br> [8] &quot;AFFX-BkGr-GC10_st&quot; &quot;AFFX-BkGr-GC11_st&quot; &quot;AFFX-BkGr-GC12_st&quot;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个 CSV 文件头部有注释行，需要跳过。让我们重新读取：</p><pre class="message-code-block"><code># 跳过注释行，重新读取
+annot &lt;- read.csv(&quot;/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz&quot;,
+                  header = TRUE, comment.char = &quot;#&quot;, stringsAsFactors = FALSE)
+
+# 查看结构
+head(annot)
+colnames(annot)
+dim(annot)</code></pre><p class="message-paragraph">如果还是不对，尝试：</p><pre class="message-code-block"><code># 用 readLines 查看文件前 30 行，找到真正的表头
+lines &lt;- readLines(gzfile(&quot;/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz&quot;), n = 30)
+print(lines)</code></pre><p class="message-paragraph">把结果发给我。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">annot &lt;- read.csv(&quot;/Users/yuzuan/Downloads/GSE113825/GPL22516_OElncRNAs520855F.r1.transcript (1).csv.gz&quot;,<br>+                   header = TRUE, comment.char = &quot;#&quot;, stringsAsFactors = FALSE)<br>&gt; <br>&gt; # 查看结构<br>&gt; head(annot)<br>  transcript_cluster_id       probeset_id seqname strand start stop total_probes gene_assignment mrna_assignment swissprot unigene<br>1     AFFX-BkGr-GC03_st AFFX-BkGr-GC03_st     ---    ---   ---  ---           25             ---             ---       ---     ---<br>2     AFFX-BkGr-GC04_st AFFX-BkGr-GC04_st     ---    ---   ---  ---          322             ---             ---       ---     ---<br>3     AFFX-BkGr-GC05_st AFFX-BkGr-GC05_st     ---    ---   ---  ---          703             ---             ---       ---     ---<br>4     AFFX-BkGr-GC06_st AFFX-BkGr-GC06_st     ---    ---   ---  ---          873             ---             ---       ---     ---<br>5     AFFX-BkGr-GC07_st AFFX-BkGr-GC07_st     ---    ---   ---  ---          914             ---             ---       ---     ---<br>6     AFFX-BkGr-GC08_st AFFX-BkGr-GC08_st     ---    ---   ---  ---          940             ---             ---       ---     ---<br>  GO_biological_process GO_cellular_component GO_molecular_function pathway protein_domains                  category locus.type notes<br>1                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>2                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>3                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>4                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>5                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>6                   ---                   ---                   ---     ---             --- control-&gt;bgp-&gt;antigenomic        ---   ---<br>&gt; colnames(annot)<br> [1] &quot;transcript_cluster_id&quot; &quot;probeset_id&quot;           &quot;seqname&quot;               &quot;strand&quot;                &quot;start&quot;                <br> [6] &quot;stop&quot;                  &quot;total_probes&quot;          &quot;gene_assignment&quot;       &quot;mrna_assignment&quot;       &quot;swissprot&quot;            <br>[11] &quot;unigene&quot;               &quot;GO_biological_process&quot; &quot;GO_cellular_component&quot; &quot;GO_molecular_function&quot; &quot;pathway&quot;              <br>[16] &quot;protein_domains&quot;       &quot;category&quot;              &quot;locus.type&quot;            &quot;notes&quot;                <br>&gt; dim(annot)<br>[1] 95722    19</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:39</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">很好！注释文件已正确读取。基因信息在 <code class="inline-code">gene_assignment</code> 列。让我们提取基因名并转换：</p><pre class="message-code-block"><code># 查看 gene_assignment 列的格式
+head(annot$gene_assignment[annot$gene_assignment != &quot;---&quot;], 5)</code></pre><pre class="message-code-block"><code># 提取基因名（通常格式为 &quot;NM_xxx // GeneSymbol // description...&quot;）
+# 先看看具体格式
+annot$gene_assignment[100:105]</code></pre><p class="message-paragraph">运行后发给我结果，我帮您写提取基因名的代码。基因注释通常在 <code class="inline-code">gene_assignment</code> 列中，格式类似 <code class="inline-code">NM_001234 // GENENAME // description</code>。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/12/02 17:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">head(annot$gene_assignment[annot$gene_assignment != &quot;---&quot;], 5)<br>[1] &quot;NR_046018 // DDX11L1 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 1 // 1p36.33 // 100287102 /// ENST00000456328 // DDX11L1 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 1 // 1p36.33 // 100287102 /// ENST00000456328 // DDX11L5 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 5 // 9p24.3 // 100287596 /// AM992878 // DDX11L12 // DEAD/H box polypeptide 11 like 12 // --- // 100532727 /// AM992880 // DDX11L9 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 9 // 15q26.3 // 100288486 /// BC032353 // DDX11L1 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 1 // 1p36.33 // 100287102 /// uc001aaa.3 // DDX11L1 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 1 // 1p36.33 // 100287102 /// uc010nxq.1 // DDX11L9 // DEAD/H (Asp-Glu-Ala-Asp/His) box helicase 11 like 9 // 15q26.3 // 100288486 /// uc010nxr.1 // DDX11L12 // DEAD/H box polypeptide 11 like 12 // --- // 100532727&quot;<br>[2] &quot;NM_001005484 // OR4F5 // olfactory receptor, family 4, subfamily F, member 5 // 1p36.33 // 79501 /// ENST00000335137 // OR4F5 // olfactory receptor, family 4, subfamily F, member 5 // 1p36.33 // 79501 /// OTTHUMT00000003223 // OR4F5 // olfactory receptor, family 4, subfamily F, member 5 // --- // --- /// uc001aal.1 // OR4F5 // olfactory receptor, family 4, subfamily F, member 5 // 1p36.33 // 79501&quot;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    <br>[3] &quot;OTTHUMT00000007169 // RP11-34P13.9 // putative novel transcript // --- // ---&quot;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       <br>[4] &quot;NM_001005221 // OR4F29 // olfactory receptor, family 4, subfamily F, member 29 // 1p36.33 // 729759 /// NM_001005224 // OR4F3 // olfactory receptor, family 4, subfamily F, member 3 // 5q35.3 // 26683 /// NM_001005277 // OR4F16 // olfactory receptor, family 4, subfamily F, member 16 // 1p36.33 // 81399 /// ENST00000426406 // OR4F3 // olfactory receptor, family 4, subfamily F, member 3 // 5q35.3 // 26683 /// ENST00000426406 // OR4F16 // olfactory receptor, family 4, subfamily F, member 16 // 1p36.33 // 81399 /// ENST00000426406 // OR4F29 // olfactory receptor, family 4, subfamily F, member 29 // 1p36.33 // 729759 /// OTTHUMT00000007999 // OR4F29 // olfactory receptor, family 4, subfamily F, member 29 // --- // --- /// uc010nxu.2 // OR4F16 // olfactory receptor, family 4, subfamily F, member 16 // 1p36.33 // 81399&quot;                                                                              <br>[5] &quot;OTTHUMT00000346905 // RP5-857K21.15 // novel transcript // --- // ---&quot;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/12/02 17:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">明白了，格式是 <code class="inline-code">NM_xxx // GeneSymbol // description</code>。现在提取基因名并转换：</p><pre class="message-code-block"><code># 提取第一个基因名（格式：xxx // GeneSymbol // ...）
+extract_gene &lt;- function(x) {
+  if (x == &quot;---&quot; || is.na(x)) return(NA)
+  # 提取第一个 // 后面的基因名
+  parts &lt;- strsplit(x, &quot; // &quot;)[[1]]
+  if (length(parts) &gt;= 2) return(parts[2])
+  return(NA)
+}
+
+# 创建探针ID到基因名的映射
+annot$gene_symbol &lt;- sapply(annot$gene_assignment, extract_gene)
+
+# 查看结果
+head(annot[, c(&quot;transcript_cluster_id&quot;, &quot;gene_symbol&quot;)], 20)
+
+# 创建映射表
+id2gene &lt;- annot$gene_symbol
+names(id2gene) &lt;- annot$transcript_cluster_id
+
+# 转换表达矩阵
+exp$gene_symbol &lt;- id2gene[rownames(exp)]
+
+# 去除没有基因注释的探针
+exp_annotated &lt;- exp[!is.na(exp$gene_symbol), ]
+
+# 对于重复基因，取表达均值
+exp_final &lt;- aggregate(. ~ gene_symbol, data = exp_annotated, FUN = mean)
+
+# 设置基因名为行名
+rownames(exp_final) &lt;- exp_final$gene_symbol
+exp_final$gene_symbol &lt;- NULL
+
+# 查看结果
+dim(exp_final)
+head(exp_final[, 1:5])</code></pre>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

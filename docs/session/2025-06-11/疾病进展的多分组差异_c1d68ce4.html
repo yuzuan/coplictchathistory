@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>&lt;task&gt; Implement the stagewise toolbar into an existing web project to provid...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>&lt;task&gt; Implement the stagewise toolbar into an existing web project to provid...</h1>
+      <p class="selected-session-meta">疾病进展的多分组差异 · 2025/06/11 23:24 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-06-11/疾病进展的多分组差异_c1d68ce4.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#c1d68ce4-77cb-4258-915f-d552fbe0daa3">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/06/11 23:24</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">&lt;task&gt;<br>  Implement the stagewise toolbar into an existing web project to provide AI-powered editing capabilities through a browser toolbar.<br>&lt;/task&gt;</p><p class="message-paragraph">&lt;context&gt;<br>  stagewise is a browser toolbar that connects frontend UI to coding AI agents in your code editor. It allows developers to select elements in a web app, leave comments, and let AI agents make changes based on that context.<br>&lt;/context&gt;</p><p class="message-paragraph">&lt;requirements&gt;<br>  1. Install the required stagewise package(s) for the project&#39;s framework<br>  2. Integrate the stagewise toolbar into the project structure (ensure it only runs in development mode)<br>&lt;/requirements&gt;</p><p class="message-paragraph">&lt;implementation_steps&gt;<br>  &lt;step_0&gt;<br>    Identify the project&#39;s package manager (npm, yarn, pnpm, etc.). You must use the same package manager to install the stagewise package.<br>  &lt;/step_0&gt;<br>  &lt;step_1&gt;<br>    Identify, if the repository only contains one web app project or multiple. If multiple projects are located inside the repository, ask the user to which project the toolbar should be installed to.<br>  &lt;/step_1&gt;<br>  &lt;step_2&gt;<br>    Identify, if the specific project already uses a stagewise package. If so, ask the user if they want to use the existing package or replace it with a new one.<br>  &lt;/step_2&gt;<br>  &lt;step_3&gt;<br>    If the project already included stagewise, chek for correct integration and do changes if necessary.<br>    If the project does not include stagewise, install the appropriate stagewise package and follow the framework specific steps.<br>    If there is no description on how to install stagewise for the used framework, reject the users request and say that the user needs to install the stagewise package manually.<br>  &lt;/step_3&gt;<br>&lt;/implementation_steps&gt;</p><p class="message-paragraph">&lt;framework_specific_integrations&gt;<br>  &lt;react&gt;<br>    Use the <code class="inline-code">@stagewise/toolbar-react</code> package for integration.<br>    Also, install and use the <code class="inline-code">@stagewise-plugins/react</code> package for react specific functionality.</p><p class="message-paragraph">Include the StagewiseToolbar component (exported by the <code class="inline-code">@stagewise/toolbar-react</code> package) inside the top-most component of the app.<br>    Set the <code class="inline-code">config</code> prop to an object with the plugins array containing the <code class="inline-code">ReactPlugin</code> (exported by the <code class="inline-code">@stagewise-plugins/react</code> package).</p><p class="message-paragraph">Note: The <code class="inline-code">@stagewise/toolbar-react</code> package already handles rendering the toolbar only in development mode. The &quot;enabled&quot; prop can be overriden with custom logic to conditionally load the toolbar.<br>  &lt;/react&gt;</p><p class="message-paragraph">&lt;next&gt;<br>    Use the <code class="inline-code">@stagewise/toolbar-next</code> package for integration.<br>    Also, install and use the <code class="inline-code">@stagewise-plugins/react</code> package for react specific functionality.</p><p class="message-paragraph">Include the StagewiseToolbar component in the root layout file (layout.tsx).<br>    Set the <code class="inline-code">config</code> prop to an object with the plugins array containing the <code class="inline-code">ReactPlugin</code> (exported by the <code class="inline-code">@stagewise-plugins/react</code> package).</p><p class="message-paragraph">Note: The <code class="inline-code">@stagewise/toolbar-next</code> package already handles opt-out of SSR so that a simple integration of the component is enough.<br>    Note: The <code class="inline-code">@stagewise/toolbar-next</code> package already handles rendering the toolbar only in development mode. The &quot;enabled&quot; prop can be overriden with custom logic to conditionally load the toolbar.<br>  &lt;/next&gt;</p><p class="message-paragraph">&lt;vue&gt;<br>    Use the <code class="inline-code">@stagewise/toolbar-vue</code> package for integration.<br>    Also, install and use the <code class="inline-code">@stagewise-plugins/vue</code> package for vue specific functionality.</p><p class="message-paragraph">Add the StagewiseToolbar component to the main App component.<br>    Set the <code class="inline-code">config</code> prop to an object with the plugins array containing the <code class="inline-code">VuePlugin</code> (exported by the <code class="inline-code">@stagewise-plugins/vue</code> package).<br>  &lt;/vue&gt;</p><p class="message-paragraph">&lt;nuxt&gt;<br>    Use the <code class="inline-code">@stagewise/toolbar-nuxt</code> package for integration.<br>    Also, install and use the <code class="inline-code">@stagewise-plugins/vue</code> package for vue specific functionality.</p><p class="message-paragraph">Wrap the StagewiseToolbar component in a ClientOnly component to ensure it only renders on the client side.<br>    Set the <code class="inline-code">config</code> prop to an object with the plugins array containing the <code class="inline-code">VuePlugin</code> (exported by the <code class="inline-code">@stagewise-plugins/vue</code> package).<br>  &lt;/nuxt&gt;</p><p class="message-paragraph">&lt;svelte&gt;<br>    Use the <code class="inline-code">@stagewise/toolbar</code> package for integration.</p><p class="message-paragraph">If the project is using SvelteKit, put the following code into the <code class="inline-code">hooks.client.ts</code> file:</p><pre class="message-code-block"><code>    import { initToolbar } from &#39;@stagewise/toolbar&#39;;
+
+    export function init() {
+      // Keep other functionality that may already exist in the file
+      // Just add the below initToolbar call (conditionally, depending if a dev mode is detected)
+
+      // If the users uses other existing metrics to check for dev mode, use that instead of import.meta.env.DEV
+      if (import.meta.env.DEV) {
+        initToolbar({
+          plugins: [],
+        });
+      }
+    }</code></pre><p class="message-paragraph">If the project is using Svelte without SvelteKit, put the following code into the <code class="inline-code">main.ts</code> file (or any other file that is the entry to the app):</p><pre class="message-code-block"><code>    import { initToolbar } from &#39;@stagewise/toolbar&#39;;
+
+    initToolbar({
+      plugins: [],
+    });</code></pre><p class="message-paragraph">&lt;/svelte&gt;<br>&lt;/framework_specific_integrations&gt;</p><p class="message-paragraph">&lt;expected_outcome&gt;<br>  A properly integrated stagewise toolbar that:<br>  1. Appears only in development mode<br>  2. Is not included in production builds<br>  3. Does not lead to any linting errors<br>  4. Is loaded once on initial opening in the browser<br>  5. Is only executed in the browser and not any SSR or server environment<br>&lt;/expected_outcome&gt;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/06/11 23:24</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我会帮助您确定当前项目的类型并尝试集成 Stagewise 工具栏。首先，让我检查一下工作区的结构和项目类型。</p><p class="message-paragraph">从工作区结构来看，我注意到这是一个 R 项目（有一个</p><p class="message-paragraph">文件）而不是一个 Web 项目。Stagewise 工具栏是用于 Web 开发项目的，如 React、Next.js、Vue、Nuxt 或 Svelte 项目。</p><p class="message-paragraph">在当前的 R 项目中，无法集成 Stagewise 工具栏，因为：</p><p class="message-paragraph">1. Stagewise 工具栏设计用于前端 Web 开发框架，如 React、Next.js、Vue、Nuxt 和 Svelte<br>2. 当前工作区是一个 R 项目（.Rproj 文件指示这是一个 R 统计分析项目）<br>3. R 项目不属于支持的框架类型，无法安装和集成 Stagewise 工具栏组件</p><p class="message-paragraph">如果您想要集成 Stagewise 工具栏，需要：</p><p class="message-paragraph">1. 在 Web 开发项目中进行操作（如 React、Next.js、Vue、Nuxt 或 Svelte 项目）<br>2. 按照相应框架的集成步骤进行操作</p><p class="message-paragraph">请问您是否有一个 Web 开发项目需要集成 Stagewise 工具栏？如果有，请分享该项目的路径，我将帮助您实现 Stagewise 工具栏的集成。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

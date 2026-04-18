@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>DEG=DEG_tb UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;] DOWN &lt;- rownames(DEG)[DEG$...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>DEG=DEG_tb UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;] DOWN &lt;- rownames(DEG)[DEG$...</h1>
+      <p class="selected-session-meta">热图显示问题及解决方案 · 2025/11/25 10:04 · 17 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-11-25/热图显示问题及解决方案_a2bb424d.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#a2bb424d-df38-4e5d-91b5-4c09ada76a7d">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:05</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">DEG=DEG_tb<br>UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;]<br>DOWN &lt;- rownames(DEG)[DEG$change == &quot;Down&quot;]<br>library(ComplexHeatmap)<br>library(circlize)<br>col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))<br>top_annotation = HeatmapAnnotation(<br>  cluster = anno_block(gp = gpar(fill = c(&quot;#2fa1dd&quot;,&quot;#f87669&quot;)),<br>                       labels = levels(group),<br>                       labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)))</p><p class="message-paragraph">pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)<br>m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))),name = &quot; &quot;,<br>            col = col_fun,<br>        top_annotation = top_annotation,<br>        column_split = group,<br>        show_heatmap_legend = T,<br>        border = F,<br>        show_column_names = F,<br>        show_row_names = F,<br>        use_raster = F,<br>        cluster_column_slices = F,<br>        column_title = NULL)<br>m<br>dev.off()热图只显示了一个抬头</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:05</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个问题通常是因为 <code class="inline-code">group</code> 变量**不是因子 (factor)** 类型，或者 <code class="inline-code">levels(group)</code> 为空导致的。</p><p class="message-paragraph">当 <code class="inline-code">group</code> 只是一个普通的字符向量时，<code class="inline-code">levels(group)</code> 会返回 <code class="inline-code">NULL</code>，这会导致 <code class="inline-code">anno_block</code> 无法正确获取标签，或者 <code class="inline-code">column_split</code> 分割后的块没有被正确识别为多个部分。</p><p class="message-paragraph">### 解决方法</p><p class="message-paragraph">请在运行 <code class="inline-code">Heatmap</code> 之前，显式地将 <code class="inline-code">group</code> 转换为因子 (factor)。</p><p class="message-paragraph">请尝试在你的代码前加上这一行（假设你的分组变量叫 <code class="inline-code">group</code>）：</p><pre class="message-code-block"><code># 1. 确保 group 是因子，并指定顺序（可选）
+# 这里的 levels 顺序决定了热图从左到右的显示顺序
+# 假设你的分组是 &quot;Control&quot; 和 &quot;Treat&quot;，请根据实际情况修改
+group &lt;- factor(group, levels = c(&quot;Control&quot;, &quot;Treat&quot;)) 
+
+# 或者简单地使用 unique 自动转换
+# group &lt;- factor(group, levels = unique(group))</code></pre><p class="message-paragraph">### 完整修改后的代码示例</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+DEG = DEG_tb
+UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;]
+DOWN &lt;- rownames(DEG)[DEG$change == &quot;Down&quot;]
+
+# --- 关键修改：确保 group 是 factor ---
+# 请确保 group 变量已经定义，并且长度与 exp 的列数一致
+if(!is.factor(group)) {
+  group &lt;- factor(group, levels = unique(group)) 
+}
+# ------------------------------------
+
+col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))
+
+# 注意：fill 的颜色数量必须与 levels(group) 的数量一致
+# 如果你有 2 个组，这里就需要 2 个颜色
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(gp = gpar(fill = c(&quot;#2fa1dd&quot;, &quot;#f87669&quot;)),
+                       labels = levels(group),
+                       labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)))
+
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)
+m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))), 
+            name = &quot; &quot;,
+            col = col_fun,
+            top_annotation = top_annotation,
+            column_split = group,    # 这里使用 factor 类型的 group
+            show_heatmap_legend = T,
+            border = F,
+            show_column_names = F,
+            show_row_names = F,
+            use_raster = F,
+            cluster_column_slices = F,
+            column_title = NULL)
+print(m) # 显式 print 对象
+dev.off()</code></pre><p class="message-paragraph">### 检查清单<br>1.  **<code class="inline-code">levels(group)</code> 是否有值？** 在控制台运行 <code class="inline-code">levels(group)</code>，确保它返回的是你的分组名称（例如 <code class="inline-code">[1] &quot;Control&quot; &quot;Treat&quot;</code>），而不是 <code class="inline-code">NULL</code>。<br>2</p><p class="message-paragraph">.  **颜色数量匹配：** <code class="inline-code">anno_block</code> 中的 <code class="inline-code">fill</code> 向量长度必须等于分组的数量。如果你有 3 个组但只给了 2 个颜色，可能会报错或循环使用。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">热图变成这样</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:07</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">从你提供的代码和描述来看，热图只显示一个“抬头”（即 <code class="inline-code">anno_block</code> 只有一个块或者没有正确显示标签），最主要的原因是 **<code class="inline-code">group</code> 变量不是因子 (factor) 类型**。</p><p class="message-paragraph">在 R 语言中：<br>1.  如果 <code class="inline-code">group</code> 只是普通的字符向量（character），<code class="inline-code">levels(group)</code> 的结果是 <code class="inline-code">NULL</code>。<br>2.  因此，<code class="inline-code">HeatmapAnnotation</code> 中的 <code class="inline-code">labels = levels(group)</code> 实际上是 <code class="inline-code">labels = NULL</code>，导致抬头标签无法显示。<br>3.  虽然 <code class="inline-code">column_split = group</code> 可以按字符分割，但 <code class="inline-code">anno_block</code> 往往依赖于因子的水平顺序来正确匹配颜色和标签。</p><p class="message-paragraph">### 修复代码</p><p class="message-paragraph">请在画图前显式地将 <code class="inline-code">group</code> 转换为因子。</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+DEG = DEG_tb
+UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;]
+DOWN &lt;- rownames(DEG)[DEG$change == &quot;Down&quot;]
+
+# ============================================================
+# 【关键修改】将 group 转换为因子
+# 假设你的分组是 &quot;Control&quot; 和 &quot;Treat&quot; (或者其他名字)
+# 请根据实际情况调整 levels 的顺序，这决定了热图从左到右的显示顺序
+# ============================================================
+# 示例：如果不知道具体组名，可以直接用 unique
+if(!is.factor(group)) {
+  group &lt;- factor(group, levels = unique(group))
+}
+# 或者手动指定顺序（推荐）：
+# group &lt;- factor(group, levels = c(&quot;Control&quot;, &quot;Treat&quot;)) 
+
+col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))
+
+# 确保 fill 的颜色数量与分组数量一致
+# levels(group) 现在能正确返回分组名称了
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(gp = gpar(fill = c(&quot;#2fa1dd&quot;, &quot;#f87669&quot;)),
+                       labels = levels(group), 
+                       labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)))
+
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)
+m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))), 
+            name = &quot; &quot;,
+            col = col_fun,
+            top_annotation = top_annotation,
+            column_split = group, # 使用因子类型的 group
+            show_heatmap_legend = T,
+            border = F,
+            show_column_names = F,
+            show_row_names = F,
+            use_raster = F,
+            cluster_column_slices = F,
+            column_title = NULL)
+print(m)
+dev.off()</code></pre><p class="message-paragraph">### 为什么这能解决问题？<br>*   **<code class="inline-code">factor(group)</code>**: 赋予了 <code class="inline-code">group</code> 变量“水平” (levels) 属性。<br>*   **<code class="inline-code">levels(group)</code>**: 现在会返回类似 <code class="inline-code">c(&quot;Control&quot;, &quot;Treat&quot;)</code> 的向量，</p><p class="message-paragraph">而不是 <code class="inline-code">NULL</code>。<br>*   **<code class="inline-code">anno_block</code>**: 接收到了正确的 <code class="inline-code">labels</code>，并且知道有几个分组，从而能正确地画出对应数量的色块和文字。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findFiles</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">levels(group)<br>[1] &quot;normal&quot; &quot;tumor&quot;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">虽然 <code class="inline-code">levels(group)</code> 显示有两个水平（&quot;normal&quot; 和 &quot;tumor&quot;），但这只代表**定义**了这两个组。**如果实际数据中（<code class="inline-code">exp</code> 矩阵的列）只包含其中一种样本，或者某一类样本数量为 0**，热图就只会显示那一部分，导致“只有一个抬头”。</p><p class="message-paragraph">请运行 <code class="inline-code">table(group)</code> 检查一下实际的样本分布。如果其中一个组是 0，那就是数据筛选的问题。</p><p class="message-paragraph">如果确认数据没问题，建议使用 <code class="inline-code">droplevels</code> 清理一下可能存在的空水平，并使用**命名向量**来匹配颜色，这样可以防止颜色和标签“张冠李戴”。</p><p class="message-paragraph">### 修正后的代码</p><p class="message-paragraph">这段代码会自动检测实际存在的组，并正确匹配颜色：</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+# 1. 确保 group 是因子，并去掉没有样本的空 level (关键步骤)
+group &lt;- droplevels(factor(group))
+
+# 2. 打印检查一下实际的样本数量
+print(&quot;当前各组样本数量：&quot;)
+print(table(group)) 
+
+# 3. 定义颜色映射 (使用命名向量，确保颜色永远跟着组名走)
+# 这样即使只有一组数据，颜色也不会乱
+group_colors &lt;- c(&quot;normal&quot; = &quot;#2fa1dd&quot;, &quot;tumor&quot; = &quot;#f87669&quot;)
+
+# 4. 动态生成注释
+# fill = group_colors[levels(group)] 会自动根据当前存在的组取颜色
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(gp = gpar(fill = group_colors[levels(group)]),
+                       labels = levels(group),
+                       labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)))
+
+# 5. 绘图
+col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))
+
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)
+m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))), 
+            name = &quot; &quot;,
+            col = col_fun,
+            top_annotation = top_annotation,
+            column_split = group,
+            show_heatmap_legend = T,
+            border = F,
+            show_column_names = F,
+            show_row_names = F,
+            use_raster = F,
+            cluster_column_slices = F,
+            column_title = NULL)
+print(m)
+dev.off()</code></pre><p class="message-paragraph">### 为什么这样做？<br>*   **<code class="inline-code">droplevels(group)</code>**: 如果你的数据里实际上只有 &quot;normal&quot; 样本，这个函数会把 &quot;tumor&quot; 这个空 level 去掉，防止画图程序</p><p class="message-paragraph">困惑。<br>*   **<code class="inline-code">group_colors[levels(group)]</code>**: 这是一个保险措施。如果数据里只有 &quot;tumor&quot;，它会自动只取红色 (<code class="inline-code">#f87669</code>)，而不会错误地把蓝色赋给它。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:10</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">还是一样的</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:10</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如果热图仍然只显示一个抬头，这说明**在 <code class="inline-code">Heatmap</code> 接收到的 <code class="inline-code">group</code> 变量中，实际上只存在一种分组的数据**（即所有样本都被标记为了同一组，或者另一组的样本数量为 0）。</p><p class="message-paragraph">即使 <code class="inline-code">levels(group)</code> 显示有两个水平（&quot;normal&quot;, &quot;tumor&quot;），但如果数据里全是 &quot;normal&quot;，热图就只会画出 &quot;normal&quot; 的那一部分。</p><p class="message-paragraph">### 第一步：请务必运行这行代码检查数据</p><p class="message-paragraph">请在 R 控制台运行以下命令，看看输出结果是什么：</p><pre class="message-code-block"><code># 检查分组的实际分布
+table(group)
+
+# 检查 group 长度是否等于表达矩阵的列数
+length(group) == ncol(exp)</code></pre><p class="message-paragraph">*   **如果 <code class="inline-code">table(group)</code> 显示某一组是 0**（例如 <code class="inline-code">normal: 10, tumor: 0</code>）：说明你的 <code class="inline-code">group</code> 变量或者表达矩阵 <code class="inline-code">exp</code> 筛选有问题，导致只有一组样本。<br>*   **如果 <code class="inline-code">table(group)</code> 显示两组都有数据**（例如 <code class="inline-code">normal: 3, tumor: 3</code>）：请使用下面的**终极修正代码**。</p><p class="message-paragraph">### 第二步：终极修正代码</p><p class="message-paragraph">这段代码修复了 <code class="inline-code">anno_block</code> 可能出现的标签与颜色错位问题，并强制根据实际存在的组来分配颜色。</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+# 1. 数据准备
+DEG = DEG_tb
+UP &lt;- rownames(DEG)[DEG$change == &quot;Up&quot;]
+DOWN &lt;- rownames(DEG)[DEG$change == &quot;Down&quot;]
+plot_matrix &lt;- t(scale(t(exp[c(UP,DOWN),])))
+
+# 2. 【核心修复】清理 group 并动态匹配颜色
+# 移除没有样本的空 level，防止画图混淆
+real_group &lt;- droplevels(factor(group))
+
+# 定义固定的颜色映射（根据你的组名修改）
+# 这样无论数据里有几组，颜色都不会乱
+my_colors &lt;- c(&quot;normal&quot; = &quot;#2fa1dd&quot;, &quot;tumor&quot; = &quot;#f87669&quot;)
+
+# 只取实际存在的组对应的颜色
+actual_colors &lt;- my_colors[levels(real_group)]
+
+# 3. 构建注释
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(
+    gp = gpar(fill = actual_colors),      # 使用动态匹配的颜色
+    labels = levels(real_group),          # 使用实际存在的组名
+    labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)
+  )
+)
+
+# 4. 绘图
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)
+m = Heatmap(plot_matrix, 
+            name = &quot; &quot;,
+            col = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;)),
+            top_annotation = top_annotation,
+            column_split = real_group,    # 使用清理后的 group
+            show_heatmap_legend = T,
+            border = F,
+            show_column_names = F,
+            show_row_names = F,
+            use_raster = F,
+            cluster_column_slices = F,
+            column_title = NULL)
+print(m)
+dev.off()</code></pre><p class="message-paragraph">### 常见原因排查<br>如果运行上面的代码后还是只有一个抬头，请检查：<br>1.  **样本顺序是否对应？** <code class="inline-code">group</code> 向量的顺序必须和 <code class="inline-code">exp</code> 矩阵的**列顺序**严格一一对应。<br>2.  **列名是否匹配？** 很有可能 `exp</p><p class="message-paragraph">` 里全是某一类样本（比如你在读取数据时只读了 tumor 样本）。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">table(group)<br>group<br>normal  tumor <br>     4     50</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">既然 <code class="inline-code">table(group)</code> 显示两组都有数据（normal: 4, tumor: 50），但热图只显示一个抬头，这通常有两个原因：</p><p class="message-paragraph">1.  **数据在绘图前被“意外”过滤了**：例如 <code class="inline-code">scale</code> 标准化过程产生了 <code class="inline-code">NA</code>，导致 <code class="inline-code">normal</code> 组的样本被 <code class="inline-code">Heatmap</code> 自动剔除。<br>2.  **<code class="inline-code">anno_block</code> 没能正确识别分组**：虽然 <code class="inline-code">group</code> 有两组，但 <code class="inline-code">anno_block</code> 可能因为某些配置原因只画了一个。</p><p class="message-paragraph">请尝试运行以下**诊断与修复代码**。这段代码会先检查绘图数据是否完整，然后用最稳妥的方式绘制热图。</p><p class="message-paragraph">### 诊断与修复代码</p><pre class="message-code-block"><code>library(ComplexHeatmap)
+library(circlize)
+
+# 1. 准备绘图矩阵
+# 注意：先取子集，再 scale，防止全基因组 scale 引入干扰
+plot_matrix &lt;- t(scale(t(exp[c(UP,DOWN),])))
+
+# --- 诊断步骤：检查是否有样本因为 scale 变成了 NA ---
+# 统计每一列（样本）的 NA 数量
+na_count &lt;- colSums(is.na(plot_matrix))
+if(any(na_count &gt; 0)) {
+  print(&quot;警告：以下样本在标准化后含有 NA，可能会在热图中丢失：&quot;)
+  print(names(na_count[na_count &gt; 0]))
+  
+  # 简单的填充 NA 方法（可选，填充为 0 或最小值）
+  plot_matrix[is.na(plot_matrix)] &lt;- 0
+}
+
+# 检查绘图矩阵的列数是否还等于 group 的长度
+if(ncol(plot_matrix) != length(group)) {
+  stop(&quot;错误：绘图矩阵的列数与 group 长度不一致！请检查是否有样本丢失。&quot;)
+}
+# --------------------------------------------------
+
+# 2. 强制重置 group 为因子，并指定顺序
+# 确保 normal 在前，tumor 在后（或者根据你的需求调整）
+group &lt;- factor(group, levels = c(&quot;normal&quot;, &quot;tumor&quot;))
+
+# 3. 显式定义颜色和标签（最稳妥的做法）
+# 这样可以确保颜色和标签绝对对应，不会错位
+group_cols &lt;- c(&quot;normal&quot; = &quot;#2fa1dd&quot;, &quot;tumor&quot; = &quot;#f87669&quot;)
+
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(
+    gp = gpar(fill = group_cols[levels(group)]), # 自动按 levels 顺序取颜色
+    labels = levels(group),
+    labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)
+  )
+)
+
+# 4. 绘图
+col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))
+
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG_fixed.pdf&quot;), width = 8, height = 6)
+m = Heatmap(plot_matrix, 
+            name = &quot;Z-score&quot;,
+            col = col_fun,
+            top_annotation = top_annotation,
+            column_split = group,     # 务必使用处理好的 factor group
+            cluster_column_slices = FALSE, # 禁止打乱分组顺序
+            show_heatmap_legend = TRUE,
+            border = FALSE,
+            show_column_names = FALSE, # 样本太少时可以改为 TRUE 看看还在不在
+            show_row_names = FALSE,
+            use_raster = FALSE,
+            column_title = NULL)
+print(m)
+dev.off()
+
+print(&quot;热图已生成，请检查 heatmap_top_DEG_fixed.pdf&quot;)</code></pre><p class="message-paragraph">### 重点解释<br>*   **<code class="inline-code">na_count</code> 检查**：如果 <code class="inline-code">normal</code> 组只有 4 个样本，且这 4 个样本在某些基因上表达量完全一致（方差为0），<code class="inline-code">scale</code> 会产生 <code class="inline-code">NaN</code>，导致这些样本在热图中直接消失（空白），从而只剩下一个 <code class="inline-code">tumor</code> 组的抬头。<br>*   **<code class="inline-code">cluster_column_slices = FALSE</code>**：确保 &quot;normal&quot; 组永远在左边（或者是你 levels 指定的第一个位置），不会因为聚类被换位置。<br>*   **<code class="inline-code">show_column_names = FALSE</code>**：如果 <code class="inline-code">normal</code> 组还在，但因为太窄（只有4个样本 vs 50个样本）看不清抬头，你可以临时改成 <code class="inline-code">TRUE</code></p><p class="message-paragraph">看看底下有没有样本名。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(ComplexHeatmap)<br>library(circlize)</p><p class="message-paragraph"># 1. 准备绘图矩阵<br># 注意：先取子集，再 scale，防止全基因组 scale 引入干扰<br>plot_matrix &lt;- t(scale(t(exp[c(UP,DOWN),])))</p><p class="message-paragraph"># --- 诊断步骤：检查是否有样本因为 scale 变成了 NA ---<br># 统计每一列（样本）的 NA 数量<br>na_count &lt;- colSums(is.na(plot_matrix))<br>if(any(na_count &gt; 0)) {<br>  print(&quot;警告：以下样本在标准化后含有 NA，可能会在热图中丢失：&quot;)<br>  print(names(na_count[na_count &gt; 0]))</p><p class="message-paragraph"># 简单的填充 NA 方法（可选，填充为 0 或最小值）<br>  plot_matrix[is.na(plot_matrix)] &lt;- 0<br>}</p><p class="message-paragraph"># 检查绘图矩阵的列数是否还等于 group 的长度<br>if(ncol(plot_matrix) != length(group)) {<br>  stop(&quot;错误：绘图矩阵的列数与 group 长度不一致！请检查是否有样本丢失。&quot;)<br>}<br># --------------------------------------------------</p><p class="message-paragraph"># 2. 强制重置 group 为因子，并指定顺序<br># 确保 normal 在前，tumor 在后（或者根据你的需求调整）<br>group &lt;- factor(group, levels = c(&quot;normal&quot;, &quot;tumor&quot;))</p><p class="message-paragraph"># 3. 显式定义颜色和标签（最稳妥的做法）<br># 这样可以确保颜色和标签绝对对应，不会错位<br>group_cols &lt;- c(&quot;normal&quot; = &quot;#2fa1dd&quot;, &quot;tumor&quot; = &quot;#f87669&quot;)</p><p class="message-paragraph">top_annotation = HeatmapAnnotation(<br>  cluster = anno_block(<br>    gp = gpar(fill = group_cols[levels(group)]), # 自动按 levels 顺序取颜色<br>    labels = levels(group),<br>    labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)<br>  )<br>)</p><p class="message-paragraph"># 4. 绘图<br>col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))</p><p class="message-paragraph">pdf(file = file.path(out_dir, &quot;heatmap_top_DEG_fixed.pdf&quot;), width = 8, height = 6)<br>m = Heatmap(plot_matrix, <br>            name = &quot;Z-score&quot;,<br>            col = col_fun,<br>            top_annotation = top_annotation,<br>            column_split = group,     # 务必使用处理好的 factor group<br>            cluster_column_slices = FALSE, # 禁止打乱分组顺序<br>            show_heatmap_legend = TRUE,<br>            border = FALSE,<br>            show_column_names = FALSE, # 样本太少时可以改为 TRUE 看看还在不在<br>            show_row_names = FALSE,<br>            use_raster = FALSE,<br>            column_title = NULL)<br>print(m)<br>dev.off()</p><p class="message-paragraph">print(&quot;热图已生成，请检查 heatmap_top_DEG_fixed.pdf&quot;)还是和原来一样</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">@agent Enable: &quot;Enable Claude Opus 4.5 (Preview) for all clients&quot;</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:13</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我现在明白问题了！从 PDF 文件内容来看，热图几乎是空白的（文件非常小，只有基本的文字字体），说明 **<code class="inline-code">UP</code> 和 <code class="inline-code">DOWN</code> 向量可能是空的**，即没有差异表达基因被选中！</p><p class="message-paragraph">请运行以下诊断代码：</p><pre class="message-code-block"><code># 诊断：检查 UP 和 DOWN 是否有基因
+print(paste(&quot;UP 基因数量:&quot;, length(UP)))
+print(paste(&quot;DOWN 基因数量:&quot;, length(DOWN)))
+
+# 检查 DEG 的 change 列有哪些值
+print(&quot;DEG$change 的取值：&quot;)
+print(table(DEG$change))
+
+# 检查 DEG 的前几行
+head(DEG)</code></pre><p class="message-paragraph">### 最可能的原因</p><p class="message-paragraph">你的 <code class="inline-code">DEG$change</code> 列的值可能**不是** <code class="inline-code">&quot;Up&quot;</code> 和 <code class="inline-code">&quot;Down&quot;</code>，而是其他形式，比如：<br>- <code class="inline-code">&quot;UP&quot;</code> / <code class="inline-code">&quot;DOWN&quot;</code> （全大写）<br>- <code class="inline-code">&quot;up&quot;</code> / <code class="inline-code">&quot;down&quot;</code> （全小写）<br>- <code class="inline-code">&quot;upregulated&quot;</code> / <code class="inline-code">&quot;downregulated&quot;</code><br>- 或者是数字/逻辑值</p><p class="message-paragraph">### 修复方法</p><p class="message-paragraph">根据 <code class="inline-code">table(DEG$change)</code> 的输出结果，修改你的筛选条件。例如：</p><pre class="message-code-block"><code># 如果是全大写
+UP &lt;- rownames(DEG)[DEG$change == &quot;UP&quot;]
+DOWN &lt;- rownames(DEG)[DEG$change == &quot;DOWN&quot;]
+
+# 或者如果是 &quot;up&quot; / &quot;down&quot;
+UP &lt;- rownames(DEG)[DEG$change == &quot;up&quot;]
+DOWN &lt;- rownames(DEG)[DEG$change == &quot;down&quot;]</code></pre><p class="message-paragraph">请先运行诊断代码，告诉我 <code class="inline-code">table(DEG$change)</code> 的输出是什么。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:16</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">DEG=DEG_tb<br>UP &lt;- rownames(DEG)[DEG$DEG == &quot;Up&quot;]<br>DOWN &lt;- rownames(DEG)[DEG$DEG == &quot;Down&quot;]<br>library(ComplexHeatmap)<br>library(circlize)<br>col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))<br>top_annotation = HeatmapAnnotation(<br>  cluster = anno_block(gp = gpar(fill = c(&quot;#2fa1dd&quot;,&quot;#f87669&quot;)),<br>                       labels = levels(group),<br>                       labels_gp = gpar(col = &quot;white&quot;, fontsize = 12)))</p><p class="message-paragraph">pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 8, height = 6)<br>m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))),name = &quot; &quot;,<br>            col = col_fun,<br>        top_annotation = top_annotation,<br>        column_split = group,<br>        show_heatmap_legend = T,<br>        border = T,<br>        show_column_names = F,<br>        show_row_names = T,<br>        use_raster = F,<br>        cluster_column_slices = F,<br>        column_title = NULL)<br>m<br>dev.off()</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:16</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我注意到你已经修正了代码（<code class="inline-code">DEG$DEG</code> 而不是 <code class="inline-code">DEG$change</code>），但热图的抬头问题可能还是存在。</p><p class="message-paragraph">关键问题在于：**<code class="inline-code">anno_block</code> 的颜色顺序与 <code class="inline-code">levels(group)</code> 的顺序需要严格匹配**。</p><p class="message-paragraph">你的 <code class="inline-code">levels(group)</code> 是 <code class="inline-code">&quot;normal&quot;, &quot;tumor&quot;</code>，但你给的颜色是 <code class="inline-code">c(&quot;#2fa1dd&quot;, &quot;#f87669&quot;)</code>（蓝色, 红色）。这意味着：<br>- normal → 蓝色<br>- tumor → 红色</p><p class="message-paragraph">如果热图只显示一个抬头，很可能是因为 <code class="inline-code">normal</code> 组只有 4 个样本，宽度太窄，抬头的文字被挤掉了或者显示不出来。</p><p class="message-paragraph">### 修复代码</p><pre class="message-code-block"><code>DEG = DEG_tb
+UP &lt;- rownames(DEG)[DEG$DEG == &quot;Up&quot;]
+DOWN &lt;- rownames(DEG)[DEG$DEG == &quot;Down&quot;]
+
+library(ComplexHeatmap)
+library(circlize)
+
+# 确保 group 是因子并指定顺序
+group &lt;- factor(group, levels = c(&quot;normal&quot;, &quot;tumor&quot;))
+
+# 使用命名向量确保颜色匹配
+group_cols &lt;- c(&quot;normal&quot; = &quot;#2fa1dd&quot;, &quot;tumor&quot; = &quot;#f87669&quot;)
+
+col_fun = colorRamp2(c(-2, 0, 2), c(&quot;#2fa1dd&quot;, &quot;white&quot;, &quot;#f87669&quot;))
+
+top_annotation = HeatmapAnnotation(
+  cluster = anno_block(
+    gp = gpar(fill = group_cols[levels(group)]),
+    labels = levels(group),
+    labels_gp = gpar(col = &quot;white&quot;, fontsize = 10),  # 缩小字体
+    labels_rot = 0  # 水平显示标签
+  )
+)
+
+pdf(file = file.path(out_dir, &quot;heatmap_top_DEG.pdf&quot;), width = 10, height = 6)  # 加宽图片
+m = Heatmap(t(scale(t(exp[c(UP,DOWN),]))), 
+            name = &quot; &quot;,
+            col = col_fun,
+            top_annotation = top_annotation,
+            column_split = group,
+            show_heatmap_legend = T,
+            border = T,
+            show_column_names = F,
+            show_row_names = T,
+            use_raster = F,
+            cluster_column_slices = F,
+            column_title = NULL,
+            column_gap = unit(2, &quot;mm&quot;))  # 增加分组之间的间隙
+draw(m)  # 使用 draw() 而不是直接 print
+dev.off()</code></pre><p class="message-paragraph">### 主要改动<br>1. **<code class="inline-code">width = 10</code>**：加宽 PDF，让 normal 组（只有4个样本）有足够空间显示标签<br>2. **<code class="inline-code">labels_gp = gpar(col = &quot;white&quot;, fontsize = 10)</code>**：缩小字体，防止标签溢出<br>3. **<code class="inline-code">column_gap = unit(2, &quot;mm&quot;)</code>**：增加两组之间的间隙，更容易看清分界<br>4. **<code class="inline-code">draw(m)</code>**：使用 <code class="inline-code">draw()</code> 函数替代直接打印，这在某些情况下能更好地渲染热图</p><p class="message-paragraph">如果还是只显示一个抬头，请运行：</p><pre class="message-code-block"><code># 检查实际绘图的样本数
+print(table(group))
+print(paste(&quot;UP基因数:&quot;, length(UP), &quot;DOWN基因数:&quot;, length(DOWN)))</code></pre>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/11/25 10:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">n_up_total &lt;- nrow(deg_up)<br>&gt; n_down_total &lt;- nrow(deg_down)<br>&gt; cat(&quot;实际差异基因数 - 上调:&quot;, n_up_total, &quot;| 下调:&quot;, n_down_total, &quot;\n&quot;)<br>实际差异基因数 - 上调: 6 | 下调: 1 <br>&gt; <br>&gt; if (gene_set == &quot;Top20&quot;) {<br>+   # 期望选择 10 个上调 + 10 个下调，但不超过实际数量<br>+   n_up_select &lt;- min(10, n_up_total)<br>+   n_down_select &lt;- min(10, n_down_total)<br>+   <br>+   top_up &lt;- head(rownames(deg_up), n_up_select)<br>+   top_down &lt;- head(rownames(deg_down), n_down_select)<br>+   selected_genes &lt;- c(top_up, top_down)<br>+   label_genes &lt;- selected_genes<br>+   <br>+   # 提示信息<br>+   if (n_up_total &lt; 10) {<br>+     cat(&quot;⚠️  上调基因不足 10 个，实际选择:&quot;, n_up_select, &quot;个\n&quot;)<br>+   }<br>+   if (n_down_total &lt; 10) {<br>+     cat(&quot;⚠️  下调基因不足 10 个，实际选择:&quot;, n_down_select, &quot;个\n&quot;)<br>+   }<br>+   <br>+ } else if (gene_set == &quot;Top50&quot;) {<br>+   # 期望选择 25 个上调 + 25 个下调，但不超过实际数量<br>+   n_up_select &lt;- min(25, n_up_total)<br>+   n_down_select &lt;- min(25, n_down_total)<br>+   <br>+   top_up &lt;- head(rownames(deg_up), n_up_select)<br>+   top_down &lt;- head(rownames(deg_down), n_down_select)<br>+   selected_genes &lt;- c(top_up, top_down)<br>+   label_genes &lt;- selected_genes<br>+   <br>+   # 提示信息<br>+   if (n_up_total &lt; 25) {<br>+     cat(&quot;⚠️  上调基因不足 25 个，实际选择:&quot;, n_up_select, &quot;个\n&quot;)<br>+   }<br>+   if (n_down_total &lt; 25) {<br>+     cat(&quot;⚠️  下调基因不足 25 个，实际选择:&quot;, n_down_select, &quot;个\n&quot;)<br>+   }<br>+   <br>+ } else if (gene_set == &quot;Custom&quot;) {<br>+   # 验证自定义基因是否存在<br>+   valid_genes &lt;- custom_genes[custom_genes %in% rownames(DEG)]<br>+   if (length(valid_genes) == 0) {<br>+     stop(&quot;❌ 错误：自定义基因未在数据中找到！请检查 custom_genes 参数&quot;)<br>+   }<br>+   <br>+   # 检查哪些基因不在数据中<br>+   invalid_genes &lt;- custom_genes[!custom_genes %in% rownames(DEG)]<br>+   if (length(invalid_genes) &gt; 0) {<br>+     cat(&quot;⚠️  以下基因未在数据中找到:&quot;, paste(invalid_genes, collapse = &quot;, &quot;), &quot;\n&quot;)<br>+   }<br>+   <br>+   selected_genes &lt;- valid_genes<br>+   label_genes &lt;- valid_genes<br>+   top_up &lt;- valid_genes[valid_genes %in% rownames(DEG[DEG$change == &quot;UP&quot;, ])]<br>+   top_down &lt;- valid_genes[valid_genes %in% rownames(DEG[DEG$change == &quot;DOWN&quot;, ])]<br>+   <br>+   # 统计自定义基因的差异情况<br>+   n_sig &lt;- sum(valid_genes %in% rownames(DEG[DEG$change != &quot;NOT&quot;, ]))<br>+   n_not_sig &lt;- length(valid_genes) - n_sig<br>+   if (n_not_sig &gt; 0) {<br>+     cat(&quot;ℹ️  提示:&quot;, n_not_sig, &quot;个自定义基因不显著（未达到阈值）\n&quot;)<br>+   }<br>+   <br>+ } else {<br>+   stop(&quot;❌ 错误：gene_set 参数必须是 &#39;Top20&#39;, &#39;Top50&#39;, 或 &#39;Custom&#39;&quot;)<br>+ }<br>⚠️  上调基因不足 10 个，实际选择: 6 个<br>⚠️  下调基因不足 10 个，实际选择: 1 个<br>&gt; <br>&gt; # 检查是否有基因可用<br>&gt; if (length(selected_genes) == 0) {<br>+   stop(&quot;❌ 错误：没有符合条件的差异基因！请检查阈值设置或数据&quot;)<br>+ }<br>&gt; <br>&gt; cat(&quot;✓ 最终选中基因数:&quot;, length(selected_genes), &quot;\n&quot;)<br>✓ 最终选中基因数: 7 <br>&gt; cat(&quot;  上调:&quot;, length(top_up), &quot;| 下调:&quot;, length(top_down), &quot;\n&quot;)<br>  上调: 6 | 下调: 1 <br>&gt; <br>&gt; # 3. 绘制热图<br>&gt; cat(&quot;\n========== 绘制热图 ==========\n&quot;)</p><p class="message-paragraph">========== 绘制热图 ==========<br>&gt; <br>&gt; if (length(selected_genes) &gt; 0) {<br>+   # 准备数据<br>+   mat &lt;- exp[selected_genes, , drop = FALSE]<br>+   mat_scaled &lt;- t(scale(t(mat)))<br>+   <br>+   # 按分组排序<br>+   group_order &lt;- order(group)<br>+   mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]<br>+   group_ordered &lt;- group[group_order]<br>+   <br>+   # 注释<br>+   annotation_col &lt;- data.frame(<br>+     Group = group_ordered,<br>+     row.names = colnames(mat_ordered)<br>+   )<br>+   <br>+   # 颜色<br>+   n_groups &lt;- length(unique(group_ordered))<br>+   if (n_groups == 2) {<br>+     group_colors &lt;- c(&quot;#3498db&quot;, &quot;#e74c3c&quot;)<br>+     names(group_colors) &lt;- levels(factor(group_ordered))<br>+   } else {<br>+     group_colors &lt;- setNames(<br>+       brewer.pal(max(3, n_groups), &quot;Set1&quot;)[1:n_groups],<br>+       levels(factor(group_ordered))<br>+     )<br>+   }<br>+   annotation_colors &lt;- list(Group = group_colors)<br>+   <br>+   # 动态调整参数<br>+   n_genes &lt;- length(selected_genes)<br>+   show_names &lt;- n_genes &lt;= 100<br>+   font_size &lt;- ifelse(n_genes &lt;= 50, 8, ifelse(n_genes &lt;= 100, 6, 4))<br>+   fig_height &lt;- max(8, n_genes * 0.15)<br>+   <br>+   # 绘图<br>+   pdf_name &lt;- paste0(out_dir, &quot;/&quot;, gene_set, &quot;_DEGs_Heatmap.pdf&quot;)<br>+   pdf(pdf_name, width = 10, height = fig_height)<br>+   <br>+   pheatmap(<br>+     mat_ordered,<br>+     annotation_col = annotation_col,<br>+     annotation_colors = annotation_colors,<br>+     show_rownames = show_names,<br>+     show_colnames = FALSE,<br>+     cluster_rows = TRUE,<br>+     cluster_cols = T,<br>+     scale = &quot;none&quot;,<br>+     color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),<br>+     border_color = NA,<br>+     gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],<br>+     main = paste0(gene_set, &quot; DEGs Heatmap (n=&quot;, n_genes, &quot;)&quot;),<br>+     fontsize_row = font_size,<br>+     annotation_names_col = TRUE,<br>+     annotation_legend = TRUE<br>+   )<br>+   <br>+   dev.off()<br>+   cat(&quot;✓ 热图已保存:&quot;, basename(pdf_name), &quot;\n&quot;)<br>+ }<br>Error: <code class="inline-code">gaps_col</code> should not be set when <code class="inline-code">cluster_cols</code> is set to TRUE.<br>&gt; # 3. 绘制热图<br>&gt; cat(&quot;\n========== 绘制热图 ==========\n&quot;)</p><p class="message-paragraph">========== 绘制热图 ==========<br>&gt; <br>&gt; if (length(selected_genes) &gt; 0) {<br>+   # 准备数据<br>+   mat &lt;- exp[selected_genes, , drop = FALSE]<br>+   mat_scaled &lt;- t(scale(t(mat)))<br>+   <br>+   # 按分组排序<br>+   group_order &lt;- order(group)<br>+   mat_ordered &lt;- mat_scaled[, group_order, drop = FALSE]<br>+   group_ordered &lt;- group[group_order]<br>+   <br>+   # 注释<br>+   annotation_col &lt;- data.frame(<br>+     Group = group_ordered,<br>+     row.names = colnames(mat_ordered)<br>+   )<br>+   <br>+   # 颜色<br>+   n_groups &lt;- length(unique(group_ordered))<br>+   if (n_groups == 2) {<br>+     group_colors &lt;- c(&quot;#3498db&quot;, &quot;#e74c3c&quot;)<br>+     names(group_colors) &lt;- levels(factor(group_ordered))<br>+   } else {<br>+     group_colors &lt;- setNames(<br>+       brewer.pal(max(3, n_groups), &quot;Set1&quot;)[1:n_groups],<br>+       levels(factor(group_ordered))<br>+     )<br>+   }<br>+   annotation_colors &lt;- list(Group = group_colors)<br>+   <br>+   # 动态调整参数<br>+   n_genes &lt;- length(selected_genes)<br>+   show_names &lt;- n_genes &lt;= 100<br>+   font_size &lt;- ifelse(n_genes &lt;= 50, 8, ifelse(n_genes &lt;= 100, 6, 4))<br>+   fig_height &lt;- max(8, n_genes * 0.15)<br>+   <br>+   # 绘图<br>+   pdf_name &lt;- paste0(out_dir, &quot;/&quot;, gene_set, &quot;_DEGs_Heatmap.pdf&quot;)<br>+   pdf(pdf_name, width = 10, height = fig_height)<br>+   <br>+   pheatmap(<br>+     mat_ordered,<br>+     annotation_col = annotation_col,<br>+     annotation_colors = annotation_colors,<br>+     show_rownames = show_names,<br>+     show_colnames = FALSE,<br>+     cluster_rows = TRUE,<br>+     cluster_cols = T,<br>+     scale = &quot;none&quot;,<br>+     color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),<br>+     border_color = NA,<br>+     gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],<br>+     main = paste0(gene_set, &quot; DEGs Heatmap (n=&quot;, n_genes, &quot;)&quot;),<br>+     fontsize_row = font_size,<br>+     annotation_names_col = TRUE,<br>+     annotation_legend = TRUE<br>+   )<br>+   <br>+   dev.off()<br>+   cat(&quot;✓ 热图已保存:&quot;, basename(pdf_name), &quot;\n&quot;)<br>+ }<br>Error: <code class="inline-code">gaps_col</code> should not be set when <code class="inline-code">cluster_cols</code> is set to TRUE.</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/11/25 10:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">错误很清楚：**<code class="inline-code">gaps_col</code> 和 <code class="inline-code">cluster_cols = TRUE</code> 不能同时使用**。</p><p class="message-paragraph"><code class="inline-code">gaps_col</code> 是用来在指定位置画分隔线的，但如果开启了列聚类（<code class="inline-code">cluster_cols = TRUE</code>），样本顺序会被重新排列，分隔线的位置就会乱掉。</p><p class="message-paragraph">### 解决方案</p><p class="message-paragraph">**方案一：关闭列聚类（推荐）**<br>如果你想保持分组的视觉分隔，应该关闭列聚类：</p><pre class="message-code-block"><code>pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_rownames = show_names,
+  show_colnames = FALSE,
+  cluster_rows = TRUE,
+  cluster_cols = FALSE,   # 关闭列聚类
+  scale = &quot;none&quot;,
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  border_color = NA,
+  gaps_col = cumsum(table(group_ordered))[-length(table(group_ordered))],
+  main = paste0(gene_set, &quot; DEGs Heatmap (n=&quot;, n_genes, &quot;)&quot;),
+  fontsize_row = font_size,
+  annotation_names_col = TRUE,
+  annotation_legend = TRUE
+)</code></pre><p class="message-paragraph">**方案二：保留列聚类，去掉分隔线**<br>如果你更想要聚类效果，就去掉 <code class="inline-code">gaps_col</code>：</p><pre class="message-code-block"><code>pheatmap(
+  mat_ordered,
+  annotation_col = annotation_col,
+  annotation_colors = annotation_colors,
+  show_rownames = show_names,
+  show_colnames = FALSE,
+  cluster_rows = TRUE,
+  cluster_cols = TRUE,    # 保留列聚类
+  scale = &quot;none&quot;,
+  color = colorRampPalette(c(&quot;blue&quot;, &quot;white&quot;, &quot;red&quot;))(100),
+  border_color = NA,
+  # 不要 gaps_col
+  main = paste0(gene_set, &quot; DEGs Heatmap (n=&quot;, n_genes, &quot;)&quot;),
+  fontsize_row = font_size,
+  annotation_names_col = TRUE,
+  annotation_legend = TRUE
+)</code></pre><p class="message-paragraph">### 推荐方案一</p><p class="message-paragraph">对于差异基因热图，通常**关闭列聚类 + 使用分隔线**更好，因为：<br>1. 可以清晰看到两组之间的边界<br>2. 样本已经按分组排序了（<code class="inline-code">group_order &lt;- order(group)</code>）<br>3. 注释条已经显示了分组信息</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

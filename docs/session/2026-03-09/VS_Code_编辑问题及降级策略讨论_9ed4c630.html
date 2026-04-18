@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>检查一下我的 VScode，为什么经常改代码比如 edit改不动，甚至有时候用 json 也不行，需要用到降级策略直接通过 Python 脚本修改 not...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>检查一下我的 VScode，为什么经常改代码比如 edit改不动，甚至有时候用 json 也不行，需要用到降级策略直接通过 Python 脚本修改 not...</h1>
+      <p class="selected-session-meta">VS Code 编辑问题及降级策略讨论 · 2026/03/09 17:27 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2026-03-09/VS_Code_编辑问题及降级策略讨论_9ed4c630.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#9ed4c630-fa5b-4def-a18f-9401ac316ca9">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/03/09 17:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">检查一下我的 VScode，为什么经常改代码比如 edit改不动，甚至有时候用 json 也不行，需要用到降级策略直接通过 Python 脚本修改 notebook JSON。是哪里的问题</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/03/09 17:29</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我来排查你的 VS Code 配置和环境，找出编辑经常失败的根本原因。</p><p class="message-paragraph">诊断完成，以下是问题根因和详细分析：</p><p class="message-paragraph">---</p><p class="message-paragraph">## 根本原因：自动格式化/自动保存与 AI 编辑工具之间的&quot;竞态冲突&quot;</p><p class="message-paragraph">你的 settings.json 中有一组 **互相叠加的自动化设置**，形成了一个&quot;连锁反应&quot;，导致 AI 编辑工具频繁失败：</p><p class="message-paragraph">### 冲突链条</p><pre class="message-code-block"><code>Agent 发起编辑 → VS Code 写入 buffer
+    → files.autoSave: &quot;afterDelay&quot; 自动触发保存
+        → editor.formatOnSave: true 格式化整个文件
+        → editor.codeActionsOnSave 执行一堆自动修复
+            → source.sort.json: &quot;always&quot; 🔴 重排 JSON 键顺序！
+            → source.fixAll.ruff: &quot;always&quot; 重写 Python 代码
+            → source.organizeImports: &quot;always&quot; 重排 import
+            → source.unusedImports: &quot;always&quot; 删除未用 import
+    → 文件内容已被&quot;偷偷改掉&quot;
+        → Agent 下一次 edit 的 oldString 匹配不上 → 编辑失败 ❌</code></pre><p class="message-paragraph">### 三个核心元凶</p><p class="message-paragraph">| # | 设置 | 危害 |<br>|---|------|------|<br>| **1** | <code class="inline-code">&quot;source.sort.json&quot;: &quot;always&quot;</code> | **最致命**。每次保存 JSON 文件时自动按字母排序所有键。Agent 刚写入的 JSON 立刻被重排顺序，后续 <code class="inline-code">oldString</code> 完全对不上 |<br>| **2** | <code class="inline-code">&quot;files.autoSave&quot;: &quot;afterDelay&quot;</code> + <code class="inline-code">&quot;editor.formatOnSave&quot;: true</code> | 自动保存 → 触发格式化 → 文件被 Prettier/Ruff 重构。Agent 写入的代码在毫秒内被改写 |<br>| **3** | <code class="inline-code">editor.codeActionsOnSave</code> 中 **9 个 &quot;always&quot;** 动作 | 保存时同时执行 fixAll、organizeImports、unusedImports 等，大规模重写文件内容 |</p><p class="message-paragraph">### 对 Notebook 的额外影响</p><p class="message-paragraph">- <code class="inline-code">&quot;notebook.formatOnSave.enabled&quot;: true</code> 同样导致 notebook cell 在保存时被格式化<br>- <code class="inline-code">&quot;editor.formatOnPaste&quot;: true</code> + <code class="inline-code">&quot;editor.formatOnType&quot;: true</code> 在输入过程中就开始改内容</p><p class="message-paragraph">### 为什么降级到 Python 脚本能成功？</p><p class="message-paragraph">因为 Python 脚本直接操作磁盘文件（绕过 VS Code buffer），不经过 VS Code 的 auto-save → format → codeActions 流水线，所以内容不会被&quot;偷改&quot;。</p><p class="message-paragraph">---</p><p class="message-paragraph">## 修复建议</p><p class="message-paragraph">**最小侵入修复**（只改关键问题项）：</p><pre class="message-code-block"><code>{
+  // 1. JSON 键排序是最大元凶，必须关掉
+  &quot;source.sort.json&quot;: &quot;never&quot;,  // 原为 &quot;always&quot;
+
+  // 2. autoSave 改为手动或 onFocusChange，避免连锁触发
+  &quot;files.autoSave&quot;: &quot;onFocusChange&quot;,  // 原为 &quot;afterDelay&quot;
+
+  // 3. notebook 的 formatOnSave 也建议关掉
+  &quot;notebook.formatOnSave.enabled&quot;: false
+}</code></pre><p class="message-paragraph">**彻底修复**（如果还有问题）：</p><pre class="message-code-block"><code>{
+  // 把 codeActionsOnSave 中的 &quot;always&quot; 改为 &quot;explicit&quot;
+  &quot;editor.codeActionsOnSave&quot;: {
+    &quot;source.fixAll&quot;: &quot;explicit&quot;,       // 只在手动触发时执行
+    &quot;source.fixAll.ruff&quot;: &quot;explicit&quot;,
+    &quot;source.organizeImports&quot;: &quot;explicit&quot;,
+    &quot;source.unusedImports&quot;: &quot;explicit&quot;,
+    &quot;source.sort.json&quot;: &quot;never&quot;
+  }
+}</code></pre><p class="message-paragraph">诊断已完成。你想怎么修复这些导致 AI 编辑失败的设置？</p><p class="message-paragraph">诊断已完成。你想怎么修复这些导致 AI 编辑失败的设置？<br>Selected: 彻底修复：额外把 codeActionsOnSave 全部改为 explicit</p><p class="message-paragraph">好，执行彻底修复方案。</p><p class="message-paragraph">```<br>验证修改已生效：</p><p class="message-paragraph">全部修改已生效。</p><p class="message-paragraph">## 修改总结</p><p class="message-paragraph">已完成 **彻底修复**，共改动 3 处、13 个设置项：</p><p class="message-paragraph">| 改动 | 修改内容 | 效果 |<br>|------|---------|------|<br>| <code class="inline-code">editor.codeActionsOnSave</code> | 10 项从 <code class="inline-code">&quot;always&quot;</code> → <code class="inline-code">&quot;explicit&quot;</code>，<code class="inline-code">sort.json</code> → <code class="inline-code">&quot;never&quot;</code> | **不再自动重排JSON/重写代码**，只在你手动触发时执行 |<br>| <code class="inline-code">files.autoSave</code> | <code class="inline-code">&quot;afterDelay&quot;</code> → <code class="inline-code">&quot;onFocusChange&quot;</code> | **不再后台偷偷保存**，只在切换窗口时保存 |<br>| <code class="inline-code">notebook.formatOnSave.enabled</code> | <code class="inline-code">true</code> → <code class="inline-code">false</code> | **Notebook 保存时不再自动格式化** |</p><p class="message-paragraph">&gt; 注意：<code class="inline-code">editor.formatOnSave: true</code> 保留了——它在 <code class="inline-code">onFocusChange</code> 模式下只在你手动 Cmd+S 时触发，不会与 AI 编辑冲突。如果仍想手动触发那些 codeActions，可以在 VS Code 里用 <code class="inline-code">Cmd+Shift+P</code> → &quot;Source Action...&quot; 手动执行。</p><p class="message-paragraph">设置已更新，建议重启 VS Code 窗口让配置生效。还有什么想做的？</p><p class="message-paragraph">设置已更新，建议重启 VS Code 窗口让配置生效。还有什么想做的？<br>Selected: 将此诊断经验写入记忆文件</p><p class="message-paragraph">已写入记忆文件。以后再遇到类似 AI 编辑失败的情况，会自动参考这份诊断清单优先排查。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (28)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_multiReplaceString</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_multiReplaceString</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_memory</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

@@ -103,7 +103,7 @@
 
 ### 4. 如何使用新的配置系统
 
-```python
+```
 # 原来的方式 (每个模块独立的 mySettings.py)
 from mySettings import get_basic_settings
 

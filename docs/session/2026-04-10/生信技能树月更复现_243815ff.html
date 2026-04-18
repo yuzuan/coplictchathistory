@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>帮我处理一下Spatial下面的GSE253080，看这个空间转录组数据是否符合我们之前的研究思路</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>帮我处理一下Spatial下面的GSE253080，看这个空间转录组数据是否符合我们之前的研究思路</h1>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/10 18:57 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2026-04-10/生信技能树月更复现_243815ff.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#243815ff-485c-4c37-b924-746b27747562">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/04/10 18:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">帮我处理一下Spatial下面的GSE253080，看这个空间转录组数据是否符合我们之前的研究思路</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/10 18:58</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Let me check the existing spatial analysis code and what&#39;s in the other Spatial dataset for reference.</p><p class="message-paragraph">数据结构已经清楚了：<br>- **3 个 GBM 患者**，每人 **多个区域+切片** (GBM1: 2 regions×4 sections; GBM2/3: 各4 regions)<br>- **10x Visium** 标准格式，有完整的 matrix + 组织图 + 坐标</p><p class="message-paragraph">现在来创建数据探索 notebook，验证这个空间数据集是否与 CT39/HIF1A-NFκB/UPR 研究方向匹配。</p><p class="message-paragraph">Now I&#39;ll build the notebook cell by cell. Let me insert all cells efficiently.</p><p class="message-paragraph">Notebook 已完整构建（Section 5-11），现在配置 kernel 并执行。先检查可用的 conda 环境：</p><p class="message-paragraph">好，<code class="inline-code">sc</code> 环境有 scanpy + squidpy。现在配置 notebook kernel 并执行：</p><p class="message-paragraph">Notebook 有 34 个 cell，kernel 已配置为 <code class="inline-code">sc</code> (Python 3.11)。开始逐步执行。</p><p class="message-paragraph">16 个样本 meta 解析成功。执行数据加载函数定义 + 批量加载：</p><p class="message-paragraph">16/16 全部加载成功，共 ~44K spots。执行测试可视化 + merge + QC：</p><p class="message-paragraph">QC 结果显示 Patient1 测序深度最高（median UMI ~25K），Patient2/3 较低。GBM2-R4 很差（median 843 genes）。继续执行过滤和降维：</p><p class="message-paragraph">UMAP 显示明显的 patient batch effect（3 大块分别对应 3 个 patient），22 个 leiden cluster。执行空间可视化：</p><p class="message-paragraph">空间图 spot 不太可见（可能是 concat 后 spatial key 映射的问题），不过不影响核心分析。继续执行 SVG 检测和研究方向评估：</p><p class="message-paragraph">空间图的 spot 渲染有问题（concat 后 library_id 映射错位），但核心是 Section 10 的评估。先跳过空间图修复，执行关键的 module scoring：</p><p class="message-paragraph">所有 4 个基因集 100% 命中（CT39 39/39, UPR 20/20, Hypoxia 14/14, TAM 7/7）。执行相关性分析：</p><p class="message-paragraph">**这是关键结果！** 相关性矩阵非常强：<br>- **CT39 ↔ UPR: r = 0.79** — 极强正相关<br>- **CT39 ↔ Hypoxia: r = 0.59** — 强正相关<br>- **CT39 ↔ TAM: r = 0.59** — 强正相关<br>- **UPR ↔ Hypoxia: r = 0.53** — 中强正相关</p><p class="message-paragraph">继续执行剩余分析：</p><p class="message-paragraph">磁盘空间不足，跳过保存，直接执行最后的总结分析：</p><p class="message-paragraph">## GSE253080 空间转录组分析结论</p><p class="message-paragraph">**数据支持你的研究方向（Direction C: Hypoxia → HIF1A → NFκB → UPR → TAM 重编程）**</p><p class="message-paragraph">### 核心证据</p><p class="message-paragraph">| 指标 | 结果 | 判读 |<br>|------|------|------|<br>| CT39 ↔ UPR 相关 | **r = 0.79** | 极强空间共定位 |<br>| CT39 ↔ Hypoxia | **r = 0.59** | 强共定位 |<br>| Hypoxia ↔ UPR | **r = 0.53** | 中强共定位 |<br>| CT39 ↔ TAM | **r = 0.59** | TAM 标志与 CT39 空间一致 |<br>| 基因集覆盖 | 39/39 + 20/20 + 14/14 + 7/7 | **100% 命中** |<br>| SVG 命中 | SPP1, VEGFA, ADM, NDRG1, DUSP1 | 关键基因空间可变 |</p><p class="message-paragraph">### 跨 Patient 一致性<br>- Patient1: Hypoxia-UPR r = 0.32 ✓<br>- Patient2: Hypoxia-UPR r = 0.41 ✓  <br>- **Patient3: r = -0.26** ← 方向相反，需注意</p><p class="message-paragraph">### 注意事项<br>1. **Patient3 异常**：Hypoxia-UPR 负相关，可能是肿瘤异质性或技术因素（该 patient MT% 偏高），后续需单独分析<br>2. **空间图渲染问题**：<code class="inline-code">ad.concat</code> 后 <code class="inline-code">sc.pl.spatial</code> 的 library_id 映射失效，spots 不可见。需要修复每个样本的 <code class="inline-code">uns[&#39;spatial&#39;]</code> key 或逐样本单独绘图<br>3. **磁盘空间不足**：h5ad 写入失败，需清理后重新保存</p><p class="message-paragraph">Notebook 已保存在</p><p class="message-paragraph">。</p><p class="message-paragraph">GSE253080 数据整体支持 Direction C，但有两个需要修复的问题。你想先处理哪个？</p><p class="message-paragraph">GSE253080 数据整体支持 Direction C，但有两个需要修复的问题。你想先处理哪个？<br>Selected: 修复空间可视化</p><p class="message-paragraph">先诊断问题。写一个诊断 cell 检查 concat 后 <code class="inline-code">uns[&#39;spatial&#39;]</code></p><p class="message-paragraph">先诊断问题。写一个诊断 cell 检查 concat 后 <code class="inline-code">uns[&#39;spatial&#39;]</code> 的状态：先插入一个诊断 cell 检查 concat 后 <code class="inline-code">uns[&#39;spatial&#39;]</code> 的状态：</p><p class="message-paragraph">根因确认：<code class="inline-code">ad.concat()</code> 丢弃了 <code class="inline-code">uns[&#39;spatial&#39;]</code>。空间坐标 (<code class="inline-code">obsm[&#39;spatial&#39;]</code>) 保留了，但图像和缩放因子全没了。现在修复：</p><p class="message-paragraph">**Step 1**: 从原始 <code class="inline-code">adatas</code> dict 重建 <code class="inline-code">uns[&#39;spatial&#39;]</code>，然后修改空间绘图 cell。</p><p class="message-paragraph">执行成功并生成了空间图！修复有效。现在继续修复 Section 9 和 10 的空间图：</p><p class="message-paragraph">空间图修复成功！现在可以看到 marker 基因在组织切片上的空间分布了。继续运行第二批和修复 Section 10：</p><p class="message-paragraph">现在修复 Section 10 的模块评分空间图和 SPP1 空间图：</p><p class="message-paragraph">所有空间可视化已修复。</p><p class="message-paragraph">**根因**: <code class="inline-code">ad.concat()</code> 默认会丢弃 <code class="inline-code">uns[&#39;spatial&#39;]</code>（包含组织图像和缩放因子），导致 <code class="inline-code">sc.pl.spatial()</code> 只渲染了 color bar 但无法定位 spots。</p><p class="message-paragraph">**修复**: <br>1. 从原始 <code class="inline-code">adatas</code> dict 重建 <code class="inline-code">adata.uns[&#39;spatial&#39;]</code>（16 个 library_id）<br>2. 所有 <code class="inline-code">sc.pl.spatial()</code> 调用中添加 <code class="inline-code">library_id=sample_name</code> 参数</p><p class="message-paragraph">现在可以看到：<br>- **CT39_score / UPR_score** 在组织切片上呈现明显的空间梯度，hotspot 区域重叠<br>- **SPP1** 表达量极高（max ~250），与 **CD68/HIF1A/HSPA5** 空间共定位<br>- **Hypoxia_score** 和 **TAM_score** 的高表达区域在组织中央偏上位置聚集</p><p class="message-paragraph">空间可视化已全部修复，接下来做什么？</p><p class="message-paragraph">空间可视化已全部修复，接下来做什么？<br>Selected: 清理诊断 cell + 保存 obs CSV</p><p class="message-paragraph">诊断</p><p class="message-paragraph">诊断 cell 已删除，obs CSV 和 SVG 结果已保存到 <code class="inline-code">GSE253080_write/</code>。</p><p class="message-paragraph">清理和保存完成，还有其他需求吗？</p><p class="message-paragraph">清理和保存完成，还有其他需求吗？<br>Selected: 多样本空间对比面板</p><p class="message-paragraph">3×4 面板生成成功（Patient1/2/3 × CT39/UPR/Hypoxia/TAM），已保存为</p><p class="message-paragraph">。</p><p class="message-paragraph">多样本面板已生成，还需要什么？</p><p class="message-paragraph">Let me check the existing spatial analysis code and what&#39;s in the other Spatial dataset for reference.</p><p class="message-paragraph">数据结构已经清楚了：<br>- **3 个 GBM 患者**，每人 **多个区域+切片** (GBM1: 2 regions×4 sections; GBM2/3: 各4 regions)<br>- **10x Visium** 标准格式，有完整的 matrix + 组织图 + 坐标</p><p class="message-paragraph">现在来创建数据探索 notebook，验证这个空间数据集是否与 CT39/HIF1A-NFκB/UPR 研究方向匹配。</p><p class="message-paragraph">Now I&#39;ll build the notebook cell by cell. Let me insert all cells efficiently.</p><p class="message-paragraph">Notebook 已完整构建（Section 5-11），现在配置 kernel 并执行。先检查可用的 conda 环境：</p><p class="message-paragraph">好，<code class="inline-code">sc</code> 环境有 scanpy + squidpy。现在配置 notebook kernel 并执行：</p><p class="message-paragraph">Notebook 有 34 个 cell，kernel 已配置为 <code class="inline-code">sc</code> (Python 3.11)。开始逐步执行。</p><p class="message-paragraph">16 个样本 meta 解析成功。执行数据加载函数定义 + 批量加载：</p><p class="message-paragraph">16/16 全部加载成功，共 ~44K spots。执行测试可视化 + merge + QC：</p><p class="message-paragraph">QC 结果显示 Patient1 测序深度最高（median UMI ~25K），Patient2/3 较低。GBM2-R4 很差（median 843 genes）。继续执行过滤和降维：</p><p class="message-paragraph">UMAP 显示明显的 patient batch effect（3 大块分别对应 3 个 patient），22 个 leiden cluster。执行空间可视化：</p><p class="message-paragraph">空间图 spot 不太可见（可能是 concat 后 spatial key 映射的问题），不过不影响核心分析。继续执行 SVG 检测和研究方向评估：</p><p class="message-paragraph">空间图的 spot 渲染有问题（concat 后 library_id 映射错位），但核心是 Section 10 的评估。先跳过空间图修复，执行关键的 module scoring：</p><p class="message-paragraph">所有 4 个基因集 100% 命中（CT39 39/39, UPR 20/20, Hypoxia 14/14, TAM 7/7）。执行相关性分析：</p><p class="message-paragraph">**这是关键结果！** 相关性矩阵非常强：<br>- **CT39 ↔ UPR: r = 0.79** — 极强正相关<br>- **CT39 ↔ Hypoxia: r = 0.59** — 强正相关<br>- **CT39 ↔ TAM: r = 0.59** — 强正相关<br>- **UPR ↔ Hypoxia: r = 0.53** — 中强正相关</p><p class="message-paragraph">继续执行剩余分析：</p><p class="message-paragraph">磁盘空间不足，跳过保存，直接执行最后的总结分析：</p><p class="message-paragraph">## GSE253080 空间转录组分析结论</p><p class="message-paragraph">**数据支持你的研究方向（Direction C: Hypoxia → HIF1A → NFκB → UPR → TAM 重编程）**</p><p class="message-paragraph">### 核心证据</p><p class="message-paragraph">| 指标 | 结果 | 判读 |<br>|------|------|------|<br>| CT39 ↔ UPR 相关 | **r = 0.79** | 极强空间共定位 |<br>| CT39 ↔ Hypoxia | **r = 0.59** | 强共定位 |<br>| Hypoxia ↔ UPR | **r = 0.53** | 中强共定位 |<br>| CT39 ↔ TAM | **r = 0.59** | TAM 标志与 CT39 空间一致 |<br>| 基因集覆盖 | 39/39 + 20/20 + 14/14 + 7/7 | **100% 命中** |<br>| SVG 命中 | SPP1, VEGFA, ADM, NDRG1, DUSP1 | 关键基因空间可变 |</p><p class="message-paragraph">### 跨 Patient 一致性<br>- Patient1: Hypoxia-UPR r = 0.32 ✓<br>- Patient2: Hypoxia-UPR r = 0.41 ✓  <br>- **Patient3: r = -0.26** ← 方向相反，需注意</p><p class="message-paragraph">### 注意事项<br>1. **Patient3 异常**：Hypoxia-UPR 负相关，可能是肿瘤异质性或技术因素（该 patient MT% 偏高），后续需单独分析<br>2. **空间图渲染问题**：<code class="inline-code">ad.concat</code> 后 <code class="inline-code">sc.pl.spatial</code> 的 library_id 映射失效，spots 不可见。需要修复每个样本的 <code class="inline-code">uns[&#39;spatial&#39;]</code> key 或逐样本单独绘图<br>3. **磁盘空间不足**：h5ad 写入失败，需清理后重新保存</p><p class="message-paragraph">Notebook 已保存在</p><p class="message-paragraph">。</p><p class="message-paragraph">GSE253080 数据整体支持 Direction C，但有两个需要修复的问题。你想先处理哪个？<br>Selected: 修复空间可视化</p><p class="message-paragraph">先诊断问题。写一个诊断 cell 检查 concat 后 <code class="inline-code">uns[&#39;spatial&#39;]</code> 的状态：先插入一个诊断 cell 检查 concat 后 <code class="inline-code">uns[&#39;spatial&#39;]</code> 的状态：</p><p class="message-paragraph">根因确认：<code class="inline-code">ad.concat()</code> 丢弃了 <code class="inline-code">uns[&#39;spatial&#39;]</code>。空间坐标 (<code class="inline-code">obsm[&#39;spatial&#39;]</code>) 保留了，但图像和缩放因子全没了。现在修复：</p><p class="message-paragraph">**Step 1**: 从原始 <code class="inline-code">adatas</code> dict 重建 <code class="inline-code">uns[&#39;spatial&#39;]</code>，然后修改空间绘图 cell。</p><p class="message-paragraph">执行成功并生成了空间图！修复有效。现在继续修复 Section 9 和 10 的空间图：</p><p class="message-paragraph">空间图修复成功！现在可以看到 marker 基因在组织切片上的空间分布了。继续运行第二批和修复 Section 10：</p><p class="message-paragraph">现在修复 Section 10 的模块评分空间图和 SPP1 空间图：</p><p class="message-paragraph">所有空间可视化已修复。</p><p class="message-paragraph">**根因**: <code class="inline-code">ad.concat()</code> 默认会丢弃 <code class="inline-code">uns[&#39;spatial&#39;]</code>（包含组织图像和缩放因子），导致 <code class="inline-code">sc.pl.spatial()</code> 只渲染了 color bar 但无法定位 spots。</p><p class="message-paragraph">**修复**: <br>1. 从原始 <code class="inline-code">adatas</code> dict 重建 <code class="inline-code">adata.uns[&#39;spatial&#39;]</code>（16 个 library_id）<br>2. 所有 <code class="inline-code">sc.pl.spatial()</code> 调用中添加 <code class="inline-code">library_id=sample_name</code> 参数</p><p class="message-paragraph">现在可以看到：<br>- **CT39_score / UPR_score** 在组织切片上呈现明显的空间梯度，hotspot 区域重叠<br>- **SPP1** 表达量极高（max ~250），与 **CD68/HIF1A/HSPA5** 空间共定位<br>- **Hypoxia_score** 和 **TAM_score** 的高表达区域在组织中央偏上位置聚集</p><p class="message-paragraph">空间可视化已全部修复，接下来做什么？<br>Selected: 清理诊断 cell + 保存 obs CSV</p><p class="message-paragraph">诊断 cell 已删除，obs CSV 和 SVG 结果已保存到 <code class="inline-code">GSE253080_write/</code>。</p><p class="message-paragraph">清理和保存完成，还有其他需求吗？<br>Selected: 多样本空间对比面板</p><p class="message-paragraph">3×4 面板生成成功（Patient1/2/3 × CT39/UPR/Hypoxia/TAM），已保存为</p><p class="message-paragraph">。</p><p class="message-paragraph">多样本面板已生成，还需要什么？</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (250)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_createNewJupyterNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_createFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_environment</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_listDirectory</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_findTextInFiles</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_createNewJupyterNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_createFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_environment</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">configure_python_notebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readNotebookCellOutput</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">manage_todo_list</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_runNotebookCell</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

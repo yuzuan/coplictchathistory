@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>f = &quot;obj.Rdata&quot; library(harmony) if(!file.exists(f)){ sce.all = sce.all %&gt;% N...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>f = &quot;obj.Rdata&quot; library(harmony) if(!file.exists(f)){ sce.all = sce.all %&gt;% N...</h1>
+      <p class="selected-session-meta">不使用管道符的R代码流程转换 · 2025/04/16 23:15 · 8 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-04-16/不使用管道符的R代码流程转换_e8babc77.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#e8babc77-ba2e-43b9-90cc-bbd1a1f93ac0">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/04/16 23:16</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">f = &quot;obj.Rdata&quot;<br>library(harmony)<br>if(!file.exists(f)){<br>  sce.all = sce.all %&gt;% <br>    NormalizeData() %&gt;%  <br>    FindVariableFeatures() %&gt;%  <br>    ScaleData(features = rownames(.)) %&gt;%  <br>    RunPCA(pc.genes = VariableFeatures(.))  %&gt;%<br>    RunHarmony(&quot;orig.ident&quot;) %&gt;%<br>    FindNeighbors(dims = 1:15, reduction = &quot;harmony&quot;) %&gt;% <br>    FindClusters(resolution = 0.5) %&gt;% <br>    RunUMAP(dims = 1:15,reduction = &quot;harmony&quot;) %&gt;% <br>    RunTSNE(dims = 1:15,reduction = &quot;harmony&quot;)<br>  save(sce.all,file = f)<br>}<br>现在不要用管道符,按照一个正常代码流程来写</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/04/16 23:16</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 管道操作符转换为标准流程代码</p><p class="message-paragraph">以下是不使用管道符(<code class="inline-code">%&gt;%</code>)的常规代码流程：</p><pre class="message-code-block"><code>f = &quot;obj.Rdata&quot;
+library(harmony)
+
+if(!file.exists(f)){
+  # 数据标准化
+  sce.all = NormalizeData(sce.all)
+  
+  # 寻找高变基因
+  sce.all = FindVariableFeatures(sce.all)
+  
+  # 数据缩放
+  sce.all = ScaleData(sce.all, features = rownames(sce.all))
+  
+  # 主成分分析
+  sce.all = RunPCA(sce.all, pc.genes = VariableFeatures(sce.all))
+  
+  # Harmony批次校正
+  sce.all = RunHarmony(sce.all, &quot;orig.ident&quot;)
+  
+  # 构建KNN图
+  sce.all = FindNeighbors(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)
+  
+  # 聚类分析
+  sce.all = FindClusters(sce.all, resolution = 0.5)
+  
+  # UMAP降维可视化
+  sce.all = RunUMAP(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)
+  
+  # tSNE降维可视化
+  sce.all = RunTSNE(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)
+  
+  # 保存处理后的对象
+  save(sce.all, file = f)
+}</code></pre><p class="message-paragraph">这个版本在每一步都将结果重新赋值给<code class="inline-code">sce.all</code>对象，清晰展示了完整的分析流程。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/04/16 23:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你的代码和我的这个代码有什么区别:library(Seurat)<br>library(harmony)</p><p class="message-paragraph"># 0. 检查数据层结构（确认存在counts/data）<br>names(sce.all[[&quot;RNA&quot;]]$layers)  # 必须包含 &quot;counts&quot; 或 &quot;data&quot;</p><p class="message-paragraph"># 1. 过滤低表达基因 --------------------------------------------------------<br>counts_matrix &lt;- LayerData(sce.all, assay = &quot;RNA&quot;, layer = &quot;counts&quot;)<br>keep_genes &lt;- rowSums(counts_matrix &gt; 0) &gt;= 10<br>sce.all &lt;- sce.all[keep_genes, ]<br>rm(counts_matrix)<br>gc()</p><p class="message-paragraph"># 2. 标准化 --------------------------------------------------------------<br>sce.all &lt;- NormalizeData(sce.all, verbose = FALSE)<br>gc()</p><p class="message-paragraph"># 3. 筛选高变基因（限制到2000个）-----------------------------------------<br>sce.all &lt;- FindVariableFeatures(sce.all)<br>pc.genes = VariableFeatures(sce.all)  # 检查是否筛选成功<br>gc()</p><p class="message-paragraph"># 4. 仅缩放高变基因 ------------------------------------------------------<br># 注意：Seurat v5中ScaleData默认使用高变基因<br>sce.all &lt;- ScaleData(sce.all, verbose = FALSE)<br>gc()</p><p class="message-paragraph"># 5. PCA（限制主成分数）--------------------------------------------------<br>sce.all &lt;- RunPCA(sce.all) # 降低到30个PCs</p><p class="message-paragraph">#sce.all &lt;- RunPCA(pc.genes)<br>gc()</p><p class="message-paragraph"># 6. Harmony整合 --------------------------------------------------------<br>sce.all &lt;- RunHarmony(sce.all, group.by.vars = &quot;orig.ident&quot;)<br>gc()</p><p class="message-paragraph"># 7. 降维和聚类（降低计算量）---------------------------------------------<br>sce.all &lt;- FindNeighbors(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)<br>sce.all &lt;- FindClusters(sce.all, resolution = 0.5)  # 降低分辨率<br>sce.all &lt;- RunUMAP(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)<br>sce.all &lt;- RunTSNE(sce.all, dims = 1:15,reduction = &quot;harmony&quot;)</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/04/16 23:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 两段代码的主要区别</p><p class="message-paragraph">我的代码和您提供的代码有以下主要区别：</p><p class="message-paragraph">### 1. 数据预处理与质量控制<br>- **您的代码**：包含数据层检查和低表达基因过滤（保留在至少10个细胞中表达的基因）<br>- **我的代码**：没有进行数据过滤和质量控制</p><p class="message-paragraph">### 2. 内存管理<br>- **您的代码**：使用<code class="inline-code">rm()</code>和<code class="inline-code">gc()</code>在各步骤后清理内存<br>- **我的代码**：没有内存管理</p><p class="message-paragraph">### 3. 参数设置差异<br>- **ScaleData**：<br>  - 我的代码：<code class="inline-code">features = rownames(sce.all)</code>（缩放全部基因）<br>  - 您的代码：使用默认参数（仅缩放高变基因）</p><p class="message-paragraph">- **RunPCA**：<br>  - 我的代码：明确指定<code class="inline-code">pc.genes = VariableFeatures(sce.all)</code><br>  - 您的代码：使用默认参数，更简洁</p><p class="message-paragraph">- **RunHarmony**：<br>  - 我的代码：直接使用<code class="inline-code">&quot;orig.ident&quot;</code><br>  - 您的代码：使用命名参数<code class="inline-code">group.by.vars = &quot;orig.ident&quot;</code>（更清晰）</p><p class="message-paragraph">### 4. 代码结构与组织<br>- **您的代码**：<br>  - 有详细注释和步骤编号<br>  - 有中间结果检查（如<code class="inline-code">pc.genes = VariableFeatures(sce.all)</code>)<br>  - 没有文件保存逻辑</p><p class="message-paragraph">- **我的代码**：<br>  - 有文件检查和保存机制<br>  - 注释较少<br>  - 没有中间结果验证</p><p class="message-paragraph">### 5. 库导入<br>- **您的代码**：同时导入<code class="inline-code">Seurat</code>和<code class="inline-code">harmony</code><br>- **我的代码**：只导入<code class="inline-code">harmony</code>（假定<code class="inline-code">Seurat</code>已加载）</p><p class="message-paragraph">您的代码在数据处理方面更严谨，有更好的内存管理，以及更清晰的注释和组织结构。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/04/16 23:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(Seurat)<br>library(harmony)</p><p class="message-paragraph"># 0. 检查数据层结构（确认存在counts/data）<br>names(sce.all[[&quot;RNA&quot;]]$layers)  # 必须包含 &quot;counts&quot; 或 &quot;data&quot;</p><p class="message-paragraph"># 1. 过滤低表达基因 --------------------------------------------------------<br>counts_matrix &lt;- LayerData(sce.all, assay = &quot;RNA&quot;, layer = &quot;counts&quot;)<br>keep_genes &lt;- rowSums(counts_matrix &gt; 0) &gt;= 10<br>sce.all &lt;- sce.all[keep_genes, ]<br>rm(counts_matrix)<br>gc()</p><p class="message-paragraph"># 2. 标准化 --------------------------------------------------------------<br>sce.all &lt;- NormalizeData(sce.all, verbose = FALSE)<br>gc()</p><p class="message-paragraph"># 3. 筛选高变基因（限制到2000个）-----------------------------------------<br>sce.all &lt;- FindVariableFeatures(sce.all)<br>VariableFeatures(sce.all)  # 检查是否筛选成功<br>gc()</p><p class="message-paragraph"># 4. 仅缩放高变基因 ------------------------------------------------------<br># 注意：Seurat v5中ScaleData默认使用高变基因<br>sce.all &lt;- ScaleData(sce.all, verbose = FALSE)<br>gc()</p><p class="message-paragraph"># 5. PCA（限制主成分数）--------------------------------------------------<br>sce.all &lt;- RunPCA(sce.all) # 降低到30个PCs</p><p class="message-paragraph">#sce.all &lt;- RunPCA(pc.genes)<br>gc()</p><p class="message-paragraph"># 6. Harmony整合 --------------------------------------------------------<br>sce.all &lt;- RunHarmony(sce.all, group.by.vars = &quot;orig.ident&quot;)<br>gc()</p><p class="message-paragraph"># 7. 降维和聚类（降低计算量）---------------------------------------------<br>sce.all &lt;- FindNeighbors(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)<br>sce.all &lt;- FindClusters(sce.all, resolution = 0.5)  # 降低分辨率<br>sce.all &lt;- RunUMAP(sce.all, dims = 1:15, reduction = &quot;harmony&quot;)<br>sce.all &lt;- RunTSNE(sce.all, dims = 1:15,reduction = &quot;harmony&quot;)<br>gc()</p><p class="message-paragraph"># 8. 选择性运行t-SNE（若内存允许）----------------------------------------<br># 调整perplexity参数（越小越省内存）<br>#sce.all &lt;- RunTSNE(sce.all, dims = 1:15,reduction = &quot;harmony&quot;)<br>#sce.all &lt;- RunTSNE(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, perplexity = 20)<br>#gc()</p><p class="message-paragraph"># 9. 清理冗余数据 --------------------------------------------------------<br>#sce.all &lt;- DietSeurat(sce.all, layers = c(&quot;counts&quot;, &quot;data&quot;))  # 保留必要层</p><p class="message-paragraph">save(sce.all, file = &quot;obj.Rdata&quot;)帮我修改一下我的这个代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/04/16 23:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 优化后的单细胞RNA-seq分析代码</p><p class="message-paragraph">我对您的代码进行了一些优化和改进，主要集中在代码清晰度、效率和内存管理方面：</p><pre class="message-code-block"><code>library(Seurat)
+library(harmony)
+
+# 检查是否存在已处理的数据文件
+f &lt;- &quot;obj.Rdata&quot;
+if(file.exists(f)) {
+  # 如果文件已存在，直接加载
+  load(f)
+  print(&quot;已加载处理好的数据&quot;)
+} else {
+  # 如果文件不存在，执行完整处理流程
+  
+  # 0. 检查数据层结构
+  print(&quot;数据层结构检查:&quot;)
+  print(names(sce.all[[&quot;RNA&quot;]]$layers))  # 确认存在counts/data
+  
+  # 1. 过滤低表达基因
+  print(&quot;开始过滤低表达基因...&quot;)
+  counts_matrix &lt;- LayerData(sce.all, assay = &quot;RNA&quot;, layer = &quot;counts&quot;)
+  keep_genes &lt;- rowSums(counts_matrix &gt; 0) &gt;= 10
+  print(paste0(&quot;保留的基因数量: &quot;, sum(keep_genes), &quot;/&quot;, length(keep_genes)))
+  sce.all &lt;- sce.all[keep_genes, ]
+  rm(counts_matrix, keep_genes)
+  gc(verbose = FALSE)
+  
+  # 2. 标准化
+  print(&quot;开始数据标准化...&quot;)
+  sce.all &lt;- NormalizeData(sce.all, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 3. 筛选高变基因
+  print(&quot;识别高变基因...&quot;)
+  sce.all &lt;- FindVariableFeatures(sce.all, nfeatures = 2000)
+  # 打印高变基因数量而不是列表
+  print(paste0(&quot;已选择高变基因数量: &quot;, length(VariableFeatures(sce.all))))
+  gc(verbose = FALSE)
+  
+  # 4. 缩放高变基因
+  print(&quot;缩放数据...&quot;)
+  sce.all &lt;- ScaleData(sce.all, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 5. PCA降维
+  print(&quot;执行PCA...&quot;)
+  sce.all &lt;- RunPCA(sce.all, npcs = 30, verbose = FALSE)  # 明确指定30个PCs
+  gc(verbose = FALSE)
+  
+  # 6. Harmony整合
+  print(&quot;执行Harmony批次校正...&quot;)
+  sce.all &lt;- RunHarmony(sce.all, group.by.vars = &quot;orig.ident&quot;, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 7. 构建KNN图和聚类
+  print(&quot;构建KNN图和聚类...&quot;)
+  sce.all &lt;- FindNeighbors(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, verbose = FALSE)
+  sce.all &lt;- FindClusters(sce.all, resolution = 0.5, verbose = FALSE)
+  
+  # 8. 降维可视化
+  print(&quot;计算UMAP...&quot;)
+  sce.all &lt;- RunUMAP(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, verbose = FALSE)
+  
+  print(&quot;计算t-SNE...&quot;)
+  # 使用合理的perplexity参数以提高效率
+  sce.all &lt;- RunTSNE(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, perplexity = 30, verbose = FALSE)
+  
+  # 9. 清理冗余数据（可选）
+  # print(&quot;清理冗余数据...&quot;)
+  # sce.all &lt;- DietSeurat(sce.all, layers = c(&quot;counts&quot;, &quot;data&quot;))
+  
+  # 10. 保存处理好的对象
+  print(&quot;保存处理好的对象...&quot;)
+  save(sce.all, file = f)
+  print(paste0(&quot;已保存对象到 &quot;, f))
+}
+
+# 打印对象基本信息
+print(sce.all)</code></pre><p class="message-paragraph">### 主要改进：</p><p class="message-paragraph">1. **添加文件检查逻辑**：避免重复处理已有数据<br>2. **进度提示**：添加打印语句帮助追踪分析进度<br>3. **参数优化**：<br>   - 明确指定PCA的主成分数量<br>   - 为FindVariableFeatures添加nfeatures参数<br>   - 为t-SNE设置合理的perplexity参数<br>4. **内存管理**：使用<code class="inline-code">gc(verbose = FALSE)</code>减少不必要的输出<br>5. **输出优化**：打印高变基因数量而非完整列表<br>6. **代码清理**：删除冗余注释和重复代码<br>7. **最终信息**：输出处理完成的对象信息</p><p class="message-paragraph">这些改变应该能让代码运行更高效，同时提高可读性和信息反馈。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/04/16 23:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">不需要这些print</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/04/16 23:36</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph"># 优化后的单细胞RNA-seq分析代码 (无print语句)</p><pre class="message-code-block"><code>library(Seurat)
+library(harmony)
+
+# 检查是否存在已处理的数据文件
+f &lt;- &quot;obj.Rdata&quot;
+if(file.exists(f)) {
+  # 如果文件已存在，直接加载
+  load(f)
+} else {
+  # 如果文件不存在，执行完整处理流程
+  
+  # 0. 检查数据层结构
+  names(sce.all[[&quot;RNA&quot;]]$layers)  # 确认存在counts/data
+  
+  # 1. 过滤低表达基因
+  counts_matrix &lt;- LayerData(sce.all, assay = &quot;RNA&quot;, layer = &quot;counts&quot;)
+  keep_genes &lt;- rowSums(counts_matrix &gt; 0) &gt;= 10
+  sce.all &lt;- sce.all[keep_genes, ]
+  rm(counts_matrix, keep_genes)
+  gc(verbose = FALSE)
+  
+  # 2. 标准化
+  sce.all &lt;- NormalizeData(sce.all, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 3. 筛选高变基因
+  sce.all &lt;- FindVariableFeatures(sce.all, nfeatures = 2000)
+  gc(verbose = FALSE)
+  
+  # 4. 缩放高变基因
+  sce.all &lt;- ScaleData(sce.all, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 5. PCA降维
+  sce.all &lt;- RunPCA(sce.all, npcs = 30, verbose = FALSE)  # 明确指定30个PCs
+  gc(verbose = FALSE)
+  
+  # 6. Harmony整合
+  sce.all &lt;- RunHarmony(sce.all, group.by.vars = &quot;orig.ident&quot;, verbose = FALSE)
+  gc(verbose = FALSE)
+  
+  # 7. 构建KNN图和聚类
+  sce.all &lt;- FindNeighbors(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, verbose = FALSE)
+  sce.all &lt;- FindClusters(sce.all, resolution = 0.5, verbose = FALSE)
+  
+  # 8. 降维可视化
+  sce.all &lt;- RunUMAP(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, verbose = FALSE)
+  sce.all &lt;- RunTSNE(sce.all, dims = 1:15, reduction = &quot;harmony&quot;, perplexity = 30, verbose = FALSE)
+  
+  # 9. 保存处理好的对象
+  save(sce.all, file = f)
+}</code></pre><p class="message-paragraph">已移除所有print语句，保留核心分析流程和文件检查逻辑。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

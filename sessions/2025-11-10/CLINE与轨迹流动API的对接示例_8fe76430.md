@@ -48,10 +48,10 @@ Cline插件想使用硅基流动的 api
 2. 你说的 “Cline 插件” 是哪种插件（比如 VS Code 插件、浏览器扩展、某个 CLI 的插件、或你们内部的插件）？  
 3. 插件使用什么语言/运行时？（TypeScript/Node.js、Python、Go、Rust 等）  
 4. 目标功能：想“订阅实时流（stream）”、还是“发送轨迹数据到 API”、或“查询历史轨迹”？  
-5. API 是否需要认证（API key / Bearer token / OAuth）？如果是，你希望示例包含认证流程吗？  
+5. API 是否需要认证（API key / Bearer token / OAuth）？如果是，你希望示例包含认证流程吗？
 
 如果你现在不方便确认，我可以先按一个合理默认方案实现并展示：
-- 假设“硅基流动”提供基于 WebSocket 的流式 API（带 Bearer token），并且你的 Cline 插件是用 Node.js/TypeScript 编写的——我会给出 Node.js（TypeScript）集成示例、错误重连策略，以及一个简单的测试脚本。  
+- 假设“硅基流动”提供基于 WebSocket 的流式 API（带 Bearer token），并且你的 Cline 插件是用 Node.js/TypeScript 编写的——我会给出 Node.js（TypeScript）集成示例、错误重连策略，以及一个简单的测试脚本。
 
 选一个你要的选项或直接把上面问题的答案发给我，我就开始第2项（检索与准备示例）。
 
@@ -148,7 +148,7 @@ Cline插件想使用硅基流动的 api,应该如何做
 
 在 VS Code 的 `settings.json` 中添加以下配置：
 
-```json
+```
 {
   "cline.apiProvider": "openai",
   "cline.openAiBaseUrl": "https://api.siliconflow.cn/v1",
@@ -207,7 +207,7 @@ Cline插件想使用硅基流动的 api,应该如何做
 
 如果你想通过环境变量管理 API Key，可以创建 `.env` 文件：
 
-```bash
+```
 # .env
 SILICONFLOW_API_KEY=sk-your-api-key-here
 SILICONFLOW_BASE_URL=https://api.siliconflow.cn/v1
@@ -216,7 +216,7 @@ SILICONFLOW_MODEL=Qwen/Qwen2.5-7B-Instruct
 
 然后在代码中使用：
 
-```typescript
+```
 // test-siliconflow.ts
 import * as dotenv from 'dotenv';
 import OpenAI from 'openai';
@@ -281,9 +281,10 @@ testSiliconFlow();
   - 检查网络连接
   - 如果使用代理，确保 VS Code 代理设置正确
   - 在 settings.json 中添加超时配置：
-    ```json
+
+```
     "cline.requestTimeoutMs": 60000
-    ```
+```
 
 #### 5. **模型回复质量不佳**
 - **原因**：模型选择不当或参数设置问题
@@ -300,7 +301,7 @@ testSiliconFlow();
 
 如果需要添加自定义请求头：
 
-```json
+```
 {
   "cline.openAiHeaders": {
     "X-Custom-Header": "your-value"
@@ -312,7 +313,7 @@ testSiliconFlow();
 
 硅基流动支持多模态模型，如 `Qwen/Qwen2-VL-72B-Instruct`：
 
-```typescript
+```
 const response = await client.chat.completions.create({
   model: 'Qwen/Qwen2-VL-72B-Instruct',
   messages: [
@@ -329,7 +330,7 @@ const response = await client.chat.completions.create({
 
 #### 流式响应
 
-```typescript
+```
 const stream = await client.chat.completions.create({
   model: 'Qwen/Qwen2.5-7B-Instruct',
   messages: [{ role: 'user', content: '写一个 Python 爬虫示例' }],
@@ -368,7 +369,7 @@ for await (const chunk of stream) {
 
 ### ✨ 快速命令总结
 
-```bash
+```
 # 1. 基础配置
 API Provider: OpenAI Compatible
 Base URL: https://api.siliconflow.cn/v1
@@ -448,7 +449,7 @@ curl https://api.siliconflow.cn/v1/chat/completions \
 
 如果你需要进一步操作，可以使用：
 
-```bash
+```
 # 查看镜像详细信息
 docker images --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.ID}}"
 
@@ -495,7 +496,7 @@ docker system df
 
 ### 🔍 其他有用的命令
 
-```bash
+```
 # 查看所有容器（包括已停止的）
 docker ps -a
 
@@ -549,7 +550,7 @@ docker exec -it <容器名称> sh
 #### 选项 2：删除以释放空间
 如果确定不需要，可以删除它们来释放磁盘空间（共约 354MB）：
 
-```bash
+```
 # 删除 Node.js 镜像（214MB）
 docker rmi node:18-slim
 
@@ -560,7 +561,7 @@ docker rmi redis:latest
 #### 选项 3：清理所有未使用的镜像
 使用 Docker 的清理命令自动删除所有未使用的镜像：
 
-```bash
+```
 # 删除所有悬空镜像（dangling images）
 docker image prune
 
@@ -607,7 +608,7 @@ docker system df
 
 **删除未使用的 xiaoyaliu/alist 镜像**（释放 62.3MB）：
 
-```bash
+```
 docker rmi xiaoyaliu/alist:latest
 ```
 
@@ -615,7 +616,7 @@ docker rmi xiaoyaliu/alist:latest
 
 可以启动第二个容器测试 `xiaoyaliu/alist`（使用不同端口）：
 
-```bash
+```
 # 使用不同端口启动第二个 Alist
 docker run -d \
   --name alist-xiaoyaliu \
@@ -626,7 +627,7 @@ docker run -d \
 
 #### 如果你想切换到体积更小的版本：
 
-```bash
+```
 # 1. 停止并删除当前容器
 docker stop alist
 docker rm alist
@@ -665,7 +666,7 @@ xiaoya这个怎么用
 
 #### 基础启动命令：
 
-```bash
+```
 docker run -d \
   --name xiaoya \
   -p 5678:5678 \
@@ -676,7 +677,7 @@ docker run -d \
 
 #### 完整配置启动（推荐）：
 
-```bash
+```
 docker run -d \
   --name xiaoya \
   -p 5678:5678 \
@@ -697,12 +698,14 @@ docker run -d \
 ### 📝 启动步骤
 
 1. **创建数据目录**：
-```bash
+
+```
 mkdir -p ~/xiaoya/config ~/xiaoya/media
 ```
 
 2. **运行容器**：
-```bash
+
+```
 docker run -d \
   --name xiaoya \
   -p 5678:5678 \
@@ -717,7 +720,8 @@ docker run -d \
    - 首次启动需要配置阿里云盘账号
 
 4. **查看初始密码**（如果需要）：
-```bash
+
+```
 docker logs xiaoya
 ```
 
@@ -730,7 +734,7 @@ docker logs xiaoya
 
 ### 🔧 常用管理命令
 
-```bash
+```
 # 查看日志
 docker logs -f xiaoya
 
@@ -756,9 +760,11 @@ docker exec -it xiaoya sh
 
 1. **启动试用**：按上述命令启动看看是否还能正常工作
 2. **删除释放空间**：如果不需要可以删除（369MB）
-   ```bash
+
+```
    docker rmi monlor/xiaoya:latest
-   ```
+```
+
 3. **寻找替代方案**：使用更新的小雅项目（如 xiaoyaliu/alist 或其他分支）
 
 你想启动试试，还是删除这个镜像？

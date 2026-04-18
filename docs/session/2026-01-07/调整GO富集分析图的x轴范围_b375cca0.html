@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>p_go_dot &lt;- dotplot(ego_all, showCategory = 10, split = &quot;ONTOLOGY&quot;, font.size...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>p_go_dot &lt;- dotplot(ego_all, showCategory = 10, split = &quot;ONTOLOGY&quot;, font.size...</h1>
+      <p class="selected-session-meta">调整GO富集分析图的x轴范围 · 2026/01/07 16:59 · 6 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2026-01-07/调整GO富集分析图的x轴范围_b375cca0.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#b375cca0-ddb4-4d8a-b422-35673c28e0b4">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 17:00</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">p_go_dot &lt;- dotplot(ego_all, <br>                    showCategory = 10, <br>                    split = &quot;ONTOLOGY&quot;,<br>                    font.size = 10) +<br>    facet_grid(ONTOLOGY ~ ., scales = &quot;free&quot;) +<br>    labs(title = &quot;GO Enrichment Analysis&quot;) +<br>    theme(plot.title = element_text(hjust = 0.5))</p><p class="message-paragraph">print(p_go_dot)<br>ggsave(file.path(out_dir, &quot;GO_dotplot.pdf&quot;), p_go_dot, width = 10, height = 12)现在这个图中间太空了，缩小一点刻度</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 17:00</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">看到您的图中x轴(GeneRatio)范围较大导致中间留白过多。可以通过调整x轴范围来压缩图形:</p><pre class="message-code-block"><code>p_go_dot &lt;- dotplot(ego_all, 
+                    showCategory = 10, 
+                    split = &quot;ONTOLOGY&quot;,
+                    font.size = 10) +
+    facet_grid(ONTOLOGY ~ ., scales = &quot;free&quot;) +
+    scale_x_continuous(limits = c(0.06, 0.14)) +  # 调整x轴范围
+    labs(title = &quot;GO Enrichment Analysis&quot;) +
+    theme(plot.title = element_text(hjust = 0.5))
+
+print(p_go_dot)
+ggsave(file.path(out_dir, &quot;GO_dotplot.pdf&quot;), p_go_dot, width = 10, height = 12)</code></pre><p class="message-paragraph">或者让x轴自动适应数据范围,去除多余空白:</p><pre class="message-code-block"><code>p_go_dot &lt;- dotplot(ego_all, 
+                    showCategory = 10, 
+                    split = &quot;ONTOLOGY&quot;,
+                    font.size = 10) +
+    facet_grid(ONTOLOGY ~ ., scales = &quot;free&quot;) +
+    scale_x_continuous(expand = expansion(mult = c(0.05, 0.1))) +  # 减少边距
+    labs(title = &quot;GO Enrichment Analysis&quot;) +
+    theme(plot.title = element_text(hjust = 0.5))
+
+print(p_go_dot)
+ggsave(file.path(out_dir, &quot;GO_dotplot.pdf&quot;), p_go_dot, width = 10, height = 12)</code></pre><p class="message-paragraph">第二种方法使用 <code class="inline-code">expand</code> 参数减少x轴两端的留白,会根据实际数据自动调整,通常效果更好。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 17:02</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">直接 0。06。0。12，0。18 这种呢</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 17:02</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code>p_go_dot &lt;- dotplot(ego_all, 
+                    showCategory = 10, 
+                    split = &quot;ONTOLOGY&quot;,
+                    font.size = 10) +
+    facet_grid(ONTOLOGY ~ ., scales = &quot;free&quot;) +
+    scale_x_continuous(breaks = c(0.06, 0.12, 0.18)) +
+    labs(title = &quot;GO Enrichment Analysis&quot;) +
+    theme(plot.title = element_text(hjust = 0.5))
+
+print(p_go_dot)
+ggsave(file.path(out_dir, &quot;GO_dotplot.pdf&quot;), p_go_dot, width = 10, height = 12)</code></pre><p class="message-paragraph">这样会将x轴刻度固定为0.06、0.12、0.18三个点,图形会更紧凑。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/07 17:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +<br>    geom_point(alpha = 0.6, size = 2) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey70&quot;)) +<br>    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    theme_bw(base_size = 14) +<br>    labs(x = &quot;log2 Fold Change&quot;, <br>         y = &quot;-log10(P value)&quot;, <br>         title = &quot;Volcano Plot: AC8 vs Control&quot;,<br>         color = &quot;Expression&quot;) +<br>    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),<br>          legend.position = &quot;right&quot;) +<br>    geom_text_repel(data = top_genes,<br>                    aes(label = Gene),<br>                    size = 3,<br>                    max.overlaps = 20,<br>                    show.legend = FALSE)</p><p class="message-paragraph">print(p_volcano)<br>ggsave(&quot;volcano_plot.pdf&quot;, p_volcano, width = 10, height = 8)<br>火山图的 X 轴范围改为-5 到 5</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/07 17:08</time>
+      </div>
+      <div class="chat-content">
+        <pre class="message-code-block"><code>p_volcano &lt;- ggplot(data_clean, aes(x = log2FC, y = -log10(P), color = change)) +
+    geom_point(alpha = 0.6, size = 2) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey70&quot;)) +
+    scale_x_continuous(limits = c(-5, 5)) +
+    geom_hline(yintercept = -log10(0.05), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    geom_vline(xintercept = c(-1, 1), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    theme_bw(base_size = 14) +
+    labs(x = &quot;log2 Fold Change&quot;, 
+         y = &quot;-log10(P value)&quot;, 
+         title = &quot;Volcano Plot: AC8 vs Control&quot;,
+         color = &quot;Expression&quot;) +
+    theme(plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),
+          legend.position = &quot;right&quot;) +
+    geom_text_repel(data = top_genes,
+                    aes(label = Gene),
+                    size = 3,
+                    max.overlaps = 20,
+                    show.legend = FALSE)
+
+print(p_volcano)
+ggsave(&quot;volcano_plot.pdf&quot;, p_volcano, width = 10, height = 8)</code></pre><p class="message-paragraph">添加了 <code class="inline-code">scale_x_continuous(limits = c(-5, 5))</code> 来设置x轴范围为-5到5。</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

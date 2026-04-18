@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>提取其中的 R代码，形成 rmd 格式</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>提取其中的 R代码，形成 rmd 格式</h1>
+      <p class="selected-session-meta">(no workspace) · 2025/07/28 17:45 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2025-07-28/_no_workspace__4cef84d9.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#4cef84d9-64c4-4dc2-b876-d5b7f0133f5b">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2025/07/29 00:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">提取其中的 R代码，形成 rmd 格式</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2025/07/29 00:19</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">以下是从你提供的内容中提取的R代码，并整理为R Markdown（.Rmd）格式，方便你直接用于分析或复现：</p><pre class="message-code-block"><code>---
+title: &quot;GEO数据基因注释（GPL17586）转换为gene symbol&quot;
+output: html_document
+---
+
+# 1. 提取基因标志</code></pre><p class="message-paragraph">{r}<br>rawFile = &quot;D:/Desktop/GPL17586_annoT.txt&quot;<br>annoT = data.table::fread(rawFile, data.table = FALSE)<br>SYMBOL = sapply(strsplit(a[, 8], &quot;[/ ]&quot;), function(x) x[5])<br>head(SYMBOL)<br>table(SYMBOL)[order(table(SYMBOL), decreasing = T)][1:20]</p><p class="message-paragraph">sum(grepl(&quot;LOC&quot;, SYMBOL))<br>sum(grepl(&quot;OTTHUMG&quot;, SYMBOL))<br>sum(is.na(SYMBOL))<br>table(SYMBOL == &quot;---&quot;)<br>sum(grepl(&quot;00000&quot;, SYMBOL))</p><pre class="message-code-block"><code>
+# 2. ID转换</code></pre><p class="message-paragraph">{r}<br>ref_gene = sapply(strsplit(readLines(&quot;hg19_protein_SYMBOL.txt&quot;), &quot; &quot;), function(x) x[2])<br>inter_gene = intersect(SYMBOL, ref_gene)<br>str(inter_gene)</p><pre class="message-code-block"><code>
+# 3. 替换与保存</code></pre><p class="message-paragraph">{r}<br>annoT = cbind(gene_name = SYMBOL, annoT)<br>save(annoT, file = &quot;RData/GPL17586_aanoT.RData&quot;)</p><pre class="message-code-block"><code>
+# 4. 取子集</code></pre><p class="message-paragraph">{r}<br>xexpM = expM[gene_name %in% ref_gene, ]<br>xgene_name = gene_name[gene_name %in% ref_gene]<br>hd(xexpM); hd(xgene_name)</p><pre class="message-code-block"><code>
+# 5. 合并基因（去重取均值）</code></pre><p class="message-paragraph">{r}<br>xexpM2 = aggregate(xexpM, by = list(xgene_name), mean)<br>rownames(xexpM2) = xexpM2[, 1]; xexpM2[, 1] = NULL<br>hd(xexpM2)</p><pre class="message-code-block"><code>
+# 6. 另一种注释方法（分列提取symbol）</code></pre><p class="message-paragraph">{r}<br>GPL17586 &lt;- read.table(&quot;D:/data/GEO/platform/GPL17586-45144.txt&quot;,<br>                       sep = &#39;\t&#39;,quote = &quot;&quot;,fill = T,comment.char = &quot;#&quot;,<br>                       header = T,stringsAsFactors = F)<br>probe2gene &lt;- GPL17586[,c(2,8)]<br>head(probe2gene)</p><p class="message-paragraph">library(stringr)  <br>probe2gene$symbol &lt;- trimws(str_split(probe2gene$gene_assignment,&#39;//&#39;,simplify = T)[,2])<br>head(probe2gene)<br>ids2 &lt;- probe2gene[,c(1,3)]<br>ids2[1:20,1:2] # 含有缺失值<br>table(table(unique(ids2$symbol))) # 30907 ,30906个基因，一个空字符<br>```<br>如需进一步美化或补充注释可告知！如需进一步美化或补充注释可告知！</p>
+      </div>
+      
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>library(ggplot2) library(ggrepel) library(ComplexHeatmap) library(ggsci) libr...</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>library(ggplot2) library(ggrepel) library(ComplexHeatmap) library(ggsci) libr...</h1>
+      <p class="selected-session-meta">火山图与热图绘制问题 · 2026/04/14 13:26 · 2 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2026-04-14/火山图与热图绘制问题_cec785e2.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#cec785e2-646e-450a-b4bc-4009404621b8">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/04/14 13:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">library(ggplot2)<br>library(ggrepel)<br>library(ComplexHeatmap)<br>library(ggsci)<br>library(grid)</p><p class="message-paragraph"># 统一避免字体问题<br>par(family = &quot;sans&quot;)</p><p class="message-paragraph"># =========================<br># 火山图标签基因<br># =========================<br>top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), , drop = FALSE]<br>top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), , drop = FALSE]<br>top_genes &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># =========================<br># 火山图<br># =========================<br>p_volcano &lt;- ggplot(DEG_tb, aes(x = logFC, y = -log10(P.Value), color = DEG)) +<br>    geom_point(alpha = 0.6, size = 1.5) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>    coord_cartesian(xlim = c(-3, 3)) +<br>    geom_hline(yintercept = -log10(p_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-logFC_t, logFC_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_text_repel(<br>        data = top_genes,<br>        aes(label = gene),<br>        size = 3,<br>        max.overlaps = 20,<br>        show.legend = FALSE,<br>        family = &quot;sans&quot;<br>    ) +<br>    theme_bw(base_family = &quot;sans&quot;) +<br>    labs(<br>        x = &quot;log2FoldChange&quot;,<br>        y = &quot;-log10(P.Value)&quot;,<br>        title = &quot;Volcano Plot&quot;,<br>        color = &quot;Expression&quot;<br>    ) +<br>    theme(<br>        plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        axis.title = element_text(face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        axis.text = element_text(family = &quot;sans&quot;),<br>        legend.title = element_text(face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        legend.text = element_text(family = &quot;sans&quot;),<br>        legend.position = &quot;right&quot;<br>    )</p><p class="message-paragraph">print(p_volcano)</p><p class="message-paragraph">ggsave(<br>    filename = file.path(out_dir, &quot;volcano_plot.png&quot;),<br>    plot = p_volcano,<br>    width = 8,<br>    height = 6,<br>    dpi = 300<br>)</p><p class="message-paragraph"># =========================<br># 热图基因选择<br># =========================<br>DEG_up_sorted &lt;- DEG_up[order(DEG_up$logFC, decreasing = TRUE), , drop = FALSE]<br>DEG_down_sorted &lt;- DEG_down[order(DEG_down$logFC, decreasing = TRUE), , drop = FALSE]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sorted$gene, 20)<br>top_down_heatmap &lt;- tail(DEG_down_sorted$gene, 20)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- unique(top_heatmap_genes[top_heatmap_genes %in% rownames(exp)])</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;实际用于热图的基因数:&quot;, length(top_heatmap_genes), &quot;\n&quot;)</p><p class="message-paragraph"># =========================<br># 热图表达矩阵<br># =========================<br>exp_heatmap &lt;- exp[top_heatmap_genes, , drop = FALSE]<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>exp_heatmap_scaled[is.na(exp_heatmap_scaled)] &lt;- 0</p><p class="message-paragraph">annotation_col &lt;- data.frame(<br>    Group = pd$group,<br>    row.names = rownames(pd)<br>)</p><p class="message-paragraph">deg_regulation &lt;- DEG_tb[DEG_tb$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;DEG&quot;), drop = FALSE]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row &lt;- data.frame(<br>    Regulation = deg_regulation[top_heatmap_genes, &quot;DEG&quot;],<br>    row.names = top_heatmap_genes<br>)</p><p class="message-paragraph"># =========================<br># 配色<br># =========================<br>npg_colors &lt;- pal_npg(&quot;nrc&quot;)(10)<br>group_colors &lt;- c(&quot;control&quot; = npg_colors[4], &quot;RESTENOSIS&quot; = npg_colors[1])</p><p class="message-paragraph">lancet_colors &lt;- pal_lancet(&quot;lanonc&quot;)(9)<br>regulation_colors &lt;- c(&quot;Up&quot; = lancet_colors[1], &quot;Down&quot; = lancet_colors[2], &quot;Not Sig&quot; = &quot;grey80&quot;)</p><p class="message-paragraph">heatmap_colors &lt;- colorRampPalette(c(npg_colors[3], &quot;white&quot;, npg_colors[1]))(100)</p><p class="message-paragraph"># =========================<br># 注释<br># =========================<br>ha_deg &lt;- HeatmapAnnotation(<br>    Group = annotation_col$Group,<br>    col = list(Group = group_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Group = list(title = NULL)),<br>    gp = gpar(fontfamily = &quot;sans&quot;)<br>)</p><p class="message-paragraph">ra_deg &lt;- rowAnnotation(<br>    Regulation = annotation_row$Regulation,<br>    col = list(Regulation = regulation_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Regulation = list(title = NULL)),<br>    width = unit(0.5, &quot;cm&quot;)<br>)</p><p class="message-paragraph"># =========================<br># 热图主体<br># =========================<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,<br>    col = heatmap_colors,<br>    name = &quot;Z-score&quot;,<br>    heatmap_legend_param = list(<br>        direction = &quot;horizontal&quot;,<br>        title_position = &quot;topcenter&quot;,<br>        legend_width = unit(6, &quot;cm&quot;),<br>        labels_gp = gpar(fontfamily = &quot;sans&quot;),<br>        title_gp = gpar(fontfamily = &quot;sans&quot;, fontface = &quot;bold&quot;)<br>    ),<br>    show_row_names = TRUE,<br>    show_column_names = FALSE,<br>    show_row_dend = FALSE,<br>    show_column_dend = FALSE,<br>    top_annotation = ha_deg,<br>    left_annotation = ra_deg,<br>    column_title_side = &quot;top&quot;,<br>    column_split = annotation_col$Group,<br>    row_split = annotation_row$Regulation,<br>    row_names_gp = gpar(fontsize = 6, fontfamily = &quot;sans&quot;),<br>    column_names_gp = gpar(fontfamily = &quot;sans&quot;),<br>    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;sans&quot;),<br>    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;sans&quot;),<br>    cluster_rows = TRUE,<br>    cluster_columns = TRUE,<br>    border = TRUE<br>)</p><p class="message-paragraph"># 先在窗口中显示<br>draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph"># =========================<br># 保存热图，统一用 PNG，避免字体报错<br># =========================<br>png(<br>    filename = file.path(out_dir, &quot;heatmap_DEGs_ggsci.png&quot;),<br>    width = 3600,<br>    height = 4200,<br>    res = 300<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph">dev.off()<br>Error in pdf(file = NULL, ...) : invalid font type<br>In addition: Warning messages:<br>1: In pdf(file = NULL, ...) :<br>  font family &#39;Heiti SC&#39; not found in PostScript font database<br>2: In pdf(file = NULL, ...) :<br>  font family &#39;Heiti SC&#39; not found in PostScript font database</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/14 13:27</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">macOS 中文 locale 把 <code class="inline-code">&quot;sans&quot;</code> 映射到 <code class="inline-code">&quot;Heiti SC&quot;</code>，而 R 的 PostScript/PDF 设备字体库里没有这个字体。<code class="inline-code">ComplexHeatmap</code> 内部用 <code class="inline-code">pdf(file=NULL)</code> 做尺寸计算时触发了该错误。</p><p class="message-paragraph">在脚本最顶部（<code class="inline-code">library(ComplexHeatmap)</code> 之后、任何绘图之前）加两行即可：</p><pre class="message-code-block"><code># 强制 PDF/PS 设备将 &quot;sans&quot; 解析为 Helvetica，而非系统 CJK 字体
+pdfFonts(sans = pdfFonts()[[&quot;Helvetica&quot;]])
+postscriptFonts(sans = postscriptFonts()[[&quot;Helvetica&quot;]])</code></pre><p class="message-paragraph">其余代码不需要改动——你已经到处显式写了 <code class="inline-code">fontfamily = &quot;sans&quot;</code>，映射修好后就全部走 Helvetica 了。</p><p class="message-paragraph">还需要什么帮助？</p><pre class="message-code-block"><code>library(ggplot2)
+library(ggrepel)
+library(ComplexHeatmap)
+library(ggsci)
+library(grid)
+
+# ★ 修复: 强制 PDF/PS 设备将 &quot;sans&quot; 映射为 Helvetica
+pdfFonts(sans = pdfFonts()[[&quot;Helvetica&quot;]])
+postscriptFonts(sans = postscriptFonts()[[&quot;Helvetica&quot;]])
+par(family = &quot;sans&quot;)
+
+# =========================
+# 火山图标签基因
+# =========================
+top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), , drop = FALSE]
+top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), , drop = FALSE]
+top_genes &lt;- rbind(top_up, top_down)
+
+# =========================
+# 火山图
+# =========================
+p_volcano &lt;- ggplot(DEG_tb, aes(x = logFC, y = -log10(P.Value), color = DEG)) +
+    geom_point(alpha = 0.6, size = 1.5) +
+    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +
+    coord_cartesian(xlim = c(-3, 3)) +
+    geom_hline(yintercept = -log10(p_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    geom_vline(xintercept = c(-logFC_t, logFC_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +
+    geom_text_</code></pre><p class="message-paragraph">r<br>library(ggplot2)<br>library(ggrepel)<br>library(ComplexHeatmap)<br>library(ggsci)<br>library(grid)</p><p class="message-paragraph"># ★ 修复: 强制 PDF/PS 设备将 &quot;sans&quot; 映射为 Helvetica<br>pdfFonts(sans = pdfFonts()[[&quot;Helvetica&quot;]])<br>postscriptFonts(sans = postscriptFonts()[[&quot;Helvetica&quot;]])<br>par(family = &quot;sans&quot;)</p><p class="message-paragraph"># =========================<br># 火山图标签基因<br># =========================<br>top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), , drop = FALSE]<br>top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), , drop = FALSE]<br>top_genes &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># =========================<br># 火山图<br># =========================<br>p_volcano &lt;- ggplot(DEG_tb, aes(x = logFC, y = -log10(P.Value), color = DEG)) +<br>    geom_point(alpha = 0.6, size = 1.5) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>    coord_cartesian(xlim = c(-3, 3)) +<br>    geom_hline(yintercept = -log10(p_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-logFC_t, logFC_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_text_repel(<br>        data = top_genes,<br>        aes(label = gene),<br>        size = 3,<br>        max.overlaps = 20,<br>        show.legend = FALSE,<br>        family = &quot;sans&quot;<br>    ) +<br>    theme_bw(base_family = &quot;sans&quot;) +<br>    labs(<br>        x = &quot;log2FoldChange&quot;,<br>        y = &quot;-log10(P.Value)&quot;,<br>        title = &quot;Volcano Plot&quot;,<br>        color = &quot;Expression&quot;<br>    ) +<br>    theme(<br>        plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        axis.title = element_text(face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        axis.text = element_text(family = &quot;sans&quot;),<br>        legend.title = element_text(face = &quot;bold&quot;, family = &quot;sans&quot;),<br>        legend.text = element_text(family = &quot;sans&quot;),<br>        legend.position = &quot;right&quot;<br>    )</p><p class="message-paragraph">print(p_volcano)</p><p class="message-paragraph">ggsave(<br>    filename = file.path(out_dir, &quot;volcano_plot.png&quot;),<br>    plot = p_volcano,<br>    width = 8,<br>    height = 6,<br>    dpi = 300<br>)</p><p class="message-paragraph"># =========================<br># 热图基因选择<br># =========================<br>DEG_up_sorted &lt;- DEG_up[order(DEG_up$logFC, decreasing = TRUE), , drop = FALSE]<br>DEG_down_sorted &lt;- DEG_down[order(DEG_down$logFC, decreasing = TRUE), , drop = FALSE]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sorted$gene, 20)<br>top_down_heatmap &lt;- tail(DEG_down_sorted$gene, 20)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- unique(top_heatmap_genes[top_heatmap_genes %in% rownames(exp)])</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;实际用于热图的基因数:&quot;, length(top_heatmap_genes), &quot;\n&quot;)</p><p class="message-paragraph"># =========================<br># 热图表达矩阵<br># =========================<br>exp_heatmap &lt;- exp[top_heatmap_genes, , drop = FALSE]<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>exp_heatmap_scaled[is.na(exp_heatmap_scaled)] &lt;- 0</p><p class="message-paragraph">annotation_col &lt;- data.frame(<br>    Group = pd$group,<br>    row.names = rownames(pd)<br>)</p><p class="message-paragraph">deg_regulation &lt;- DEG_tb[DEG_tb$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;DEG&quot;), drop = FALSE]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row &lt;- data.frame(<br>    Regulation = deg_regulation[top_heatmap_genes, &quot;DEG&quot;],<br>    row.names = top_heatmap_genes<br>)</p><p class="message-paragraph"># =========================<br># 配色<br># =========================<br>npg_colors &lt;- pal_npg(&quot;nrc&quot;)(10)<br>group_colors &lt;- c(&quot;control&quot; = npg_colors[4], &quot;RESTENOSIS&quot; = npg_colors[1])</p><p class="message-paragraph">lancet_colors &lt;- pal_lancet(&quot;lanonc&quot;)(9)<br>regulation_colors &lt;- c(&quot;Up&quot; = lancet_colors[1], &quot;Down&quot; = lancet_colors[2], &quot;Not Sig&quot; = &quot;grey80&quot;)</p><p class="message-paragraph">heatmap_colors &lt;- colorRampPalette(c(npg_colors[3], &quot;white&quot;, npg_colors[1]))(100)</p><p class="message-paragraph"># =========================<br># 注释<br># =========================<br>ha_deg &lt;- HeatmapAnnotation(<br>    Group = annotation_col$Group,<br>    col = list(Group = group_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Group = list(title = NULL)),<br>    gp = gpar(fontfamily = &quot;sans&quot;)<br>)</p><p class="message-paragraph">ra_deg &lt;- rowAnnotation(<br>    Regulation = annotation_row$Regulation,<br>    col = list(Regulation = regulation_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Regulation = list(title = NULL)),<br>    width = unit(0.5, &quot;cm&quot;)<br>)</p><p class="message-paragraph"># =========================<br># 热图主体<br># =========================<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,<br>    col = heatmap_colors,<br>    name = &quot;Z-score&quot;,<br>    heatmap_legend_param = list(<br>        direction = &quot;horizontal&quot;,<br>        title_position = &quot;topcenter&quot;,<br>        legend_width = unit(6, &quot;cm&quot;),<br>        labels_gp = gpar(fontfamily = &quot;sans&quot;),<br>        title_gp = gpar(fontfamily = &quot;sans&quot;, fontface = &quot;bold&quot;)<br>    ),<br>    show_row_names = TRUE,<br>    show_column_names = FALSE,<br>    show_row_dend = FALSE,<br>    show_column_dend = FALSE,<br>    top_annotation = ha_deg,<br>    left_annotation = ra_deg,<br>    column_title_side = &quot;top&quot;,<br>    column_split = annotation_col$Group,<br>    row_split = annotation_row$Regulation,<br>    row_names_gp = gpar(fontsize = 6, fontfamily = &quot;sans&quot;),<br>    column_names_gp = gpar(fontfamily = &quot;sans&quot;),<br>    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;sans&quot;),<br>    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;sans&quot;),<br>    cluster_rows = TRUE,<br>    cluster_columns = TRUE,<br>    border = TRUE<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph"># =========================<br># 保存热图<br># =========================<br>png(<br>    filename = file.path(out_dir, &quot;heatmap_DEGs_ggsci.png&quot;),<br>    width = 3600,<br>    height = 4200,<br>    res = 300<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph">dev.off()</p><pre class="message-code-block"><code>
+唯一改动：第 7-8 行加了 `pdfFonts()` / `postscriptFonts()` 映射，其余完全不变。
+
+还需要什么？
+
+还需要什么？
+
+`pdfFonts()` 映射无效，说明 macOS 中文 locale 下 R 的 PDF 设备字体解析绕过了这层映射。有两个可靠方案：
+
+---
+
+**方案 A（推荐）：`showtext` 接管字体渲染**
+
+在所有代码最前面加：</code></pre><p class="message-paragraph">r<br>library(showtext)<br>showtext_auto()</p><pre class="message-code-block"><code>
+如果未安装：`install.packages(&quot;showtext&quot;)`
+
+---
+
+**方案 B（不装新包）：全部替换为 `&quot;Helvetica&quot;`**
+
+`&quot;sans&quot;` 在 macOS 中文 locale 会被系统解析为 `&quot;Heiti SC&quot;`，而 `&quot;Helvetica&quot;` 是 PDF 设备内建字体，不经过系统映射。把代码中所有 `fontfamily = &quot;sans&quot;` 和 `base_family = &quot;sans&quot;` 和 `family = &quot;sans&quot;` 全替换为 `&quot;Helvetica&quot;`：</code></pre><p class="message-paragraph">r<br>par(family = &quot;Helvetica&quot;)</p><p class="message-paragraph"># ggplot<br>theme_bw(base_family = &quot;Helvetica&quot;)<br>family = &quot;Helvetica&quot;            # geom_text_repel</p><p class="message-paragraph"># ComplexHeatmap gpar<br>gpar(fontfamily = &quot;Helvetica&quot;)</p><pre class="message-code-block"><code>
+另外 `HeatmapAnnotation` 里的 `gp = gpar(fontfamily = &quot;sans&quot;)` 控制的是注释色块而非文字，可以直接删掉：</code></pre><p class="message-paragraph">r<br>ha_deg &lt;- HeatmapAnnotation(<br>    Group = annotation_col$Group,<br>    col = list(Group = group_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Group = list(title = NULL))<br>    # 移除 gp = gpar(fontfamily = &quot;sans&quot;)<br>)</p><pre class="message-code-block"><code>
+先试方案 A，最简单。
+
+选哪个方案？
+Selected: 方案 B: 全替换 Helvetica
+
+完整替换后的脚本：</code></pre><p class="message-paragraph">r<br>library(ggplot2)<br>library(ggrepel)<br>library(ComplexHeatmap)<br>library(ggsci)<br>library(grid)</p><p class="message-paragraph">par(family = &quot;Helvetica&quot;)</p><p class="message-paragraph"># =========================<br># 火山图标签基因<br># =========================<br>top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), , drop = FALSE]<br>top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), , drop = FALSE]<br>top_genes &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># =========================<br># 火山图<br># =========================<br>p_volcano &lt;- ggplot(DEG_tb, aes(x = logFC, y = -log10(P.Value), color = DEG)) +<br>    geom_point(alpha = 0.6, size = 1.5) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>    coord_cartesian(xlim = c(-3, 3)) +<br>    geom_hline(yintercept = -log10(p_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-logFC_t, logFC_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_text_repel(<br>        data = top_genes,<br>        aes(label = gene),<br>        size = 3,<br>        max.overlaps = 20,<br>        show.legend = FALSE,<br>        family = &quot;Helvetica&quot;<br>    ) +<br>    theme_bw(base_family = &quot;Helvetica&quot;) +<br>    labs(<br>        x = &quot;log2FoldChange&quot;,<br>        y = &quot;-log10(P.Value)&quot;,<br>        title = &quot;Volcano Plot&quot;,<br>        color = &quot;Expression&quot;<br>    ) +<br>    theme(<br>        plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;, family = &quot;Helvetica&quot;),<br>        axis.title = element_text(face = &quot;bold&quot;, family = &quot;Helvetica&quot;),<br>        axis.text = element_text(family = &quot;Helvetica&quot;),<br>        legend.title = element_text(face = &quot;bold&quot;, family = &quot;Helvetica&quot;),<br>        legend.text = element_text(family = &quot;Helvetica&quot;),<br>        legend.position = &quot;right&quot;<br>    )</p><p class="message-paragraph">print(p_volcano)</p><p class="message-paragraph">ggsave(<br>    filename = file.path(out_dir, &quot;volcano_plot.png&quot;),<br>    plot = p_volcano,<br>    width = 8,<br>    height = 6,<br>    dpi = 300<br>)</p><p class="message-paragraph"># =========================<br># 热图基因选择<br># =========================<br>DEG_up_sorted &lt;- DEG_up[order(DEG_up$logFC, decreasing = TRUE), , drop = FALSE]<br>DEG_down_sorted &lt;- DEG_down[order(DEG_down$logFC, decreasing = TRUE), , drop = FALSE]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sorted$gene, 20)<br>top_down_heatmap &lt;- tail(DEG_down_sorted$gene, 20)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- unique(top_heatmap_genes[top_heatmap_genes %in% rownames(exp)])</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;实际用于热图的基因数:&quot;, length(top_heatmap_genes), &quot;\n&quot;)</p><p class="message-paragraph"># =========================<br># 热图表达矩阵<br># =========================<br>exp_heatmap &lt;- exp[top_heatmap_genes, , drop = FALSE]<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>exp_heatmap_scaled[is.na(exp_heatmap_scaled)] &lt;- 0</p><p class="message-paragraph">annotation_col &lt;- data.frame(<br>    Group = pd$group,<br>    row.names = rownames(pd)<br>)</p><p class="message-paragraph">deg_regulation &lt;- DEG_tb[DEG_tb$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;DEG&quot;), drop = FALSE]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row &lt;- data.frame(<br>    Regulation = deg_regulation[top_heatmap_genes, &quot;DEG&quot;],<br>    row.names = top_heatmap_genes<br>)</p><p class="message-paragraph"># =========================<br># 配色<br># =========================<br>npg_colors &lt;- pal_npg(&quot;nrc&quot;)(10)<br>group_colors &lt;- c(&quot;control&quot; = npg_colors[4], &quot;RESTENOSIS&quot; = npg_colors[1])</p><p class="message-paragraph">lancet_colors &lt;- pal_lancet(&quot;lanonc&quot;)(9)<br>regulation_colors &lt;- c(&quot;Up&quot; = lancet_colors[1], &quot;Down&quot; = lancet_colors[2], &quot;Not Sig&quot; = &quot;grey80&quot;)</p><p class="message-paragraph">heatmap_colors &lt;- colorRampPalette(c(npg_colors[3], &quot;white&quot;, npg_colors[1]))(100)</p><p class="message-paragraph"># =========================<br># 注释<br># =========================<br>ha_deg &lt;- HeatmapAnnotation(<br>    Group = annotation_col$Group,<br>    col = list(Group = group_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Group = list(title = NULL))<br>)</p><p class="message-paragraph">ra_deg &lt;- rowAnnotation(<br>    Regulation = annotation_row$Regulation,<br>    col = list(Regulation = regulation_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Regulation = list(title = NULL)),<br>    width = unit(0.5, &quot;cm&quot;)<br>)</p><p class="message-paragraph"># =========================<br># 热图主体<br># =========================<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,<br>    col = heatmap_colors,<br>    name = &quot;Z-score&quot;,<br>    heatmap_legend_param = list(<br>        direction = &quot;horizontal&quot;,<br>        title_position = &quot;topcenter&quot;,<br>        legend_width = unit(6, &quot;cm&quot;),<br>        labels_gp = gpar(fontfamily = &quot;Helvetica&quot;),<br>        title_gp = gpar(fontfamily = &quot;Helvetica&quot;, fontface = &quot;bold&quot;)<br>    ),<br>    show_row_names = TRUE,<br>    show_column_names = FALSE,<br>    show_row_dend = FALSE,<br>    show_column_dend = FALSE,<br>    top_annotation = ha_deg,<br>    left_annotation = ra_deg,<br>    column_title_side = &quot;top&quot;,<br>    column_split = annotation_col$Group,<br>    row_split = annotation_row$Regulation,<br>    row_names_gp = gpar(fontsize = 6, fontfamily = &quot;Helvetica&quot;),<br>    column_names_gp = gpar(fontfamily = &quot;Helvetica&quot;),<br>    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;Helvetica&quot;),<br>    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;Helvetica&quot;),<br>    cluster_rows = TRUE,<br>    cluster_columns = TRUE,<br>    border = TRUE<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph"># =========================<br># 保存热图<br># =========================<br>png(<br>    filename = file.path(out_dir, &quot;heatmap_DEGs_ggsci.png&quot;),<br>    width = 3600,<br>    height = 4200,<br>    res = 300<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph">dev.off()</p><pre class="message-code-block"><code>
+改动汇总：
+- `par(family = &quot;Helvetica&quot;)`
+- 所有 `fontfamily = &quot;sans&quot;` → `&quot;Helvetica&quot;`
+- 所有 `base_family = &quot;sans&quot;` → `&quot;Helvetica&quot;`
+- 所有 `family = &quot;sans&quot;` → `&quot;Helvetica&quot;`
+- `HeatmapAnnotation` 删除了 `gp = gpar(fontfamily = &quot;sans&quot;)`
+
+运行结果如何？
+
+运行结果如何？
+Selected: 仍报错，贴错误信息
+
+请贴出错误信息，我继续排查。如果错误和之前一样还是 `Heiti SC`，那说明字体不是从你的代码传入的，而是 macOS 中文 locale 下 R 设备的系统默认。这种情况用 `showtext` 是最稳的解法。
+
+请贴出错误信息，或告诉我是否愿意改用 showtext 方案。
+
+确认了：`&quot;Heiti SC&quot;` 不是你代码传的，是 macOS 中文 locale 下 R 的系统默认字体。任何 `fontfamily` 参数替换都无法解决，因为 ComplexHeatmap 内部 `pdf(file = NULL)` 时 grid 继承的是系统默认。
+
+**两个可行方案：**
+
+---
+
+**方案 1（零依赖，临时改 locale）：**
+
+在所有 ComplexHeatmap 代码之前执行：</code></pre><p class="message-paragraph">r<br>Sys.setlocale(&quot;LC_ALL&quot;, &quot;C&quot;)</p><pre class="message-code-block"><code>
+这会让 R 不再把默认字体映射到 Heiti SC。中文 `cat()` 输出可能受影响，但绘图不会。跑完后可恢复：</code></pre><p class="message-paragraph">r<br>Sys.setlocale(&quot;LC_ALL&quot;, &quot;zh_CN.UTF-8&quot;)</p><pre class="message-code-block"><code>
+---
+
+**方案 2（一劳永逸，装 showtext）：**</code></pre><p class="message-paragraph">r<br>install.packages(&quot;showtext&quot;)<br>library(showtext)<br>showtext_auto()</p><pre class="message-code-block"><code>
+加在脚本最开头，之后所有字体问题永久消失。
+
+---
+
+建议先试方案 1，一行代码验证是否能跑通。
+
+先试哪个？
+
+先试哪个？</code></pre><p class="message-paragraph">r<br>library(ggplot2)<br>library(ggrepel)<br>library(ComplexHeatmap)<br>library(ggsci)<br>library(grid)</p><p class="message-paragraph"># ★ 修复 macOS 中文 locale 字体问题<br>old_locale &lt;- Sys.getlocale(&quot;LC_ALL&quot;)<br>Sys.setlocale(&quot;LC_ALL&quot;, &quot;C&quot;)<br>par(family = &quot;Helvetica&quot;)</p><p class="message-paragraph"># =========================<br># 火山图标签基因<br># =========================<br>top_up &lt;- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), , drop = FALSE]<br>top_down &lt;- DEG_down[order(abs(DEG_down$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_down)), , drop = FALSE]<br>top_genes &lt;- rbind(top_up, top_down)</p><p class="message-paragraph"># =========================<br># 火山图<br># =========================<br>p_volcano &lt;- ggplot(DEG_tb, aes(x = logFC, y = -log10(P.Value), color = DEG)) +<br>    geom_point(alpha = 0.6, size = 1.5) +<br>    scale_color_manual(values = c(&quot;Up&quot; = &quot;#E41A1C&quot;, &quot;Down&quot; = &quot;#377EB8&quot;, &quot;Not Sig&quot; = &quot;grey60&quot;)) +<br>    coord_cartesian(xlim = c(-3, 3)) +<br>    geom_hline(yintercept = -log10(p_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_vline(xintercept = c(-logFC_t, logFC_t), linetype = &quot;dashed&quot;, color = &quot;black&quot;) +<br>    geom_text_repel(<br>        data = top_genes,<br>        aes(label = gene),<br>        size = 3,<br>        max.overlaps = 20,<br>        show.legend = FALSE,<br>        family = &quot;Helvetica&quot;<br>    ) +<br>    theme_bw(base_family = &quot;Helvetica&quot;) +<br>    labs(<br>        x = &quot;log2FoldChange&quot;,<br>        y = &quot;-log10(P.Value)&quot;,<br>        title = &quot;Volcano Plot&quot;,<br>        color = &quot;Expression&quot;<br>    ) +<br>    theme(<br>        plot.title = element_text(hjust = 0.5, face = &quot;bold&quot;),<br>        axis.title = element_text(face = &quot;bold&quot;),<br>        legend.title = element_text(face = &quot;bold&quot;),<br>        legend.position = &quot;right&quot;<br>    )</p><p class="message-paragraph">print(p_volcano)</p><p class="message-paragraph">ggsave(<br>    filename = file.path(out_dir, &quot;volcano_plot.png&quot;),<br>    plot = p_volcano,<br>    width = 8,<br>    height = 6,<br>    dpi = 300<br>)</p><p class="message-paragraph"># =========================<br># 热图基因选择<br># =========================<br>DEG_up_sorted &lt;- DEG_up[order(DEG_up$logFC, decreasing = TRUE), , drop = FALSE]<br>DEG_down_sorted &lt;- DEG_down[order(DEG_down$logFC, decreasing = TRUE), , drop = FALSE]</p><p class="message-paragraph">top_up_heatmap &lt;- head(DEG_up_sorted$gene, 20)<br>top_down_heatmap &lt;- tail(DEG_down_sorted$gene, 20)<br>top_heatmap_genes &lt;- c(top_up_heatmap, top_down_heatmap)<br>top_heatmap_genes &lt;- unique(top_heatmap_genes[top_heatmap_genes %in% rownames(exp)])</p><p class="message-paragraph">cat(&quot;热图基因数: Up =&quot;, length(top_up_heatmap), &quot;, Down =&quot;, length(top_down_heatmap), &quot;\n&quot;)<br>cat(&quot;实际用于热图的基因数:&quot;, length(top_heatmap_genes), &quot;\n&quot;)</p><p class="message-paragraph"># =========================<br># 热图表达矩阵<br># =========================<br>exp_heatmap &lt;- exp[top_heatmap_genes, , drop = FALSE]<br>exp_heatmap_scaled &lt;- t(scale(t(exp_heatmap)))<br>exp_heatmap_scaled[is.na(exp_heatmap_scaled)] &lt;- 0</p><p class="message-paragraph">annotation_col &lt;- data.frame(<br>    Group = pd$group,<br>    row.names = rownames(pd)<br>)</p><p class="message-paragraph">deg_regulation &lt;- DEG_tb[DEG_tb$gene %in% top_heatmap_genes, c(&quot;gene&quot;, &quot;DEG&quot;), drop = FALSE]<br>rownames(deg_regulation) &lt;- deg_regulation$gene</p><p class="message-paragraph">annotation_row &lt;- data.frame(<br>    Regulation = deg_regulation[top_heatmap_genes, &quot;DEG&quot;],<br>    row.names = top_heatmap_genes<br>)</p><p class="message-paragraph"># =========================<br># 配色<br># =========================<br>npg_colors &lt;- pal_npg(&quot;nrc&quot;)(10)<br>group_colors &lt;- c(&quot;control&quot; = npg_colors[4], &quot;RESTENOSIS&quot; = npg_colors[1])</p><p class="message-paragraph">lancet_colors &lt;- pal_lancet(&quot;lanonc&quot;)(9)<br>regulation_colors &lt;- c(&quot;Up&quot; = lancet_colors[1], &quot;Down&quot; = lancet_colors[2], &quot;Not Sig&quot; = &quot;grey80&quot;)</p><p class="message-paragraph">heatmap_colors &lt;- colorRampPalette(c(npg_colors[3], &quot;white&quot;, npg_colors[1]))(100)</p><p class="message-paragraph"># =========================<br># 注释<br># =========================<br>ha_deg &lt;- HeatmapAnnotation(<br>    Group = annotation_col$Group,<br>    col = list(Group = group_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Group = list(title = NULL))<br>)</p><p class="message-paragraph">ra_deg &lt;- rowAnnotation(<br>    Regulation = annotation_row$Regulation,<br>    col = list(Regulation = regulation_colors),<br>    show_annotation_name = FALSE,<br>    annotation_legend_param = list(Regulation = list(title = NULL)),<br>    width = unit(0.5, &quot;cm&quot;)<br>)</p><p class="message-paragraph"># =========================<br># 热图主体<br># =========================<br>p_heatmap &lt;- Heatmap(<br>    exp_heatmap_scaled,<br>    col = heatmap_colors,<br>    name = &quot;Z-score&quot;,<br>    heatmap_legend_param = list(<br>        direction = &quot;horizontal&quot;,<br>        title_position = &quot;topcenter&quot;,<br>        legend_width = unit(6, &quot;cm&quot;),<br>        labels_gp = gpar(fontfamily = &quot;Helvetica&quot;),<br>        title_gp = gpar(fontfamily = &quot;Helvetica&quot;, fontface = &quot;bold&quot;)<br>    ),<br>    show_row_names = TRUE,<br>    show_column_names = FALSE,<br>    show_row_dend = FALSE,<br>    show_column_dend = FALSE,<br>    top_annotation = ha_deg,<br>    left_annotation = ra_deg,<br>    column_title_side = &quot;top&quot;,<br>    column_split = annotation_col$Group,<br>    row_split = annotation_row$Regulation,<br>    row_names_gp = gpar(fontsize = 6, fontfamily = &quot;Helvetica&quot;),<br>    column_names_gp = gpar(fontfamily = &quot;Helvetica&quot;),<br>    column_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;Helvetica&quot;),<br>    row_title_gp = gpar(fontsize = 12, fontface = &quot;bold&quot;, fontfamily = &quot;Helvetica&quot;),<br>    cluster_rows = TRUE,<br>    cluster_columns = TRUE,<br>    border = TRUE<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph"># =========================<br># 保存热图<br># =========================<br>png(<br>    filename = file.path(out_dir, &quot;heatmap_DEGs_ggsci.png&quot;),<br>    width = 3600,<br>    height = 4200,<br>    res = 300<br>)</p><p class="message-paragraph">draw(<br>    p_heatmap,<br>    heatmap_legend_side = &quot;bottom&quot;,<br>    annotation_legend_side = &quot;bottom&quot;,<br>    merge_legend = TRUE<br>)</p><p class="message-paragraph">dev.off()</p><p class="message-paragraph"># ★ 恢复 locale<br>Sys.setlocale(&quot;LC_ALL&quot;, old_locale)</p><pre class="message-code-block"><code>
+关键改动：
+1. 开头 `Sys.setlocale(&quot;LC_ALL&quot;, &quot;C&quot;)` 阻止 Heiti SC 被选为默认字体
+2. 结尾 `Sys.setlocale(&quot;LC_ALL&quot;, old_locale)` 恢复原始 locale
+3. 所有字体统一用 `&quot;Helvetica&quot;`
+4. `HeatmapAnnotation` 移除多余的 `gp`
+5. ggplot `theme()` 精简（`base_family` 已设，子元素自动继承）
+
+运行结果如何？
+
+运行结果如何？
+
+GPL23191 的 ORF（Gene symbols）列基本为空，只有 GB_ACC（GenBank 登录号）。需要通过 GenBank → SYMBOL 映射来补全。
+
+以下 R 脚本完成全部工作：</code></pre><p class="message-paragraph">r<br># =========================<br># 下载 GPL23191 注释并映射 ID → SYMBOL<br># =========================<br>library(GEOquery)<br>library(org.Hs.eg.db)<br>library(AnnotationDbi)</p><p class="message-paragraph"># 1. 下载 GPL 注释<br>gpl &lt;- getGEO(&quot;GPL23191&quot;, destdir = tempdir())<br>ann &lt;- Table(gpl)</p><p class="message-paragraph">cat(&quot;GPL23191 行数:&quot;, nrow(ann), &quot;\n&quot;)<br>cat(&quot;列名:&quot;, paste(colnames(ann), collapse = &quot;, &quot;), &quot;\n&quot;)<br>cat(&quot;ORF 非空比例:&quot;, mean(ann$ORF != &quot;&quot;, na.rm = TRUE), &quot;\n&quot;)</p><p class="message-paragraph"># 2. 清理 GB_ACC（去掉版本号 .1 .2 等）<br>ann$GB_ACC_clean &lt;- sub(&quot;\\.[0-9]+$&quot;, &quot;&quot;, ann$GB_ACC)</p><p class="message-paragraph"># 3. GenBank Accession → Gene Symbol（通过 org.Hs.eg.db）<br># GenBank accession 映射到 Entrez ID<br>acc2eg &lt;- select(org.Hs.eg.db,<br>    keys    = unique(na.omit(ann$GB_ACC_clean)),<br>    keytype = &quot;ACCNUM&quot;,<br>    columns = c(&quot;ACCNUM&quot;, &quot;SYMBOL&quot;)<br>)<br>acc2eg &lt;- acc2eg[!is.na(acc2eg$SYMBOL), ]<br>acc2eg &lt;- acc2eg[!duplicated(acc2eg$ACCNUM), ]</p><p class="message-paragraph">cat(&quot;成功映射的 accession 数:&quot;, nrow(acc2eg), &quot;\n&quot;)</p><p class="message-paragraph"># 4. 合并<br>ann$SYMBOL &lt;- acc2eg$SYMBOL[match(ann$GB_ACC_clean, acc2eg$ACCNUM)]</p><p class="message-paragraph"># 5. 如果 ORF 列有值，优先使用 ORF<br>has_orf &lt;- !is.na(ann$ORF) &amp; ann$ORF != &quot;&quot;<br>if (any(has_orf)) {<br>    ann$SYMBOL[has_orf] &lt;- ann$ORF[has_orf]<br>}</p><p class="message-paragraph"># 6. 输出统计<br>cat(&quot;最终有 SYMBOL 的探针数:&quot;, sum(!is.na(ann$SYMBOL)), &quot;/&quot;, nrow(ann), &quot;\n&quot;)</p><p class="message-paragraph"># 7. 生成 GPL 文件（ID + SYMBOL）<br>gpl_out &lt;- data.frame(<br>    ID     = ann$ID,<br>    SYMBOL = ann$SYMBOL,<br>    stringsAsFactors = FALSE<br>)</p><p class="message-paragraph"># 去掉没有 SYMBOL 的行（可选，看你需求）<br># gpl_out &lt;- gpl_out[!is.na(gpl_out$SYMBOL), ]</p><p class="message-paragraph">write.csv(gpl_out, file = &quot;GPL23191_ID_SYMBOL.csv&quot;, row.names = FALSE)<br>cat(&quot;已保存: GPL23191_ID_SYMBOL.csv\n&quot;)</p><p class="message-paragraph"># 预览<br>head(gpl_out[!is.na(gpl_out$SYMBOL), ], 20)</p><pre class="message-code-block"><code>
+**输出文件**: `GPL23191_ID_SYMBOL.csv`，两列 `ID` + `SYMBOL`。
+
+如果你没装 `GEOquery` 或 `org.Hs.eg.db`：</code></pre><p class="message-paragraph">r<br>if (!require(&quot;BiocManager&quot;)) install.packages(&quot;BiocManager&quot;)<br>BiocManager::install(c(&quot;GEOquery&quot;, &quot;org.Hs.eg.db&quot;))</p><pre class="message-code-block"><code>
+还需要什么？
+
+还需要什么？
+
+`dplyr::select` 覆盖了 `AnnotationDbi::select`。用全名调用即可：</code></pre><p class="message-paragraph">r<br>acc2eg &lt;- AnnotationDbi::select(org.Hs.eg.db,<br>    keys    = unique(na.omit(ann$GB_ACC_clean)),<br>    keytype = &quot;ACCNUM&quot;,<br>    columns = c(&quot;ACCNUM&quot;, &quot;SYMBOL&quot;)<br>)</p><pre class="message-code-block"><code>
+把脚本中 `select(` 换成 `AnnotationDbi::select(`，其余不变。
+
+运行结果如何？
+
+运行结果如何？
+
+脚本最后已经生成了 `GPL23191_ID_SYMBOL.csv`，就是 ID + SYMBOL 两列。如果你想只保留有 SYMBOL 的行：</code></pre><p class="message-paragraph">r<br>gpl_out &lt;- gpl_out[!is.na(gpl_out$SYMBOL), ]<br>write.csv(gpl_out, file = &quot;GPL23191_ID_SYMBOL.csv&quot;, row.names = FALSE)<br>cat(&quot;有效探针数:&quot;, nrow(gpl_out), &quot;\n&quot;)<br>head(gpl_out, 20)</p><pre class="message-code-block"><code>
+运行后 `GPL23191_ID_SYMBOL.csv` 就是你需要的干净映射表。
+
+检查下输出文件是否符合预期？
+
+检查下输出文件是否符合预期？</code></pre><p class="message-paragraph">r<br>ann &lt;- ann[!is.na(ann$SYMBOL), ]<br>cat(&quot;剩余行数:&quot;, nrow(ann), &quot;\n&quot;)</p><pre class="message-code-block"><code>
+然后重新导出：</code></pre><p class="message-paragraph">r<br>gpl_out &lt;- data.frame(ID = ann$ID, SYMBOL = ann$SYMBOL, stringsAsFactors = FALSE)<br>write.csv(gpl_out, file = &quot;GPL23191_ID_SYMBOL.csv&quot;, row.names = FALSE)</p><pre class="message-code-block"><code>
+还需要什么？
+
+还需要什么？
+
+`file.copy()` 返回 `FALSE` 是因为目标文件已存在，默认不覆盖。加 `overwrite = TRUE`：</code></pre><p class="message-paragraph">r<br>file.copy(&quot;~/.fastGEO/anno_obj_user.rda&quot;, &quot;~/Desktop/fastGEO/anno_obj_user_backup.rda&quot;, overwrite = TRUE)</p><pre class="message-code-block"><code>
+还需要什么？
+
+还需要什么？
+
+多了一个右括号 `)`。正确写法：</code></pre><p class="message-paragraph">r<br>file.copy(&quot;~/.fastGEO/anno_obj_user.rda&quot;, &quot;~/Desktop/fastGEO/anno_obj_user_backup.rda&quot;, overwrite = TRUE)</p><pre class="message-code-block"><code>
+还需要什么？
+
+还需要什么？
+
+数据结构清晰了：
+- **miRNA-seq 数据**，`miR_name` 列是基因（miRNA），3479 行
+- 13 个样本，列名是 OP1-5 / RPL1-4 / SPL1-4（不是 GSM 开头），需要从注释 CSV 映射
+- 有 raw 和 norm 两套数据，用 norm
+- 存在重复 miRNA 行，需要取均值</code></pre><p class="message-paragraph">r<br># =========================<br># GSE200122 整合表达矩阵<br># =========================<br>library(readxl)</p><p class="message-paragraph">data_dir &lt;- &quot;~/Desktop/fastGEO/test/00_GEO_data_GSE200122&quot;</p><p class="message-paragraph"># 1. 读取表达数据 (normalized)<br>df &lt;- read_xlsx(file.path(data_dir, &quot;GSE200122_processed_data.xlsx&quot;))<br>norm_cols &lt;- grep(&quot;\\(norm\\)$&quot;, colnames(df), value = TRUE)<br>exp_df &lt;- df[, c(&quot;miR_name&quot;, norm_cols)]</p><p class="message-paragraph"># 清理列名: &quot;OP1(norm)&quot; → &quot;OP1&quot;<br>clean_names &lt;- sub(&quot;\\(norm\\)$&quot;, &quot;&quot;, norm_cols)<br>colnames(exp_df) &lt;- c(&quot;miR_name&quot;, clean_names)</p><p class="message-paragraph">cat(&quot;原始行数:&quot;, nrow(exp_df), &quot; 样本数:&quot;, length(clean_names), &quot;\n&quot;)</p><p class="message-paragraph"># 2. 读取样本注释，建立 title → GSM 映射<br>anno &lt;- read.csv(file.path(data_dir, &quot;GSE200122_GPL16791_sample_anno.csv&quot;),<br>                 row.names = 1, stringsAsFactors = FALSE)<br>title2gsm &lt;- setNames(anno$geo_accession, anno$title)</p><p class="message-paragraph"># 映射列名为 GSM<br>gsm_names &lt;- title2gsm[clean_names]<br>if (any(is.na(gsm_names))) {<br>    cat(&quot;警告: 以下样本未匹配到 GSM:&quot;, clean_names[is.na(gsm_names)], &quot;\n&quot;)<br>}<br>colnames(exp_df) &lt;- c(&quot;miR_name&quot;, gsm_names)</p><p class="message-paragraph"># 3. 重复 miRNA 取均值<br>exp_mat &lt;- as.data.frame(exp_df)<br>exp_mat[, -1] &lt;- lapply(exp_mat[, -1], as.numeric)<br>exp_agg &lt;- aggregate(. ~ miR_name, data = exp_mat, FUN = mean)</p><p class="message-paragraph">cat(&quot;去重后基因数:&quot;, nrow(exp_agg), &quot;\n&quot;)</p><p class="message-paragraph"># 4. 转为矩阵，行名=gene，列名=GSM<br>rownames(exp_agg) &lt;- exp_agg$miR_name<br>exp_agg$miR_name &lt;- NULL<br>exp &lt;- as.matrix(exp_agg)</p><p class="message-paragraph"># 5. 检查是否需要 log2<br>cat(&quot;表达值范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)<br>cat(&quot;中位数:&quot;, median(exp, na.rm = TRUE), &quot;\n&quot;)</p><p class="message-paragraph">if (max(exp, na.rm = TRUE) &gt; 100) {<br>    cat(&quot;→ 值域大于100，未经 log2 变换，执行 log2(x + 1)\n&quot;)<br>    exp &lt;- log2(exp + 1)<br>    cat(&quot;log2 后范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)<br>} else {<br>    cat(&quot;→ 值域较小，可能已 log 变换，不再处理\n&quot;)<br>}</p><p class="message-paragraph"># 6. 验证<br>cat(&quot;\n最终矩阵维度:&quot;, nrow(exp), &quot;genes ×&quot;, ncol(exp), &quot;samples\n&quot;)<br>cat(&quot;行名前5:&quot;, head(rownames(exp)), &quot;\n&quot;)<br>cat(&quot;列名:&quot;, colnames(exp), &quot;\n&quot;)</p><p class="message-paragraph">数据结构清晰了：<br>- **miRNA-seq 数据**，<code class="inline-code">miR_name</code> 列是基因（miRNA），3479 行<br>- 13 个样本，列名是 OP1-5 / RPL1-4 / SPL1-4（不是 GSM 开头），需要从注释 CSV 映射<br>- 有 raw 和 norm 两套数据，用 norm<br>- 存在重复 miRNA 行，需要取均值</p><pre class="message-code-block"><code># =========================
+# GSE200122 整合表达矩阵
+# =========================
+library(readxl)
+
+data_dir &lt;- &quot;~/Desktop/fastGEO/test/00_GEO_data_GSE200122&quot;
+
+# 1. 读取表达数据 (normalized)
+df &lt;- read_xlsx(file.path(data_dir, &quot;GSE200122_processed_data.xlsx&quot;))
+norm_cols &lt;- grep(&quot;\\(norm\\)$&quot;, colnames(df), value = TRUE)
+exp_df &lt;- df[, c(&quot;miR_name&quot;, norm_cols)]
+
+# 清理列名: &quot;OP1(norm)&quot; → &quot;OP1&quot;
+clean_names &lt;- sub(&quot;\\(norm\\)$&quot;, &quot;&quot;, norm_cols)
+colnames(exp_df) &lt;- c(&quot;miR_name&quot;, clean_names)
+
+cat(&quot;原始行数:&quot;, nrow(exp_df), &quot; 样本数:&quot;, length(clean_names), &quot;\n&quot;)
+
+# 2. 读取样本注释，建立 title → GSM 映射
+anno &lt;- read.csv(file.path(data_dir, &quot;GSE200122_GPL16791_sample_anno.csv&quot;),
+                 row.names = 1, stringsAsFactors = FALSE)
+title2gsm &lt;- setNames(anno$geo_accession, anno$title)
+
+# 映射列名为 GSM
+gsm_names &lt;- title2gsm[clean_names]
+if (any(is.na(gsm_names))) {
+    cat(&quot;警告: 以下样本未匹配到 GSM:&quot;, clean_names[is.na(gsm_names)], &quot;\n&quot;)
+}
+colnames(exp_df) &lt;- c(&quot;miR_name&quot;, gsm_names)
+
+# 3. 重复 miRNA 取均值
+exp_mat &lt;- as.data.frame(exp_df)
+exp_mat[, -1] &lt;- lapply(exp_mat[, -1], as.numeric)
+exp_agg &lt;- aggregate(. ~ miR_name, data = exp_mat, FUN = mean)
+
+cat(&quot;去重后基因数:&quot;, nrow(exp_agg), &quot;\n&quot;)
+
+# 4. 转为矩阵，行名=gene，列名=GSM
+rownames(exp_agg) &lt;- exp_agg$miR_name
+exp_agg$miR_name &lt;- NULL
+exp &lt;- as.matrix(exp_agg)
+
+# 5. 检查是否需要 log2
+cat(&quot;表达值范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)
+cat(&quot;中位数:&quot;, median(exp, na.rm = TRUE), &quot;\n&quot;)
+
+if (max(exp, na.rm = TRUE) &gt; 100) {
+    cat(&quot;→ 值域大于100，未经 log2 变换，执行 log2(x + 1)\n&quot;)
+    exp &lt;- log2(exp + 1)
+    cat(&quot;log2 后范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)
+} else {
+    cat(&quot;→ 值域较小，可能已 log 变换，不再处理\n&quot;)
+}
+
+# 6. 验证
+cat(&quot;\n最终矩阵维度:&quot;, nrow(exp), &quot;genes ×&quot;, ncol(exp), &quot;samples\n&quot;)
+cat(&quot;行名前5:&quot;, head(rownames(exp)), &quot;\n&quot;)
+cat(&quot;列名:&quot;, colnames(exp), &quot;\n&quot;)
+exp[1:5, 1:5]
+
+# 7. 保存
+save(exp, file = file.path(data_dir, &quot;GSE200122_exp.RData&quot;))
+cat(&quot;已保存:&quot;, file.path(data_dir, &quot;GSE200122_exp.RData&quot;), &quot;\n&quot;)
+cat(&quot;读取方式: load(&#39;GSE200122_exp.RData&#39;)  # 变量名: exp\n&quot;)</code></pre><p class="message-paragraph">保存后用 <code class="inline-code">load(&quot;GSE200122_exp.RData&quot;)</code> 即可得到 <code class="inline-code">exp</code> 矩阵（行名=miRNA，列名=GSM）。</p><p class="message-paragraph">运行结果如何？</p><p class="message-paragraph">数据结构清晰了：<br>- **miRNA-seq 数据**，<code class="inline-code">miR_name</code> 列是基因（miRNA），3479 行<br>- 13 个样本，列名是 OP1-5 / RPL1-4 / SPL1-4（不是 GSM 开头），需要从注释 CSV 映射<br>- 有 raw 和 norm 两套数据，用 norm<br>- 存在重复 miRNA 行，需要取均值</p><pre class="message-code-block"><code># =========================
+# GSE200122 整合表达矩阵
+# =========================
+library(readxl)
+
+data_dir &lt;- &quot;~/Desktop/fastGEO/test/00_GEO_data_GSE200122&quot;
+
+# 1. 读取表达数据 (normalized)
+df &lt;- read_xlsx(file.path(data_dir, &quot;GSE200122_processed_data.xlsx&quot;))
+norm_cols &lt;- grep(&quot;\\(norm\\)$&quot;, colnames(df), value = TRUE)
+exp_df &lt;- df[, c(&quot;miR_name&quot;, norm_cols)]
+
+# 清理列名: &quot;OP1(norm)&quot; → &quot;OP1&quot;
+clean_names &lt;- sub(&quot;\\(norm\\)$&quot;, &quot;&quot;, norm_cols)
+colnames(exp_df) &lt;- c(&quot;miR_name&quot;, clean_names)
+
+cat(&quot;原始行数:&quot;, nrow(exp_df), &quot; 样本数:&quot;, length(clean_names), &quot;\n&quot;)
+
+# 2. 读取样本注释，建立 title → GSM 映射
+anno &lt;- read.csv(file.path(data_dir, &quot;GSE200122_GPL16791_sample_anno.csv&quot;),
+                 row.names = 1, stringsAsFactors = FALSE)
+title2gsm &lt;- setNames(anno$geo_accession, anno$title)
+
+# 映射列名为 GSM
+gsm_names &lt;- title2gsm[clean_names]
+if (any(is.na(gsm_names))) {
+    cat(&quot;警告: 以下样本未匹配到 GSM:&quot;, clean_names[is.na(gsm_names)], &quot;\n&quot;)
+}
+colnames(exp_df) &lt;- c(&quot;miR_name&quot;, gsm_names)
+
+# 3. 重复 miRNA 取均值
+exp_mat &lt;- as.data.frame(exp_df)
+exp_mat[, -1] &lt;- lapply(exp_mat[, -1], as.numeric)
+exp_agg &lt;- aggregate(. ~ miR_name, data = exp_mat, FUN = mean)
+
+cat(&quot;去重后基因数:&quot;, nrow(exp_agg), &quot;\n&quot;)
+
+# 4. 转为矩阵，行名=gene，列名=GSM
+rownames(exp_agg) &lt;- exp_agg$miR_name
+exp_agg$miR_name &lt;- NULL
+exp &lt;- as.matrix(exp_agg)
+
+# 5. 检查是否需要 log2
+cat(&quot;表达值范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)
+cat(&quot;中位数:&quot;, median(exp, na.rm = TRUE), &quot;\n&quot;)
+
+if (max(exp, na.rm = TRUE) &gt; 100) {
+    cat(&quot;→ 值域大于100，未经 log2 变换，执行 log2(x + 1)\n&quot;)
+    exp &lt;- log2(exp + 1)
+    cat(&quot;log2 后范围: [&quot;, min(exp, na.rm = TRUE), &quot;,&quot;, max(exp, na.rm = TRUE), &quot;]\n&quot;)
+} else {
+    cat(&quot;→ 值域较小，可能已 log 变换，不再处理\n&quot;)
+}
+
+# 6. 验证
+cat(&quot;\n最终矩阵维度:&quot;, nrow(exp), &quot;genes ×&quot;, ncol(exp), &quot;samples\n&quot;)
+cat(&quot;行名前5:&quot;, head(rownames(exp)), &quot;\n&quot;)
+cat(&quot;列名:&quot;, colnames(exp), &quot;\n&quot;)
+exp[1:5, 1:5]
+
+# 7. 保存
+save(exp, file = file.path(data_dir, &quot;GSE200122_exp.RData&quot;))
+cat(&quot;已保存:&quot;, file.path(data_dir, &quot;GSE200122_exp.RData&quot;), &quot;\n&quot;)
+cat(&quot;读取方式: load(&#39;GSE200122_exp.RData&#39;)  # 变量名: exp\n&quot;)</code></pre><p class="message-paragraph">保存后用 <code class="inline-code">load(&quot;GSE200122_exp.RData&quot;)</code> 即可得到 <code class="inline-code">exp</code> 矩阵（行名=miRNA，列名=GSM）。</p><p class="message-paragraph">运行结果如何？</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (46)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_fetchWebPage</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_fetchWebPage_internal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

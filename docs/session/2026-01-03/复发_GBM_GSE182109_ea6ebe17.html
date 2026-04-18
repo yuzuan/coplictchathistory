@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="light dark">
+  <title>报错原因是什么</title>
+  <link rel="stylesheet" href="../../assets/site.css">
+</head>
+<body class="session-page">
+  <header class="standalone-session-header">
+    <div>
+      <p class="main-kicker">Standalone session</p>
+      <h1>报错原因是什么</h1>
+      <p class="selected-session-meta">复发 GBM_GSE182109 · 2026/01/03 00:03 · 12 messages</p>
+    </div>
+    <div class="main-actions">
+      <a class="action-link secondary" href="../../../sessions/2026-01-03/复发_GBM_GSE182109_ea6ebe17.md">Markdown</a>
+      <a class="action-link secondary" href="../index.html#ea6ebe17-0856-45ed-b053-3618c6d91745">Back to list</a>
+    </div>
+  </header>
+
+  <main class="session-page-body">
+    <div class="session-stack">
+      <div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/03 00:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">报错原因是什么</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/03 00:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">报错原因是**键名不匹配**：</p><p class="message-paragraph">在第6个cell中，执行差异分析时使用了自定义的键名：</p><pre class="message-code-block"><code>sc.tl.rank_genes_groups(
+    adata, 
+    groupby=&#39;sample_type&#39;, 
+    reference=&#39;LGG&#39;, 
+    method=&#39;wilcoxon&#39;, 
+    key_added=&#39;wilcoxon_sample_type_vs_LGG&#39;  # 结果保存在这个键名下
+)</code></pre><p class="message-paragraph">但在第7个cell（报错的cell）中，尝试用 <code class="inline-code">key=&#39;wilcoxon&#39;</code> 来获取结果：</p><pre class="message-code-block"><code>deg_results = sc.get.rank_genes_groups_df(adata, group=None, key=&#39;wilcoxon&#39;)</code></pre><p class="message-paragraph">由于 <code class="inline-code">adata.uns</code> 中不存在键名为 <code class="inline-code">&#39;wilcoxon&#39;</code> 的差异分析结果（实际保存的键名是 <code class="inline-code">&#39;wilcoxon_sample_type_vs_LGG&#39;</code>），所以抛出了 <code class="inline-code">KeyError: &#39;wilcoxon&#39;</code>。</p><p class="message-paragraph">**解决方法**：</p><p class="message-paragraph">如果你想对所有 <code class="inline-code">sample_type</code> 组别进行两两比较（不指定参照组），需要重新运行差异分析，不使用 <code class="inline-code">reference</code> 参数，并将结果保存为 <code class="inline-code">key_added=&#39;wilcoxon&#39;</code>，或者在第7个cell中使用正确的键名 <code class="inline-code">key=&#39;wilcoxon_sample_type_vs_LGG&#39;</code>。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/03 00:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">是什么意思</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/03 00:11</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这个新错误 <code class="inline-code">KeyError: &#39;names&#39;</code> 发生在第6个cell中，原因是**参数名写错了**：</p><p class="message-paragraph">在这行代码中：</p><pre class="message-code-block"><code>sc.tl.rank_genes_groups(
+    adata, 
+    groupby=&#39;sample_type&#39;, 
+    reference=&#39;LGG&#39;, 
+    method=&#39;wilcoxon&#39;, 
+    key=&#39;wilcoxon_sample_type_vs_LGG&#39;  # ❌ 错误：应该是 key_added
+)</code></pre><p class="message-paragraph"><code class="inline-code">sc.tl.rank_genes_groups</code> 函数保存结果时应该使用 **<code class="inline-code">key_added</code>** 参数，而不是 <code class="inline-code">key</code> 参数。</p><p class="message-paragraph">- <code class="inline-code">key_added</code>：指定将结果保存到 <code class="inline-code">adata.uns</code> 的哪个键名下<br>- <code class="inline-code">key</code>：是用于读取已有结果的参数</p><p class="message-paragraph">因为使用了错误的参数名，差异分析结果没有正确保存，所以后续调用 <code class="inline-code">sc.pl.rank_genes_groups()</code> 时找不到 <code class="inline-code">&#39;names&#39;</code> 字段。</p><p class="message-paragraph">**正确写法**应该是：</p><pre class="message-code-block"><code>sc.tl.rank_genes_groups(
+    adata, 
+    groupby=&#39;sample_type&#39;, 
+    reference=&#39;LGG&#39;, 
+    method=&#39;wilcoxon&#39;, 
+    key_added=&#39;wilcoxon_sample_type_vs_LGG&#39;  # ✓ 正确
+)</code></pre>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/03 00:20</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根据前面的代码检查和修改一下后面的代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/03 00:20</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我来检查并修改后面的代码，使其与前面的差异分析保持一致。</p><p class="message-paragraph">我发现了问题：后面的代码引用了不存在的差异分析结果键 <code class="inline-code">&#39;wilcoxon&#39;</code>。根据前面的分析，我需要：</p><p class="message-paragraph">1. 在第7个cell之后添加一个新的差异分析，针对 <code class="inline-code">Group</code> 列进行 &#39;Pre-treatment&#39; vs &#39;Post-treatment&#39; 的比较<br>2. 修改后续所有引用错误键的代码</p><p class="message-paragraph">让我先检查是否有 <code class="inline-code">Group</code> 列，然后进行修改：</p><p class="message-paragraph">现在修改后续引用错误键的代码：</p><p class="message-paragraph">已完成修改！主要更改包括：</p><p class="message-paragraph">1. **添加了新的差异分析**（在第7个cell之后）：<br>   - 检查是否存在 <code class="inline-code">Group</code> 列<br>   - 如果存在，则进行 &#39;Post-treatment&#39; vs &#39;Pre-treatment&#39; 的差异分析<br>   - 结果保存为 <code class="inline-code">key_added=&#39;wilcoxon_Group&#39;</code></p><p class="message-paragraph">2. **修改了第13个cell**（&quot;top 20 上调基因 + top20 下调基因热图&quot;部分）：<br>   - 如果有 <code class="inline-code">Group</code> 列，使用 <code class="inline-code">key=&#39;wilcoxon_Group&#39;</code> 和 <code class="inline-code">group=&#39;Post-treatment&#39;</code><br>   - 否则使用 <code class="inline-code">key=&#39;wilcoxon_sample_type_vs_LGG&#39;</code> 和 <code class="inline-code">group=&#39;ndGBM&#39;</code></p><p class="message-paragraph">3. **修改了第17个cell**（&quot;全部的上调基因，下调基因&quot;部分）：<br>   - 同样添加了条件判断，根据是否存在 <code class="inline-code">Group</code> 列选择正确的键和组名</p><p class="message-paragraph">现在代码逻辑一致了，不会再出现 <code class="inline-code">KeyError: &#39;wilcoxon&#39;</code> 的错误。你可以按顺序运行这些cell来进行分析。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (5)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/03 00:22</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根据报错修改一下这部分代码</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/03 00:22</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已修复！将 <code class="inline-code">groupby=&#39;ndGBM&#39;</code> 改为 <code class="inline-code">groupby=&#39;sample_type&#39;</code>，因为根据错误信息，<code class="inline-code">adata.obs</code> 中的可用列是 <code class="inline-code">[&#39;dataset&#39;, &#39;sample&#39;, &#39;sample_type&#39;, &#39;gsm_id&#39;, &#39;patient_id&#39;, ...]</code>，而 <code class="inline-code">ndGBM</code> 只是 <code class="inline-code">sample_type</code> 列中的一个具体值，不能作为 groupby 的参数。</p><p class="message-paragraph">现在这个热图会按 <code class="inline-code">sample_type</code> 分组显示所有样本类型的差异基因表达。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/08 15:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根据前面的代码修改一下这个</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/08 15:56</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我看到问题了。代码中使用了 <code class="inline-code">tissue_type</code> 列，但实际数据中应该是 <code class="inline-code">sample_type</code> 列。让我先查看一下 <code class="inline-code">sample_type</code> 的实际值：</p><p class="message-paragraph">已修复！主要更改：</p><p class="message-paragraph">1. **将所有 <code class="inline-code">tissue_type</code> 改为 <code class="inline-code">sample_type</code>**：这是数据中实际存在的列名</p><p class="message-paragraph">2. **移除了固定的分组假设**：不再假设数据中有 &#39;Peripheral&#39; 和 &#39;Tumor&#39; 这两个值，而是自动获取 <code class="inline-code">sample_type</code> 的所有实际值</p><p class="message-paragraph">3. **动态获取样本类型**：使用 <code class="inline-code">sorted(adata_Macrophage.obs[&#39;sample_type&#39;].unique().tolist())</code> 来获取所有实际的样本类型</p><p class="message-paragraph">4. **改进了统计分析**：对所有 sample_type 分别计算统计量，而不是只比较两组</p><p class="message-paragraph">5. **更新了颜色方案**：使用 <code class="inline-code">plt.cm.Set2</code> 为多个样本类型自动分配颜色</p><p class="message-paragraph">现在代码会根据数据中实际存在的 <code class="inline-code">sample_type</code> 值（如 &#39;LGG&#39;, &#39;ndGBM&#39; 等）进行分析和可视化。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_readFile</span>
+    
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/01/08 15:57</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">仍然有报错</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/01/08 15:57</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">看到错误了，问题出在颜色映射上。<code class="inline-code">plt.cm.Set2(range(len(sample_types)))</code> 返回的是numpy数组，无法作为字典的值进行映射。让我修复这个问题：</p><p class="message-paragraph">已修复！主要更改：</p><p class="message-paragraph">将颜色映射部分从：</p><pre class="message-code-block"><code>colors = plt.cm.Set2(range(len(sample_types)))
+color_map = dict(zip(sample_types, colors))
+point_colors = scatter_data[&#39;sample_type&#39;].map(color_map)</code></pre><p class="message-paragraph">改为：</p><pre class="message-code-block"><code>cmap = plt.cm.Set2
+colors = [cmap(i / len(sample_types)) for i in range(len(sample_types))]
+color_map = dict(zip(sample_types, colors))
+point_colors = [color_map[st] for st in scatter_data[&#39;sample_type&#39;]]</code></pre><p class="message-paragraph">这样每个颜色都是单独的RGBA元组，可以正确地用作字典的值和散点图的颜色参数。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_editNotebook</span>
+    
+  </div></div>
+  </details>
+    </div>
+  </div>
+    </div>
+  </main>
+
+  <script src="../../assets/session.js"></script>
+</body>
+</html>

@@ -24,31 +24,37 @@
 请在终端运行下面的命令并把输出粘贴回来（我们先收集信息，之后再定位修复）。命令针对 zsh（macOS 默认 shell）准备。
 
 - 检查 R 版本与 sessionInfo（在 R 控制台中运行）：
-```r
+
+```
 R.version.string
 sessionInfo()
 ```
 
 - 检查系统架构（Terminal）：
-```bash
+
+```
 uname -m
 ```
+
 输出 x86_64 表示 Intel，arm64 表示 Apple Silicon。
 
 - 检查是否安装 Xcode 命令行工具：
-```bash
+
+```
 xcode-select -p
 ```
 
 - 检查是否通过 Homebrew 安装 R，以及 brew 信息：
-```bash
+
+```
 which R
 brew --version
 brew list --versions r
 ```
 
 - 检查常见依赖库（libxml2, openssl, curl, zlib）与编译器（gcc/gfortran）：
-```bash
+
+```
 brew list --versions libxml2 openssl curl zlib gcc || true
 which gcc
 gcc --version || true
@@ -57,7 +63,8 @@ gfortran --version || true
 ```
 
 - 试用安装并捕获详细错误（把 <package> 换成你要装的包，比如 ggplot2 或 devtools）：
-```r
+
+```
 install.packages("<package>", dependencies=TRUE)
 # 若需要从源码并看到详细日志：
 install.packages("<package>", type="source", INSTALL_opts = c('--configure-args="--with-keep.source"'))
@@ -65,33 +72,39 @@ install.packages("<package>", type="source", INSTALL_opts = c('--configure-args=
 
 ## 常见快速修复命令（可先逐条尝试）
 - 安装/更新 Xcode 命令行工具：
-```bash
+
+```
 xcode-select --install
 ```
 
 - 使用 Homebrew 安装必需库（示例）：
-```bash
+
+```
 brew install libxml2 openssl@3 curl zlib gfortran
 # 可能需要根据 R 与包的期望版本调整 openssl@1.1 或 openssl@3
 ```
 
 - 为 R 设置编译器与库路径（Apple Silicon 常需）：
 在你的 `~/.zshrc` 中（或临时在 shell 里）添加：
-```bash
+
+```
 export LDFLAGS="-L/opt/homebrew/opt/openssl@3/lib -L/opt/homebrew/opt/libxml2/lib -L/opt/homebrew/opt/curl/lib"
 export CPPFLAGS="-I/opt/homebrew/opt/openssl@3/include -I/opt/homebrew/opt/libxml2/include -I/opt/homebrew/opt/curl/include"
 export PKG_CONFIG_PATH="/opt/homebrew/opt/openssl@3/lib/pkgconfig:/opt/homebrew/opt/libxml2/lib/pkgconfig:/opt/homebrew/opt/curl/lib/pkgconfig"
 ```
+
 对于 Intel Homebrew 路径可能是 `/usr/local/opt/...`。
 
 - 如果安装时出现 SSL/OpenSSL 相关错误，试试：
-```bash
+
+```
 # 指向 Homebrew 的 openssl
 export PATH="/opt/homebrew/opt/openssl@3/bin:$PATH"
 ```
 
 - 如果是某些包（如 xml2、curl、openssl）编译失败，尝试先安装对应的系统依赖再安装 R 包，例如：
-```bash
+
+```
 brew reinstall libxml2
 # 然后在 R 里：
 install.packages("xml2", type="source")
