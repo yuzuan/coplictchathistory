@@ -116,25 +116,13 @@ Error: package or namespace load failed for ‘kableExtra’ in loadNamespace(j 
 
 现在让我修改RMD文件，添加更健壮的包加载机制，确保所有依赖都能正确安装和加载：
 
-```
-
-```
-
 我需要修改相关性表格部分，去掉对kableExtra的依赖：
-
-```
-
-```
 
 现在让我们重新运行RMD文件来测试修复效果：
 
 看起来patchwork包在组合不同类型的图形时出现了问题。让我修复组合图形的代码：
 
 让我修复组合图形的代码，使其与ggpairs兼容：
-
-```
-
-```
 
 现在让我们重新运行RMD文件：
 
@@ -158,7 +146,8 @@ Error: package or namespace load failed for ‘kableExtra’ in loadNamespace(j 
 
 ### 2. **优化了包加载机制**
 添加了健壮的包管理函数：
-```r
+
+```
 install_and_load <- function(packages) {
   for (pkg in packages) {
     if (!require(pkg, character.only = TRUE, quietly = TRUE)) {
@@ -175,7 +164,8 @@ install_and_load <- function(packages) {
 
 ### 4. **添加了容错机制**
 对于`kableExtra`表格：
-```r
+
+```
 if (requireNamespace("kableExtra", quietly = TRUE)) {
   # 使用kableExtra美化表格
 } else {

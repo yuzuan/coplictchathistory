@@ -116,37 +116,17 @@
 
 添加 GTF 文件处理功能。我会在文件的开头添加必要的库依赖和 GTF 解析函数，然后在主要调用部分添加 GTF 文件的使用。
 
-```
-
-```
-
 现在让我修复循环的问题，并继续添加 GTF 文件使用部分：
-
-```
-
-```
 
 现在让我在文件末尾添加 GTF 文件的使用：
 
-```
-
-```
-
 现在让我添加最终的列名整理和输出部分：
-
-```
-
-```
 
 现在让我读取完整的更新后的文件内容以确认所有更改都正确应用：
 
 让我读取文件的末尾部分：
 
 我发现末尾有重复的代码，让我修正这个问题：
-
-```
-
-```
 
 完成！我已经成功为
 
@@ -183,7 +163,7 @@
 ✅ **模块化设计**：GTF 解析功能独立为函数，便于维护  
 ✅ **错误处理**：完善的文件检查和异常处理  
 ✅ **进度反馈**：详细的处理进度和结果统计  
-✅ **代码质量**：修复了循环和变量的代码质量问题  
+✅ **代码质量**：修复了循环和变量的代码质量问题
 
 现在
 
@@ -199,29 +179,13 @@
 
 是的，我可以帮你把GTF文件转换成一个RData文件，这样可以大大提高加载速度。让我修改代码来实现这个功能。
 
-```
-
-```
-
 现在让我更新使用GTF映射表的部分：
 
-```
-
-```
-
 现在让我添加一些额外的注释来说明如何使用这个新功能：
-
-```
-
-```
 
 让我创建一个独立的脚本来展示如何使用这个GTF转RData的功能，并创建一个简单的测试脚本：
 
 现在让我在原来的r2.R文件末尾添加一个快速转换的示例：
-
-```
-
-```
 
 完成！我已经为你的r2.R文件添加了GTF文件转RData的完整功能。以下是主要改进：
 
@@ -233,9 +197,11 @@
 - **灵活控制**：可通过`force_rebuild = TRUE`强制重新构建
 
 ### **2. 新增的核心函数**
-```r
+
+```
 load_or_create_gtf_mapping(gtf_file, rdata_file, verbose, force_rebuild)
 ```
+
 - 智能判断是否需要重新解析GTF文件
 - 自动保存和加载映射表
 - 完整的错误处理机制
@@ -257,24 +223,28 @@ load_or_create_gtf_mapping(gtf_file, rdata_file, verbose, force_rebuild)
 ### **5. 使用方式**
 
 **第一次运行**：
-```r
+
+```
 # 会自动从GTF文件解析并保存为RData
 gtf_mapping <- load_or_create_gtf_mapping(gtf_file, rdata_file)
 ```
 
 **后续运行**：
-```r
+
+```
 # 直接加载RData，秒级完成
 gtf_mapping <- load_or_create_gtf_mapping(gtf_file, rdata_file)
 ```
 
 **手动转换**：
-```r
+
+```
 # 设置文件末尾的if(FALSE)为if(TRUE)即可手动转换
 ```
 
 ### **6. 文件路径配置**
-```r
+
+```
 gtf_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/gencode.v46.annotation.gtf.gz"
 rdata_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/otthumt_mapping.RData"
 ```
@@ -295,15 +265,7 @@ rdata_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/otthumt_mapping.RDa
 
 好的，我来帮你修改代码，让它直接执行GTF转RData的转换。我会把示例代码部分设置为自动运行。
 
-```
-
-```
-
 现在让我在文件开头添加tools库的加载，因为我们使用了`tools::file_path_sans_ext`函数：
-
-```
-
-```
 
 现在让我们运行这个脚本来转换GTF文件。但首先让我检查GTF文件是否存在：
 
@@ -312,10 +274,6 @@ rdata_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/otthumt_mapping.RDa
 太棒了！转换成功完成！让我检查生成的文件：
 
 现在让我更新r2.R文件，使它使用这个新生成的RData文件：
-
-```
-
-```
 
 现在让我创建一个简单的测试脚本来验证RData文件的快速加载：
 
@@ -331,10 +289,6 @@ rdata_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/otthumt_mapping.RDa
 
 现在我来删除第80行的那个注释：
 
-```
-
-```
-
 完成！我已经成功删除了第80行的注释"# 如果RData文件不存在或加载失败，从GTF文件构建"。
 
 现在这部分代码更加简洁了，直接从逻辑流程上来执行操作，而不需要额外的注释说明。
@@ -347,21 +301,9 @@ rdata_file_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/otthumt_mapping.RDa
 
 我明白了，您希望简化r2.R文件，让它直接加载已经预处理好的RData文件，而不再处理GTF文件的解析。我来修改代码：
 
-```
-
-```
-
 现在让我更新调用部分，使其直接使用RData文件：
 
-```
-
-```
-
 现在让我删除文件末尾不再需要的GTF转换代码块：
-
-```
-
-```
 
 现在让我测试一下修改后的r2.R文件是否能正常工作：
 

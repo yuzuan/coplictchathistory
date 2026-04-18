@@ -20,7 +20,7 @@
 
 手动注释后保存回 `anno_obj.RData` 的完整流程如下：
 
-```r
+```
 # 1. 定位 anno_obj.RData 的路径
 anno_file <- file.path(.libPaths()[1], "fastGEO", "data", "anno_obj.RData")
 
@@ -65,10 +65,6 @@ head(anno_obj[["GPL57XX"]])
 
 ### 🤖 Copilot <sub>2026/02/26 20:15</sub>
 
-```
-
-```
-
 已在原来的 `anno_file` 备份代码块后面，插入了新的 **"手动注释后保存到 anno_obj.RData"** 章节，包含完整的 8 步流程代码（标注了 `eval=FALSE` 防止误运行）。
 
 ### 👤 User <sub>2026/02/26 20:17</sub>
@@ -78,10 +74,6 @@ head(anno_obj[["GPL57XX"]])
 ### 🤖 Copilot <sub>2026/02/26 20:17</sub>
 
 可以，GPL 号可以直接从文件名中提取，或者用 `read_GPL_file` 返回值的列表名（它本身就是 GPL 号）。更新代码：
-
-```
-
-```
 
 已更新，提供了两种自动获取 GPL 号的方式：
 
@@ -99,9 +91,5 @@ head(anno_obj[["GPL57XX"]])
 ### 🤖 Copilot <sub>2026/02/26 20:19</sub>
 
 两步操作：在 `read_GPL` 系列后面插入该章节，同时删除原来位置的重复内容。
-
-```
-
-```
 
 已完成：将"手动注释后保存到 anno_obj.RData"章节移动到 `read_GPL` 系列代码块的正后方，原来安装说明里的重复内容已删除。位置更合理，因为它本身就是 GPL 注释的后续操作。

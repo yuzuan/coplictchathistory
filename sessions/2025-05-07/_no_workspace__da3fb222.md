@@ -45,7 +45,7 @@
 
 首先创建`data_GO-enrich.csv`文件，包含GO富集分析所需的数据：
 
-```csv
+```
 GO_terms,-Log10(P value),Gene_count
 "protein targeting to membrane",135,1200
 "establishment of protein localization to membrane",125,980
@@ -178,10 +178,12 @@ Daptomycin,△plnF,53.8,56.2,51.4
 
 3. **修复Rmd文件中的一个明显错误**:
    我注意到Rmd文件中有一行代码似乎存在问题：
-   ```r
+
+```
    ounter(lineounter(lineounter(lineounter(lineounter(lineounter(lineounter(lineounter(lineounter(lineounter(line
-   ```
-   这应该被删除，因为它不是有效的R代码。
+```
+
+这应该被删除，因为它不是有效的R代码。
 
 这两个数据文件已经根据代码的需求进行了优化设计：
 

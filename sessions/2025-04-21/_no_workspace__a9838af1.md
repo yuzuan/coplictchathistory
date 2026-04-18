@@ -37,9 +37,8 @@ data <- data.frame(
   row.names = c("Max", "Min", "Diamond", "SiC"),
   check.names = FALSE
 )
-```
 
-```{r data_prep_2}
+{r data_prep_2}
 # 复现2示例数据
 set.seed(123)
 n_vars <- 6
@@ -51,9 +50,8 @@ data <- data.frame(rbind(max_vals, min_vals, data_values))
 colnames(data) <- paste0("Var", 1:n_vars)
 locations <- paste("Location", 1:n_groups)
 rownames(data) <- c("Max", "Min", locations)
-```
 
-```{r data_prep_3}
+{r data_prep_3}
 # 复现3示例数据
 library(tidyverse)
 set.seed(456)
@@ -63,9 +61,8 @@ data <- expand.grid(Cluster = clusters, Variable = vars) %>%
   mutate(Value = runif(n(), 0.1, 0.9)) %>%
   pivot_wider(names_from = Variable, values_from = Value)
 global_max <- ceiling(max(data %>% select(-Cluster)))
-```
 
-```{r data_prep_4}
+{r data_prep_4}
 # 复现4示例数据
 set.seed(789)
 groups <- c("PG3:High", "PG2:Low", "PG1:Low")
@@ -97,7 +94,9 @@ data <- data.frame(
 
 我将为每个雷达图分别创建示例数据，这些数据将符合您代码中所需的格式和结构：
 
-````
+`
+
+```
 
 # 加载包
 library(fmsb) # 绘制雷达图
@@ -115,11 +114,15 @@ data <- data.frame(
 )
 
 # 定义填充颜色并设置透明度。
-````
+```
+
+`
 
 目前我已经添加了第一个雷达图的示例数据，接下来我将继续为剩余的三个雷达图创建示例数据：
 
-````
+`
+
+```
 
 # 加载包
 library(fmsb) # 绘制雷达图
@@ -138,11 +141,15 @@ locations <- paste("Location", 1:n_groups)
 rownames(data) <- c("Max", "Min", locations)
 
 # 设置颜色
-````
+```
+
+`
 
 我将继续为您创建剩余两个雷达图的示例数据，并插入到相应位置：
 
-````
+`
+
+```
 
 # 加载必要的包
 library(tidyverse)
@@ -162,11 +169,15 @@ data <- expand.grid(Cluster = clusters, Variable = vars) %>%
 global_max <- ceiling(max(data %>% select(-Cluster)))
 
 # 设置颜色
-````
+```
+
+`
 
 让我继续为您创建第四个雷达图的示例数据：
 
-````
+`
+
+```
 
 # 加载必要的包
 library(tidyverse)
@@ -192,7 +203,9 @@ data <- data.frame(
 )
 
 # 设置颜色
-````
+```
+
+`
 
 我已经成功地为您的四个雷达图创建了示例数据。每个数据集都已插入到相应的读入数据位置前，并且根据每种图表类型的需求定制了适当的数据结构：
 
