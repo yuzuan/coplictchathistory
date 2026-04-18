@@ -5,8 +5,8 @@
 | Session ID | `e59e7b1f-127f-4c04-88b8-b58e4530e2b6` |
 | Workspace | copilot-chat-sync |
 | Start | 2026/04/17 21:42 |
-| End | 2026/04/18 20:25 |
-| Messages | 14 |
+| End | 2026/04/18 20:26 |
+| Messages | 15 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -113,3 +113,20 @@ aria2c --all-proxy="http://127.0.0.1:<port>" ...
 ### 🤖 Copilot <sub>2026/04/18 20:25</sub>
 
 让我看看这个包的信息： 
+
+### 🤖 Copilot <sub>2026/04/18 20:26</sub>
+
+**不能直接在 Python 中使用。** `scop` 是一个 **R 包**（92.4% R 代码），基于 Seurat 生态，所有可视化函数（`CellDimPlot`, `FeatureDimPlot`, `GroupHeatmap` 等）都是 R/ggplot2 实现的。
+
+它内部的 7.6% Python 仅通过 `reticulate` 调用 scVelo、PAGA、Palantir、CellRank 等分析工具，**不提供 Python 绑定或 Python 绘图 API**。
+
+如果你想在 Python 中实现类似的单细胞可视化，对应工具是：
+
+| scop (R) | Python 等价 |
+|-----------|-------------|
+| `CellDimPlot` | `sc.pl.umap` / `sc.pl.embedding` |
+| `FeatureDimPlot` | `sc.pl.umap(..., color=)` |
+| `GroupHeatmap` | `sc.pl.heatmap` / `sc.pl.matrixplot` |
+| `RunSCVELO` / `VelocityPlot` | `scvelo` 直接用 |
+| `RunPAGA` / `PAGAPlot` | `sc.tl.paga` + `sc.pl.paga` |
+| `RunEnrichment` | `gseapy` / `decoupler` | 
