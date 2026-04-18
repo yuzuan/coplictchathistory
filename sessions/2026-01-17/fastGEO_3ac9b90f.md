@@ -25,10 +25,6 @@
 
 让我在文件末尾添加这些新的分析代码:
 
-```
-
-```
-
 完成了！我已经为您在
 
 文件中添加了以下新功能：
@@ -47,7 +43,7 @@
   - Y轴：-log10(Adjusted P-value)
   - 点的大小表示富集到的基因数量
   - 自动标注Top 15最显著的通路
-  
+
 - **第二种火山图**: 按基因数量渐变着色
   - 更加突出富集到更多基因的通路
 
@@ -76,10 +72,6 @@
 ### 🤖 Copilot <sub>2026/01/17 19:35</sub>
 
 我理解了！针对单个基因的情况，我会修改代码，提供更合适的分析方法。单个基因无法做传统的富集分析（需要多个基因），但我们可以查询这个基因参与了哪些KEGG通路：
-
-```
-
-```
 
 完成！我已经修改了代码，专门针对**单个基因**的KEGG分析。新版本代码的特点：
 
@@ -111,7 +103,8 @@
 
 ## 使用方法：
 只需修改这一行：
-```r
+
+```
 gene_of_interest <- "TP53"  # 改为您关注的基因，如 "MYC", "EGFR" 等
 ```
 
@@ -124,10 +117,6 @@ gene_of_interest <- "TP53"  # 改为您关注的基因，如 "MYC", "EGFR" 等
 ### 🤖 Copilot <sub>2026/01/17 19:40</sub>
 
 我理解了！根据您提供的图片，这是针对**某个KEGG通路中所有基因**的火山图，并突出显示特定基因（如BCL2）。我来为您添加这个功能：
-
-```
-
-```
 
 完成！我已经添加了**特定KEGG通路的基因火山图**功能，可以完美复现您图片中的效果。
 
@@ -142,7 +131,8 @@ gene_of_interest <- "TP53"  # 改为您关注的基因，如 "MYC", "EGFR" 等
 - 其他显著基因用黑色，非显著基因用灰色
 
 #### 2. **配置参数**（修改这两个变量）：
-```r
+
+```
 target_gene <- "BCL2"           # 要突出显示的目标基因
 pathway_name <- "Apoptosis"     # KEGG通路名称
 ```
@@ -168,7 +158,8 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
 - `KEGG_04210_BCL2_volcano_data.csv` - 数据文件
 
 #### 6. **支持的通路示例**：
-```r
+
+```
 "Apoptosis"          # 凋亡
 "Cell cycle"         # 细胞周期
 "p53 signaling"      # p53信号通路
@@ -195,14 +186,6 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
 
 让我修复这些问题：
 
-```
-
-```
-
-```
-
-```
-
 好的！已经修复了问题。现在让我检查是否还有其他错误：
 
 完美！已经修复了代码中的问题：
@@ -226,10 +209,6 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
 火山图要标注pathway_name <- "Apoptosis"啊
 
 ### 🤖 Copilot <sub>2026/01/17 19:46</sub>
-
-```
-
-```
 
 完成！现在火山图的标题会使用您输入的 `pathway_name`（例如"Apoptosis"），而不是从KEGG描述中提取的复杂文本。
 
@@ -257,10 +236,6 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
                     show.legend = FALSE)但是那个 目标 gene 要加粗大写
 
 ### 🤖 Copilot <sub>2026/01/17 19:49</sub>
-
-```
-
-```
 
 完成！已经将火山图样式修改为您要求的风格：
 
@@ -294,17 +269,9 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
 
 ### 🤖 Copilot <sub>2026/01/17 19:52</sub>
 
-```
-
-```
-
 代码看起来是完整的，让我检查错误信息。这个错误可能是格式检查的误报。让我验证一下整个代码块是否完整：
 
 我发现问题了！`geom_text_repel` 缺少了闭合括号和后续代码。让我修复：
-
-```
-
-```
 
 完美！已经完成修改：
 
@@ -362,10 +329,6 @@ pathway_name <- "Apoptosis"     # KEGG通路名称
 修复成完整的独立代码块
 
 ### 🤖 Copilot <sub>2026/01/17 19:59</sub>
-
-```
-
-```
 
 已修复完成！我将残留代码改造成了一个**完整的独立代码块**：
 
@@ -436,27 +399,25 @@ Warning messages:
 
 ## 问题根源：
 
-```r
+```
 scale_x_continuous(limits = c(-3, 3))  # ← 这行代码限制了x轴范围
 ```
 
 ## 解决方案：
-
-```
-
-```
 
 已修复！主要改动：
 
 ## ✅ 修改内容：
 
 **替换**：
-```r
+
+```
 scale_x_continuous(limits = c(-3, 3))  # 会删除超出范围的数据
 ```
 
 **为**：
-```r
+
+```
 coord_cartesian(xlim = c(-3, 3))  # 只限制视图，保留所有数据
 ```
 
@@ -482,10 +443,6 @@ xY轴的标注都加粗
 
 ### 🤖 Copilot <sub>2026/01/17 20:11</sub>
 
-```
-
-```
-
 已完成！添加了 `axis.title = element_text(face = "bold")`，现在X轴和Y轴的标签（"log2Change" 和 "-log10(FDR)"）都会以**粗体**显示。
 
 ### 👤 User <sub>2026/01/17 20:13</sub>
@@ -494,10 +451,6 @@ title = "Volcano Plot",
         color = "Expression"标注也加粗
 
 ### 🤖 Copilot <sub>2026/01/17 20:13</sub>
-
-```
-
-```
 
 已完成！现在所有标注都会以**粗体**显示：
 - ✅ **标题**（"Volcano Plot"）
@@ -510,10 +463,6 @@ title = "Volcano Plot",
 要求生成的 DEG 改成 DEG_tb，DEG_tb内的列名分别为"logFC"     "AveExpr"   "t"         "P.Value"   "adj.P.Val" "B"         "DEG"
 
 ### 🤖 Copilot <sub>2026/01/17 20:32</sub>
-
-```
-
-```
 
 已完成修改！主要变更：
 
@@ -540,10 +489,6 @@ title = "Volcano Plot",
 ### 🤖 Copilot <sub>2026/01/17 20:33</sub>
 
 我将修改关键部分，移除别名机制，让所有代码直接使用 DEG_tb 和正确的列名：
-
-```
-
-```
 
 部分修改成功。让我继续修改其余部分：
 
@@ -580,10 +525,6 @@ title = "Volcano Plot",
 中需要修改的地方：
 
 现在我来批量修改所有需要更新的地方：
-
-```
-
-```
 
 完成！已将
 
@@ -624,10 +565,6 @@ title = "Volcano Plot",
 
 ### 🤖 Copilot <sub>2026/01/17 20:44</sub>
 
-```
-
-```
-
 完成！已优化代码结构：
 
 ✅ **优化内容**：
@@ -643,10 +580,6 @@ title = "Volcano Plot",
 这部分改一下
 
 ### 🤖 Copilot <sub>2026/01/17 20:46</sub>
-
-```
-
-```
 
 完成！已优化"全部差异基因热图"部分：
 
@@ -671,12 +604,14 @@ title = "Volcano Plot",
 是的，确实不一样！
 
 **火山图**（第55-56行）：按 **logFC 绝对值**排序 → 选择**变化幅度最大**的基因
-```r
+
+```
 top_up <- DEG_up[order(abs(DEG_up$logFC), decreasing = TRUE), ][1:min(10, nrow(DEG_up)), ]
 ```
 
 **热图**（第101-102行）：按 **adj.P.Val** 排序 → 选择**统计显著性最高**的基因
-```r
+
+```
 DEG_up_sorted <- DEG_up[order(DEG_up$adj.P.Val), ]
 ```
 
@@ -707,44 +642,52 @@ DEG_up_sorted <- DEG_up[order(DEG_up$adj.P.Val), ]
 有两种选择模式（通过 `method` 参数控制）：
 
 - **`method = "logFC"`（默认）**：
-  ```r
+
+```
   DEG_tb = DEG_tb[order(DEG_tb$logFC, decreasing = TRUE), ]
   DEG_tb_UP = DEG_tb[DEG_tb$DEG == "Up", ]
   UP_top10 = head(rownames(DEG_tb_UP), ntop)
   DEG_tb_DN = DEG_tb[DEG_tb$DEG == "Down", ]
   DN_top10 = tail(rownames(DEG_tb_DN), ntop)
-  ```
-  - **上调基因**：按 `logFC` 降序排列，取前 ntop 个（logFC 最大）
+```
+
+- **上调基因**：按 `logFC` 降序排列，取前 ntop 个（logFC 最大）
   - **下调基因**：按 `logFC` 降序排列，取后 ntop 个（logFC 最小，即负值最大）
 
 - **`method = "pvalue"`**：
-  ```r
+
+```
   DEG_tb = DEG_tb[order(DEG_tb$adj.P.Val), ]  # 或 P.Value
   DEG_tb_UP = DEG_tb[DEG_tb$DEG == "Up", ]
   UP_top10 = head(rownames(DEG_tb_UP), ntop)
   DEG_tb_DN = DEG_tb[DEG_tb$DEG == "Down", ]
   DN_top10 = head(rownames(DEG_tb_DN), ntop)
-  ```
-  - **上调和下调基因都是 `head()`**：按 **P 值升序**排列，取最显著的 ntop 个
+```
+
+- **上调和下调基因都是 `head()`**：按 **P 值升序**排列，取最显著的 ntop 个
 
 ### **2. `plot_volcano_limma` 函数**
 标注基因的选择也有两种模式（通过 `method` 参数控制）：
 
 - **`method = "logFC"`（默认）**：
-  ```r
+
+```
   DEG_tb = DEG_tb[order(DEG_tb$logFC, decreasing = TRUE), ]
   UP_top10 = head(rownames(DEG_tb_UP), label.top)
   DN_top10 = tail(rownames(DEG_tb_DN), label.top)
-  ```
-  - 与热图的 logFC 模式相同
+```
+
+- 与热图的 logFC 模式相同
 
 - **`method = "pvalue"`**：
-  ```r
+
+```
   DEG_tb = DEG_tb[order(DEG_tb$adj.P.Val), ]
   UP_top10 = head(rownames(DEG_tb_UP), label.top)
   DN_top10 = head(rownames(DEG_tb_DN), label.top)
-  ```
-  - 与热图的 pvalue 模式相同
+```
+
+- 与热图的 pvalue 模式相同
 
 ---
 
@@ -764,10 +707,6 @@ DEG_up_sorted <- DEG_up[order(DEG_up$adj.P.Val), ]
 那我这里也改成 logFC
 
 ### 🤖 Copilot <sub>2026/01/17 21:03</sub>
-
-```
-
-```
 
 已完成修改！现在热图和火山图的 top 基因选择标准统一为：
 

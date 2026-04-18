@@ -67,7 +67,8 @@
 建议的排查与修复步骤（在 notebook 中运行）：
 
 1) 快速诊断当前数据类型
-```python
+
+```
 import numpy as np, scipy.sparse as sp
 print(type(adata.X), getattr(adata.X, "dtype", None))
 print("is sparse:", sp.issparse(adata.X))
@@ -82,7 +83,8 @@ for k in adata.layers.keys():
 ```
 
 2) 如果发现 dtype 是 object（或非浮点数），把数据转换为数值（推荐 float32）：
-```python
+
+```
 import numpy as np, scipy.sparse as sp
 if sp.issparse(adata.X):
     adata.X.data = adata.X.data.astype(np.float32)
@@ -98,7 +100,8 @@ if "scaled" in adata.layers:
 ```
 
 3) 如果 `adata.X` 中包含非数值（例如字符串、None），需回退并重新从原始 10x 文件读取 AnnData，或清理/填充这些非数值项后再转换：
-```python
+
+```
 # 重新读取（示例）
 adata = sc.read_10x_mtx("data/GSE163973_RAW/KF1_matrix/", var_names='gene_symbols', cache=True)
 adata.X = adata.X.astype(np.float32)
@@ -120,7 +123,8 @@ adata.X = adata.X.astype(np.float32)
 
 排查与快速修复（建议执行）
 - 诊断当前数据类型（在 notebook 运行）：
-```python
+
+```
 import numpy as np, scipy.sparse as sp
 print(type(adata.X), getattr(adata.X, "dtype", None))
 print("is sparse:", sp.issparse(adata.X))
@@ -132,8 +136,10 @@ for k in adata.layers.keys():
     a = adata.layers[k]
     print(k, type(a), getattr(a, "dtype", None))
 ```
+
 - 如果看到 dtype 为 `object` 或非数值，转换为数值（推荐 float32）：
-```python
+
+```
 import numpy as np, scipy.sparse as sp
 if sp.issparse(adata.X):
     adata.X.data = adata.X.data.astype(np.float32)
@@ -141,10 +147,12 @@ else:
     adata.X = adata.X.astype(np.float32)
 # 同样处理有问题的 layer，例如 adata.layers['scaled']
 ```
+
 - 如果数据中有字符串/None，应该从原始 10x 重新读取数据或清理那些非数值项。
 
 可选验证（查看是否升级过相关包）
-```bash
+
+```
 # conda 环境
 conda list | grep -E "scanpy|numba|numpy|scipy"
 # 或 pip
@@ -167,7 +175,8 @@ pip show scanpy numba numpy scipy
 - numba / numpy / scanpy 版本或线程后端（tbb）出现不兼容，导致 numba 在并行/序列化切换时失败并抛错。
 
 建议的快速排查（在 notebook 运行一段话即可）：
-```python
+
+```
 import numpy as np, scipy.sparse as sp
 
 def check_matrix(a, name):
@@ -193,7 +202,8 @@ except Exception:
 
 快速修复思路
 - 若发现某个 matrix 的 dtype 为 object：把它转为数值（np.float32）或重新从原始 10x 读取；示例：
-```python
+
+```
 import numpy as np
 if sp.issparse(adata.X):
     adata.X.data = adata.X.data.astype(np.float32)
@@ -201,6 +211,7 @@ else:
     adata.X = adata.X.astype(np.float32)
 # 同理处理有问题的 layers 或 adata.raw.X
 ```
+
 - 若所有数据都是数值，则可能是库不兼容：检查/回滚 `scanpy`、`numba`、`numpy`、`scipy` 版本，或安装 `tbb`（警告里建议的）：`conda install -c conda-forge tbb`，或临时把 numba 的并行选项禁用（scanpy 内部实现上不太好改）。
 
 我可以：
