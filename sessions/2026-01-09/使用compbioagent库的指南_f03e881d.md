@@ -32,8 +32,7 @@
 ## 安装步骤
 
 ### 1. 下载代码
-
-```
+```bash
 cd /tmp
 git clone https://github.com/interactivereport/CompBioAgent.git
 rsync -avr /tmp/CompBioAgent/webapp/ /var/www/html/compbioagent/
@@ -41,8 +40,7 @@ rm -Rf /tmp/CompBioAgent/
 ```
 
 ### 2. 配置数据库
-
-```
+```bash
 # 创建 MySQL 用户和数据库
 mysql -u root -p
 CREATE USER mysql_user@localhost IDENTIFIED BY 'mysql_password';
@@ -55,8 +53,7 @@ zcat db_compbioagent.sql.gz | mysql -u mysql_user -pmysql_password db_compbioage
 ```
 
 ### 3. 设置权限
-
-```
+```bash
 chown -R apache:apache /var/www/html/compbioagent_share/
 chown -R apache:apache /var/www/html/compbioagent/
 chmod -R ug+rw /var/www/html/compbioagent_share/
@@ -236,7 +233,7 @@ dev.off()4575B4蓝色代码。 D73027红色颜色代码
 
 根据你提供的颜色代码，这里是自定义颜色的修改方案：
 
-```
+```r
 # ========== 方案 1：使用你指定的蓝色和红色 ==========
 
 # 分组颜色
@@ -269,7 +266,7 @@ heatmap_colors <- colorRampPalette(rev(brewer.pal(11, "RdBu")))(100)
 
 **完整的热图注释代码：**
 
-```
+```r
 # 顶部注释
 ha_deg <- HeatmapAnnotation(
     Group = annotation_col$Group,
@@ -396,7 +393,7 @@ dev.off()分组颜色不改，主题颜色改一下
 
 好的，保持分组颜色不变，只修改热图主体颜色：
 
-```
+```r
 npg_colors <- pal_npg("nrc")(10)
 group_colors <- c("AmRS" = npg_colors[4], "AmBR" = npg_colors[1])
 
@@ -479,7 +476,7 @@ https://www.ncbi.nlm.nih.gov/datasets/genome/GCA_002759435.3/这个网站的 gen
 
 ## 方法 1：直接从 NCBI 下载注释文件
 
-```
+```bash
 # 1. 下载基因组注释文件（GFF/GTF格式）
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/759/435/GCA_002759435.3_Cand_auris_B8441_V3/GCA_002759435.3_Cand_auris_B8441_V3_genomic.gff.gz
 
@@ -495,7 +492,7 @@ gunzip *.gz
 
 ## 方法 2：使用 R 进行基因注释转换
 
-```
+```r
 library(tidyverse)
 library(biomaRt)
 
@@ -526,7 +523,7 @@ annotated_genes <- your_gene_ids %>%
 
 ## 方法 3：解析 GFF 文件获取注释
 
-```
+```r
 library(rtracklayer)
 
 # 读取GFF文件
@@ -551,7 +548,7 @@ head(gene_annotation)
 
 ## 方法 4：使用 Python 解析注释文件
 
-```
+```python
 import pandas as pd
 import gzip
 
@@ -578,7 +575,7 @@ annotations = [id_to_annotation.get(gid, 'Not found') for gid in your_gene_ids]
 
 ## 方法 5：使用 NCBI Datasets 命令行工具
 
-```
+```bash
 # 安装 NCBI datasets
 curl -o datasets 'https://ftp.ncbi.nlm.nih.gov/pub/datasets/command-line/v2/linux-amd64/datasets'
 chmod +x datasets
@@ -595,7 +592,7 @@ unzip ncbi_dataset.zip
 
 ## 推荐工作流程
 
-```
+```r
 library(tidyverse)
 
 # 1. 下载并读取特征表
@@ -645,7 +642,7 @@ PIS 开头的 gene 是要找哪个啊
 
 ### 2. 查找方法
 
-```
+```bash
 # 下载特征表并搜索
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCA/002/759/435/GCA_002759435.3_Cand_auris_B8441_V3/GCA_002759435.3_Cand_auris_B8441_V3_feature_table.txt.gz
 
@@ -655,7 +652,7 @@ zcat GCA_002759435.3_Cand_auris_B8441_V3_feature_table.txt.gz | grep -i "^PIS\|[
 
 ### 3. 使用 R 查找
 
-```
+```r
 library(tidyverse)
 
 # 读取特征表
@@ -809,7 +806,6 @@ Candidozyma auris的还有哪些 gene 注释的密码
 ## Candidozyma auris GCA_002759435.3 可用的基因注释信息：
 
 ### 1. **当前基因组的ID系统**
-
 ```
 - Locus tag (新): B9J08_00001 ~ B9J08_05594
 - Locus tag (旧): B9J08_001530 ~ B9J08_XXXXXX
@@ -819,8 +815,7 @@ Candidozyma auris的还有哪些 gene 注释的密码
 ### 2. **其他 C. auris 基因注释资源**
 
 **CDC 参考基因组（更完整的注释）：**
-
-```
+```bash
 # B8441 参考株的其他版本
 https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/759/435/
 
@@ -841,8 +836,7 @@ https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/002/759/435/
 - 提供：GO、KEGG、InterPro 注释
 
 **UniProt：**
-
-```
+```bash
 # 搜索 C. auris 蛋白质
 https://www.uniprot.org/uniprotkb?query=organism_id:498019
 ```
@@ -914,7 +908,7 @@ https://www.uniprot.org/uniprotkb?query=organism_id:498019
 
 ### 💡 使用方法
 
-```
+```bash
 # 搜索特定基因
 grep 'B9J08_00330' ~/Cauris_gene_annotation.txt
 
@@ -975,7 +969,7 @@ grep -v 'hypothetical' ~/Cauris_gene_annotation.txt > annotated_genes.txt
 
 ### 📁 已生成的文件
 
-```
+```bash
 ~/PIS_mapping.txt                    # PIS基因映射关系
 ~/Cauris_gene_annotation.txt         # 完整基因注释表
 ~/Calbicans_feature_table.txt.gz     # C. albicans 注释
@@ -1208,7 +1202,7 @@ Python执行失败了。让我用简单方式完成：
 
 ### 📖 文件使用方法
 
-```
+```r
 # 在R中读取
 library(tidyverse)
 data <- read_tsv("~/DESeq_with_B9J08_final.txt")
@@ -1274,7 +1268,7 @@ data %>% filter(B9J08_ID == "B9J08_004831")
 
 1. **自动检索10个肺癌免疫治疗GEO数据集**
    - GSE126044, GSE135222, GSE93157 等
-
+   
 2. **提取每个数据集的完整临床信息**
    - 患者特征
    - 治疗信息
@@ -1292,14 +1286,13 @@ data %>% filter(B9J08_ID == "B9J08_004831")
 
 ### 🚀 立即运行
 
-```
+```bash
 cd ~
 Rscript lung_cancer_PDL1_GEO_analysis.R
 ```
 
 或在R中：
-
-```
+```r
 source("~/lung_cancer_PDL1_GEO_analysis.R")
 ```
 
@@ -1319,7 +1312,6 @@ source("~/lung_cancer_PDL1_GEO_analysis.R")
 ### 📖 脚本会输出
 
 对每个GEO数据集：
-
 ```
 ================================================================
 处理数据集: GSE126044
@@ -1349,24 +1341,21 @@ source("~/lung_cancer_PDL1_GEO_analysis.R")
 ### 🔍 后续步骤
 
 1. **查看摘要**
-
-```
+   ```r
    summary <- read.delim("lung_cancer_PDL1_GEO_summary.txt")
    View(summary)
-```
+   ```
 
 2. **筛选有结局的数据集**
-
-```
+   ```r
    with_outcome <- summary[summary$Has_Outcome == TRUE, ]
-```
+   ```
 
 3. **查看具体临床数据**
-
-```
+   ```r
    gse126044 <- read.delim("GSE126044_clinical_data.txt")
    table(gse126044$response)
-```
+   ```
 
 ### 💡 重要提示
 
@@ -1398,8 +1387,7 @@ PD-L1
 - 生成摘要报告
 
 **使用方法：**
-
-```
+```bash
 cd ~
 Rscript lung_cancer_PDL1_GEO_analysis.R
 ```
@@ -1416,6 +1404,13 @@ Rscript lung_cancer_PDL1_GEO_analysis.R
 
 ### 🤖 Copilot <sub>2026/01/12 12:08</sub>
 
+```
+
+```
+
+```
+
+```
 已修改脚本！现在它会：
 
 ✅ **创建独立目录** `GEO_PDL1_Data/` 存放所有输出文件  
@@ -1424,7 +1419,6 @@ Rscript lung_cancer_PDL1_GEO_analysis.R
 ✅ **总摘要文件**显示哪些数据集有结局信息
 
 运行后文件结构：
-
 ```
 GEO_PDL1_Data/
 ├── lung_cancer_PDL1_GEO_summary.csv     ← 总览表
@@ -1480,6 +1474,17 @@ GEO_PDL1_Data/
 
 代码有bug，需要修复获取metadata的方式。让我更新脚本：
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 还需要修复返回结果部分：
 
 好的，代码已经修复了。现在重新运行：

@@ -32,7 +32,7 @@ SAT_normal_weight_143要保留132_1和143如何写 R代码
 
 ## 方案 1：使用 `sub()` 提取最后的数字部分
 
-```
+```r
 # 从 title 列提取最后的下划线后的内容（如 132_1 或 143）
 pd$id <- sub(".*_([0-9_]+)$", "\\1", pd$title)
 
@@ -42,7 +42,7 @@ pd_filtered <- pd[pd$id %in% c("132_1", "143"), ]
 
 ## 方案 2：使用 `stringr` 包（推荐）
 
-```
+```r
 library(stringr)
 
 # 提取最后一个下划线后的所有内容
@@ -55,14 +55,14 @@ pd_filtered <- pd %>%
 
 ## 方案 3：直接用正则表达式筛选（不创建新列）
 
-```
+```r
 # 直接筛选 title 列中以 _132_1 或 _143 结尾的行
 pd_filtered <- pd[grepl("_(132_1|143)$", pd$title), ]
 ```
 
 ## 完整示例代码
 
-```
+```r
 # 创建示例数据
 pd <- data.frame(
   title = c("SAT_obese_132_1", 
@@ -113,7 +113,7 @@ _132_1要保留132_1
 
 ## 提取时去掉开头的下划线
 
-```
+```r
 # 方法 1: 使用 sub() 去掉开头的下划线
 pd$id <- sub(".*_([0-9_]+)$", "\\1", pd$title)
 
@@ -129,7 +129,7 @@ pd_filtered <- pd[pd$id %in% c("132_1", "143"), ]
 
 ## 完整示例
 
-```
+```r
 # 示例数据
 pd <- data.frame(
   title = c("SAT_obese_132_1", 
@@ -151,7 +151,7 @@ pd_filtered <- pd[pd$id %in% c("132_1", "143"), ]
 
 如果您的 ID 格式固定是 `数字_数字` 或纯数字：
 
-```
+```r
 # 精确匹配 数字_数字 或 纯数字
 pd$id <- str_extract(pd$title, "[0-9]+(_[0-9]+)?$")
 
@@ -174,13 +174,13 @@ print(pd$title)
 
 我明白了，您想看看 `pd$title` 的实际内容。请在 R 控制台中运行：
 
-```
+```r
 print(pd$title)
 ```
 
 如果您想看到更多信息，也可以使用：
 
-```
+```r
 # 查看所有 title 值
 print(pd$title)
 
@@ -197,7 +197,7 @@ str(pd$title)
 如果您能分享 `print(pd$title)` 的输出结果，我可以帮您编写更精确的提取代码！通常输出会类似：
 
 ```
-[1] "SAT_obese_132_1"       "SAT_normal_weight_143" "SAT_obese_156_2"
+[1] "SAT_obese_132_1"       "SAT_normal_weight_143" "SAT_obese_156_2"      
 ```
 
 请告诉我您看到了什么内容，我可以根据实际格式调整代码。
@@ -233,7 +233,7 @@ print(pd$title)
 
 ## 解决方案
 
-```
+```r
 # 提取最后一个下划线后的所有内容
 pd$id <- sub(".*_", "", pd$title)
 
@@ -248,7 +248,7 @@ print(pd_filtered)
 
 ## 验证提取结果
 
-```
+```r
 # 提取 ID
 pd$id <- sub(".*_", "", pd$title)
 
@@ -257,7 +257,6 @@ head(data.frame(title = pd$title, id = pd$id), 10)
 ```
 
 **预期输出：**
-
 ```
                   title     id
 1       SAT_obese_108    108
@@ -274,7 +273,7 @@ head(data.frame(title = pd$title, id = pd$id), 10)
 
 ## 完整代码
 
-```
+```r
 # 提取 ID
 pd$id <- sub(".*_", "", pd$title)
 
@@ -298,7 +297,7 @@ pd的 id 列为 1 的改为132_1
 
 明白了！您想要修改 `pd` 数据框中 `id` 列值为 `1` 的行，将其改为 `132_1`。
 
-```
+```r
 # 将 id 列中值为 1 的改为 "132_1"
 pd$id[pd$id == 1] <- "132_1"
 
@@ -311,7 +310,7 @@ print(pd$id)
 
 ## 如果需要修改多个值
 
-```
+```r
 # 修改单个值
 pd$id[pd$id == 1] <- "132_1"
 
@@ -325,7 +324,7 @@ pd$id <- ifelse(pd$id == 1, "132_1", pd$id)
 
 ## 验证修改
 
-```
+```r
 # 查看修改后的数据
 head(pd[, c("title", "id")], 10)
 

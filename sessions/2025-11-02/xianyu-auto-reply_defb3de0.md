@@ -47,8 +47,7 @@
 - ⚠️ **重要**: 首次登录后请立即修改默认密码！
 
 ### 📋 常用管理命令
-
-```
+```bash
 # 查看容器状态
 docker ps | grep xianyu-auto-reply
 
