@@ -28,7 +28,7 @@ In addition: Warning messages:
 
 在 R 中运行以下代码配置清华镜像：
 
-```
+```r
 # 设置 Bioconductor 镜像
 options(BioC_mirror="https://mirrors.tuna.tsinghua.edu.cn/bioconductor")
 
@@ -40,14 +40,14 @@ options("repos" = c(CRAN="https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
 
 创建或编辑 `.Rprofile` 文件（在用户主目录下）：
 
-```
+```r
 # 在 R 中运行
 file.edit("~/.Rprofile")
 ```
 
 添加以下内容：
 
-```
+```r
 local({
   r <- getOption("repos")
   r["CRAN"] <- "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"
@@ -58,7 +58,7 @@ local({
 
 ## 方案 3：其他可用镜像
 
-```
+```r
 # 中科大镜像
 options(BioC_mirror="https://mirrors.ustc.edu.cn/bioc/")
 
@@ -70,7 +70,7 @@ options(BioC_mirror="https://mirror.nju.edu.cn/bioconductor/")
 
 配置镜像后，重新安装或使用 BiocManager：
 
-```
+```r
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
@@ -135,7 +135,7 @@ local({
 
 在你的 `.Rprofile` 文件中，将最后的镜像配置部分替换为：
 
-```
+```r
 local({
     r <- getOption("repos")
     r["CRAN"] <- "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"
@@ -154,7 +154,7 @@ local({
 
 ## 立即应用配置（在当前 R 会话中运行）
 
-```
+```r
 # 1. 设置镜像
 options(BioC_mirror = "https://mirrors.tuna.tsinghua.edu.cn/bioconductor")
 Sys.setenv(BIOCONDUCTOR_CONFIG_FILE = "https://mirrors.tuna.tsinghua.edu.cn/bioconductor/config.yaml")
@@ -169,7 +169,7 @@ BiocManager::install(version = "3.19", update = FALSE, ask = FALSE)
 
 ## 如果清华镜像仍有问题，可以尝试中科大镜像
 
-```
+```r
 local({
     r <- getOption("repos")
     r["CRAN"] <- "https://mirrors.ustc.edu.cn/CRAN/"

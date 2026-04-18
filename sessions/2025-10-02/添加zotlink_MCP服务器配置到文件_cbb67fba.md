@@ -45,6 +45,9 @@
 
 我看到您想要将 zotlink MCP 服务器配置添加到现有的 `cline_mcp_settings.json` 文件中。我将把这个新的配置添加到现有的 `mcpServers` 对象中。
 
+```
+
+```
 ✅ 已成功将 zotlink MCP 服务器配置添加到您的配置文件中！
 
 配置已经添加到 `mcpServers` 对象中，包含了：

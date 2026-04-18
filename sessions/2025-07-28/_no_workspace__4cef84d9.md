@@ -18,16 +18,15 @@
 
 以下是从你提供的内容中提取的R代码，并整理为R Markdown（.Rmd）格式，方便你直接用于分析或复现：
 
-```
+```markdown
 ---
 title: "GEO数据基因注释（GPL17586）转换为gene symbol"
 output: html_document
 ---
 
 # 1. 提取基因标志
-```
 
-{r}
+```{r}
 rawFile = "D:/Desktop/GPL17586_annoT.txt"
 annoT = data.table::fread(rawFile, data.table = FALSE)
 SYMBOL = sapply(strsplit(a[, 8], "[/ ]"), function(x) x[5])
@@ -39,52 +38,42 @@ sum(grepl("OTTHUMG", SYMBOL))
 sum(is.na(SYMBOL))
 table(SYMBOL == "---")
 sum(grepl("00000", SYMBOL))
-
 ```
 
 # 2. ID转换
-```
 
-{r}
+```{r}
 ref_gene = sapply(strsplit(readLines("hg19_protein_SYMBOL.txt"), " "), function(x) x[2])
 inter_gene = intersect(SYMBOL, ref_gene)
 str(inter_gene)
-
 ```
 
 # 3. 替换与保存
-```
 
-{r}
+```{r}
 annoT = cbind(gene_name = SYMBOL, annoT)
 save(annoT, file = "RData/GPL17586_aanoT.RData")
-
 ```
 
 # 4. 取子集
-```
 
-{r}
+```{r}
 xexpM = expM[gene_name %in% ref_gene, ]
 xgene_name = gene_name[gene_name %in% ref_gene]
 hd(xexpM); hd(xgene_name)
-
 ```
 
 # 5. 合并基因（去重取均值）
-```
 
-{r}
+```{r}
 xexpM2 = aggregate(xexpM, by = list(xgene_name), mean)
 rownames(xexpM2) = xexpM2[, 1]; xexpM2[, 1] = NULL
 hd(xexpM2)
-
 ```
 
 # 6. 另一种注释方法（分列提取symbol）
-```
 
-{r}
+```{r}
 GPL17586 <- read.table("D:/data/GEO/platform/GPL17586-45144.txt",
                        sep = '\t',quote = "",fill = T,comment.char = "#",
                        header = T,stringsAsFactors = F)

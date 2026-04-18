@@ -36,7 +36,7 @@ if (sum(!is.na(symbol_mapping)) < length(symbol_mapping) * 0.1) {
 
 我理解了，您想将使用 `ENTREZID` 的 `mapIds` 调用也整合到现有的注释转换逻辑中。这样可以形成一个更完善的多重尝试策略：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Rn.eg.db)
 library(org.Hs.eg.db)
@@ -70,7 +70,7 @@ if (sum(!is.na(symbol_mapping)) < length(symbol_mapping) * 0.1) {
 
 是的，`org.Rn.eg.db` 还支持其他多种 keytype。可以查看所有可用的选项：
 
-```
+```r
 library(org.Rn.eg.db)
 keytypes(org.Rn.eg.db)
 ```
@@ -89,7 +89,7 @@ keytypes(org.Rn.eg.db)
 
 如果您的数据 ID 格式已知，可以添加更多策略：
 
-```
+```r
 # 策略4: 尝试 ENSEMBLTRANS (转录本)
 if (sum(!is.na(symbol_mapping)) < length(symbol_mapping) * 0.1) {
     symbol_mapping <- mapIds(org.Rn.eg.db, keys = anno$ID, column = "SYMBOL", 
@@ -119,7 +119,7 @@ Error in .testForValidKeys(x, keys, keytype, fks) :
 
 这个错误说明您的 ID 不是 REFSEQ 格式。需要先查看实际的 ID 格式来确定正确的 keytype：
 
-```
+```r
 # 查看前几个ID的格式
 head(rownames(exp))
 
@@ -138,7 +138,7 @@ head(anno$ID)
 
 看到 ID 格式后，可以直接从合适的 keytype 开始：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Rn.eg.db)
 
@@ -171,7 +171,7 @@ if (sum(!is.na(symbol_mapping)) < length(symbol_mapping) * 0.1) {
 
 可以，这里是一个自动判断ID格式的代码：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Rn.eg.db)
 
@@ -255,7 +255,7 @@ cat("\n最终匹配率:", sum(!is.na(symbol_mapping)), "/", length(symbol_mappin
 
 好的，这是小鼠（Mus musculus）版本的代码：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Mm.eg.db)
 
@@ -339,7 +339,7 @@ cat("\n最终匹配率:", sum(!is.na(symbol_mapping)), "/", length(symbol_mappin
 
 好的，这是人类（Homo sapiens）版本的代码：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 
@@ -435,8 +435,7 @@ colnames(expr_final) <- sub("_.*", "", colnames(expr_final))
 好的，这是整合后的完整代码，包含ID转换和数据处理：
 
 **大鼠版本：**
-
-```
+```r
 library(AnnotationDbi)
 library(org.Rn.eg.db)
 library(dplyr)
@@ -522,8 +521,7 @@ colnames(expr_final) <- sub("_.*", "", colnames(expr_final))
 ```
 
 **小鼠版本：**
-
-```
+```r
 library(AnnotationDbi)
 library(org.Mm.eg.db)
 library(dplyr)
@@ -603,8 +601,7 @@ colnames(expr_final) <- sub("_.*", "", colnames(expr_final))
 ```
 
 **人类版本：**
-
-```
+```r
 library(AnnotationDbi)
 library(org.Hs.eg.db)
 library(dplyr)
@@ -694,15 +691,13 @@ ENST这种也包括了吗？
 是的，已经包括了。在人类版本的代码中：
 
 **检测部分：**
-
-```
+```r
 } else if (any(grepl("^ENST[0-9]+$", sample_ids))) {
     return("ENSEMBLTRANS")
 ```
 
 **转换部分：**
-
-```
+```r
 "ENSEMBLTRANS" = c("ENSEMBLTRANS", "ENSEMBL", "ENTREZID", "REFSEQ"),
 ```
 

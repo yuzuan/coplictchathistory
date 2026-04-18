@@ -124,9 +124,9 @@ Continue with new workspace setup
 
 让我为你修改多因素Cox回归分析的森林图部分：
 
-`
+````
 
-{r}
+```{r}
 # 选择单因素分析中显著的变量(p < 0.05)进行多因素分析
 significant_vars <- univ_results$var[univ_results$pvalue < 0.5]
 
@@ -134,12 +134,12 @@ if(length(significant_vars) > 0) {
   # 构建多因素模型公式
   multi_formula <- as.formula(paste("Surv(time, event) ~", 
                                   paste(significant_vars, collapse="+")))
-
-# 运行多因素Cox回归
+  
+  # 运行多因素Cox回归
   multi_model <- coxph(multi_formula, data=dat)
   multi_summary <- summary(multi_model)
-
-# 创建多因素分析结果数据框
+  
+  # 创建多因素分析结果数据框
   multi_results <- data.frame(
     var = rownames(multi_summary$coefficients),
     HR = round(multi_summary$coefficients[, "exp(coef)"], 2),
@@ -147,15 +147,15 @@ if(length(significant_vars) > 0) {
     HR.95H = round(multi_summary$conf.int[, "upper .95"], 2),
     pvalue = round(multi_summary$coefficients[, "Pr(>|z|)"], 4)
   )
-
-# 显示多因素分析结果
+  
+  # 显示多因素分析结果
   print(multi_results)
-
-# 准备用于forestplot的数据
+  
+  # 准备用于forestplot的数据
   # 创建一个标准差列，用于设置点的大小（可选）
   multi_results$se <- (multi_results$HR.95H - multi_results$HR.95L) / (2 * 1.96)
-
-# 创建数据框，包含变量名、HR值和P值等信息
+  
+  # 创建数据框，包含变量名、HR值和P值等信息
   dt_tmp <- data.frame(
     var = multi_results$var,
     est = multi_results$HR,
@@ -165,8 +165,8 @@ if(length(significant_vars) > 0) {
     pvalue = paste0("P=", multi_results$pvalue),
     hr_text = paste0(multi_results$HR, " (", multi_results$HR.95L, "-", multi_results$HR.95H, ")")
   )
-
-# 添加一行摘要（可选）
+  
+  # 添加一行摘要（可选）
   summary_row <- data.frame(
     var = "Overall", 
     est = NA, 
@@ -177,8 +177,8 @@ if(length(significant_vars) > 0) {
     hr_text = ""
   )
   dt_tmp <- rbind(dt_tmp, summary_row)
-
-# 定义主题
+  
+  # 定义主题
   library(forestplot)
   tm <- forest_theme(base_size = 10,
                      # 置信区间点形状，线类型/颜色/宽度
@@ -202,8 +202,8 @@ if(length(significant_vars) > 0) {
                      footnote_cex = 0.6,
                      footnote_fontface = "italic",
                      footnote_col = "red")
-
-# 保存为PDF文件
+  
+  # 保存为PDF文件
   pdf(paste0(proj, "_multivariate_forest_plot.pdf"), height = 7, width = 10)
   forest(dt_tmp[,c(1, 6, 7)],  # 使用变量名、P值和HR文本列
          est = dt_tmp$est,
@@ -219,8 +219,8 @@ if(length(significant_vars) > 0) {
          footnote = "多因素Cox回归分析森林图",
          theme = tm)
   dev.off()
-
-# 在R Markdown中显示图形
+  
+  # 在R Markdown中显示图形
   forest(dt_tmp[,c(1, 6, 7)],
          est = dt_tmp$est,
          lower = dt_tmp$low, 
@@ -234,12 +234,12 @@ if(length(significant_vars) > 0) {
          ticks_at = c(0.5, 1, 2, 3, 4),
          footnote = "多因素Cox回归分析森林图",
          theme = tm)
-
+  
 } else {
   print("没有变量在单因素分析中达到统计学显著性")
 }
-
-`
+```
+````
 
 现在我已经为您修改了多因素分析的森林图代码，替换了原来的ggplot2版本，改用forestplot包并应用了您想要的自定义主题和样式。
 
@@ -305,9 +305,7 @@ Warning messages:
 
 让我帮您修改代码来解决这些问题：
 
-`
-
-```
+````
 
 # 定义主题
   library(forestplot)
@@ -368,9 +366,7 @@ Warning messages:
          ticks_at = x_ticks,
          footnote = "多因素Cox回归分析森林图",
          theme = tm)
-```
-
-`
+````
 
 我注意到在尝试修改文件时出现了连接错误。让我再次尝试修改您的森林图代码，解决您提到的警告问题。
 
@@ -380,9 +376,7 @@ Warning messages:
 2. `footnote_cex`, `footnote_fontface`, `footnote_col` 将被弃用，应该使用 `footnote_gp` 替代
 3. `ticks_at` 设置超出了 `xlim` 的范围
 
-`
-
-```
+````
 
 # 定义主题
   library(forestplot)
@@ -444,9 +438,7 @@ Warning messages:
          ticks_at = x_ticks,
          footnote = "多因素Cox回归分析森林图",
          theme = tm)
-```
-
-`
+````
 
 我已成功修改了您的森林图代码，解决了之前提到的所有警告问题：
 
@@ -478,9 +470,7 @@ Warning messages:
 
 让我修改您的森林图代码来实现这个效果。
 
-`
-
-```
+````
 
 # 创建多因素分析结果数据框
   multi_results <- data.frame(
@@ -519,9 +509,7 @@ Warning messages:
     pvalue = formatted_pvalue,
     hr_text = paste0(multi_results$HR, " (", multi_results$HR.95L, "-", multi_results$HR.95H, ")")
   )
-```
-
-`
+````
 
 我已经为您修改了多因素分析森林图中的 P 值显示方式。根据您的要求，现在 P 值将按照以下规则显示：
 
@@ -530,8 +518,7 @@ Warning messages:
 3. 当 P ≥ 0.05 时，保留两位小数显示为 "P=x.xx"
 
 具体修改添加了一个格式化 P 值的函数：
-
-```
+```r
 formatted_pvalue <- sapply(multi_results$pvalue, function(p) {
   if (p < 0.001) {
     return("P<0.001")
@@ -544,8 +531,7 @@ formatted_pvalue <- sapply(multi_results$pvalue, function(p) {
 ```
 
 然后在创建数据框时使用了这个格式化后的 P 值：
-
-```
+```r
 dt_tmp <- data.frame(
   ...
   pvalue = formatted_pvalue,
@@ -565,9 +551,7 @@ dt_tmp <- data.frame(
 
 让我来修改单因素分析的森林图代码：
 
-`
-
-```
+````
 
 # 准备用于单因素分析的临床和基因变量
 library(survival)
@@ -697,9 +681,7 @@ forest(dt_univ[,c(1, 6, 7)],
        ticks_at = x_ticks,
        footnote = "单因素Cox回归分析森林图",
        theme = tm)
-```
-
-`
+````
 
 我已经成功修改了单因素分析的森林图代码，使其与多因素分析森林图具有相同的风格和效果。现在单因素分析的森林图也将使用 forestplot 包创建，并具有以下特点：
 
@@ -732,9 +714,9 @@ ggforest(model,data = dat)
 
 下面是我的修改方案：
 
-`
+````
 
-{r}
+```{r}
 # 使用forestplot包创建与其他分析一致风格的森林图
 library(forestplot)
 library(grid)
@@ -844,8 +826,8 @@ forest(dt_model[,c(1, 6, 7)],
 
 # 保留原始ggforest图作为参考（可注释掉）
 # ggforest(model, data = dat)
-
-`
+```
+````
 
 我已经成功修改了您代码中的"3.风险森林图"部分，现在它使用 forestplot 包替代了原来的 ggforest 函数，保持了与您的单因素和多因素分析森林图相同的风格。
 
@@ -874,9 +856,7 @@ forest(dt_model[,c(1, 6, 7)],
 
 让我修改森林图的代码，增加HR文本与其他元素之间的间距：
 
-`
-
-```
+````
 
 # 使用forestplot包创建与其他分析一致风格的森林图
 library(forestplot)
@@ -990,29 +970,24 @@ forest(dt_model[,c(1, 6, 7)],
 
 # 保留原始ggforest图作为参考（可注释掉）
 # ggforest(model, data = dat)
-```
-
-`
+````
 
 我已经成功修改了模型系数森林图的代码，解决了HR文本太拥挤的问题。主要做了以下改进：
 
 1. 在HR文本前添加了20个空格字符，使文本向右移动：
-
-```
+   ```r
    hr_text = paste0(paste(rep(" ", 20), collapse = ""), model_results$HR, " (", model_results$HR.95L, "-", model_results$HR.95H, ")")
-```
+   ```
 
 2. 增加了图表的整体宽度，从10增加到12英寸，以便有更多空间显示移动后的文本：
-
-```
+   ```r
    pdf(paste0(proj, "_model_coefficients_forest_plot.pdf"), height = 7, width = 12)
-```
+   ```
 
 3. 调整了x轴的最大值，从原来的1.2倍增加到1.5倍，以确保有足够的空间容纳移动后的文本：
-
-```
+   ```r
    x_max <- max(dt_model$hi, na.rm=TRUE) * 1.5
-```
+   ```
 
 4. 添加了`graph.pos = 3`参数，确保图形位置正确
 
@@ -1032,19 +1007,35 @@ forest(dt_model[,c(1, 6, 7)],
 
 我看到了问题。"1-y survival"线条密集的问题通常是因为生存概率刻度设置不当导致的。让我检查一下诺模图的配置，并提供解决方案：
 
+```
+
+```
+
 现在我还可以提供一个更精细的解决方案，根据实际数据范围来调整刻度：
 
+```
+
+```
+
 让我再添加一个更完善的解决方案，包括图形参数的调整：
+
+```
+
+```
 
 现在让我也提供一个备选方案，使用更精确的刻度控制：
 
 让我添加一个注释块来解释如何进一步优化诺模图：
 
-`
+````
 
-`
+````
 
 现在让我再添加一个更高级的解决方案，可以动态计算最佳刻度：
+
+```
+
+```
 
 ## 诺模图"1-y survival"线条密集问题已解决
 
@@ -1089,15 +1080,27 @@ forest(dt_model[,c(1, 6, 7)],
 
 现在让我替换整个校准曲线部分：
 
+```
+
+```
+
 现在让我也修复第二个校准曲线（圆滑曲线）部分：
+
+```
+
+```
 
 现在让我添加一个更详细的解决方案说明：
 
-`
+````
 
-`
+````
 
 看起来有一些编译错误，让我修复它们。首先需要加载grid包，并且检查代码结构：
+
+```
+
+```
 
 ## 校准曲线插值错误已修复
 

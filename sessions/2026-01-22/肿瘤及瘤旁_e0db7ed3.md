@@ -35,8 +35,7 @@
 **错误原因**：`n_neighbors=-1` 错误表明 `adata_Macrophage` 的**细胞数量太少**（少于16个），导致 scanpy 内部计算出负值。
 
 在第7个cell中：
-
-```
+```python
 sc.pp.neighbors(adata_Macrophage, n_neighbors=15, n_pcs=50)
 ```
 
@@ -59,7 +58,6 @@ sc.pp.neighbors(adata_Macrophage, n_neighbors=15, n_pcs=50)
 ### 关键问题：HVG识别
 
 当前代码顺序是错误的：
-
 ```
 normalize_total → log1p → highly_variable_genes(flavor="seurat_v3")  ❌
 ```
@@ -85,7 +83,6 @@ normalize_total → log1p → highly_variable_genes(flavor="seurat_v3")  ❌
 **已修复**：添加 `layer="counts"` 参数，让HVG识别使用原始counts层。
 
 ### 正确的单细胞分析流程
-
 ```
 QC过滤 → 保存counts到layer → 识别HVG(用counts) → normalize → log1p → [scale] → PCA → 批次校正 → UMAP → 聚类
 ```
@@ -114,8 +111,7 @@ QC过滤 → 保存counts到layer → 识别HVG(用counts) → normalize → log
 - 所以不需要从 counts layer 重新处理
 
 **当前代码的问题**：
-
-```
+```python
 # 错误：从原始counts重新处理，实际上直接用 adata.X 即可
 if 'counts' in adata.layers:
     adata_for_ct = sc.AnnData(X=adata.layers['counts'], ...)  # 这是原始counts
@@ -142,7 +138,7 @@ if 'counts' in adata.layers:
 2. **手动注释**：根据实际的 dotplot 结果选择一个 `new_cluster_names`
 3. **验证聚类数**：运行前先检查 `adata.obs['leiden'].unique()` 确保映射完整
 
-```
+```python
 # 在手动注释前添加验证
 print(f"Leiden 聚类: {sorted(adata.obs['leiden'].unique().astype(int))}")
 print(f"需要注释的聚类数: {adata.obs['leiden'].nunique()}")

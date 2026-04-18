@@ -27,8 +27,7 @@
 ## 详细代码解释
 
 ### 1. 库加载和数据准备
-
-```
+```r
 library(cvms)         # 交叉验证和模型评估
 library(groupdata2)   # 数据分组和折叠
 library(knitr)        # 表格格式化
@@ -39,20 +38,17 @@ set.seed(7)                # 设置随机种子确保结果可重现
 ```
 
 ### 2. 数据折叠（K-fold分割）
-
-```
+```r
 data <- fold(
   data = data, k = 4,
   cat_col = 'diagnosis',    # 按diagnosis列进行分层抽样
   id_col = 'participant'    # 确保同一参与者不会同时出现在训练集和测试集
 ) %>% arrange(.folds)
 ```
-
 这里创建了4折交叉验证，确保每个折中`diagnosis`的分布保持平衡。
 
 ### 3. 第一个交叉验证（回归问题）
-
-```
+```r
 CV1 <- cross_validate(
   data = data,
   formulas = "score ~ diagnosis",  # 用diagnosis预测score
@@ -68,8 +64,7 @@ CV1 <- cross_validate(
 - 训练过程信息
 
 ### 4. 第二个交叉验证（分类问题）
-
-```
+```r
 CV2 <- cross_validate(
   data = data,
   formulas = "diagnosis~score",    # 用score预测diagnosis
@@ -87,11 +82,9 @@ CV2 <- cross_validate(
 - **混淆矩阵**: 显示预测vs实际分类结果
 
 ### 5. 结果可视化
-
-```
+```r
 plot_confusion_matrix(CV2$`Confusion Matrix`[[1]], add_sums = TRUE)
 ```
-
 绘制混淆矩阵图，直观显示分类性能。
 
 ## 关键概念
@@ -149,8 +142,7 @@ plot_confusion_matrix(CV2$`Confusion Matrix`[[1]], add_sums = TRUE)
    - `event`：事件指示器（1=发生事件，0=删失）
 
 2. 运行代码前先安装必要的包：
-
-```
+```r
 install.packages(c("survival", "survminer", "dplyr", "ggplot2", "survivalROC", "timeROC"))
 ```
 
@@ -204,8 +196,7 @@ install.packages(c("survival", "survminer", "dplyr", "ggplot2", "survivalROC", "
 ## 🚀 使用步骤
 
 1. **安装必要的包**：
-
-```
+```r
 install.packages(c("cvms", "ggplot2", "caret", "plotly", "gridExtra", "tidyr"))
 ```
 
@@ -239,6 +230,21 @@ install.packages(c("cvms", "ggplot2", "caret", "plotly", "gridExtra", "tidyr"))
 
 我明白您还没有CV2结果。让我为您创建一个完整的示例，从数据生成到混淆矩阵可视化的完整流程。
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 现在我为您创建了一个完整的示例，包含：
 
 ## 🔧 完整的工作流程

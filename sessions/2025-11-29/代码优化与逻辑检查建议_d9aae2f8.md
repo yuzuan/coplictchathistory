@@ -37,6 +37,14 @@
 
 现在我来修复这些问题，重构整个代码：
 
+```
+
+```
+
+```
+
+```
+
 ### 👤 User <sub>2025/11/29 21:35</sub>
 
 @agent 重试
@@ -88,19 +96,47 @@ Proceeding to scan the Rmd for inconsistent variables and other problems (search
 
 Proceeding to update `差异分析及 PPI 分析.Rmd` to (1) add a single `output_dir` variable, (2) replace all `out_dir` usages to `output_dir`, and (3) add an existence check for `exp` and `pd`.
 
+```
+
+```
+
 正在扫描并替换文件中剩余的 out_dir 为 output_dir。下一步会更新所有文件路径。
 
 现在开始把文件中所有 remaining 的 out_dir 替换为 output_dir（包括 STRINGdb 初始化的 input_directory 及所有写/保存路径）。
 
+```
+
+```
+
+```
+
+```
+
 准备把重复的 Top50 / Top100 PPI/HUB 代码合并成单个、更稳健且参数化的块（支持多个 top-N，如 50 和 100），并修复 g_sub 未定义和输出文件名冲突问题。接着我会替换整个重复片段。
 
+```
+
+```
+
+```
+
+```
+
 我将用一个清晰、健壮、参数化的 R Markdown 重写整个文件，合并并简化重复部分，添加必要的检查和说明，使流程更合理并减少出错。
+
+```
+
+```
 
 ### 👤 User <sub>2025/11/29 21:48</sub>
 
 @agent 继续: "是否继续迭代？"
 
 ### 🤖 Copilot <sub>2025/11/29 21:48</sub>
+
+```
+
+```
 
 已完成代码重构与修复，我统一了路径与变量、合并了重复的 PPI/hub 分析块并加入了数据检查与参数化输出（TopN 可配置）。下一步我会给你一个简短的修改清单、如何运行测试，以及我推荐的后续改进选项。完工 ✅ — 我已检查并把 `差异分析及 PPI 分析.Rmd` 重构为更清晰、稳健、参数化的版本，修复了多个逻辑与流程问题，合并并去重了重复代码块。下面是更详尽的说明与如何验证。
 
@@ -136,8 +172,7 @@ Proceeding to update `差异分析及 PPI 分析.Rmd` to (1) add a single `outpu
 在 RStudio 内打开并 Knit（推荐）或在终端使用 Rscript：
 - 在 RStudio 中直接点击 Knit
 - 或者在终端运行：
-
-```
+```bash
 # 进入工作目录（修改路径到 Rmd 所在目录）
 cd "/Users/yuzuan/Desktop/2025_08_10 fastGEO"
 
