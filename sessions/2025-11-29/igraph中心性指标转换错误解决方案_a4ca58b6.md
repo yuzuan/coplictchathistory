@@ -175,7 +175,7 @@ Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = strin
 
 问题出在这一行代码：
 
-```r
+```
 hub_analysis <- data.frame(
     gene = V(g)$name,
     degree = degree(g),  # 这里返回的是 "degree" 类对象
@@ -187,7 +187,7 @@ hub_analysis <- data.frame(
 
 **解决方法**：使用 `as.numeric()` 或 `as.vector()` 将 `degree()` 的结果转换为普通数值向量：
 
-```r
+```
 hub_analysis <- data.frame(
     gene = V(g)$name,
     degree = as.numeric(degree(g)),
@@ -199,7 +199,7 @@ hub_analysis <- data.frame(
 
 **完整修改后的代码段**：
 
-```r
+```
 # 计算多种中心性指标
 hub_analysis <- data.frame(
     gene = V(g)$name,
@@ -223,7 +223,7 @@ Error in data.frame(gene = V(g)$name, degree = as.numeric(degree(g)),  :
 
 **修正后的代码**：
 
-```r
+```
 # 计算多种中心性指标
 deg_values <- degree(g)
 bet_values <- betweenness(g)
@@ -241,7 +241,7 @@ hub_analysis <- data.frame(
 
 或者更简洁的写法：
 
-```r
+```
 # 计算多种中心性指标
 hub_analysis <- data.frame(
     gene = names(V(g)),
@@ -254,7 +254,7 @@ hub_analysis <- data.frame(
 
 **如果仍有问题**，可以尝试更保守的方法：
 
-```r
+```
 # 分步计算，避免类型问题
 gene_names <- V(g)$name
 n_genes <- length(gene_names)
@@ -1288,7 +1288,7 @@ Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = strin
 
 **解决方法**：
 
-```r
+```
 # 计算多种中心性指标 - 使用 igraph:: 前缀避免函数冲突
 hub_analysis <- data.frame(
     gene = V(g)$name,
@@ -1302,6 +1302,7 @@ hub_analysis$eigenvector <- as.vector(igraph::eigen_centrality(g)$vector)
 ```
 
 您在加载包的时候看到了这个警告：
+
 ```
 Attaching package: 'circlize'
 
@@ -1314,7 +1315,7 @@ The following object is masked from 'package:igraph':
 
 **完整修正后的代码段**：
 
-```r
+```
 # 创建网络
 g <- graph_from_data_frame(interactions_clean[, c("from_gene", "to_gene")], directed = FALSE)
 
@@ -1349,9 +1350,6 @@ Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = strin
 
 ### 🤖 Copilot <sub>2025/11/29 08:58</sub>
 
-```
-
-```
 已修复代码。问题是 `circlize` 包的 `degree` 函数遮盖了 `igraph` 的 `degree` 函数。
 
 **主要修改**：
@@ -1372,7 +1370,7 @@ Error in as.data.frame.default(x[[i]], optional = TRUE, stringsAsFactors = strin
 
 这是整理后的完整代码（去除了控制台的 `+` 符号）：
 
-```r
+```
 if(nrow(deg_mapped) > 0) {
     
     # 获取互作关系
@@ -1529,13 +1527,11 @@ Error: object 'ann_colors' not found
 
 错误是因为 `ann_colors` 变量未定义。需要在热图代码之前添加 `ann_colors` 的定义。
 
-```
-
-```
 已修复。添加了 `annotation_col` 和 `ann_colors` 的定义，并将 `pheatmap` 改为 `pheatmap::pheatmap` 以避免与 ComplexHeatmap 的冲突。
 
 现在代码中包含了：
-```r
+
+```
 annotation_col <- data.frame(
     Group = pd$group,
     row.names = rownames(pd)
@@ -1553,9 +1549,6 @@ ann_colors <- list(
 
 ### 🤖 Copilot <sub>2025/11/29 09:03</sub>
 
-```
-
-```
 代码已整理完成，主要修改：
 
 1. **去除了所有 `+` 符号** - 这些是 R 控制台的续行符号
@@ -1571,9 +1564,6 @@ ann_colors <- list(
 
 ### 🤖 Copilot <sub>2025/11/29 09:07</sub>
 
-```
-
-```
 已将 Hub 基因统一改为 Top 50，修改内容包括：
 
 1. **显示和提取**：`top_hub_genes <- head(hub_analysis, 50)`
@@ -1588,9 +1578,6 @@ ann_colors <- list(
 
 ### 🤖 Copilot <sub>2025/11/29 09:08</sub>
 
-```
-
-```
 已将 Hub 基因热图的风格统一为与上面差异基因热图一致，主要修改：
 
 1. **使用 ComplexHeatmap** 替代 pheatmap
@@ -1607,9 +1594,6 @@ ann_colors <- list(
 
 ### 🤖 Copilot <sub>2025/11/29 09:15</sub>
 
-```
-
-```
 已修改火山图的 top 基因标注，现在分别从 Up 和 Down 基因中各取 logFC 绝对值最大的 10 个进行标注（共 20 个），同时删除了重复的保存代码。
 
 ### 👤 User <sub>2025/11/29 09:57</sub>
@@ -1626,7 +1610,7 @@ Error in expM[rownames(DEG_tb), ] : subscript out of bounds
 
 **解决方法**：
 
-```r
+```
 # 检查两者的基因名
 head(rownames(expM))
 head(rownames(DEG_tb))
@@ -1649,7 +1633,7 @@ plot_heatmap_DEG(expM, DEG_tb_filtered, group, out_name = "test/00_GEO_data_GSE1
 
 **或者快速检查问题**：
 
-```r
+```
 # 查看有多少基因能匹配上
 sum(rownames(DEG_tb) %in% rownames(expM))
 

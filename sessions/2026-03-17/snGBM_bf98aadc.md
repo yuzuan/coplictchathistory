@@ -59,6 +59,7 @@ Now let me clean up temp files and do the final summary:
 所有 7 个 notebook 的路径已更新完毕。以下是修改总结：
 
 **目录结构** — 已创建 12 个步骤子目录：
+
 ```
 figures/{1_snRNA_processing, 2_snATAC_processing, 3_multiomics_integration, 
          4_peak_gene_linkage, 5_multiomics_validation, 5_SPP1_axis_multiomics}/
@@ -119,10 +120,6 @@ Selected: 逐步代码审查
 是否需要我直接在 notebook 中修复这些问题？
 Selected: 直接修复这3个CRITICAL问题
 
-```
-
-```
-
 已修复 3 个 CRITICAL 问题。还需要其他操作吗？
 
 审查报告已完成。需要我直接修复这些问题吗？还是有其他需要？
@@ -131,10 +128,6 @@ Selected: 直接修复这3个CRITICAL问题
 
 是否需要我直接在 notebook 中修复这些问题？
 Selected: 直接修复这3个CRITICAL问题
-
-```
-
-```
 
 已修复 3 个 CRITICAL 问题。还需要其他操作吗？
 Selected: 无其他需求
@@ -340,6 +333,7 @@ Now let me clean up temp files and do the final summary:
 所有 7 个 notebook 的路径已更新完毕。以下是修改总结：
 
 **目录结构** — 已创建 12 个步骤子目录：
+
 ```
 figures/{1_snRNA_processing, 2_snATAC_processing, 3_multiomics_integration, 
          4_peak_gene_linkage, 5_multiomics_validation, 5_SPP1_axis_multiomics}/
@@ -397,10 +391,6 @@ Selected: 逐步代码审查
 
 是否需要我直接在 notebook 中修复这些问题？
 Selected: 直接修复这3个CRITICAL问题
-
-```
-
-```
 
 已修复 3 个 CRITICAL 问题。还需要其他操作吗？
 Selected: 无其他需求
@@ -600,6 +590,7 @@ Now let me clean up temp files and do the final summary:
 所有 7 个 notebook 的路径已更新完毕。以下是修改总结：
 
 **目录结构** — 已创建 12 个步骤子目录：
+
 ```
 figures/{1_snRNA_processing, 2_snATAC_processing, 3_multiomics_integration, 
          4_peak_gene_linkage, 5_multiomics_validation, 5_SPP1_axis_multiomics}/
@@ -657,10 +648,6 @@ Selected: 逐步代码审查
 
 是否需要我直接在 notebook 中修复这些问题？
 Selected: 直接修复这3个CRITICAL问题
-
-```
-
-```
 
 已修复 3 个 CRITICAL 问题。还需要其他操作吗？
 Selected: 无其他需求

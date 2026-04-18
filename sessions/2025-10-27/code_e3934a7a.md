@@ -23,33 +23,39 @@
 你可以在终端中运行以下命令:
 
 **1. 查找所有 Python 可执行文件:**
-```zsh
+
+```
 which -a python python3
 ```
 
 **2. 查看系统中所有 Python 版本:**
-```zsh
+
+```
 ls -la /usr/bin/python* /usr/local/bin/python* 2>/dev/null
 ```
 
 **3. 如果使用 Homebrew 安装的 Python:**
-```zsh
+
+```
 brew list | grep python
 ls -la /opt/homebrew/bin/python* 2>/dev/null
 ```
 
 **4. 查看 conda 环境 (如果安装了 Anaconda/Miniconda):**
-```zsh
+
+```
 conda env list
 ```
 
 **5. 查看 pyenv 管理的 Python 版本 (如果安装了 pyenv):**
-```zsh
+
+```
 pyenv versions
 ```
 
 **6. 查看当前使用的 Python 版本和路径:**
-```zsh
+
+```
 python3 --version
 which python3
 ```

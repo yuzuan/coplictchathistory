@@ -29,11 +29,6 @@
 
 我现在需要修改原始的Rmd文件，让它能够正确地加载您需要的数据：
 
-```
-
-```
-
-
 我看到一个lint错误，但这并不会影响代码的实际运行。现在让我们创建一个运行脚本，以便您可以一次性执行整个流程：
 
 现在让我为您提供使用说明：
@@ -54,7 +49,7 @@
 
 在终端中执行以下命令：
 
-```bash
+```
 cd "/Users/yuzuan/Downloads/MSTT 笔记/241216_ploar_Lollipop/"
 Rscript run_lollipop_plot.R
 ```
@@ -62,7 +57,8 @@ Rscript run_lollipop_plot.R
 #### 方法二：分步执行
 
 1. 先生成示例数据：
-```bash
+
+```
 cd "/Users/yuzuan/Downloads/MSTT 笔记/241216_ploar_Lollipop/"
 Rscript create_sample_data.R
 ```
@@ -117,37 +113,11 @@ Execution halted
 
 让我修复这个问题：
 
-```
-
-```
-
-
 现在我需要更新Rmd文件中的`circos.genomicLabels()`调用部分，以使用正确格式的数据：
-
-```
-
-```
-
-
-
 
 我们还需要修复`circos.link()`函数的调用，确保它能够正确地连接共有基因：
 
-```
-
-```
-
-
-
-
-
-
 让我们加强一下示例数据生成脚本，确保有足够数量的共有基因来展示连线效果：
-
-```
-
-```
-
 
 错误提示是R的lint工具的建议，但这不会影响代码的运行。我们只需要确保脚本可以顺利运行。
 
@@ -175,7 +145,8 @@ Execution halted
 ### 使用方法
 
 **一键运行（推荐）**：
-```bash
+
+```
 cd "/Users/yuzuan/Downloads/MSTT 笔记/241216_ploar_Lollipop/"
 ./run.sh
 ```
@@ -229,17 +200,6 @@ Execution halted
 
 现在，我们需要更新run_lollipop_plot.R脚本以使用新的Rmd文件：
 
-```
-
-```
-
-
-
-
-
-
-
-
 让我们让脚本具有执行权限：
 
 现在，让我们尝试运行这个修复后的脚本：
@@ -270,11 +230,13 @@ Execution halted
 我们提供了两种使用方法：
 
 1. **使用R脚本直接运行**：
-   ```bash
+
+```
    cd "/Users/yuzuan/Downloads/MSTT 笔记/241216_ploar_Lollipop/"
    Rscript run_lollipop_plot.R
-   ```
-   这将自动生成示例数据并渲染Rmd文件为HTML。
+```
+
+这将自动生成示例数据并渲染Rmd文件为HTML。
 
 2. **在RStudio中使用**：
    - 打开`fixed_Lollipop_plot.Rmd`

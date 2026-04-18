@@ -34,13 +34,13 @@ Error in h(simpleError(msg, call)) :
 
 **解决方案1** - 使用 `top_heatmap_genes`（推荐）：
 
-```r
+```
 deg_regulation <- DEG[DEG$gene %in% top_heatmap_genes, c("gene", "change")]
 ```
 
 **解决方案2** - 如果你想要所有差异基因，先创建 `all_deg_genes`：
 
-```r
+```
 # 提取所有差异表达基因
 all_deg_genes <- DEG$gene[DEG$change != "Not Sig"]
 
@@ -135,7 +135,7 @@ Error: object 'annotation_row' not found
 
 **解决方案** - 修改热图代码中的变量名：
 
-```r
+```
 # 绘制热图
 p_heatmap <- Heatmap(
     exp_heatmap_scaled,
@@ -171,7 +171,7 @@ Error: Length or nrow of `row_split` should be same as nrow of `matrix`.
 
 **解决方案** - 修改行注释创建代码，使用 `top_heatmap_genes`：
 
-```r
+```
 # 行注释（标记 Up/Down）- 只针对热图中的基因
 annotation_row_all <- data.frame(
   Regulation = deg_regulation[top_heatmap_genes, "change"],
@@ -181,7 +181,7 @@ annotation_row_all <- data.frame(
 
 同时更新行注释对象的创建：
 
-```r
+```
 # 行注释（Up/Down）
 ra_all <- rowAnnotation(
   Regulation = annotation_row_all$Regulation,
@@ -292,7 +292,7 @@ draw(p_heatmap,
 
 **修正后的完整代码：**
 
-```r
+```
 all_deg_genes <- DEG$gene[DEG$change != "Not Sig"]
 DEG_up_sig <- DEG[DEG$change == "Up", ]
 DEG_down_sig <- DEG[DEG$change == "Down", ]

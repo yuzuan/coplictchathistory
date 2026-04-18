@@ -22,7 +22,7 @@ pd2=pd,现在 GSE1 和 GSE2 合并去批次
 
 我来帮你合并 GSE1 和 GSE2 的表达数据并进行批次效应校正。这是一个常见的生物信息学分析任务。
 
-```python
+```
 import pandas as pd
 import numpy as np
 
@@ -74,7 +74,7 @@ print(f"合并后基因数: {exp_corrected.shape[0]}")
 
 如果你使用 **R 语言**，可以用以下代码：
 
-```r
+```
 library(sva)
 library(limma)
 
@@ -126,7 +126,7 @@ exp_corrected <- ComBat(dat = exp_merged, batch = batch, mod = mod)
 
 ### 🤖 Copilot <sub>2025/11/25 11:24</sub>
 
-```r
+```
 # ========== GSE1 和 GSE2 合并去批次效应 ==========
 
 library(sva)
@@ -189,7 +189,7 @@ p1 + p2
 
 **如果有分组信息需要保护**（比如 `group` 列区分疾病和对照）：
 
-```r
+```
 # 在 mod 中加入分组信息，防止 ComBat 把生物学差异也去掉
 mod <- model.matrix(~ group, data = pd_merged)
 exp_corrected <- ComBat(dat = as.matrix(exp_merged), batch = batch, mod = mod)
@@ -201,7 +201,7 @@ pd 不是都一致的，但是都有 group列，按照 group 列合并
 
 ### 🤖 Copilot <sub>2025/11/25 11:28</sub>
 
-```r
+```
 # ========== GSE1 和 GSE2 合并去批次效应 ==========
 
 library(sva)
@@ -303,7 +303,7 @@ Error in ComBat(dat = as.matrix(exp_merged), batch = batch, mod = mod) :
 
 这个错误说明 `group` 和 `batch` 之间存在混杂（confounding），即某些 group 只在某一个 batch 中出现。需要检查并处理：
 
-```r
+```
 # ========== 检查混杂问题 ==========
 
 # 查看 group 和 batch 的分布
@@ -350,7 +350,7 @@ mod <- model.matrix(~ group, data = pd_merged)
 exp_corrected <- ComBat(dat = as.matrix(exp_merged), batch = batch, mod = mod)
 ```
 
-```r
+```
 # ========== 方案二：不保护 group，直接去批次 ==========
 # 如果必须保留所有样本，可以不在 mod 中指定 group
 
@@ -362,7 +362,7 @@ exp_corrected <- ComBat(dat = as.matrix(exp_merged), batch = batch, mod = mod)
 # 注意：这样可能会损失一些生物学差异
 ```
 
-```r
+```
 # ========== 方案三：使用 limma::removeBatchEffect ==========
 # limma 对混杂的容忍度更高
 
@@ -401,7 +401,7 @@ table(pd_merged$batch, pd_merged$group)
 
 这是**完全混杂**，无法用 ComBat 保护 group 信息。你需要先统一 group 的定义：
 
-```r
+```
 # ========== 重新定义 group ==========
 
 # 假设：AD/tumor = 疾病组，Control/normal = 对照组
@@ -468,7 +468,7 @@ p1 + p2
 
 ### 🤖 Copilot <sub>2025/11/25 11:33</sub>
 
-```r
+```
 # ========== 统一 group 名称 ==========
 
 # Control 和 normal 合并为 Control
@@ -529,7 +529,7 @@ p1 + p2
 
 ### 🤖 Copilot <sub>2025/11/25 11:35</sub>
 
-```r
+```
 # ========== AD vs tumor 差异分析 ==========
 
 library(limma)
@@ -635,7 +635,7 @@ pheatmap(exp_heatmap_scaled,
 
 **保存结果：**
 
-```r
+```
 # 保存差异基因表
 write.csv(DEG, "DEG_AD_vs_tumor.csv", row.names = FALSE)
 
@@ -649,7 +649,7 @@ ggsave("volcano_AD_vs_tumor.pdf", p_volcano, width = 8, height = 6)
 
 ### 🤖 Copilot <sub>2025/11/25 11:37</sub>
 
-```r
+```
 # ========== 设置保存路径 ==========
 save_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/AD_tumor"
 
@@ -723,7 +723,7 @@ Error: object 'p_volcano' not found
 
 需要先运行火山图的代码。以下是完整的火山图和热图代码：
 
-```r
+```
 # ========== 设置保存路径 ==========
 save_path <- "/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/AD_tumor"
 
@@ -808,7 +808,7 @@ cat("文件已保存到:", save_path, "\n")
 
 ### 🤖 Copilot <sub>2025/11/25 11:41</sub>
 
-```r
+```
 # ========== 热图（全部差异基因） ==========
 library(pheatmap)
 
@@ -1075,7 +1075,7 @@ cat("文件已保存到:", save_path, "\n")
 
 ## 1. 潜在问题
 
-```r
+```
 # 这行代码被覆盖了，没有实际作用
 group <- factor(pd_sub$group_new, levels = c("Control", "AD", "tumor"))
 # 下一行立即覆盖了上面的定义
@@ -1084,7 +1084,7 @@ group <- factor(pd_sub$group_new, levels = c("tumor", "AD"))
 
 **修正**：删除第一行，因为你只比较 AD vs tumor，不需要 Control：
 
-```r
+```
 # 2. 差异分析 (limma)
 group <- factor(pd_sub$group_new, levels = c("tumor", "AD"))  # AD 相对于 tumor
 ```
@@ -1093,13 +1093,13 @@ group <- factor(pd_sub$group_new, levels = c("tumor", "AD"))  # AD 相对于 tum
 
 ## 2. 最后一行注释和代码混在一起
 
-```r
+```
 cat("热图已保存到:", file.path(save_path, "heatmap_AD_vs_tumor_all_DEGs.pdf"), "\n")# ========== 保存差异基因表 ==========
 ```
 
 **修正**：加个换行
 
-```r
+```
 cat("热图已保存到:", file.path(save_path, "heatmap_AD_vs_tumor_all_DEGs.pdf"), "\n")
 
 # ========== 保存差异基因表 ==========
@@ -1110,7 +1110,7 @@ write.csv(DEG, file.path(save_path, "DEG_AD_vs_tumor.csv"), row.names = FALSE)
 
 ## 3. 建议添加：保存合并后的数据
 
-```r
+```
 # 保存合并校正后的表达矩阵和样本信息（方便后续分析）
 save(exp_corrected, pd_merged, file = file.path(save_path, "merged_data.RData"))
 ```
@@ -1119,7 +1119,7 @@ save(exp_corrected, pd_merged, file = file.path(save_path, "merged_data.RData"))
 
 ## 4. 建议添加：保存 PCA 图
 
-```r
+```
 # 保存 PCA 图
 p_pca <- p1 + p2
 ggsave(file.path(save_path, "PCA_batch_correction.pdf"), p_pca, width = 12, height = 5)
@@ -1145,7 +1145,7 @@ ggsave(file.path(save_path, "PCA_batch_correction.png"), p_pca, width = 12, heig
 
 ### 🤖 Copilot <sub>2025/11/25 12:16</sub>
 
-```r
+```
 # ========================================================
 # GSE1 和 GSE2 合并去批次效应 + 差异分析
 # ========================================================
@@ -1367,7 +1367,7 @@ cat("  - merged_data.RData (合并数据)\n")
 
 热图 PDF 显示损坏通常是因为 `dev.off()` 没有正确关闭，或者绘图过程中出错。以下是修复方案：
 
-```r
+```
 # ========== 7. 热图（全部差异基因） ==========
 
 sig_genes <- DEG$gene[DEG$change != "NS"]
@@ -1443,7 +1443,7 @@ if(length(sig_genes) == 0) {
 
 **如果还是损坏，试试这个替代方案：**
 
-```r
+```
 # 替代方案：使用 png/pdf 设备
 heatmap_file <- file.path(save_path, "heatmap_AD_vs_tumor_all_DEGs.pdf")
 
@@ -1550,7 +1550,7 @@ cat("✓ 火山图已保存:", basename(volcano_pdf), "\n")
 
 ### 🤖 Copilot <sub>2025/11/25 12:24</sub>
 
-```r
+```
 # ========== 6. 火山图（新风格） ==========
 
 library(ggrepel)
@@ -1691,7 +1691,7 @@ cat("✓ 火山图已保存:", file.path(save_path, "volcano_AD_vs_tumor.pdf"), 
 
 **如需手动指定标注基因：**
 
-```r
+```
 # 替换这行
 label_genes <- c("基因1", "基因2", "基因3")
 ```
@@ -1702,7 +1702,7 @@ exp_corrected，pd_merged分别保存为 csv文件
 
 ### 🤖 Copilot <sub>2025/11/25 12:27</sub>
 
-```r
+```
 # ========== 保存表达矩阵和样本信息为 CSV ==========
 
 # 保存校正后的表达矩阵（保留行名作为第一列）

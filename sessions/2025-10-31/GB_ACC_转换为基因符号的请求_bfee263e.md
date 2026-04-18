@@ -29,7 +29,7 @@ anno的 ID 列全是GB_ACC，帮我转成 gene symbol
 
 **如果使用 R 语言：**
 
-```r
+```
 # 使用 biomaRt 包
 library(biomaRt)
 
@@ -53,7 +53,7 @@ anno_converted <- merge(anno, gene_symbols,
 
 **如果使用 Python：**
 
-```python
+```
 import mygene
 
 # 创建查询对象

@@ -39,7 +39,7 @@
 - 让我在你的环境中运行并验证这个 notebook（会执行单元并报告任何新错误），或
 - 你可以本地运行以下命令来执行并保存输出：
 
-```bash
+```
 python -m nbconvert --to notebook --execute fig1_py.ipynb --inplace
 ```
 

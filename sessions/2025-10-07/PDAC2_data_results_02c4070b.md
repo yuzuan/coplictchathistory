@@ -33,13 +33,16 @@ http://www.genetictargets.com/PDAC2BOOKLET/figure-4.html#a-chemotherapy-biomarke
 1. 打开终端并切换到项目根目录（包含该 Rmd 的文件夹）。
 2. 在 R 或 RStudio 中渲染该 Rmd（会运行其中的所有代码块并生成 HTML）：
    - 在 R 控制台中：
-     ```r
+
+```
      rmarkdown::render("Figure4_extracted.Rmd")
-     ```
-   - 或在命令行用 Rscript：
-     ```bash
+```
+
+- 或在命令行用 Rscript：
+
+```
      Rscript -e "rmarkdown::render('Figure4_extracted.Rmd')"
-     ```
+```
 
 注意事项与后续建议：
 - 运行前请确保安装并加载了 R 包：openxlsx, tidyverse, stringr, survival, survminer, pbapply, ggthemes, broom, ggpubr, forestmodel, RColorBrewer 等。若需要，我可以为你生成一份 `install_packages.R` 或 `requirements` 列表并自动安装（在你的许可下）。
@@ -215,7 +218,8 @@ Error in DGEList.default(counts = counts, lib.size = lib.size, norm.factors = no
 ## 核心修复
 
 **移除以下代码**（不适用于蛋白质组）：
-```r
+
+```
 # ❌ 删除这些行
 dge <- edgeR::DGEList(counts=expr)
 dge <- edgeR::calcNormFactors(dge)
@@ -225,7 +229,8 @@ fit <- lmFit(v, design)
 ```
 
 **替换为**（蛋白质组标准流程）：
-```r
+
+```
 # ✅ 使用这个
 library(limma)
 
@@ -247,7 +252,7 @@ DEG3 <- topTable(fit, coef=2, n=Inf)
 
 ## 完整修复代码
 
-```r
+```
 library(limma)
 
 # 参数设置
@@ -361,7 +366,7 @@ save(DEG, top_up, top_down, top_genes,
 
 ### 关键代码修改
 
-```r
+```
 # ❌ 删除这些（如果有 Top 50 限制）
 # top_genes <- c(head(top_up, 25), head(top_down, 25))
 
@@ -383,7 +388,7 @@ fontsize_row = ifelse(length(sig_genes) <= 50, 8,      # ≤50: 8号字
 
 ### 实际运行代码（精简版）
 
-```r
+```
 # 提取所有显著差异基因
 sig_genes <- rownames(DEG[DEG$change != "NOT", ])
 
@@ -419,7 +424,7 @@ dev.off()
 
 ### 保存数据修改
 
-```r
+```
 # ❌ 原代码可能缺少 top_genes 定义
 save(DEG, top_up, top_down, top_genes, ...)  
 
@@ -444,10 +449,6 @@ save(DEG, all_sig_genes, top_up, top_down,
 
 我来为你添加火山图代码，用于可视化所有上调和下调基因的分布：
 
-```
-
-```
-
 完成！我添加了两种火山图方案到你的脚本中：
 
 ## 新增内容摘要
@@ -471,6 +472,7 @@ save(DEG, all_sig_genes, top_up, top_down,
 
 ### 统计摘要输出
 自动输出到控制台：
+
 ```
 ========== 差异表达基因统计 ==========
 总基因数: XXXX
@@ -487,7 +489,7 @@ save(DEG, all_sig_genes, top_up, top_down,
 
 ## 关键参数说明
 
-```r
+```
 # 可以修改这些参数来自定义火山图：
 
 # 1. 标注基因数量
@@ -503,7 +505,7 @@ custom_genes <- c("GENE1", "GENE2")  # 取消注释并添加基因名
 
 ## 运行方式
 
-```r
+```
 # 在你的完整分析流程之后运行：
 # 1. 完成 limma 差异分析得到 DEG
 # 2. 运行热图代码
@@ -542,7 +544,8 @@ source("heatmap_all_DEGs.R")
 ## 🎯 核心特性
 
 ### 1️⃣ **灵活的热图配置**
-```r
+
+```
 # 在脚本的参数区域修改：
 heatmap_configs <- list(
   # Top 20 基因（上调10 + 下调10）
@@ -557,7 +560,8 @@ heatmap_configs <- list(
 ```
 
 ### 2️⃣ **智能火山图标注**
-```r
+
+```
 volcano_configs <- list(
   # 自动标注前20个最显著的基因
   auto_label_n = 20,
@@ -577,13 +581,16 @@ volcano_configs <- list(
 ### 3️⃣ **查看基因位置（三种方式）**
 
 #### 方式 1：火山图中高亮
-```r
+
+```
 volcano_configs$custom_genes <- c("你的基因1", "你的基因2")
 ```
+
 → 这些基因会被**加粗标注**
 
 #### 方式 2：热图中显示
-```r
+
+```
 # 基因会自动出现在 Top N 热图中（如果它们足够显著）
 # 或者查询：
 gene_name %in% heatmap_results$Top20$genes  # 检查是否在 Top20
@@ -617,7 +624,8 @@ output_dir/
 ## 🚀 快速使用
 
 ### 最简单的方式（零配置）
-```r
+
+```
 # 准备数据
 # exp: 表达矩阵
 # group: 分组向量
@@ -627,7 +635,8 @@ source("flexible_DEG_visualization.R")
 ```
 
 ### 自定义方式（推荐）
-```r
+
+```
 # 1. 打开 flexible_DEG_visualization.R
 # 2. 找到 "第二步：自定义参数配置区域"
 # 3. 修改这3个参数：
@@ -689,7 +698,8 @@ source("flexible_DEG_visualization.R")
 ## 🎯 示例场景
 
 ### 场景 1：我只想要 Top20 和 Top50
-```r
+
+```
 heatmap_configs <- list(
   list(n_up = 10, n_down = 10, name = "Top20", sort_by = "P.Value"),
   list(n_up = 25, n_down = 25, name = "Top50", sort_by = "P.Value")
@@ -697,7 +707,8 @@ heatmap_configs <- list(
 ```
 
 ### 场景 2：我要标注特定的5个基因
-```r
+
+```
 volcano_configs <- list(
   auto_label_n = 0,  # 关闭自动
   custom_genes = c("TP53", "KRAS", "MYC", "EGFR", "BRCA1")
@@ -705,7 +716,8 @@ volcano_configs <- list(
 ```
 
 ### 场景 3：我想看这5个基因在 Top20 热图中的位置
-```r
+
+```
 # 1. 设置热图
 heatmap_configs <- list(
   list(n_up = 10, n_down = 10, name = "Top20", sort_by = "P.Value")
@@ -734,7 +746,8 @@ heatmap_configs <- list(
 ## 🎯 核心改进
 
 ### 之前（复杂版）
-```r
+
+```
 # 需要配置很多参数...
 heatmap_configs <- list(
   list(n_up = 10, n_down = 10, name = "Top20", ...),
@@ -745,7 +758,8 @@ volcano_configs <- list(...)
 ```
 
 ### 现在（简化版）⭐
-```r
+
+```
 # 只需改一行！
 gene_set <- "Top50"  # 三选一: "Top20", "Top50", "Custom"
 
@@ -774,7 +788,8 @@ custom_genes <- c("TP53", "KRAS", "MYC")
 ## 🚀 快速开始
 
 ### 1️⃣ 使用 Top50（推荐）
-```r
+
+```
 # 打开 simple_DEG_visualization.R
 # 第 15 行改为：
 gene_set <- "Top50"
@@ -791,7 +806,8 @@ source("simple_DEG_visualization.R")
 ---
 
 ### 2️⃣ 使用 Top20
-```r
+
+```
 gene_set <- "Top20"
 source("simple_DEG_visualization.R")
 ```
@@ -804,7 +820,8 @@ source("simple_DEG_visualization.R")
 ---
 
 ### 3️⃣ 自定义基因
-```r
+
+```
 gene_set <- "Custom"
 
 custom_genes <- c(
@@ -900,7 +917,8 @@ source("simple_DEG_visualization.R")
 ## 🎁 额外功能
 
 ### 查看结果数据
-```r
+
+```
 load("DEG_Top50_results.RData")
 
 # 查看选中的基因
@@ -917,7 +935,8 @@ head(DEG)
 ```
 
 ### 检查某个基因
-```r
+
+```
 # 查看 TP53 的统计信息
 DEG["TP53", ]
 
@@ -945,10 +964,6 @@ DEG["TP53", ]
 
 好的！我来修改代码，让它能够自动处理差异基因不足的情况。当差异基因数量不足时，按实际数量来计算：
 
-```
-
-```
-
 完美！✅ 现在代码已经更新，具有以下智能特性：
 
 ## 🎯 核心改进
@@ -969,6 +984,7 @@ DEG["TP53", ]
 ## 📊 实际运行示例
 
 ### 场景 1: 差异基因充足
+
 ```
 ========== 基因选择 ==========
 当前模式: Top20
@@ -978,6 +994,7 @@ DEG["TP53", ]
 ```
 
 ### 场景 2: 上调基因不足
+
 ```
 ========== 基因选择 ==========
 当前模式: Top20
@@ -988,6 +1005,7 @@ DEG["TP53", ]
 ```
 
 ### 场景 3: 两种基因都不足
+
 ```
 ========== 基因选择 ==========
 当前模式: Top50
@@ -999,6 +1017,7 @@ DEG["TP53", ]
 ```
 
 ### 场景 4: 完全没有差异基因（极端情况）
+
 ```
 ========== 基因选择 ==========
 当前模式: Top20
@@ -1010,7 +1029,7 @@ DEG["TP53", ]
 
 ## 🔧 关键代码逻辑
 
-```r
+```
 # Top20 模式
 n_up_select <- min(10, n_up_total)    # 期望10个，但不超过实际数量
 n_down_select <- min(10, n_down_total)
@@ -1031,7 +1050,8 @@ n_down_select <- min(25, n_down_total)
 - ❌ 错误：无可用基因
 
 ### 2. **自定义基因增强验证**
-```r
+
+```
 # 自动检测无效基因
 invalid_genes <- custom_genes[!custom_genes %in% rownames(DEG)]
 if (length(invalid_genes) > 0) {
@@ -1046,7 +1066,8 @@ if (n_not_sig > 0) {
 ```
 
 ### 3. **零差异基因保护**
-```r
+
+```
 if (length(selected_genes) == 0) {
   stop("❌ 错误：没有符合条件的差异基因！请检查阈值设置或数据")
 }
@@ -1059,19 +1080,22 @@ if (length(selected_genes) == 0) {
 ### 如果差异基因太少（< 20）
 
 **方法 1：降低阈值**
-```r
+
+```
 logFC_t <- 0.5    # 从 1 降到 0.5
 pvalue_t <- 0.1   # 从 0.05 放宽到 0.1
 ```
 
 **方法 2：使用 Custom 模式手动指定**
-```r
+
+```
 gene_set <- "Custom"
 custom_genes <- c("你关心的基因1", "基因2", ...)
 ```
 
 **方法 3：查看实际有多少差异基因**
-```r
+
+```
 # 运行脚本后查看
 table(DEG$change)
 #   UP DOWN  NOT
@@ -1168,22 +1192,6 @@ table(DEG$change)
 
 ## ✅ 修复方案
 
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
 完美！✅ 我已经修复了所有问题。现在让我总结一下：
 
 ---
@@ -1209,7 +1217,7 @@ table(DEG$change)
 
 ## 📋 修复后的正确顺序
 
-```r
+```
 1. 加载包
    ↓
 2. ⭐ 参数设置区域（用户修改）
@@ -1235,7 +1243,7 @@ table(DEG$change)
 
 ## ✅ 现在的文件结构（正确）
 
-```r
+```
 # 行 1-10: 加载包
 library(limma)
 library(pheatmap)
@@ -1272,7 +1280,7 @@ pvalue_t <- 0.05
 
 ## 🚀 现在可以安全运行了
 
-```r
+```
 # 1. 修改参数（第 17 行）
 gene_set <- "Top20"  # 或 "Top50" 或 "Custom"
 
@@ -1308,7 +1316,7 @@ source("simple_DEG_visualization.R")
 
 ## 📋 修复后的正确顺序
 
-```r
+```
 1. 加载包
    ↓
 2. ⭐ 参数设置区域（用户修改）
@@ -1334,7 +1342,7 @@ source("simple_DEG_visualization.R")
 
 ## ✅ 现在的文件结构（正确）
 
-```r
+```
 # 行 1-10: 加载包
 library(limma)
 library(pheatmap)
@@ -1371,7 +1379,7 @@ pvalue_t <- 0.05
 
 ## 🚀 现在可以安全运行了
 
-```r
+```
 # 1. 修改参数（第 17 行）
 gene_set <- "Top20"  # 或 "Top50" 或 "Custom"
 
@@ -1410,7 +1418,7 @@ gene_set放在中间不行吗
 
 当前的结构是**最佳实践**：
 
-```r
+```
 # 1. 加载包
 library(...)
 
@@ -1443,21 +1451,13 @@ if (gene_set == "Top20") { ... }
 
 我明白了！如果你想把 `gene_set` 放在 limma 分析和基因选择之间（第 62 行之前），可以这样做：
 
-```
-
-```
-
-```
-
-```
-
 完美！✅ 现在 `gene_set` 参数放在了中间位置（差异分析之后，基因选择之前）。
 
 ---
 
 ## 📋 现在的结构
 
-```r
+```
 1. 加载包
    library(limma), library(pheatmap), ...
    ↓
@@ -1507,7 +1507,8 @@ if (gene_set == "Top20") { ... }
 ## 💡 实际使用流程
 
 ### 场景 1：已知要 Top20
-```r
+
+```
 # 1. 直接运行脚本
 source("simple_DEG_visualization.R")
 
@@ -1520,7 +1521,8 @@ source("simple_DEG_visualization.R")
 ```
 
 ### 场景 2：不确定差异基因数量
-```r
+
+```
 # 1. 先运行到差异分析（第 40-56 行）
 # 看输出：
 # 上调基因: 5    ← 不足 10 个！
@@ -1538,18 +1540,22 @@ custom_genes <- c("可用的5个上调基因", "可用的8个下调基因")
 ## 🔍 两处参数的作用
 
 ### 顶部参数（第 13-21 行）
-```r
+
+```
 output_dir <- "..."   # 输出路径
 logFC_t <- 1          # 用于差异分析的阈值
 pvalue_t <- 0.05      # 用于差异分析的阈值
 ```
+
 **作用**：控制**哪些基因被认为是差异基因**
 
 ### 中间参数（第 59-67 行）⭐
-```r
+
+```
 gene_set <- "Top20"   # 从差异基因中选哪些
 custom_genes <- c()   # 手动指定基因
 ```
+
 **作用**：从差异基因中**选择要展示的基因**
 
 ---
@@ -1563,6 +1569,7 @@ custom_genes <- c()   # 手动指定基因
 - **方案 2（参数在中间）**：适合探索性分析，先看数据再决定 ← 你现在的方案
 
 现在的结构是：
+
 ```
 基础参数（顶部）→ 差异分析 → 基因选择参数（中间）→ 绘图
 ```
@@ -1577,10 +1584,6 @@ custom_genes <- c()   # 手动指定基因
 
 明白了！你想把上调/下调数量显示在图外（作为副标题或图例），而不是在图内用 `annotate` 标注。让我修改火山图代码：
 
-```
-
-```
-
 完美！✅ 我已经修改了火山图，现在上调/下调数量显示在**图外的副标题**中。
 
 ---
@@ -1588,7 +1591,8 @@ custom_genes <- c()   # 手动指定基因
 ## 🎯 主要改动
 
 ### ❌ 删除了（图内标注）
-```r
+
+```
 # 删除了这两个 annotate() 函数：
 annotate("text", 
          x = min(volcano_data$logFC) * 0.9, 
@@ -1604,7 +1608,8 @@ annotate("text",
 ```
 
 ### ✅ 添加了（图外副标题）
-```r
+
+```
 # 1. 先统计数量
 n_up <- sum(DEG$change == "UP")
 n_down <- sum(DEG$change == "DOWN")
@@ -1625,6 +1630,7 @@ subtitle = paste0(
 ## 📊 效果对比
 
 ### 之前（图内显示）❌
+
 ```
 ┌─────────────────────────────────┐
 │   Volcano Plot                  │
@@ -1638,6 +1644,7 @@ subtitle = paste0(
 ```
 
 ### 现在（图外显示）✅
+
 ```
 ┌─────────────────────────────────────────────────────┐
 │          Volcano Plot - Top20 Genes Highlighted    │
@@ -1681,7 +1688,8 @@ subtitle = paste0(
 ## 🔧 如果想进一步定制
 
 ### 选项 1：简化副标题（只显示差异基因）
-```r
+
+```
 subtitle = paste0(
   "Up: ", n_up, " | Down: ", n_down,
   " | Threshold: |log2FC| > ", logFC_t, ", P < ", pvalue_t
@@ -1689,7 +1697,8 @@ subtitle = paste0(
 ```
 
 ### 选项 2：多行显示（更清晰）
-```r
+
+```
 subtitle = paste0(
   "Differential Genes: Up-regulated = ", n_up, ", Down-regulated = ", n_down, "\n",
   "Threshold: |log2FC| > ", logFC_t, ", P-value < ", pvalue_t,
@@ -1698,7 +1707,8 @@ subtitle = paste0(
 ```
 
 ### 选项 3：添加颜色提示（使用表达式）
-```r
+
+```
 subtitle = paste0(
   "🔴 Up: ", n_up, " | 🔵 Down: ", n_down,
   " | Highlighted: ", length(label_genes), " genes"
@@ -1710,6 +1720,7 @@ subtitle = paste0(
 ## 📝 完整的统计信息示例
 
 运行脚本时会输出：
+
 ```
 ========== 绘制火山图 ==========
 ✓ 火山图已保存: Volcano_Plot_Top20.pdf
@@ -1731,10 +1742,6 @@ subtitle = paste0(
 ### 🤖 Copilot <sub>2025/10/07 14:59</sub>
 
 明白了！你想把上调/下调数量显示在火山图的**右侧图例**位置，而不是副标题。让我修改：
-
-```
-
-```
 
 完美！✅ 现在火山图的统计信息显示在**右侧图例**中，而不是副标题。
 
@@ -1776,12 +1783,14 @@ Threshold: |log2FC| > 1, P < 0.05 | Highlighted genes: 20
 ## 🎨 关键特性
 
 ### 1. **图例在右侧**
-```r
+
+```
 legend.position = "right"
 ```
 
 ### 2. **图例包含数量**
-```r
+
+```
 labels = c(
   paste0("Up-regulated (", n_up, ")"),      # Up-regulated (150)
   paste0("Down-regulated (", n_down, ")"),  # Down-regulated (120)
@@ -1790,7 +1799,8 @@ labels = c(
 ```
 
 ### 3. **颜色映射到图例**
-```r
+
+```
 scale_color_manual(
   name = "Differential Expression",
   values = c(
@@ -1802,7 +1812,8 @@ scale_color_manual(
 ```
 
 ### 4. **底部说明**
-```r
+
+```
 caption = paste0(
   "Threshold: |log2FC| > ", logFC_t, ", P < ", pvalue_t, 
   " | Highlighted genes: ", length(label_genes)
@@ -1827,7 +1838,8 @@ caption = paste0(
 ## 🔧 如果需要调整图例样式
 
 ### 选项 1：图例在底部
-```r
+
+```
 theme(
   legend.position = "bottom",
   legend.direction = "horizontal"
@@ -1835,14 +1847,16 @@ theme(
 ```
 
 ### 选项 2：只显示差异基因（隐藏 Not significant）
-```r
+
+```
 # 在绘图时过滤
 geom_point(data = volcano_data[volcano_data$change != "NOT", ], 
            aes(color = Group), ...)
 ```
 
 ### 选项 3：调整图例大小和位置
-```r
+
+```
 theme(
   legend.position = c(0.85, 0.85),  # 图内右上角
   legend.background = element_rect(fill = "white", color = "black"),
@@ -1852,7 +1866,8 @@ theme(
 ```
 
 ### 选项 4：简化图例文字
-```r
+
+```
 labels = c(
   paste0("Up (", n_up, ")"),
   paste0("Down (", n_down, ")"),
@@ -1910,10 +1925,6 @@ Error: unexpected '=' in:
 
 发现问题了！在 R 中，命名向量的语法需要使用反引号或 `setNames()` 函数。让我修复这个错误：
 
-```
-
-```
-
 完美！✅ 已经修复了语法错误。
 
 ---
@@ -1923,7 +1934,8 @@ Error: unexpected '=' in:
 在 R 中，**不能直接用 `paste0()` 结果作为命名向量的名称**。
 
 ### ❌ 错误写法
-```r
+
+```
 values = c(
   paste0("Up (", n_up, ")") = "#e74c3c",  # 语法错误！
   ...
@@ -1933,7 +1945,8 @@ values = c(
 ### ✅ 正确写法（两种方式）
 
 #### 方式 1：使用 `setNames()` 函数（我使用的）
-```r
+
+```
 values = setNames(
   c("#e74c3c", "#3498db", "#95a5a6"),  # 颜色值
   c(                                    # 对应的名称
@@ -1945,7 +1958,8 @@ values = setNames(
 ```
 
 #### 方式 2：先创建变量再命名
-```r
+
+```
 # 先创建标签
 label_up <- paste0("Up-regulated (", n_up, ")")
 label_down <- paste0("Down-regulated (", n_down, ")")
@@ -1963,7 +1977,7 @@ values = c(
 
 ## 🔍 `setNames()` 函数说明
 
-```r
+```
 setNames(values, names)
 ```
 
@@ -1971,7 +1985,8 @@ setNames(values, names)
 - **names**: 向量的名称（图例标签）
 
 **示例**：
-```r
+
+```
 setNames(c("red", "blue"), c("Group1", "Group2"))
 # 等同于
 c("Group1" = "red", "Group2" = "blue")
@@ -1981,7 +1996,7 @@ c("Group1" = "red", "Group2" = "blue")
 
 ## ✅ 现在的代码逻辑
 
-```r
+```
 # 1. 统计数量
 n_up <- sum(DEG$change == "UP")           # 150
 n_down <- sum(DEG$change == "DOWN")       # 120
