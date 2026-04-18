@@ -66,14 +66,11 @@ Stagewise是一个创新的Visual Studio Code插件，它提供了一种名为"V
 
 1. 安装VS Code插件
 2. 在前端项目中安装并注入工具栏：
-
-```
+   ```
    pnpm i -D @stagewise/toolbar
-```
-
+   ```
 3. 在应用中初始化工具栏：
-
-```
+   ```javascript
    import { initToolbar } from '@stagewise/toolbar';
    
    const stagewiseConfig = {
@@ -87,7 +84,7 @@ Stagewise是一个创新的Visual Studio Code插件，它提供了一种名为"V
    }
    
    setupStagewise();
-```
+   ```
 
 ### 支持的AI代理
 

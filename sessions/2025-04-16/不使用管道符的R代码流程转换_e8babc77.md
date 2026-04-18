@@ -35,7 +35,7 @@ if(!file.exists(f)){
 
 以下是不使用管道符(`%>%`)的常规代码流程：
 
-```
+```r
 f = "obj.Rdata"
 library(harmony)
 
@@ -226,7 +226,7 @@ save(sce.all, file = "obj.Rdata")帮我修改一下我的这个代码
 
 我对您的代码进行了一些优化和改进，主要集中在代码清晰度、效率和内存管理方面：
 
-```
+```r
 library(Seurat)
 library(harmony)
 
@@ -329,7 +329,7 @@ print(sce.all)
 
 # 优化后的单细胞RNA-seq分析代码 (无print语句)
 
-```
+```r
 library(Seurat)
 library(harmony)
 

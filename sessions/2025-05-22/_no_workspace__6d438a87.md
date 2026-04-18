@@ -28,21 +28,17 @@ output: html_document
 ```{r setup, message=FALSE}
 library(tidyverse)
 library(ggnewscale)
-
 ```
 
 # 数据准备
-```
 
-{r 读取数据}
+```{r 读取数据}
 data <- readxl::read_excel('data/data.xlsx')
-
 ```
 
 # 离散数据转为连续数据，方便位置调整
-```
 
-{r 坐标映射}
+```{r 坐标映射}
 height <- c(0.6, 1)
 gap <- 0.2
 row_order <- structure(1:nrow(data), names = data$gene)
@@ -55,13 +51,11 @@ anno_order <- structure(
     seq(height[1], height[1] * 3, length.out = 3),
     names = rev(colnames(data)[10:12])
 )
-
 ```
 
 # 点图和色块图数据，以及分割线
-```
 
-{r 数据处理}
+```{r 数据处理}
 point.data <- dplyr::select(data, c(1:9)) %>%
     pivot_longer(CCRCC:UCEC) %>%
     dplyr::filter(!is.na(value)) %>%
@@ -78,13 +72,11 @@ segment.data <- tibble(
     y = 0,
     yend = max(cancer_order)
 )
-
 ```
 
 # 文本标签数据
-```
 
-{r 标签数据}
+```{r 标签数据}
 label.point <- group_by(point.data, name, y) %>%
     reframe(count = n()) %>%
     mutate(label = paste0(name, ' (', count, ')'))
@@ -92,13 +84,11 @@ label.gene <- dplyr::select(point.data, gene, x) %>%
     distinct()
 label.block <- group_by(block.data, name, y) %>%
     reframe(count = n())
-
 ```
 
 # 边框数据
-```
 
-{r 边框数据}
+```{r 边框数据}
 cancer_border <- tibble(
     xmin = 0, xmax = nrow(data),
     ymin = max(anno_order) + gap, ymax = max(cancer_order)
@@ -108,13 +98,11 @@ anno_border <- tibble(
     xmin = 0, xmax = nrow(data),
     ymin = 0, ymax = max(anno_order)
 )
-
 ```
 
 # 颜色映射
-```
 
-{r 颜色映射}
+```{r 颜色映射}
 drug <- structure(
     c('#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0'),
     names = paste0('T', 5:1)
@@ -133,13 +121,11 @@ cancer <- structure(
 )
 
 colorMap <- c(drug, pharos, member)
-
 ```
 
 # 修改图例
-```
 
-{r 图例}
+```{r 图例}
 tier <- table(data$`Drug target tier`) %>%
     as.data.frame() %>%
     mutate(label = paste0(Var1, ' (', Freq, ')')) %>%
@@ -154,13 +140,11 @@ membrane <- table(data$Membrane) %>%
     as.data.frame() %>%
     mutate(label = paste0(Var1, ' (', Freq, ')')) %>%
     pull(label, name = 'Var1')
-
 ```
 
 # 绘图
-```
 
-{r 绘图, fig.width=16, fig.height=5}
+```{r 绘图, fig.width=16, fig.height=5}
 ggplot() +
     geom_segment(
         aes(x = x, y = y, xend = xend, yend = yend),
@@ -275,21 +259,17 @@ output: html_document
 ```{r setup, message=FALSE}
 library(tidyverse)
 library(ggnewscale)
-
 ```
 
 # 数据准备
-```
 
-{r 读取数据}
+```{r 读取数据}
 data <- readxl::read_excel('data/data.xlsx')
-
 ```
 
 # 离散数据转为连续数据，方便位置调整
-```
 
-{r 坐标映射}
+```{r 坐标映射}
 height <- c(0.6, 1)
 gap <- 0.2
 row_order <- structure(1:nrow(data), names = data$gene)
@@ -302,13 +282,11 @@ anno_order <- structure(
     seq(height[1], height[1] * 3, length.out = 3),
     names = rev(colnames(data)[10:12])
 )
-
 ```
 
 # 点图和色块图数据，以及分割线
-```
 
-{r 数据处理}
+```{r 数据处理}
 point.data <- dplyr::select(data, c(1:9)) %>%
     pivot_longer(CCRCC:UCEC) %>%
     dplyr::filter(!is.na(value)) %>%
@@ -325,13 +303,11 @@ segment.data <- tibble(
     y = 0,
     yend = max(cancer_order)
 )
-
 ```
 
 # 文本标签数据
-```
 
-{r 标签数据}
+```{r 标签数据}
 label.point <- group_by(point.data, name, y) %>%
     reframe(count = n()) %>%
     mutate(label = paste0(name, ' (', count, ')'))
@@ -339,13 +315,11 @@ label.gene <- dplyr::select(point.data, gene, x) %>%
     distinct()
 label.block <- group_by(block.data, name, y) %>%
     reframe(count = n())
-
 ```
 
 # 边框数据
-```
 
-{r 边框数据}
+```{r 边框数据}
 cancer_border <- tibble(
     xmin = 0, xmax = nrow(data),
     ymin = max(anno_order) + gap, ymax = max(cancer_order)
@@ -355,13 +329,11 @@ anno_border <- tibble(
     xmin = 0, xmax = nrow(data),
     ymin = 0, ymax = max(anno_order)
 )
-
 ```
 
 # 颜色映射
-```
 
-{r 颜色映射}
+```{r 颜色映射}
 drug <- structure(
     c('#edf8b1', '#c7e9b4', '#7fcdbb', '#41b6c4', '#1d91c0'),
     names = paste0('T', 5:1)
@@ -380,13 +352,11 @@ cancer <- structure(
 )
 
 colorMap <- c(drug, pharos, member)
-
 ```
 
 # 修改图例
-```
 
-{r 图例}
+```{r 图例}
 tier <- table(data$`Drug target tier`) %>%
     as.data.frame() %>%
     mutate(label = paste0(Var1, ' (', Freq, ')')) %>%
@@ -401,13 +371,11 @@ membrane <- table(data$Membrane) %>%
     as.data.frame() %>%
     mutate(label = paste0(Var1, ' (', Freq, ')')) %>%
     pull(label, name = 'Var1')
-
 ```
 
 # 绘图
-```
 
-{r 绘图, fig.width=16, fig.height=5}
+```{r 绘图, fig.width=16, fig.height=5}
 ggplot() +
     geom_segment(
         aes(x = x, y = y, xend = xend, yend = yend),

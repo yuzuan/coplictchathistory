@@ -6,7 +6,7 @@
 | Workspace | GBM 单细胞 |
 | Start | 2025/12/21 20:15 |
 | End | 2025/12/23 20:33 |
-| Messages | 21 |
+| Messages | 28 |
 
 ---
 
@@ -18,6 +18,9 @@ AnnData object with n_obs × n_vars = 284650 × 3300
     uns: 'hvg', 'leiden', 'leiden_colors', 'log1p', 'majority_voting_colors', 'neighbors', 'over_clustering', 'pca', 'self_annotation_colors', 'umap'
     obsm: 'X_pca', 'X_pca_harmony', 'X_umap'
     varm: 'PCs'。我现在需要你写几个代码，并分别保存下来结果。分别是adata_Macro.obs中primary_status的差异分析；sample_type分为 Normal 和 Tumor，选择 Tumor 样本的primary_status中 Primary 分类和 Normal 的差异分析；加载 Cell10 之后
+
+### 🤖 Copilot <sub>2025/12/21 20:32</sub>
+
 
 ### 👤 User <sub>2025/12/21 20:42</sub>
 
@@ -44,7 +47,7 @@ AnnData object with n_obs × n_vars = 284650 × 3300
 ### 代码实现位置：
 我在原笔记本的第 10 个代码单元格（处理 Macrophage 差异分析的部分）之后，插入了一个新的 Markdown 单元格和代码单元格。
 
-```
+```python
 # 1. adata_Macro.obs 中 primary_status 的差异分析
 if 'primary_status' in adata_Macro.obs.columns:
     adata_Macro.obs['primary_status'] = adata_Macro.obs['primary_status'].astype('category')
@@ -72,9 +75,15 @@ if 'sample_type' in adata.obs.columns and 'primary_status' in adata.obs.columns:
 
 以 Normal 对比呢
 
+### 🤖 Copilot <sub>2025/12/22 13:57</sub>
+
+
 ### 👤 User <sub>2025/12/22 14:02</sub>
 
 who_grade我想这边以 normal 作为参照
+
+### 🤖 Copilot <sub>2025/12/22 14:02</sub>
+
 
 ### 👤 User <sub>2025/12/22 15:04</sub>
 
@@ -100,7 +109,7 @@ who_grade我想这边以 normal 作为参照
 
 ### 修改后的代码片段（第 18 个单元格）：
 
-```
+```python
 # 1. who_grade 差异分析（以 Normal 为参照）
 if 'who_grade' in adata2.obs.columns:
     print("正在以 'Normal' 为参照计算 who_grade 的差异分析...")
@@ -182,6 +191,30 @@ print(f"✅ adata2 已保存至: {write_dir / 'adata.h5ad'}")
 
 ### 🤖 Copilot <sub>2025/12/23 19:25</sub>
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 已成功在
 
 中集成了外部临床元数据文件
@@ -225,9 +258,15 @@ print(f"✅ adata2 已保存至: {write_dir / 'adata.h5ad'}")
 
 'who_grade'和"WHO"是一样的，保留 WHO，“primary_status"和"Recurrent"是一样的，保留 Recurrent
 
+### 🤖 Copilot <sub>2025/12/23 19:37</sub>
+
+
 ### 👤 User <sub>2025/12/23 19:43</sub>
 
 这部分就按照sample_anno_all.csv来。其他的都删除
+
+### 🤖 Copilot <sub>2025/12/23 19:43</sub>
+
 
 ### 👤 User <sub>2025/12/23 20:01</sub>
 
@@ -253,12 +292,18 @@ sample_type有哪些是 nukown 的，提取出 GSM 号
 
 Normal不是有 4 个吗
 
+### 🤖 Copilot <sub>2025/12/23 20:13</sub>
+
+
 ### 👤 User <sub>2025/12/23 20:19</sub>
 
 Normal 样本的 GSM 号分别是GSM4955732
 GSM4955734
 GSM4955736
 GSM4955738
+
+### 🤖 Copilot <sub>2025/12/23 20:19</sub>
+
 
 ### 👤 User <sub>2025/12/23 20:27</sub>
 

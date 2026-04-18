@@ -64,7 +64,7 @@ Agent 发起编辑 → VS Code 写入 buffer
 
 **最小侵入修复**（只改关键问题项）：
 
-```
+```jsonc
 {
   // 1. JSON 键排序是最大元凶，必须关掉
   "source.sort.json": "never",  // 原为 "always"
@@ -79,7 +79,7 @@ Agent 发起编辑 → VS Code 写入 buffer
 
 **彻底修复**（如果还有问题）：
 
-```
+```jsonc
 {
   // 把 codeActionsOnSave 中的 "always" 改为 "explicit"
   "editor.codeActionsOnSave": {
@@ -98,6 +98,10 @@ Agent 发起编辑 → VS Code 写入 buffer
 Selected: 彻底修复：额外把 codeActionsOnSave 全部改为 explicit
 
 好，执行彻底修复方案。
+
+```
+
+```
 
 ```
 验证修改已生效：

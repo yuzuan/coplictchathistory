@@ -42,7 +42,7 @@
 
 在RStudio或R控制台中运行：
 
-```
+```r
 source("merge_kallisto_data.R")
 ```
 
@@ -54,8 +54,7 @@ source("merge_kallisto_data.R")
 ## 📖 读取数据
 
 后续读取时运行：
-
-```
+```r
 # 方法1：CSV格式
 data <- read.csv("expression_matrix.csv", row.names = 1, check.names = FALSE)
 
@@ -74,6 +73,22 @@ load("expression_matrix.RData")
 看起来h5文件的内部结构与标准Kallisto格式不同。让我先检查一下文件内容：
 
 明白了！这些h5文件包含bootstrap数据，结构与标准格式稍有不同。我来重写脚本直接读取：
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 
 现在重新运行更新后的脚本：
 
@@ -100,7 +115,7 @@ load("expression_matrix.RData")
 
 ## 💻 如何读取
 
-```
+```r
 # 方法1：CSV格式
 expr <- read.csv("expression_matrix.csv", row.names = 1, check.names = FALSE)
 

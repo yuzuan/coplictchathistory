@@ -18,7 +18,7 @@
 
 基因验证的核心逻辑在这一行：
 
-```
+```python
 valid_genes = [gene for gene in marker_genes if gene in adata.var_names]
 ```
 
@@ -46,10 +46,9 @@ valid_genes = [gene for gene in marker_genes if gene in adata.var_names]
 2. **高变基因（HVG）**：通过 `sc.pp.highly_variable_genes()` 分析后筛选出的表达变异较大的基因子集
    - 存储在：`adata.var['highly_variable']` (布尔值标记)
    - 获取高变基因列表：
-
-```
+   ```python
    hvg_genes = adata.var_names[adata.var['highly_variable']]
-```
+   ```
 
 **验证逻辑：**
 - `gene in adata.var_names` 检查基因是否在**所有基因**中存在
@@ -167,20 +166,16 @@ valid_genes = [gene for gene in marker_genes if gene in adata.var_names]
 ## **关键区别：**
 
 ### **1. 基因验证（第7个单元格）**
-
-```
+```python
 valid_genes = [gene for gene in marker_genes if gene in adata.var_names]
 ```
-
 - 检查的是 `adata.var_names`：**3,300个高变基因**
 - 这是经过 `sc.pp.highly_variable_genes()` 筛选后的基因子集
 
 ### **2. 差异表达分析（第34个单元格）**
-
-```
+```python
 sc.tl.rank_genes_groups(adata, groupby='self_annotation', method='logreg')
 ```
-
 - 默认使用 `adata.raw`：包含**所有原始基因**（可能上万个）
 - `use_raw=True` 是默认行为
 
@@ -190,7 +185,7 @@ sc.tl.rank_genes_groups(adata, groupby='self_annotation', method='logreg')
 
 可以运行以下代码确认：
 
-```
+```python
 # 检查 LDHA 在不同位置的存在情况
 print("LDHA in adata.var_names:", "LDHA" in adata.var_names)
 print("LDHA in adata.raw.var_names:", "LDHA" in adata.raw.var_names if adata.raw else "No raw data")
@@ -218,7 +213,7 @@ if adata.raw:
 
 ## **数据处理流程：**
 
-```
+```python
 # 1. 标准化 + log1p（所有基因）
 sc.pp.normalize_total(adata, target_sum=1e4)
 sc.pp.log1p(adata)
@@ -265,7 +260,7 @@ sc.pp.scale(adata, max_value=10)
 
 ## **当前设计分析：**
 
-```
+```python
 # 1. 保存完整数据（所有基因）
 adata.raw = adata.copy()
 
@@ -284,7 +279,7 @@ adata = adata[:, adata.var["highly_variable"]].copy()
 
 **在标记基因验证时，改用 `adata.raw.var_names` 验证：**
 
-```
+```python
 # 原始验证（只在高变基因中查找）
 valid_genes = [gene for gene in marker_genes if gene in adata.var_names]
 
@@ -294,7 +289,7 @@ valid_genes = [gene for gene in marker_genes if gene in adata.raw.var_names]
 
 **或者提供更灵活的验证：**
 
-```
+```python
 # 检查基因在哪里
 def check_gene_location(gene, adata):
     in_hvg = gene in adata.var_names
@@ -340,6 +335,10 @@ for gene in marker_genes:
 
 我来帮你将这个基因位置检查功能集成到现有代码中。最好的位置是在第7个单元格（检查基因的地方）添加这个详细检查：
 
+```
+
+```
+
 完成！我已经将基因位置检查功能集成到第7个单元格中。
 
 **更新内容：**
@@ -379,6 +378,10 @@ for gene in marker_genes:
 
 ### 🤖 Copilot <sub>2025/12/31 23:46</sub>
 
+```
+
+```
+
 完成！我已经将第25个单元格的函数修改为基于 `Recurrent` 列进行分类：
 
 **更新内容：**
@@ -417,7 +420,7 @@ Normal       xxxxx
 
 ## **group 列的创建过程：**
 
-```
+```python
 # 第24个单元格创建了 group 列
 adata.obs['group'] = np.where(
     adata.obs[score_col] > adata.obs[score_col].median(),  # 如果评分 > 中位数
@@ -435,7 +438,7 @@ adata.obs['group'] = np.where(
 
 ## **在差异分析中的作用：**
 
-```
+```python
 sc.tl.rank_genes_groups(
     adata,
     groupby='group',      # 按 'group' 列分组
@@ -460,6 +463,10 @@ sc.tl.rank_genes_groups(
 
 ### 🤖 Copilot <sub>2026/01/01 21:57</sub>
 
+```
+
+```
+
 已成功添加 Proliferative 细胞的子聚类分析部分。新增内容包括：
 
 1. **细胞子集提取**：筛选 Proliferative 细胞
@@ -483,6 +490,10 @@ sc.tl.rank_genes_groups(
 这个输出的图能按照分类0-12一个个往下排吗？
 
 ### 🤖 Copilot <sub>2026/01/01 22:00</sub>
+
+```
+
+```
 
 已修改代码，在绘制 dotplot 前添加了 leiden_sub 分类排序逻辑：
 
