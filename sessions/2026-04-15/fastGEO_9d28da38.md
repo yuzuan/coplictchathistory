@@ -26,8 +26,7 @@
 - 列名：GSM9329350 ~ GSM9329357
 
 **读取方式：**
-
-```
+```r
 load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_matrix.RData")
 # 得到 expr_matrix 对象（matrix 类型）
 ```
@@ -55,7 +54,7 @@ load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_ma
 
 已升级到 **1.9.0**。现在测试修复效果：
 
-**问题已修复！**
+**问题已修复！** 
 
 1.9.0 版本的行为：
 - ✅ 检测到无表达谱（高通量测序数据）
@@ -71,7 +70,7 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 
 `getGEO2` 返回了 `data.frame`，这是正确的。测试完整的 `download_GEO`：
 
-**现在工作正常了！**
+**现在工作正常了！**  
 
 1.9.0 版本输出：
 - ✅ 只有 `sample_anno.csv` 和 `series_matrix.txt.gz`  
@@ -82,6 +81,10 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 1.9.0 已修复，之前的空文件是 1.8.7 缓存导致。还需要其他操作吗？
 
 1.9.0 已修复，之前的空文件是 1.8.7 缓存导致。还需要其他操作吗？
+
+```
+
+```
 
 **fastGEO 2.0.0 已安装！**
 
@@ -97,8 +100,7 @@ fastGEO 2.0.0 已安装，还需要其他操作吗？
 ### 🔑 核心修复：空表达谱处理
 
 **1.8.7 (有问题)**：
-
-```
+```r
 # 没有表达谱时仍然保存空 RData
 if(nrow(expM_raw) == 0){
     assign(paste0(GSE, "_", GPL), list(expM_raw = NULL, expM = NULL, ...))
@@ -108,8 +110,7 @@ if(nrow(expM_raw) == 0){
 ```
 
 **2.0.0 (已修复)**：
-
-```
+```r
 # 没有表达谱时直接返回样本注释表，不保存 RData
 if(nrow(expM_raw) == 0){
     print_info("未识别到表达谱, 提供的数据集可能是高通量测序...")
@@ -143,6 +144,18 @@ Java 警告是 xlsx 导出功能需要 Java，不影响主功能。
 你想要媒件语言恢复成英文么？
 Selected: 恢复英文
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 测试英文界面：
 
 **界面已恢复英文！**
@@ -174,7 +187,7 @@ fastGEO 2.0.0 英文界面已安装。还需要其他操作吗？
 
 `obj` 是 `data.frame` 类型的样本注释表，因为该数据集的表达谱在 supplementary files 中，需要手动下载处理：
 
-```
+```r
 # 返回的 obj 就是 sample_anno
 class(obj)  # "data.frame"
 head(names(obj))  # title, geo_accession, status, ...
@@ -186,11 +199,27 @@ head(names(obj))  # title, geo_accession, status, ...
 
 当数据集没有表达矩阵时，你希望 download_GEO 返回什么？
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 **修复完成！**
 
 现在 `obj$sample_anno` 可以正常使用：
 
-```
+```r
 obj <- download_GEO("GSE311681", ...)
 pd <- obj$sample_anno  # ✅ 可以正常工作
 
@@ -213,7 +242,7 @@ pd <- obj$sample_anno  # ✅ 可以正常工作
 
 现在 `obj$sample_anno` 可以正常使用：
 
-```
+```r
 obj <- download_GEO("GSE311681", ...)
 pd <- obj$sample_anno  # ✅ 可以正常工作
 
@@ -256,6 +285,14 @@ Selected: 重写脚本适配 2.0.0 API
 
 `primeview.db` 不可用导致脚本中断。需要修复错误处理 — 让脚本在单个 GPL 失败时继续执行。
 
+```
+
+```
+
+```
+
+```
+
 GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 进展顺利！Agilent 部分接近完成 —— GPL13607 没有 SYMBOL 列（跳过），GPL1708 正在下载中。
@@ -292,7 +329,7 @@ GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 每次启动 R 会话使用 fastGEO **前**：
 
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")
 ```
 
@@ -346,6 +383,14 @@ GPL 注释扩展完成（35 → 73）。下一步？
 确认：将 1.8.7 的 GPL 管理功能迁移到 2.0.0？
 Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 
+```
+
+```
+
+```
+
+```
+
 **fastGEO 2.0.1 升级完成！**
 
 | 改进 | 说明 |
@@ -364,14 +409,12 @@ Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 那个文件 (`~/Desktop/fastGEO/anno_obj.RData`) 是独立的完整注释集，有两种使用方式：
 
 **方式 1** — 作为参数传入：
-
-```
+```r
 download_GEO("GSE12345", anno_file = "~/Desktop/fastGEO/anno_obj.RData")
 ```
 
 **方式 2** — 把 38 个新 GPL 导入到用户存储（推荐）：
-
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")  # 加载 73 GPL
 library(fastGEO)
 
@@ -390,7 +433,7 @@ GPL 管理功能已恢复，下一步？
 
 **`add_GPL()` 完全正常！**
 
-```
+```r
 # 用法
 add_GPL("GPL17692", anno)  # anno 必须是 data.frame(ID, SYMBOL)
 add_GPL("GPL17692", anno, overwrite = TRUE)  # 覆盖已存在的
@@ -404,7 +447,7 @@ remove_GPL("GPL17692") # 删除用户添加的
 
 **把你之前批量构建的 38 个新 GPL 导入到用户存储：**
 
-```
+```r
 library(fastGEO)
 
 # 加载批量构建的 73 GPL
@@ -436,7 +479,7 @@ list_GPL()  # 应该显示 ~70+ GPL
 
 **注意**：R 中用 `~` 需要 `path.expand()` 展开，否则可能找不到文件：
 
-```
+```r
 # ✅ 正确
 file.copy(path.expand("~/.fastGEO/anno_obj_user.rda"), 
           path.expand("~/Desktop/fastGEO/anno_obj_user_backup.rda"))
@@ -458,16 +501,14 @@ file.copy("~/.fastGEO/anno_obj_user.rda", ...)
 | GPL 已存在于**内置注释** | ❌ 不需要 | 添加到用户存储，用户优先 |
 
 **简单版导入脚本（安全，不覆盖已有用户数据）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = FALSE)
 }
 ```
 
 **完全导入脚本（用批量构建的版本覆盖所有）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = TRUE)
 }
@@ -477,7 +518,7 @@ for (gpl in names(anno_obj)) {
 
 **`file.copy()` 的 `overwrite` 参数：**
 
-```
+```r
 # 默认 overwrite=FALSE —— 如果目标已存在，不复制
 file.copy(src, dst)                    # 目标存在时静默失败
 
@@ -493,7 +534,7 @@ file.copy(src, dst, overwrite = TRUE)  # 目标存在时覆盖
 
 **对于导入 GPL 到用户存储的 `add_GPL()` 也是类似逻辑：**
 
-```
+```r
 add_GPL("GPL123", anno)                    # 已存在则跳过
 add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 ```
@@ -502,7 +543,7 @@ add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 
 **你的写法完全正确！**
 
-```
+```r
 file.copy("~/.fastGEO/anno_obj_user.rda", 
           "~/Desktop/fastGEO/anno_obj_user_backup.rda", 
           overwrite = TRUE)
@@ -524,8 +565,7 @@ file.copy("~/.fastGEO/anno_obj_user.rda",
 - 列名：GSM9329350 ~ GSM9329357
 
 **读取方式：**
-
-```
+```r
 load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_matrix.RData")
 # 得到 expr_matrix 对象（matrix 类型）
 ```
@@ -546,7 +586,7 @@ load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_ma
 
 已升级到 **1.9.0**。现在测试修复效果：
 
-**问题已修复！**
+**问题已修复！** 
 
 1.9.0 版本的行为：
 - ✅ 检测到无表达谱（高通量测序数据）
@@ -560,7 +600,7 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 
 `getGEO2` 返回了 `data.frame`，这是正确的。测试完整的 `download_GEO`：
 
-**现在工作正常了！**
+**现在工作正常了！**  
 
 1.9.0 版本输出：
 - ✅ 只有 `sample_anno.csv` 和 `series_matrix.txt.gz`  
@@ -569,6 +609,10 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 你之前看到的 `GSE311681` 空 RData 是在升级前用 1.8.7 生成的缓存文件。我已经清除并重新测试，现在修复正常。
 
 1.9.0 已修复，之前的空文件是 1.8.7 缓存导致。还需要其他操作吗？
+
+```
+
+```
 
 **fastGEO 2.0.0 已安装！**
 
@@ -582,8 +626,7 @@ fastGEO 2.0.0 已安装，还需要其他操作吗？
 ### 🔑 核心修复：空表达谱处理
 
 **1.8.7 (有问题)**：
-
-```
+```r
 # 没有表达谱时仍然保存空 RData
 if(nrow(expM_raw) == 0){
     assign(paste0(GSE, "_", GPL), list(expM_raw = NULL, expM = NULL, ...))
@@ -593,8 +636,7 @@ if(nrow(expM_raw) == 0){
 ```
 
 **2.0.0 (已修复)**：
-
-```
+```r
 # 没有表达谱时直接返回样本注释表，不保存 RData
 if(nrow(expM_raw) == 0){
     print_info("未识别到表达谱, 提供的数据集可能是高通量测序...")
@@ -628,6 +670,18 @@ Java 警告是 xlsx 导出功能需要 Java，不影响主功能。
 你想要媒件语言恢复成英文么？
 Selected: 恢复英文
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 测试英文界面：
 
 **界面已恢复英文！**
@@ -657,7 +711,7 @@ fastGEO 2.0.0 英文界面已安装。还需要其他操作吗？
 
 `obj` 是 `data.frame` 类型的样本注释表，因为该数据集的表达谱在 supplementary files 中，需要手动下载处理：
 
-```
+```r
 # 返回的 obj 就是 sample_anno
 class(obj)  # "data.frame"
 head(names(obj))  # title, geo_accession, status, ...
@@ -667,11 +721,27 @@ head(names(obj))  # title, geo_accession, status, ...
 
 当数据集没有表达矩阵时，你希望 download_GEO 返回什么？
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 **修复完成！**
 
 现在 `obj$sample_anno` 可以正常使用：
 
-```
+```r
 obj <- download_GEO("GSE311681", ...)
 pd <- obj$sample_anno  # ✅ 可以正常工作
 
@@ -712,6 +782,10 @@ Selected: 重写脚本适配 2.0.0 API
 
 `primeview.db` 不可用导致脚本中断。需要修复错误处理 — 让脚本在单个 GPL 失败时继续执行。
 
+```
+
+```
+
 GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 进展顺利！Agilent 部分接近完成 —— GPL13607 没有 SYMBOL 列（跳过），GPL1708 正在下载中。
@@ -738,7 +812,7 @@ GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 每次启动 R 会话使用 fastGEO **前**：
 
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")
 ```
 
@@ -786,6 +860,14 @@ GPL 注释扩展完成（35 → 73）。下一步？
 确认：将 1.8.7 的 GPL 管理功能迁移到 2.0.0？
 Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 
+```
+
+```
+
+```
+
+```
+
 **fastGEO 2.0.1 升级完成！**
 
 | 改进 | 说明 |
@@ -804,14 +886,12 @@ Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 那个文件 (`~/Desktop/fastGEO/anno_obj.RData`) 是独立的完整注释集，有两种使用方式：
 
 **方式 1** — 作为参数传入：
-
-```
+```r
 download_GEO("GSE12345", anno_file = "~/Desktop/fastGEO/anno_obj.RData")
 ```
 
 **方式 2** — 把 38 个新 GPL 导入到用户存储（推荐）：
-
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")  # 加载 73 GPL
 library(fastGEO)
 
@@ -828,7 +908,7 @@ GPL 管理功能已恢复，下一步？
 
 **`add_GPL()` 完全正常！**
 
-```
+```r
 # 用法
 add_GPL("GPL17692", anno)  # anno 必须是 data.frame(ID, SYMBOL)
 add_GPL("GPL17692", anno, overwrite = TRUE)  # 覆盖已存在的
@@ -842,7 +922,7 @@ remove_GPL("GPL17692") # 删除用户添加的
 
 **把你之前批量构建的 38 个新 GPL 导入到用户存储：**
 
-```
+```r
 library(fastGEO)
 
 # 加载批量构建的 73 GPL
@@ -872,7 +952,7 @@ list_GPL()  # 应该显示 ~70+ GPL
 
 **注意**：R 中用 `~` 需要 `path.expand()` 展开，否则可能找不到文件：
 
-```
+```r
 # ✅ 正确
 file.copy(path.expand("~/.fastGEO/anno_obj_user.rda"), 
           path.expand("~/Desktop/fastGEO/anno_obj_user_backup.rda"))
@@ -892,16 +972,14 @@ file.copy("~/.fastGEO/anno_obj_user.rda", ...)
 | GPL 已存在于**内置注释** | ❌ 不需要 | 添加到用户存储，用户优先 |
 
 **简单版导入脚本（安全，不覆盖已有用户数据）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = FALSE)
 }
 ```
 
 **完全导入脚本（用批量构建的版本覆盖所有）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = TRUE)
 }
@@ -911,7 +989,7 @@ for (gpl in names(anno_obj)) {
 
 **`file.copy()` 的 `overwrite` 参数：**
 
-```
+```r
 # 默认 overwrite=FALSE —— 如果目标已存在，不复制
 file.copy(src, dst)                    # 目标存在时静默失败
 
@@ -927,7 +1005,7 @@ file.copy(src, dst, overwrite = TRUE)  # 目标存在时覆盖
 
 **对于导入 GPL 到用户存储的 `add_GPL()` 也是类似逻辑：**
 
-```
+```r
 add_GPL("GPL123", anno)                    # 已存在则跳过
 add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 ```
@@ -936,7 +1014,7 @@ add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 
 **你的写法完全正确！**
 
-```
+```r
 file.copy("~/.fastGEO/anno_obj_user.rda", 
           "~/Desktop/fastGEO/anno_obj_user_backup.rda", 
           overwrite = TRUE)
@@ -958,8 +1036,7 @@ file.copy("~/.fastGEO/anno_obj_user.rda",
 - 列名：GSM9329350 ~ GSM9329357
 
 **读取方式：**
-
-```
+```r
 load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_matrix.RData")
 # 得到 expr_matrix 对象（matrix 类型）
 ```
@@ -980,7 +1057,7 @@ load("/Users/yuzuan/Desktop/fastGEO/test/00_GEO_data_GSE311682/GSE311682_expr_ma
 
 已升级到 **1.9.0**。现在测试修复效果：
 
-**问题已修复！**
+**问题已修复！** 
 
 1.9.0 版本的行为：
 - ✅ 检测到无表达谱（高通量测序数据）
@@ -994,7 +1071,7 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 
 `getGEO2` 返回了 `data.frame`，这是正确的。测试完整的 `download_GEO`：
 
-**现在工作正常了！**
+**现在工作正常了！**  
 
 1.9.0 版本输出：
 - ✅ 只有 `sample_anno.csv` 和 `series_matrix.txt.gz`  
@@ -1003,6 +1080,10 @@ fastGEO 1.9.0 已修复空 RData 保存问题，还需要其他操作吗？
 你之前看到的 `GSE311681` 空 RData 是在升级前用 1.8.7 生成的缓存文件。我已经清除并重新测试，现在修复正常。
 
 1.9.0 已修复，之前的空文件是 1.8.7 缓存导致。还需要其他操作吗？
+
+```
+
+```
 
 **fastGEO 2.0.0 已安装！**
 
@@ -1016,8 +1097,7 @@ fastGEO 2.0.0 已安装，还需要其他操作吗？
 ### 🔑 核心修复：空表达谱处理
 
 **1.8.7 (有问题)**：
-
-```
+```r
 # 没有表达谱时仍然保存空 RData
 if(nrow(expM_raw) == 0){
     assign(paste0(GSE, "_", GPL), list(expM_raw = NULL, expM = NULL, ...))
@@ -1027,8 +1107,7 @@ if(nrow(expM_raw) == 0){
 ```
 
 **2.0.0 (已修复)**：
-
-```
+```r
 # 没有表达谱时直接返回样本注释表，不保存 RData
 if(nrow(expM_raw) == 0){
     print_info("未识别到表达谱, 提供的数据集可能是高通量测序...")
@@ -1062,6 +1141,18 @@ Java 警告是 xlsx 导出功能需要 Java，不影响主功能。
 你想要媒件语言恢复成英文么？
 Selected: 恢复英文
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 测试英文界面：
 
 **界面已恢复英文！**
@@ -1091,7 +1182,7 @@ fastGEO 2.0.0 英文界面已安装。还需要其他操作吗？
 
 `obj` 是 `data.frame` 类型的样本注释表，因为该数据集的表达谱在 supplementary files 中，需要手动下载处理：
 
-```
+```r
 # 返回的 obj 就是 sample_anno
 class(obj)  # "data.frame"
 head(names(obj))  # title, geo_accession, status, ...
@@ -1101,11 +1192,27 @@ head(names(obj))  # title, geo_accession, status, ...
 
 当数据集没有表达矩阵时，你希望 download_GEO 返回什么？
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
 **修复完成！**
 
 现在 `obj$sample_anno` 可以正常使用：
 
-```
+```r
 obj <- download_GEO("GSE311681", ...)
 pd <- obj$sample_anno  # ✅ 可以正常工作
 
@@ -1146,6 +1253,10 @@ Selected: 重写脚本适配 2.0.0 API
 
 `primeview.db` 不可用导致脚本中断。需要修复错误处理 — 让脚本在单个 GPL 失败时继续执行。
 
+```
+
+```
+
 GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 进展顺利！Agilent 部分接近完成 —— GPL13607 没有 SYMBOL 列（跳过），GPL1708 正在下载中。
@@ -1172,7 +1283,7 @@ GPL4134 仍在下载中，GEO 服务器响应较慢。稍等片刻...
 
 每次启动 R 会话使用 fastGEO **前**：
 
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")
 ```
 
@@ -1220,6 +1331,14 @@ GPL 注释扩展完成（35 → 73）。下一步？
 确认：将 1.8.7 的 GPL 管理功能迁移到 2.0.0？
 Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 
+```
+
+```
+
+```
+
+```
+
 **fastGEO 2.0.1 升级完成！**
 
 | 改进 | 说明 |
@@ -1238,14 +1357,12 @@ Selected: 把 1.8.7 的 anno_manage.R 整合进 2.0.0 源码并重新打包
 那个文件 (`~/Desktop/fastGEO/anno_obj.RData`) 是独立的完整注释集，有两种使用方式：
 
 **方式 1** — 作为参数传入：
-
-```
+```r
 download_GEO("GSE12345", anno_file = "~/Desktop/fastGEO/anno_obj.RData")
 ```
 
 **方式 2** — 把 38 个新 GPL 导入到用户存储（推荐）：
-
-```
+```r
 load("~/Desktop/fastGEO/anno_obj.RData")  # 加载 73 GPL
 library(fastGEO)
 
@@ -1262,7 +1379,7 @@ GPL 管理功能已恢复，下一步？
 
 **`add_GPL()` 完全正常！**
 
-```
+```r
 # 用法
 add_GPL("GPL17692", anno)  # anno 必须是 data.frame(ID, SYMBOL)
 add_GPL("GPL17692", anno, overwrite = TRUE)  # 覆盖已存在的
@@ -1276,7 +1393,7 @@ remove_GPL("GPL17692") # 删除用户添加的
 
 **把你之前批量构建的 38 个新 GPL 导入到用户存储：**
 
-```
+```r
 library(fastGEO)
 
 # 加载批量构建的 73 GPL
@@ -1306,7 +1423,7 @@ list_GPL()  # 应该显示 ~70+ GPL
 
 **注意**：R 中用 `~` 需要 `path.expand()` 展开，否则可能找不到文件：
 
-```
+```r
 # ✅ 正确
 file.copy(path.expand("~/.fastGEO/anno_obj_user.rda"), 
           path.expand("~/Desktop/fastGEO/anno_obj_user_backup.rda"))
@@ -1326,16 +1443,14 @@ file.copy("~/.fastGEO/anno_obj_user.rda", ...)
 | GPL 已存在于**内置注释** | ❌ 不需要 | 添加到用户存储，用户优先 |
 
 **简单版导入脚本（安全，不覆盖已有用户数据）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = FALSE)
 }
 ```
 
 **完全导入脚本（用批量构建的版本覆盖所有）：**
-
-```
+```r
 for (gpl in names(anno_obj)) {
     add_GPL(gpl, anno_obj[[gpl]], overwrite = TRUE)
 }
@@ -1345,7 +1460,7 @@ for (gpl in names(anno_obj)) {
 
 **`file.copy()` 的 `overwrite` 参数：**
 
-```
+```r
 # 默认 overwrite=FALSE —— 如果目标已存在，不复制
 file.copy(src, dst)                    # 目标存在时静默失败
 
@@ -1361,7 +1476,7 @@ file.copy(src, dst, overwrite = TRUE)  # 目标存在时覆盖
 
 **对于导入 GPL 到用户存储的 `add_GPL()` 也是类似逻辑：**
 
-```
+```r
 add_GPL("GPL123", anno)                    # 已存在则跳过
 add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 ```
@@ -1370,7 +1485,7 @@ add_GPL("GPL123", anno, overwrite = TRUE)  # 强制覆盖
 
 **你的写法完全正确！**
 
-```
+```r
 file.copy("~/.fastGEO/anno_obj_user.rda", 
           "~/Desktop/fastGEO/anno_obj_user_backup.rda", 
           overwrite = TRUE)

@@ -33,27 +33,23 @@
 ## 可选的下一步（选一或多项）
 1) 全盘精确查找（可能需要 sudo，运行时间取决于磁盘大小）  
    如果你同意我现在继续在整盘查找，我会运行下面命令（会提示输入密码）：
-
-```
+   ```bash
    sudo find / -type f -name 'claude.json' 2>/dev/null
-```
-
-估计耗时：几秒到数分钟不等。
+   ```
+   估计耗时：几秒到数分钟不等。
 
 2) 按名称模糊/更广泛地查找（如果文件名不是完全 `claude.json`，比如 `claude-config.json`、`claude.jsonc` 等）  
    我可以运行：
-
-```
+   ```bash
    find ~ -type f -iname '*claude*' 2>/dev/null
    mdfind claude
-```
+   ```
 
 3) 在文件内容中查找包含关键词（如果文件名不同但内容里有 "claude"）  
    比如在主目录内查找文本内容（会比按文件名慢很多）：
-
-```
+   ```bash
    grep -R --binary-files=without-match -I "claude" ~ 2>/dev/null | head -n 200
-```
+   ```
 
 4) 检查常见配置/应用文件夹（可能被放在隐藏目录或应用支持目录）  
    我可以列出这些目录供你检查：
@@ -63,11 +59,10 @@
    - /etc/
    - ~/Library/Containers/ 或 ~/Library/Group Containers/
 
-示例命令（快速列出含 `claude` 的文件/文件夹名）：
-
-```
+   示例命令（快速列出含 `claude` 的文件/文件夹名）：
+   ```bash
    find ~/Library ~/Library/Application\ Support ~/.config ~/.local -maxdepth 3 -iname "*claude*" 2>/dev/null
-```
+   ```
 
 5) 如果你把文件放在云盘（iCloud Drive / Dropbox / Google Drive）或另一个用户目录，我可以给出对应的检查办法或命令。
 
@@ -107,8 +102,7 @@
 - 搜索并展示 `claude_desktop_config.json` 内容或 VS Code 插件的设置 schema。
 
 示例命令（你可以复制到 zsh 终端执行）：
-
-```
+```bash
 # 查看隐藏文件内容（只读）
 cat ~/.claude.json
 
@@ -187,38 +181,30 @@ cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
 ## 我可以为你做的下一步（选一）
 1) 在 Finder 中打开某个文件夹（例如打开桌面版配置目录）  
    示例命令：
-
-```
+   ```bash
    open ~/Library/Application\ Support/Claude
    # 或定位并选中文件
    open -R ~/.claude.json
-```
-
+   ```
 2) 在终端列出某目录内容（显示隐藏文件、权限）  
    示例命令：
-
-```
+   ```bash
    ls -la ~/.claude
    ls -la "~/.vscode/extensions/anthropic.claude-code-2.0.8"
-```
-
+   ```
 3) 查看配置文件（例如 `~/.claude.json` 或 `~/Library/Application Support/Claude/claude_desktop_config.json`）的前几行或结构化输出（会提示是否屏蔽敏感字段）  
    示例命令：
-
-```
+   ```bash
    # 只看前 200 行
    sed -n '1,200p' ~/.claude.json
 
    # 如果已安装 jq，用来美化输出
    jq '.' ~/.claude.json
-```
-
-4) 备份或复制某个文件到桌面（例如把配置复制到桌面作备份）
-
-```
+   ```
+4) 备份或复制某个文件到桌面（例如把配置复制到桌面作备份）  
+   ```bash
    cp ~/.claude.json ~/Desktop/claude.json.backup
-```
-
+   ```
 5) 我现在直接把某个目录在终端中打开（cd + ls），或把 `~/Library/Application Support/Claude` 的目录树列给你看（有限深度）。
 
 告诉我你要我执行哪一项（回复数字或写出目标路径），例如：
@@ -254,6 +240,9 @@ cat ~/Library/Application\ Support/Claude/claude_desktop_config.json
 
 ### 🤖 Copilot <sub>2025/10/05 06:41</sub>
 
+```
+
+```
 我已修复并保存 `~/.claude.json`：
 
 - 修复了错误的分号（改为逗号），删除了行内注释，使文件成为有效的 JSON。
@@ -285,19 +274,15 @@ Claude Code Chat如何添加 api
 - 优点：简单、可撤销（只在 shell 配置里添加），不会把 key 写入项目文件。
 - 操作（zsh）：
   - 临时（只对当前终端会话有效）：
-
-```
+    ```zsh
     export ANTHROPIC_API_KEY="你的_api_key_here"
-```
-
-- 永久（每次新开终端都会生效，编辑 `~/.zshrc`）：
-
-```
+    ```
+  - 永久（每次新开终端都会生效，编辑 `~/.zshrc`）：
+    ```zsh
     echo 'export ANTHROPIC_API_KEY="你的_api_key_here"' >> ~/.zshrc
     source ~/.zshrc
-```
-
-- 注意：如果要让 VS Code GUI 读取这个环境变量，最好从终端启动 VS Code（在终端运行 `code .`），或者在 macOS 上把环境变量放到登录环境（视你的 macOS/VS Code 启动方式而定）。
+    ```
+  - 注意：如果要让 VS Code GUI 读取这个环境变量，最好从终端启动 VS Code（在终端运行 `code .`），或者在 macOS 上把环境变量放到登录环境（视你的 macOS/VS Code 启动方式而定）。
 
 ## 2) 通过 VS Code 扩展的认证/设置（如果你用的是 `Anthropic Claude Code` 扩展）
 - 优点：更集成、通常会把 key 安全地存到系统 Keychain（macOS）或操作系统安全存储。
@@ -310,26 +295,22 @@ Claude Code Chat如何添加 api
 ## 3) macOS Keychain（桌面版优先/适用于 Desktop 应用）
 - 优点：将密钥安全保存在系统 Keychain 中，桌面版通常会默认读取 Keychain。
 - 操作（把 key 写入 Keychain 的示例命令）：
-
-```
+  ```zsh
   # 把 key 存为通用密码项，service 名称可自定义
   security add-generic-password -a $USER -s "anthropic_api_key" -w "你的_api_key_here" -U
-```
-
-- `-U` 表示如果已经存在则更新。随后桌面/扩展若支持 Keychain，会自动读取。
+  ```
+  - `-U` 表示如果已经存在则更新。随后桌面/扩展若支持 Keychain，会自动读取。
   - 如果你更倾向可视化操作，也可以用 macOS 钥匙串访问（Keychain Access.app）手动添加。
 
 ## 如何验证是否成功
 - 在 VS Code 中打开 Claude 面板 / 使用扩展发送一个简单请求（例如发送 “hello”）看是否有响应。  
 - 在终端用 CLI（如果你装了 `claude` 命令）运行一个简单命令，例如：
-
-```
+  ```zsh
   # 仅在你安装了 claude CLI 的情况下
   claude --version
   # 或
   CLAUDE_API_TEST=1 python -c 'print("test")'
-```
-
+  ```
 - 我也可以帮你读取 `~/.claude.json` 或 `~/Library/Application Support/Claude/claude_desktop_config.json` 来确认应用是否记录了某种登录或连接状态（不会显示密钥内容，除非你允许）。
 
 ## 我可以现在帮你做哪一项（请选择）

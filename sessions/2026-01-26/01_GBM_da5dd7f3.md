@@ -18,6 +18,14 @@
 
 现在我了解了这两个文件的内容。根据 `0.model_test.Rmd` 中的 OS 和 PFS 分析模式，我将修改这两个文件，使其同时支持 OS（总生存期）和 PFS（无进展生存期）的分析。
 
+```
+
+```
+
+```
+
+```
+
 已完成修改。以下是主要更改内容的总结：
 
 ## 修改总结
@@ -64,8 +72,7 @@
 ### 使用说明
 
 切换分析类型只需修改一处：
-
-```
+```r
 analysis_type <- "OS"   # 分析总生存期
 # 或
 analysis_type <- "PFS"  # 分析无进展生存期
@@ -79,6 +86,10 @@ analysis_type <- "PFS"  # 分析无进展生存期
 
 我来修改 `3_lasso.Rmd` 中 3.1 节的临床信息部分，使其与 `0.model_test.Rmd` 的代码风格保持一致，统一使用 `time` 和 `event` 变量名，并添加缺失值处理。
 
+```
+
+```
+
 已完成修改。主要更改内容：
 
 ###
@@ -86,8 +97,7 @@ analysis_type <- "PFS"  # 分析无进展生存期
 第3.1节修改
 
 **修改前：**
-
-```
+```r
 pd$OS <- as.numeric(pd$OS)
 pd$OS.time <- as.numeric(pd$OS.time)
 ...
@@ -95,8 +105,7 @@ y <- Surv(pd$OS.time, pd$OS)
 ```
 
 **修改后：**
-
-```
+```r
 # 转换数据类型并统一变量名
 pd$time <- as.numeric(pd$OS.time)
 pd$event <- as.numeric(pd$OS)
@@ -123,6 +132,14 @@ y <- Surv(pd$time, pd$event)
 ### 🤖 Copilot <sub>2026/01/26 19:41</sub>
 
 现在我了解了当前文件内容。我将根据 `0.model_test.Rmd` 中 OS 和 PFS 的代码逻辑，在这两个文件末尾添加对应的 OS 和 PFS 分析代码。
+
+```
+
+```
+
+```
+
+```
 
 已完成修改。以下是添加内容的总结：
 
@@ -179,6 +196,10 @@ pd_pfs和 pd_pfs_valid是一样的
 
 ### 🤖 Copilot <sub>2026/01/26 19:45</sub>
 
+```
+
+```
+
 已简化 PFS 部分的代码，移除了多余的 `pd_pfs_valid` 变量，直接使用 `pd_pfs`：
 
 - **GEO PFS KM-plot**: 移除了缺失值过滤步骤，直接用 `pd_pfs`
@@ -207,11 +228,23 @@ Group
 
 问题在于 `exp_pfs_valid <- exp_pfs[, valid_idx_pfs]` 这行代码使用逻辑索引，但 `exp_pfs` 的列名与 `pd_pfs` 的行名可能不匹配。需要使用样本名来匹配，而不是逻辑索引。
 
+```
+
+```
+
 同时也需要修改 OS 部分，确保样本名匹配：
+
+```
+
+```
 
 同时需要更新
 
 中的变量名：
+
+```
+
+```
 
 已修复问题。主要改动：
 
@@ -220,8 +253,7 @@ Group
 **问题原因**：使用逻辑索引 `valid_idx_pfs` 来筛选表达矩阵列时，`exp_pfs` 的列名与 `pd_pfs` 的行名不匹配，导致数据为空。
 
 **修复方法**：使用 `intersect()` 获取共同样本名，然后按样本名筛选：
-
-```
+```r
 # 获取共同样本名
 common_samples_pfs <- intersect(colnames(exp_pfs), rownames(pd_pfs))
 
@@ -299,25 +331,27 @@ PFS数据已保存至: risk_PFS.Rdata
 
 问题在于 `pd_pfs$Risk` 的值是 "Low risk" 和 "High risk"，而 `factor()` 设置的 levels 是 "low" 和 "high"，不匹配导致全部变成 NA。
 
+```
+
+```
+
 已修复。问题是 `pd_pfs$Risk` 的值格式不一致：
 
 - **原始值**: `"Low risk"`, `"High risk"`
 - **期望值**: `"low"`, `"high"`
 
 修复方法：
-
-```
+```r
 pd_pfs$Risk <- gsub(" risk", "", pd_pfs$Risk, ignore.case = TRUE)  # 移除 " risk"
 pd_pfs$Risk <- tolower(pd_pfs$Risk)  # 转为小写
 ```
 
 现在重新运行应该会显示：
-
 ```
 PFS最终分组:
 Group_pfs
  low high 
-  30   30
+  30   30 
 ```
 
 ### 👤 User <sub>2026/01/26 19:51</sub>
@@ -352,6 +386,10 @@ Error in DESeqDataSet(se, design = design, ignoreRank) :
 
 GEO数据是log2转换后的数据，不能用DESeq2和edgeR（需要count数据）。我将修改OS和PFS部分，只使用limma进行差异分析：
 
+```
+
+```
+
 已修改完成。由于 GEO 数据是 log2 转换后的数据，不能使用 DESeq2 和 edgeR（它们需要 count 数据），所以 OS 和 PFS 部分都改为只使用 **limma** 进行差异分析：
 
 ### 主要修改
@@ -380,11 +418,14 @@ GEO数据是log2转换后的数据，不能用DESeq2和edgeR（需要count数据
 
 中的数据准备代码：
 
+```
+
+```
+
 已修改完成。主要改动：
 
 ### 修改前的问题
-
-```
+```r
 # 只保留了lasso筛选的基因（15个左右）
 exp_pfs <- exp_pfs[intersect(g_pfs, rownames(exp_pfs)), ]
 ```
@@ -401,7 +442,6 @@ exp_pfs <- exp_pfs[intersect(g_pfs, rownames(exp_pfs)), ]
 5. 保存数据供差异分析使用
 
 重新运行后应该会看到：
-
 ```
 PFS数据集全部基因数: xxxxx (几千或上万个)
 PFS表达矩阵维度: xxxxx genes x 60 samples
@@ -412,6 +452,10 @@ PFS表达矩阵维度: xxxxx genes x 60 samples
 根据 2 的代码来添加 3.enrich.Rmd中 OS 和 PFS 的代码！！！
 
 ### 🤖 Copilot <sub>2026/01/26 20:04</sub>
+
+```
+
+```
 
 已完成修改。在
 
@@ -451,6 +495,10 @@ PFS表达矩阵维度: xxxxx genes x 60 samples
 
 我来帮你重新组织代码逻辑，将密度图和GO+KEGG整合可视化放在最后。这样可以先完成所有的富集分析，最后统一进行高级可视化。
 
+```
+
+```
+
 完成!我已经重新组织了
 
 的代码结构:
@@ -486,6 +534,10 @@ PFS表达矩阵维度: xxxxx genes x 60 samples
 
 你说得对！富集分析应该使用全部差异基因，而不是只选择某一个方向。我来修改所有相关部分：
 
+```
+
+```
+
 完成!我已经将所有富集分析部分改为默认使用**所有差异基因**:
 
 ## 修改内容:
@@ -511,7 +563,7 @@ Failed to get list of R functions. Make sure that "isonlite" is installe..一直
 
 这是VS Code的R扩展提示需要安装`jsonlite`包。在R控制台中运行：
 
-```
+```r
 install.packages("jsonlite")
 ```
 

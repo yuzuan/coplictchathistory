@@ -1449,7 +1449,6 @@ Selected: 深挖 EZH2/SMARCA4 表观遗传调控线索
 | **4. 空间验证** | 免疫富集 Niche 内 EZH2 与抗原 **反相关** | Niche_2: ρ=**-0.383** |
 
 **机制模型**：
-
 ```
 EZH2↑ → PRC2(SUZ12,MTF2) + DNMT1 → H3K27me3/DNA甲基化
 → MHC-I/II启动子沉默(HLA-A/B/C, B2M) → 免疫逃逸
@@ -1759,7 +1758,6 @@ Selected: 深挖 EZH2/SMARCA4 表观遗传调控线索
 | **4. 空间验证** | 免疫富集 Niche 内 EZH2 与抗原 **反相关** | Niche_2: ρ=**-0.383** |
 
 **机制模型**：
-
 ```
 EZH2↑ → PRC2(SUZ12,MTF2) + DNMT1 → H3K27me3/DNA甲基化
 → MHC-I/II启动子沉默(HLA-A/B/C, B2M) → 免疫逃逸
@@ -2577,6 +2575,10 @@ Heatmap 非常清晰，EZH2/SMARCA4 在 Antigen_presentation 侧强负 Δρ，TB
 
 只有 5 个 bridge TFs（importance>1 门槛太高）。之前分析用的是全部 adjacencies（736 TFs → receptors），实际有 130 个 bridge。需要降低门槛：
 
+```
+
+```
+
 71 bridge TFs，ARID5B(5 receptors)、MSRA(5)、RFX4(4)、FOXP1(4)。继续执行后续 cells：
 
 很好！DRD2 有 12 个 bridge TFs 参与调控——反而是「被保护」的受体。继续 dual heatmap 和后续 cells：
@@ -2641,6 +2643,10 @@ Selected: ③ 用 regulon AUC 替换 raw adjacency 重做
 motifs CSV 没有干净的 TF 列，解析困难。换一个更强的 functional approach：用 regulon AUC 与受体表达的 Spearman 相关性来定义"调控关系"——这比 raw adjacency 更有生物学意义。
 
 15GB 的 adata 太重。更实际的方案：**只保留有 SCENIC 验证过的 regulon 的 TFs**（即 AUC 矩阵的 239 列）来过滤 adjacency，这比 raw GRNBoost2 全集已经是 regulon-level 证据了。
+
+```
+
+```
 
 关键发现：**235/239 (98.3%) 的 validated TFs 都有显著 Δρ**——Δρ 是 nearly universal 的现象，不可能做重叠富集检验。
 

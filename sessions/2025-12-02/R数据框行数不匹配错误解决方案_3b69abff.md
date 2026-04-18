@@ -44,7 +44,7 @@ Error in `$<-.data.frame`(`*tmp*`, symbol, value = c("Gnai3", "Pbsn",  :
 
 你需要先将 `anno` 与 `expr` 进行匹配，而不是直接赋值。以下是修正后的代码：
 
-```
+```r
 library(AnnotationDbi)
 library(org.Mm.eg.db)
 library(dplyr)
@@ -78,7 +78,7 @@ expr <- expr[!is.na(expr$symbol) & expr$symbol != "", ]
 
 **如果你想用 SYMBOL 作为行名并合并重复的基因**：
 
-```
+```r
 # 添加 symbol 并过滤
 expr$symbol <- anno$SYMBOL[match(rownames(expr), anno$ID)]
 expr <- expr[!is.na(expr$symbol) & expr$symbol != "", ]
@@ -224,7 +224,7 @@ cat("下调基因:", sum(DEG$change == "Down"), "\n")
 
 以下是绘制三个基因 boxplot 和 violin 图的代码：
 
-```
+```r
 library(ggplot2)
 library(tidyr)
 library(dplyr)
@@ -318,7 +318,7 @@ ggsave(file.path(out_dir, "boxplot_3genes_stat.pdf"), p_box_stat, width = 9, hei
 
 **注意**：如果某个基因不在 `expM` 中，代码会自动跳过。你可以先检查基因是否存在：
 
-```
+```r
 genes_of_interest[genes_of_interest %in% rownames(expM)]
 ```
 
@@ -334,7 +334,7 @@ Error in `$<-.data.frame`(`*tmp*`, group, value = c(NA, NA, 2L, 2L, 1L,  :
 
 需要通过样本名匹配来添加 group 信息。修正代码如下：
 
-```
+```r
 library(ggplot2)
 library(tidyr)
 library(dplyr)
@@ -423,7 +423,7 @@ boxplot_3genes_stat.是什么意思啊
 
 具体来说，这张图除了显示箱线图外，还会在图上添加统计显著性标记：
 
-```
+```r
 stat_compare_means(method = "t.test", label = "p.signif", 
                    comparisons = list(c("wt_Mx", "cKI_Mx")))
 ```

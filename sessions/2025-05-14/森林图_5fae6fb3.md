@@ -121,7 +121,7 @@ In .get_data(model, data = data) :
 
 1. 首先修改主题定义部分，使用新的参数格式：
 
-```
+```r
 tm <- forest_theme(base_size = 10,
                    # 置信区间点形状，线类型/颜色/宽度
                    ci_pch = 16,  # 点形状
@@ -142,7 +142,7 @@ tm <- forest_theme(base_size = 10,
 
 2. 对于没有`add_underline`函数的问题，我们可以使用`edit_plot`函数来添加下划线效果：
 
-```
+```r
 # 改变第三行文字的颜色：
 g <- edit_plot(p, row = 3, gp = gpar(col = "red", fontface = "italic"))
 
@@ -177,6 +177,14 @@ g <- insert_text(g,
 
 让我帮你修改文件。我会使用`replace_string_in_file`工具来更新这些代码：
 
+```
+
+```
+
+```
+
+```
+
 这些修改应该解决了警告信息和错误。主要的更改包括：
 
 1. 将弃用的参数（refline_lwd、refline_lty、refline_col）替换为新的 refline_gp 参数
@@ -202,6 +210,14 @@ In .get_data(model, data = data) :
 这个错误显示在使用 `forestplot` 函数时出现了问题，错误信息表明输入的数据框格式不正确。让我帮你修复这个问题。
 
 问题出在 `forestplot` 函数调用时的数据处理部分。我们需要确保输入的数据是正确的数据框格式。让我修改相关代码：
+
+```
+
+```
+
+```
+
+```
 
 我做了以下修改：
 
@@ -232,6 +248,10 @@ In .get_data(model, data = data) :
 ### 🤖 Copilot <sub>2025/05/14 14:04</sub>
 
 这个错误是因为 `forestplot` 函数的参数使用方式有误。让我修改一下代码以正确使用 `forestplot` 函数：
+
+```
+
+```
 
 我做了以下修改：
 

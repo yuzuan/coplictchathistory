@@ -74,7 +74,7 @@
 2. 输入 "Preferences: Open Settings (JSON)"
 3. 将以下内容添加到您的设置文件中：
 
-```
+```json
 {
     "notebook.lineNumbers": "on",
     "editor.lineNumbers": "on",

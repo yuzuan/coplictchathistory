@@ -40,7 +40,7 @@ Terminal output was garbled. Let me write the script to a file and run it instea
 三大块数据各自的差异：
 - **X**: gzip 4.5 GB → 无压缩 15.6 GB  
 - **raw/X**: gzip 4.5 GB → 无压缩 15.6 GB  
-- **layers/counts**: gzip 4.2 GB → 无压缩 11.7 GB
+- **layers/counts**: gzip 4.2 GB → 无压缩 11.7 GB  
 
 修复方法：在保存时加上 `compression='gzip'`。我来更新 notebook 最后一个 cell：
 
@@ -276,7 +276,7 @@ Selected: 查看 notebook 关键 cell 内容
 
 Notebook 整体流程如下：
 
-### 核心架构
+### 核心架构      
 
 | 阶段 | Cell | 内容 |
 |------|------|------|
@@ -298,7 +298,7 @@ Notebook 整体流程如下：
 | **Cell 73** | 综合可视化 | 加载 4 类 clean h5ad → 四面板 UMAP 总览 |
 | **Cell 75-76** | 最终图 | `UMAP_clean_4types.pdf/.png` 输出 |
 
-### 关键数据流
+### 关键数据流          
 
 ```
 adata2.h5ad (876K cells)
@@ -322,7 +322,7 @@ Selected: 查看具体子类细节
 
 现在看其余子类的命名映射和处理：
 
-### 各子类处理详情
+### 各子类处理详情                 
 
 ---
 
@@ -375,7 +375,7 @@ Selected: 查看具体子类细节
 #### **Proliferative tumor** (res=0.5, 11 clusters)
 **Marker**: G2M phase, S phase, DNA replication, Mitosis, Stemness (`SOX2, OLIG2, NES`)
 
-**命名**: 包含多种混合谱系 —— IEG-MΦ, C1Q-Microglia, OPC-like Glioma, AC-like Glioma, NPC-like Prolif. Glioma, Monocyte-like, Cycling Progenitor 等
+**命名**: 包含多种混合谱系 —— IEG-MΦ, C1Q-Microglia, OPC-like Glioma, AC-like Glioma, NPC-like Prolif. Glioma, Monocyte-like, Cycling Progenitor 等                
 
 ---
 
@@ -507,8 +507,7 @@ Selected: 我已在跑 1_preprocess
 **注意事项**：新的
 
 保存时，`1_preprocess` Cell 24 中的 `adata.uns['log1p'] = {'base': None}` 仍然会写入 null encoding。如果你想一劳永逸，保存前可以改成：
-
-```
+```python
 adata.uns['log1p'] = {}  # 或直接删除这个 key
 ```
 
@@ -785,7 +784,7 @@ shell 被上次命令堵住了。让我用干净的 background terminal：
 
 **第 12 次尝试终于完整通过了。**
 
-**第 12 次尝试终于完整通过了。**
+**第 12 次尝试终于完整通过了。** 
 
 Cell 69 的问题是 `sc.pl.umap(color=['prolif_subtype', PLOT_GROUP_COL], palette=GROUP_PALETTE)` — scanpy 对列表中第一个 color 的类别（如 `'AC-like Glioma'`）查询 `GROUP_PALETTE` 字典导致 KeyError。修复方式：拆成两次独立 `sc.pl.umap` 调用，只在画 `PLOT_GROUP_COL` 时传 `palette`。同时将 `assert unmapped_prolif == 0` 改为 warning + 自动标注，与之前 `apply_naming_and_plot` 的修复保持一致。
 
@@ -981,7 +980,7 @@ Selected: 将 SPP1 加入 Nature 程序基因集
 
 建议**新建独立的 "SPP1-TAM" 程序**，基因集从数据驱动的共表达基因中筛选（排除已在其他程序中的基因和神经元 identity 标记）：
 
-```
+```python
 "SPP1-TAM": ["SPP1", "OLR1", "IPCEF1", "MYO1E", "FTL", "FTH1", "PDPN", "RGCC", "LPL", "SGK1"]
 ```
 
@@ -1092,7 +1091,7 @@ Selected: 将 SPP1 加入 Nature 程序基因集
 
 建议**新建独立的 "SPP1-TAM" 程序**，基因集从数据驱动的共表达基因中筛选（排除已在其他程序中的基因和神经元 identity 标记）：
 
-```
+```python
 "SPP1-TAM": ["SPP1", "OLR1", "IPCEF1", "MYO1E", "FTL", "FTH1", "PDPN", "RGCC", "LPL", "SGK1"]
 ```
 
@@ -1776,6 +1775,14 @@ pySCENIC 修复成功。现在创建完整的 Step 2 脚本（cisTarget 剪枝 +
 
 更新 Step 2 脚本使用 v2 格式数据库：
 
+```
+
+```
+
+```
+
+```
+
 发现 ctxcore 有 `not 0 == True` 的 bug（当 index 列在第 0 位时检测失败）。将 "motifs" 列移到最后一列来规避：
 
 数据库已修复（motifs 在最后一列）。现在读取 step2 脚本确认路径正确并重新执行：
@@ -2172,8 +2179,7 @@ Selected: 清理 _executed：去掉所有注入的日志行，只保留纯净代
 只是注释里包含了这个关键词，实际代码已经替换成功。两个 notebook 的 Cell 11 已修复：
 
 **修改内容**（两个 notebook 都已更新）：
-
-```
+```python
 # 旧代码（报错）:
 adata_Macrophage._inplace_subset_obs(keep_mask)
 
@@ -2876,6 +2882,10 @@ pySCENIC 修复成功。现在创建完整的 Step 2 脚本（cisTarget 剪枝 +
 
 更新 Step 2 脚本使用 v2 格式数据库：
 
+```
+
+```
+
 发现 ctxcore 有 `not 0 == True` 的 bug（当 index 列在第 0 位时检测失败）。将 "motifs" 列移到最后一列来规避：
 
 数据库已修复（motifs 在最后一列）。现在读取 step2 脚本确认路径正确并重新执行：
@@ -3184,8 +3194,7 @@ Selected: 清理 _executed：去掉所有注入的日志行，只保留纯净代
 只是注释里包含了这个关键词，实际代码已经替换成功。两个 notebook 的 Cell 11 已修复：
 
 **修改内容**（两个 notebook 都已更新）：
-
-```
+```python
 # 旧代码（报错）:
 adata_Macrophage._inplace_subset_obs(keep_mask)
 
@@ -3841,6 +3850,10 @@ pySCENIC 修复成功。现在创建完整的 Step 2 脚本（cisTarget 剪枝 +
 
 更新 Step 2 脚本使用 v2 格式数据库：
 
+```
+
+```
+
 发现 ctxcore 有 `not 0 == True` 的 bug（当 index 列在第 0 位时检测失败）。将 "motifs" 列移到最后一列来规避：
 
 数据库已修复（motifs 在最后一列）。现在读取 step2 脚本确认路径正确并重新执行：
@@ -4149,8 +4162,7 @@ Selected: 清理 _executed：去掉所有注入的日志行，只保留纯净代
 只是注释里包含了这个关键词，实际代码已经替换成功。两个 notebook 的 Cell 11 已修复：
 
 **修改内容**（两个 notebook 都已更新）：
-
-```
+```python
 # 旧代码（报错）:
 adata_Macrophage._inplace_subset_obs(keep_mask)
 
