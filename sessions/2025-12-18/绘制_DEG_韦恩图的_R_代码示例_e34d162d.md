@@ -92,7 +92,7 @@ ggsave(
 > 关键注意：你开头写的  
 > `GSE246298_DEG = DEG_tb` 和 `GSE106090_DEG = DEG_tb` 会把两个对象指向同一个表，最后两组基因会完全一样，韦恩图就没意义。请确保它们是两张不同的 DEG 表。
 
-```
+```r
 library(ggVennDiagram)
 library(ggplot2)
 library(dplyr)
@@ -194,7 +194,7 @@ ggsave(
 2) **Down 基因集（两队列之间）** 的韦恩图  
 3) **把 Up+Down 合并、但保留方向一致性** 的“common_direction_genes”韦恩图（用“基因|方向”做集合，避免 Up/Down 混在一起）
 
-```
+```r
 library(ggVennDiagram)
 library(ggplot2)
 library(dplyr)
@@ -305,7 +305,7 @@ ggsave(file.path(out_dir, "DEG_venn_direction_nature.pdf"), p_direction, width =
 **改法 A：把集合名字缩短 + 字体变小（推荐，最直接）**
 把 `gene_list_up / down / direction` 的名字改短一点，例如：
 
-```
+```r
 gene_list_up <- list(
   `246298 Up` = up_GSE246298,
   `106090 Up` = up_GSE106090
@@ -324,7 +324,7 @@ gene_list_direction <- list(
 
 然后把你函数里的 `set_size` 调小（比如 5 或 6）：
 
-```
+```r
 set_size = 5
 ```
 
@@ -333,7 +333,7 @@ set_size = 5
 **改法 B：不裁剪文字 + 给画布留更多空白（防止“显示不全”）**
 在你 `make_venn_nature()` 里加上 `coord_cartesian(clip = "off")`，并把边距/expand 再放大一点：
 
-```
+```r
 make_venn_nature <- function(gene_list, note_label) {
   ggVennDiagram(
     gene_list,
@@ -385,7 +385,7 @@ make_venn_nature <- function(gene_list, note_label) {
 
 > 假设你的 `GSE246298_DEG` / `GSE106090_DEG` 里至少有 `logFC` +（`adj.P.Val` 或 `padj` 或 `P.Value` 之一）。如果列名不同，我这段会自动匹配常见写法。
 
-```
+```r
 library(dplyr)
 
 ## 把 rownames 变成 gene 列，方便 join
@@ -465,7 +465,7 @@ logFC AveExpr t ÷ P.Value 수 adj.P.Val B 수 DEG
 
 如果你想显式指定（最稳、最不容易匹配错），就这样写即可：
 
-```
+```r
 lfc1 <- "logFC"
 lfc2 <- "logFC"
 p1   <- "adj.P.Val"   # 或者改成 "P.Value"
@@ -476,7 +476,7 @@ p2   <- "adj.P.Val"   # 或者改成 "P.Value"
 
 如果你现在的列名里出现了奇怪字符（比如你发的 “÷ / 수” 这种，可能是复制时编码问题），先跑一句确认真实列名：
 
-```
+```r
 colnames(GSE246298_DEG)
 colnames(GSE106090_DEG)
 ```
@@ -491,7 +491,7 @@ colnames(GSE106090_DEG)
 
 很好，你的列名就是标准 limma：`logFC` 和 `adj.P.Val` 都齐全。下面给你一段“**严格用这两个列**”来从 `common_up_genes`、`common_down_genes` **各选前 10 个**并合并成“火山图标注基因集”的代码（排序规则：两数据集的平均 $|logFC|$ 越大越靠前；同时更显著（两者中更小的 `adj.P.Val`）优先）。
 
-```
+```r
 library(dplyr)
 library(tibble)
 

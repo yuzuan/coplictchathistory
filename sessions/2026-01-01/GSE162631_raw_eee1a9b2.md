@@ -68,6 +68,10 @@
 
 我来修改加载函数，使其兼容两种文件格式：
 
+```
+
+```
+
 完成！现在代码已经修改为兼容两种10X格式：
 - **旧版格式**：barcodes.tsv.gz, genes.tsv.gz, matrix.mtx.gz（R1、R2、R4使用）
 - **新版格式**：barcodes.tsv.gz, features.tsv.gz, matrix.mtx.gz（R3使用）
@@ -120,8 +124,7 @@
 报错的原因是 **key 名称不匹配**：
 
 在第6个代码单元格中，您使用了：
-
-```
+```python
 sc.tl.rank_genes_groups(
     adata, 
     groupby='tissue_type', 
@@ -132,8 +135,7 @@ sc.tl.rank_genes_groups(
 ```
 
 但在第7个代码单元格中，您尝试读取：
-
-```
+```python
 deg_results = sc.get.rank_genes_groups_df(adata, group=None, key='wilcoxon')  # ← 尝试读取不存在的 key
 ```
 
@@ -141,7 +143,7 @@ deg_results = sc.get.rank_genes_groups_df(adata, group=None, key='wilcoxon')  # 
 
 **解决方案**：将第7个单元格的 key 改为正确的名称，或者删除这个单元格（因为第6个单元格已经保存过结果了）：
 
-```
+```python
 # 修改为正确的 key 名称
 deg_results = sc.get.rank_genes_groups_df(adata, group=None, key='wilcoxon_tissue_type_vs_normal')
 deg_results.to_csv('./write/All_Groups_tissue_type_DEG.csv', index=False)
@@ -207,6 +209,10 @@ sc.pl.rank_genes_groups_heatmap(
 
 让我修复这个单元格：
 
+```
+
+```
+
 修复完成！
 
 **错误原因总结：**
@@ -233,6 +239,18 @@ logFC > 0.5（或 < -0.5）这个标准是不是太低了
 - **严格**：|logFC| > 1.5（~3倍）或 2（4倍）
 
 让我修改代码，将阈值调整为更合理的 **logFC > 1.0**，并使其更容易调整：
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 
 完成！我已经将阈值从 **0.5 提升到 1.0**，主要修改包括：
 
@@ -265,6 +283,10 @@ logFC > 0.5（或 < -0.5）这个标准是不是太低了
 ### 🤖 Copilot <sub>2026/01/01 19:40</sub>
 
 报错原因是**语法错误**：两个 `display()` 语句写在了同一行，缺少换行符。同时代码确实有很多问题和重复。让我修复：
+
+```
+
+```
 
 完成！我修复了以下问题：
 
@@ -382,6 +404,10 @@ logFC > 0.5（或 < -0.5）这个标准是不是太低了
 处理一下后面所有的报错
 
 ### 🤖 Copilot <sub>2026/01/01 19:54</sub>
+
+```
+
+```
 
 已完成！为所有8个富集分析单元格添加了 **try-except 异常处理**：
 

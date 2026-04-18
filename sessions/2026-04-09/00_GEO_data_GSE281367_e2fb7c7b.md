@@ -31,11 +31,27 @@
 
 先写一个 R 脚本快速探查 Seurat 对象的结构（assay 类型、metadata 等），不需要全部加载到内存：
 
+```
+
+```
+
 Seurat 对象有 4 个 assay：`ATAC`, `RNA`, `peaks`, `chromvar`。我们需要的是 `RNA` assay。但 ATAC assay 依赖 Signac。让我改写脚本，先安装 Signac 或绕过 ATAC assay 直接访问 RNA：
+
+```
+
+```
 
 Seurat 对象有 4 个 assay：`ATAC`, `RNA`, `peaks`, `chromvar`。我们需要的是 `RNA` assay。但 ATAC assay 依赖 Signac。让我改写脚本，先安装 Signac 或绕过 ATAC assay 直接访问 RNA：
 
 RNA assay 有 19,620 genes × 69,601 cells，`sample` 列有 12 个样本。现在需要确定内部样本名到 GSM 的映射。让我下载一个 barcode 文件来确认映射：
+
+```
+
+```
+
+```
+
+```
 
 确认了 GSM8619363 → NASHY72621D1。让我一次性下载所有 12 个样本的首行 barcode 来建立完整映射：
 
@@ -75,8 +91,7 @@ Seurat 内部 UpdateSlots 触发了 Signac 依赖。需要先安装 Signac：
 **注意**：这是 **snATAC-seq** 数据，RNA assay 中存储的是 **gene activity score**（基于 chromatin accessibility 推断的基因活性），不是传统 RNA-seq 表达量。
 
 **R 读取方式**：
-
-```
+```r
 load("GSE281367_expression_matrix.RData")
 # expr_matrix 已经是 matrix, 行名=gene, 列名=GSM
 dim(expr_matrix)       # 19620   12
@@ -125,9 +140,17 @@ colnames(expr_matrix)
 
 先写一个 R 脚本快速探查 Seurat 对象的结构（assay 类型、metadata 等），不需要全部加载到内存：
 
+```
+
+```
+
 Seurat 对象有 4 个 assay：`ATAC`, `RNA`, `peaks`, `chromvar`。我们需要的是 `RNA` assay。但 ATAC assay 依赖 Signac。让我改写脚本，先安装 Signac 或绕过 ATAC assay 直接访问 RNA：
 
 RNA assay 有 19,620 genes × 69,601 cells，`sample` 列有 12 个样本。现在需要确定内部样本名到 GSM 的映射。让我下载一个 barcode 文件来确认映射：
+
+```
+
+```
 
 确认了 GSM8619363 → NASHY72621D1。让我一次性下载所有 12 个样本的首行 barcode 来建立完整映射：
 
@@ -167,8 +190,7 @@ Seurat 内部 UpdateSlots 触发了 Signac 依赖。需要先安装 Signac：
 **注意**：这是 **snATAC-seq** 数据，RNA assay 中存储的是 **gene activity score**（基于 chromatin accessibility 推断的基因活性），不是传统 RNA-seq 表达量。
 
 **R 读取方式**：
-
-```
+```r
 load("GSE281367_expression_matrix.RData")
 # expr_matrix 已经是 matrix, 行名=gene, 列名=GSM
 dim(expr_matrix)       # 19620   12

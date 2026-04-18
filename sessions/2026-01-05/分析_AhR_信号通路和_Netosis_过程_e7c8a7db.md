@@ -330,6 +330,9 @@ Error in .testForValidKeys(x, keys, keytype, fks) :
 
 现在让我也更新您的 AhR/NETosis 分析脚本,添加错误处理和ID验证:
 
+```
+
+```
 完成!我为您创建了两个解决方案:
 
 ## 📁 创建的文件:
@@ -350,8 +353,7 @@ Error in .testForValidKeys(x, keys, keytype, fks) :
 ## ✅ 解决方案:
 
 ### **方案1: 使用 biomaRt (推荐)**
-
-```
+```r
 library(biomaRt)
 
 # 小鼠
@@ -366,8 +368,7 @@ results <- getBM(
 ```
 
 ### **方案2: 验证ID是否存在**
-
-```
+```r
 # 先检查ID是否在数据库中
 all_valid_ids <- keys(org.Mm.eg.db, keytype = "ENTREZID")
 valid_ids <- gene_id[gene_id %in% all_valid_ids]
@@ -381,8 +382,7 @@ if (length(valid_ids) > 0) {
 
 ### **方案3: 尝试人类数据库**
 如果是人类基因,改用:
-
-```
+```r
 library(org.Hs.eg.db)
 sym <- mapIds(org.Hs.eg.db, keys = gene_id, 
               keytype = "ENTREZID", column = "SYMBOL")
@@ -400,6 +400,21 @@ sym <- mapIds(org.Hs.eg.db, keys = gene_id,
 
 现在让我更新 AhR/NETosis 分析脚本,使其适用于大鼠:
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 现在运行大鼠ID转换脚本:
 
 看起来需要先安装大鼠注释包。让我创建一个安装脚本:
@@ -511,7 +526,7 @@ rg.Rn.eg.db包
 
 ## 💡 使用方法:
 
-```
+```r
 # 1. 加载数据
 exp <- read.csv("your_data.csv", row.names = 1)
 

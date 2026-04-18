@@ -35,9 +35,7 @@ print(p_box_stat)
 
 根据图片效果，我帮你修改代码如下：
 
-`
-
-```
+````r
 library(ggpubr)
 
 p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
@@ -61,9 +59,7 @@ p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
     )
 
 print(p_box_stat)
-```
-
-`
+````
 
 主要修改说明：
 
@@ -76,14 +72,10 @@ print(p_box_stat)
 
 如果你的分组名称是 "Control" 和 "Treat"，需要调整：
 
-`
-
-```
+````r
 scale_fill_manual(values = c("Control" = "#F8B4B4", "Treat" = "#ADD8E6")) +
 scale_color_manual(values = c("Control" = "#D35400", "Treat" = "#2980B9"))
-```
-
-`
+````
 
 ### 👤 User <sub>2025/12/03 16:10</sub>
 
@@ -93,9 +85,7 @@ scale_color_manual(values = c("Control" = "#D35400", "Treat" = "#2980B9"))
 
 根据你的要求，修改代码如下：
 
-`
-
-```
+````r
 library(ggpubr)
 
 p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
@@ -118,9 +108,7 @@ p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
     )
 
 print(p_box_stat)
-```
-
-`
+````
 
 主要修改说明：
 
@@ -138,9 +126,7 @@ print(p_box_stat)
 
 根据你的要求，在每个箱线图上方添加横线（误差线），修改代码如下：
 
-`
-
-```
+````r
 library(ggpubr)
 
 p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
@@ -164,9 +150,7 @@ p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
     )
 
 print(p_box_stat)
-```
-
-`
+````
 
 主要修改说明：
 
@@ -182,9 +166,7 @@ print(p_box_stat)
 
 根据你的要求，修改代码如下：
 
-`
-
-```
+````r
 library(ggpubr)
 
 p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
@@ -208,9 +190,7 @@ p_box_stat <- ggplot(plot_data, aes(x = group, y = expression, fill = group)) +
     )
 
 print(p_box_stat)
-```
-
-`
+````
 
 主要修改说明：
 

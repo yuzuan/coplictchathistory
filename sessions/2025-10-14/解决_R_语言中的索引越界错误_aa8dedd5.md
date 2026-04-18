@@ -21,6 +21,9 @@ Error in mat_scaled[, group_order, drop = FALSE] :
 
 这个问题可能是因为 `group` 变量的长度与 `exp` 矩阵的列数不匹配。让我修复这个问题：
 
+```
+
+```
 现在我已经修复了代码。问题出在以下几点:
 
 1. **根本原因**: 在代码前面,你有这行代码 `exp=expr[, !is.na(group)]`,这会过滤掉 `group` 中的 `NA` 值对应的列,但 `group` 变量本身可能还包含 `NA`。
@@ -42,11 +45,14 @@ Error in mat_scaled[, group_order, drop = FALSE] :
 
 我看到问题了。错误是因为 `str_split` 函数来自 `stringr` 包,但你没有加载这个包。让我修复这个问题:
 
+```
+
+```
 或者,如果你不想依赖 `stringr` 包,也可以使用 R 基础函数来替代:
 
 好的!我已经添加了 `library(stringr)` 来解决问题。现在你可以在 R 终端中重新运行这段代码:
 
-```
+```r
 library(data.table)
 library(stringr)
 folder_path <- "/Users/yuzuan/Downloads/GSE130036_RAW"
@@ -85,6 +91,9 @@ expr <- Reduce(function(x, y) cbind(x, y), df_list)
 
 让我重写这部分代码:
 
+```
+
+```
 完成!我已经修复了代码。主要问题和修复如下:
 
 **问题诊断:**
@@ -116,13 +125,13 @@ expr <- Reduce(function(x, y) cbind(x, y), df_list)
 
 你可以在 R 终端输入以下命令来查看 `expr` 的结构：
 
-```
+```r
 str(expr)
 ```
 
 如果你想看前几行内容，可以用：
 
-```
+```r
 head(expr)
 ```
 
@@ -153,7 +162,7 @@ head(expr)
 
 举例排查代码：
 
-```
+```r
 table(is.na(anno$symbol))      # 看看有多少 NA
 table(anno$symbol == "")       # 看看有多少空字符串
 head(anno$ID)                  # 检查 ID 格式
@@ -179,7 +188,7 @@ head(anno$ID)                  # 检查 ID 格式
 
 建议你先运行：
 
-```
+```r
 head(rownames(expr))
 ```
 
@@ -193,7 +202,7 @@ head(rownames(expr))
 
 下面是整理后的 R 代码（去掉多余注释，格式标准，适合直接运行）：
 
-```
+```r
 library(ggplot2)
 library(ggrepel)
 
@@ -253,6 +262,9 @@ print(p)
 
 我将在 `fastGEO_analysis_tutorial.Rmd` 文件的末尾添加一个新的代码块，使用 `library(ggplot2)` 绘制火山图，并使用文件中第895-991行定义的变量。
 
+```
+
+```
 完成！我已经在
 
 文件末尾添加了一个新的代码块，主要特点：
@@ -284,6 +296,9 @@ print(p)
 
 我会修改代码，移除 "KRAS_UP" 和 "KRAS_DN" 的命名，改用更通用的 "Up" 和 "Down"：
 
+```
+
+```
 完成！我已经将代码中的：
 - `"KRAS_UP"` 改为 `"Up"`
 - `"KRAS_DN"` 改为 `"Down"`
@@ -301,6 +316,9 @@ print(p)
 
 ### 🤖 Copilot <sub>2025/10/14 21:52</sub>
 
+```
+
+```
 完成！我已经将关键基因标注数量从 **Top 5** 改为 **Top 10**，现在会标注：
 - **Top 10 上调基因**（按 P 值排序）
 - **Top 10 下调基因**（按 P 值排序）
@@ -429,6 +447,9 @@ clustered
 
 这个错误是因为 `exp_sel` 的维度出现了问题。问题在于你对 `exp` 进行了转置 (`t(exp)`)，导致基因变成了列而不是行。让我修复这个问题：
 
+```
+
+```
 我已经修复了代码。问题的关键点：
 
 **问题诊断：**
@@ -451,6 +472,9 @@ clustered
 
 明白了！如果导入的 `exp` 本身就是样本在行、基因在列，那么我们需要调整代码：
 
+```
+
+```
 完美！我已经修正了代码。主要变更：
 
 **关键修改：**
@@ -475,6 +499,9 @@ Error in 1:nrow(m) : argument of length 0
 
 这个错误表明 `exp_sel` 矩阵可能是空的或者维度有问题。让我添加一些调试代码来检查问题：
 
+```
+
+```
 我添加了调试代码来检查问题。现在请重新运行脚本，你会看到：
 
 1. **exp 的维度** - 确认样本数和基因数
@@ -522,6 +549,9 @@ exp_sel 维度: 845 396
 
 问题可能出在数据类型上。让我检查并修复：
 
+```
+
+```
 我做了以下改进：
 
 1. ✅ 使用 `apply(exp_sel, 2, as.numeric)` 而不是 `as.data.frame(lapply(...))` - 这样确保返回的是矩阵而不是数据框
@@ -601,6 +631,9 @@ Error in 1:nrow(m) : argument of length 0
 
 问题依然存在。让我检查一下 `ConsensusClusterPlus` 的内部问题。错误可能是因为某些参数或数据格式问题。让我尝试一个更稳健的方法：
 
+```
+
+```
 我做了以下关键修改：
 
 1. ✅ **添加数据清洗**：移除方差为0的样本和NA值
@@ -918,6 +951,9 @@ Error in 1:nrow(m) : argument of length 0
 
 太好了！聚类过程成功运行了，但在生成图表时出错。问题出在绘图部分。让我修改代码，关闭绘图功能或使用其他方式：
 
+```
+
+```
 我将 `plot` 参数改为 `NULL` 来关闭自动绘图功能。这样聚类分析可以正常完成，我们可以在之后手动绘制需要的图表。现在重新运行代码，应该可以顺利完成了！
 
 完成后你可以：
@@ -937,6 +973,9 @@ Error in 1:nrow(m) : argument of length 0
 
 错误依然存在。问题可能出在 `ConsensusClusterPlus` 的内部代码。让我尝试另一个解决方案 - 使用旧版本的调用方式或者完全手动处理：
 
+```
+
+```
 我添加了 `tryCatch` 错误处理，这样即使绘图失败，也能捕获错误并尝试备选方案。同时：
 
 1. ✅ 添加了临时目录设置
@@ -960,6 +999,9 @@ Browse[1]>
 
 好的！现在我们知道问题出在 `clusterTrackingPlot` 函数上。让我们完全跳过内置的绘图功能，直接提取聚类结果：
 
+```
+
+```
 现在我提供了一个更稳健的方案：
 
 1. ✅ **先使用基础的层次聚类**（`hclust`）- 这个肯定能工作，作为备选方案
@@ -1039,6 +1081,9 @@ ConsensusClusterPlus 出错: argument of length 0
 
 完美！虽然 `ConsensusClusterPlus` 还是有绘图错误，但我们成功使用了基础的层次聚类方法完成了分析。现在让我们继续完善代码，保存结果并添加可视化：
 
+```
+
+```
 完美！我已经更新了代码，现在会：
 
 1. ✅ **保存聚类结果** - CSV文件包含样本名称和所属聚类
@@ -1062,6 +1107,9 @@ ConsensusClusterPlus 出错: argument of length 0
 
 好的！我来添加生存分析的代码。让我在现有代码后面添加生存分析部分：
 
+```
+
+```
 完美！我已经添加了完整的生存分析代码，包括：
 
 **生存分析内容：**
@@ -1090,6 +1138,10 @@ ConsensusClusterPlus 出错: argument of length 0
 ### 🤖 Copilot <sub>2025/10/15 14:50</sub>
 
 好问题！让我添加代码来评估最佳聚类数目（K值）。我们可以使用多种指标来评估聚类效果：
+
+```
+
+```
 
 我已经为您添加了完整的聚类效果评估代码。代码会使用三种方法来评估最佳聚类数目:
 
@@ -1139,16 +1191,22 @@ Error: object 'hc_result' not found
 
 我发现问题了!在评估代码中,我们需要先创建 `hc_result` 对象才能使用它。让我重新调整代码顺序:
 
+```
+
+```
+
+```
+
+```
 完美!我已经修正了代码顺序。现在的逻辑是:
 
 ## 修正后的代码结构:
 
 1. **第一步** (第54行): 先创建距离矩阵和层次聚类对象
-
-```
+   ```r
    dist_matrix <- dist(exp_sel_matrix, method = "euclidean")
    hc_result <- hclust(dist_matrix, method = "ward.D2")
-```
+   ```
 
 2. **第二步** (第62行): 使用已创建的对象进行评估
    - 轮廓系数分析
@@ -1157,10 +1215,9 @@ Error: object 'hc_result' not found
    - 生成评估图表
 
 3. **第三步** (第161行): 根据评估结果选择K值并进行最终聚类
-
-```
+   ```r
    clusters <- cutree(hc_result, k = recommended_k)
-```
+   ```
 
 现在可以重新运行代码了,不会再出现 `hc_result not found` 的错误!
 
@@ -1172,6 +1229,9 @@ Error: object 'hc_result' not found
 
 我来为您添加基于聚类分组的差异分析代码。
 
+```
+
+```
 完成!我已经为您添加了完整的差异分析代码。这段代码会:
 
 ## 📊 差异分析功能
@@ -1228,6 +1288,10 @@ exp 现在是行为样本，列为基因，是不是要改
 
 确实!`exp`是**行为样本,列为基因**的格式。我需要修正差异分析部分的代码,因为limma需要的是**行为基因,列为样本**的格式。让我修复:
 
+```
+
+```
+
 现在热图部分的代码是正确的,因为它已经做了转置(`t(exp_full_subset[, rownames(top20_genes)])`)。让我再确认一下是否还有其他需要注意的地方:
 
 很好!代码中对`exp_full_subset`的使用都已经正确处理了。让我总结一下修正的关键点:
@@ -1235,16 +1299,14 @@ exp 现在是行为样本，列为基因，是不是要改
 ## ✅ 已修正的数据格式问题
 
 ### 原始数据结构:
-
-```
+```r
 exp: 行 = 样本 (845个), 列 = 基因 (36215个)
 ```
 
 ### 修正要点:
 
 1. **差异分析部分** (已修正):
-
-```
+```r
 # 原来: fit <- lmFit(t(exp_full_subset), design)  ❌ 多余的转置
 # 现在: 
 exp_full_t <- t(exp_full_subset)  # 先转置: 行=基因, 列=样本
@@ -1252,8 +1314,7 @@ fit <- lmFit(exp_full_t, design)  # ✅ 正确格式
 ```
 
 2. **热图部分** (本来就是正确的):
-
-```
+```r
 # 从 exp_full_subset[样本, 基因] 中提取数据
 top20_matrix <- t(exp_full_subset[, rownames(top20_genes)])
 # 转置后: top20_matrix = 行=基因, 列=样本 ✅
@@ -1275,13 +1336,28 @@ top20_matrix <- t(exp_full_subset[, rownames(top20_genes)])
 
 好的,我来把筛选阈值参数化,方便您随时修改。
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 完美!我已经将差异基因筛选阈值参数化了。现在您可以很方便地在代码开头修改阈值参数:
 
 ## ⚙️ 参数化筛选阈值
 
 在代码第375-377行,您现在可以看到:
 
-```
+```r
 #---------------------------------------
 # ⚙️  差异基因筛选阈值参数 (可修改)
 #---------------------------------------
@@ -1294,15 +1370,13 @@ pvalue_cutoff <- 0.05   # 校正后P值阈值
 只需要修改这两个参数即可,整个分析会自动应用新的阈值:
 
 ### 示例1: 更严格的筛选
-
-```
+```r
 logFC_cutoff <- 1.5     # 更高的logFC阈值
 pvalue_cutoff <- 0.01   # 更低的P值阈值
 ```
 
 ### 示例2: 更宽松的筛选
-
-```
+```r
 logFC_cutoff <- 0.5     # 更低的logFC阈值
 pvalue_cutoff <- 0.1    # 更高的P值阈值
 ```
@@ -1332,6 +1406,9 @@ Error in .ebayes(fit = fit, proportion = proportion, stdev.coef.lim = stdev.coef
 
 我看到问题了。变量名是 `cluster_assign` 而不是 `Cluster_assignments`。让我修正差异分析部分:
 
+```
+
+```
 完成!我已经修复了几个关键问题:
 
 ## 🔧 修复的问题:
@@ -1351,12 +1428,10 @@ Error in .ebayes(fit = fit, proportion = proportion, stdev.coef.lim = stdev.coef
    - 验证样本顺序一致性
 
 4. **自由度检查**:
-
-```
+   ```r
    残差自由度 = 样本数 - 分组数
-```
-
-必须 > 0 才能进行差异分析
+   ```
+   必须 > 0 才能进行差异分析
 
 ## 🔍 这将帮助诊断问题:
 
@@ -1382,6 +1457,9 @@ Error in .ebayes(fit = fit, proportion = proportion, stdev.coef.lim = stdev.coef
 
 我看到了,变量名是 `cluster_assign`,但是保存的CSV文件名是 `Cluster_assignments.csv`。让我修改代码,先读取已保存的CSV文件来创建 `Cluster_assignments` 对象:
 
+```
+
+```
 完成!现在代码会:
 
 1. **优先使用内存中的变量**: 如果 `cluster_assign` 存在,就将它赋值给 `Cluster_assignments`
@@ -1412,7 +1490,15 @@ cat("  上调基因 (Up):", deg_stats["Up"], "\n")
 
 好的,我明白了。下调基因只有9个,不足20个,所以在绘制Top20热图时应该按实际数量绘制。让我修改代码:
 
+```
+
+```
+
 我看到有重复代码,让我清理一下:
+
+```
+
+```
 
 ### 👤 User <sub>2025/10/15 16:50</sub>
 
@@ -1424,6 +1510,9 @@ cat("  上调基因 (Up):", deg_stats["Up"], "\n")
 
 从第7行可以看到 `genes <- fread(..., header = T)[[1]]`,这意味着`genes`已经是一个向量了,不是数据框。所以应该直接使用`genes`而不是`genes$gene`。让我修正:
 
+```
+
+```
 完成!我已经修正了代码:
 
 ## 修正内容:
@@ -1452,15 +1541,25 @@ cat("  上调基因 (Up):", deg_stats["Up"], "\n")
 
 好的,我来修改火山图代码,将标注的基因从Top20改为Top5:
 
+```
+
+```
+
+```
+
+```
+
+```
+
+```
 完成!我已经将火山图的标注修改为Top5基因。修改内容包括:
 
 ## ✅ 修改要点:
 
-1. **参数化标注数量**:
-
-```
+1. **参数化标注数量**: 
+   ```r
    n_label_genes <- 5  # 可以轻松修改这个数字来改变标注数量
-```
+   ```
 
 2. **智能处理不足情况**: 
    - 如果差异基因不足5个,会自动使用实际数量
@@ -1533,14 +1632,14 @@ cat("  上调基因 (Up):", deg_stats["Up"], "\n")
 
 在终端（zsh）可直接运行脚本（假设 Rscript 在 PATH 中）：
 
-```
+```bash
 # 以 Rscript 运行（会把所有输出打印到终端）
 Rscript "/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/00_GEO_data_GSE24080/GSE24080.R"
 ```
 
 或在 R interactive 中逐步 source（便于交互查看输出）：
 
-```
+```r
 # R 交互环境里
 source("/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/00_GEO_data_GSE24080/GSE24080.R")
 ```

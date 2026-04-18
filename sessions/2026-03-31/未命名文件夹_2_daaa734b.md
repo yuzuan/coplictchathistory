@@ -62,11 +62,23 @@ Now I have a complete picture. Let me analyze the gaps and create an enhanced PP
 
 内容已收集完毕。现在增加 4 页打结/止血专题页（模块一概述 + 线结图谱 + 打结方法★重点★ + 止血方法）。
 
+```
+
+```
+
 Now update the page numbers and function names in the remaining slides and main():
+
+```
+
+```
 
 Now update the
 
 function to include the 4 new slides:
+
+```
+
+```
 
 增强版 PPT 已成功生成：**23 页，1386KB**。
 
@@ -99,6 +111,10 @@ Selected: 进一步展开打结分步操作详解
 
 我将在第 6 页（打结方法总览）和第 7 页（止血方法）之间插入 3 页分步详解。
 
+```
+
+```
+
 现在需要重编号后续所有页面。让我先检查当前文件结构。
 
 需要把旧的 08-23 号页面重编号为 11-26。用 Python 脚本批量替换最可靠：
@@ -112,6 +128,10 @@ Selected: 进一步展开打结分步操作详解
 所有页码已修正。现在更新
 
 中的 slides 列表并生成 PPT：
+
+```
+
+```
 
 26 页增强版 PPT 已成功生成（1396KB），打结部分现在包含：
 

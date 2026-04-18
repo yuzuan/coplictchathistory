@@ -123,8 +123,7 @@ docker run -d \
 - ✅ 容器状态：运行中且健康
 
 **常用管理命令：**
-
-```
+```bash
 # 查看日志
 docker logs xianyu-auto-reply
 
