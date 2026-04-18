@@ -26,12 +26,14 @@
 ## 解决方案
 
 **重新安装 fastGEO**：
-```r
+
+```
 install.packages("fastGEO")
 ```
 
 **批量迁移所有旧包**（在 R 控制台中）：
-```r
+
+```
 # 获取旧版本已安装的包列表
 old_packages <- list.files("~/Library/R/x86_64/4.4/library")
 old_packages <- setdiff(old_packages, c("base", "boot", "class", "cluster", 
@@ -79,12 +81,14 @@ install.packages(old_packages)
 ## 解决方案
 
 在 R 控制台中运行：
-```r
+
+```
 install.packages("fastGEO")
 ```
 
 或者，如果想批量迁移所有 R 4.4 的包到 R 4.5：
-```r
+
+```
 # 获取 R 4.4 中的非基础包列表
 old_libs <- list.files("/Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/library/")
 base_pkgs <- c("base", "boot", "class", "cluster", "codetools", "compiler", 
@@ -128,12 +132,14 @@ R 会按优先级搜索包：
 ## 您的 fastGEO 应该能用
 
 试试在 R 中运行：
-```r
+
+```
 library(fastGEO)
 ```
 
 如果还是提示找不到，可能是缓存问题，可以尝试：
-```r
+
+```
 # 刷新包缓存
 .libPaths()  # 确认路径
 detach("package:fastGEO", unload=TRUE)  # 如果已加载先卸载
@@ -158,7 +164,7 @@ fastGEO 实际上已经存在于您的用户库中，应该可以直接使用了
 
 您可以继续使用电脑，安装在后台进行。如果想查看进度，可以运行：
 
-```bash
+```
 ls ~/Library/R/arm64/library/ | wc -l
 ```
 
@@ -190,7 +196,7 @@ ls ~/Library/R/arm64/library/ | wc -l
 
 如果您需要这些生物信息学包:
 
-```r
+```
 # 安装 BiocManager
 install.packages("BiocManager")
 
@@ -286,7 +292,8 @@ BiocManager::install(c(
 ## 使用方式
 
 以后直接运行即可：
-```r
+
+```
 install.packages("包名")           # 自动安装到用户库
 BiocManager::install("包名")      # Bioconductor 包也安装到用户库
 ```
@@ -303,7 +310,7 @@ BiocManager::install("包名")      # Bioconductor 包也安装到用户库
 
 ## 1. **pak** (最推荐，最快) ⚡
 
-```r
+```
 # 安装 CRAN 包
 pak::pak("包名")
 
@@ -325,7 +332,7 @@ pak::pak(c("dplyr", "ggplot2", "tidyr"))
 
 ## 2. **remotes** (从 GitHub 安装开发版)
 
-```r
+```
 # 安装 remotes
 install.packages("remotes")
 
@@ -341,7 +348,7 @@ remotes::install_gitlab("用户名/仓库名")
 
 ## 3. **BiocManager** (Bioconductor 专用)
 
-```r
+```
 # 安装 Bioconductor 包
 BiocManager::install("DESeq2")
 
@@ -351,7 +358,7 @@ BiocManager::install(c("clusterProfiler", "DOSE"))
 
 ## 4. **renv** (项目级包管理)
 
-```r
+```
 # 为项目创建独立的包环境
 renv::init()
 
@@ -379,7 +386,7 @@ renv::restore()
 
 ## 实例对比
 
-```r
+```
 # 传统方法
 install.packages("dplyr")
 
@@ -407,7 +414,7 @@ remotes::install_github("tidyverse/dplyr")  # 或使用 remotes
 
 ## 使用方法
 
-```r
+```
 # 安装单个包
 pak::pak("dplyr")
 
@@ -447,7 +454,7 @@ pak::pkg_status("dplyr")
 
 ## 1. **Posit Package Manager (PPM)** - 预编译二进制包 ⚡⚡⚡
 
-```r
+```
 # 设置使用 Posit Package Manager（提供预编译二进制包）
 options(repos = c(
   CRAN = "https://packagemanager.posit.co/cran/__linux__/jammy/latest"
@@ -466,7 +473,7 @@ options(repos = c(
 
 ## 2. **r-universe** - 自动更新的包仓库 ⚡⚡⚡
 
-```r
+```
 # 从 r-universe 安装（支持最新开发版）
 options(repos = c(
   tidyverse = 'https://tidyverse.r-universe.dev',
@@ -483,7 +490,7 @@ install.packages('dplyr')  # 会从 r-universe 获取最新版本
 
 ## 3. **bspm** (Bridge to System Package Manager) - 使用系统包管理器
 
-```r
+```
 # 仅 Linux 可用，通过系统包管理器安装
 install.packages("bspm")
 bspm::enable()
@@ -495,7 +502,7 @@ bspm::enable()
 
 ## 4. **conda/mamba** - Conda 生态系统 ⚡⚡⚡
 
-```bash
+```
 # 使用 mamba（比 conda 快）
 mamba install -c conda-forge r-dplyr r-ggplot2
 
@@ -512,7 +519,7 @@ conda install -c conda-forge r-dplyr
 
 ### 方案 A：启用并行下载
 
-```r
+```
 # 设置并行下载
 options(Ncpus = parallel::detectCores())
 install.packages(c("dplyr", "ggplot2", "tidyr"))
@@ -520,7 +527,7 @@ install.packages(c("dplyr", "ggplot2", "tidyr"))
 
 ### 方案 B：使用最近的 CRAN 镜像
 
-```r
+```
 # 使用地理位置最近的镜像（中国用户）
 options(repos = c(CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
 # 或
@@ -529,7 +536,7 @@ options(repos = c(CRAN = "https://mirrors.ustc.edu.cn/CRAN/"))
 
 ### 方案 C：优先使用二进制包
 
-```r
+```
 # 强制使用二进制包（避免源码编译）
 install.packages("package_name", type = "binary")
 ```
@@ -553,7 +560,7 @@ install.packages("package_name", type = "binary")
 
 要使用最快的方案，替换您的 `~/.Rprofile`：
 
-```bash
+```
 cp ~/.Rprofile ~/.Rprofile.backup  # 备份
 ```
 
@@ -571,7 +578,7 @@ cp ~/.Rprofile ~/.Rprofile.backup  # 备份
 
 ## 使用示例
 
-```r
+```
 # 使用 pak（推荐，最快）
 pak::pak("dplyr")              # 超快！
 pak::pak(c("dplyr", "ggplot2", "tidyr"))  # 并行安装

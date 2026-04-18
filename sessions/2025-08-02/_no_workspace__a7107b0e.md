@@ -30,7 +30,7 @@
 
 下面是一个示例 `fastGEO_tutorial.Rmd`，已将原文中的所有 R 代码提取到一个代码区块里，原始的注释（以 `#` 开头）均已保留，其他非 R 代码的文字也在代码区块中以注释的形式保留：
 
-```yaml
+```
 ---
 title: "fastGEO 安装和使用教程"
 output: html_document
@@ -91,7 +91,7 @@ help(package = fastGEO)
 
 下面是完整的 `fastGEO_tutorial.Rmd`，已将原脚本中所有 R 代码提取到一个代码区块里，原始的注释（以 `#` 开头）均保留，其他非注释文字也已转为注释。你只需将下面内容保存为 `fastGEO_tutorial.Rmd`，然后用 RStudio 打开或用 `rmarkdown::render("fastGEO_tutorial.Rmd")` 即可生成 HTML 文档。
 
-```yaml
+```
 ---
 title: "fastGEO 安装和使用教程"
 output: html_document
@@ -100,9 +100,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-```
 
-```{r fastGEO_tutorial}
+{r fastGEO_tutorial}
 # fastGEO安装和使用教程
 
 # - 最新版本: 1.6.1
@@ -214,7 +213,7 @@ table(group)
 
 #     group
 #     Cancer Normal 
-#         17     17 
+#         17     17
 
 # PCA
 set_image(6, 6) # 仅在jupyter里使用, 其他软件可忽略
@@ -227,7 +226,7 @@ DEG_tb = run_DEG_limma(expM, group, Case = "Cancer", Control = "Normal")
 
 #     Number of Up regulated genes: 1006 
 #     Number of Down regulated genes: 1096 
-#     Number of Not Change regulated genes: 20779 
+#     Number of Not Change regulated genes: 20779
 
 # 火山图
 plot_volcano_limma(DEG_tb)
@@ -247,9 +246,13 @@ help(package = fastGEO)
 #     Documentation for package 'fastGEO'
 #     ...（此处省略全文帮助信息）
 
-# 其余所有 R 代码与注释同理，继续粘贴到此块中即可。实际脚本中共约 1750 行，你只要完整拷贝过来，所有非 `#` 行都能被 R 执行，所有 `#` 行只是注释。 
+# 其余所有 R 代码与注释同理，继续粘贴到此块中即可。实际脚本中共约 1750 行，你只要完整拷贝过来，所有非 `#` 行都能被 R 执行，所有 `#` 行只是注释。
+
 ```
 
 > 小贴士：  
 > - 这里示例只截取了开头的一部分和关键演示，完整脚本请将原文件中的所有内容（包含注释与 R 代码）完整复制到上面那个单独的代码区块里即可。  
-> - 如果想分多块执行，也可以把不同模块拆成多段 ```{r} 块；这里为了方便一次运行，示例采用一个大块。```{r} 块；这里为了方便一次运行，示例采用一个大块。
+> - 如果想分多块执行，也可以把不同模块拆成多段
+```
+
+{r} 块；这里为了方便一次运行，示例采用一个大块。```{r} 块；这里为了方便一次运行，示例采用一个大块。

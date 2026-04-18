@@ -89,7 +89,7 @@ GSEA 分析还有一种图
 
 这是补充代码：
 
-```r
+```
 # ========== GSEA 其他可视化 ==========
 
 # 1. Enrichment Plot (gseaplot2) - 展示前几个显著通路
@@ -193,7 +193,7 @@ cat("5. Heatmap (热图)\n")
 
 好的,我将山脊图的显示数量从15个改为top3:
 
-```r
+```
 # 2. Ridge Plot - 显示基因表达分布 (修改为显示top3)
 if (nrow(gsea_go@result) > 0) {
     p_ridge_go <- ridgeplot(gsea_go, showCategory = 3, fill = "p.adjust") +
@@ -240,8 +240,8 @@ Error in h(simpleError(msg, call)) :
 if (exists("gsea_go") && nrow(gsea_go@result) > 0) {
     # 选择前3个最显著的通路
     top_pathways <- head(gsea_go@result$ID, 3)
-    
-    p_gsea_enrich <- gseaplot2(gsea_go, 
+
+p_gsea_enrich <- gseaplot2(gsea_go, 
                                geneSetID = top_pathways,
                                title = "GSEA Enrichment Plot - Top GO Terms",
                                color = c("#E64B35", "#4DBBD5", "#00A087"),
@@ -264,7 +264,7 @@ GSEA 如何在 MsigDB指定通路富集分析？
 
 在 GSEA 中使用 MsigDB 指定通路进行富集分析，需要使用 `msigdbr` 包。以下是完整的代码示例：
 
-```r
+```
 # ========== 安装必要的包（首次使用需要） ==========
 # if (!require("msigdbr")) install.packages("msigdbr")
 
@@ -464,7 +464,7 @@ cat("\n========== GSEA MsigDB 分析完成 ==========\n")
 
 以下是针对乳酸和糖酵解相关通路的 GSEA 分析代码：
 
-```r
+```
 library(clusterProfiler)
 library(msigdbr)
 library(org.Hs.eg.db)
@@ -696,7 +696,7 @@ cat("总差异基因转换成功:", nrow(all_entrez), "\n")
 
 根据你前面的代码，我看到你使用了筛选后的基因列表。需要注意的是，**GSEA 需要使用所有基因**（而非仅差异基因），按 logFC 排序。以下是适配你代码的版本：
 
-```r
+```
 # ========== GSEA 分析需要使用完整的基因列表（非筛选后的）==========
 # 注意：GSEA 应该使用所有基因，而不是 genes_interest 筛选后的基因
 
@@ -904,7 +904,7 @@ Run `rlang::last_trace()` to see where the error occurred.print(colnames(glycoly
 
 看到问题了，你的差异分析结果使用的是 `P.Value` 和 `FDR` 列名，而不是 `pvalue` 和 `padj`。以下是修正后的代码：
 
-```r
+```
 # ========== 方法3: 提取糖酵解核心基因的表达情况 ==========
 glycolysis_core <- c(
     "HK1", "HK2", "HK3",           # 己糖激酶
@@ -1008,7 +1008,7 @@ In addition: There were 16 warnings (use warnings() to see them)
 
 `geom_text_repel` 函数来自 `ggrepel` 包，需要先安装和加载。以下是修正后的代码：
 
-```r
+```
 # ========== 安装并加载必要的包 ==========
 if (!require("ggrepel", quietly = TRUE)) {
     install.packages("ggrepel")
@@ -1106,7 +1106,7 @@ cat("\n========== 糖酵解核心基因分析完成 ==========\n")
 
 **替代方案（如果不想安装 ggrepel）：**
 
-```r
+```
 # 使用 geom_text 替代 geom_text_repel（可能有标签重叠）
 p_volcano <- ggplot(glycolysis_deg, aes(x = logFC, y = -log10(P.Value), 
                                         color = significance, label = gene)) +
@@ -1133,7 +1133,7 @@ p_volcano <- ggplot(glycolysis_deg, aes(x = logFC, y = -log10(P.Value),
 
 好的，我来添加乙酰化相关的通路分析。以下是完整的代码，整合了**糖酵解、乳酸代谢和乙酰化**三个方面：
 
-```r
+```
 library(clusterProfiler)
 library(msigdbr)
 library(org.Hs.eg.db)
@@ -1429,7 +1429,7 @@ cat("7. Metabolism_Significant_Genes_heatmap.pdf\n")
 
 以下是修改后的完整代码：
 
-```r
+```
 library(clusterProfiler)
 library(msigdbr)
 library(org.Hs.eg.db)

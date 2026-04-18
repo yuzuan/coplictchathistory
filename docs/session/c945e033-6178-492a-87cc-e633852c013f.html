@@ -348,7 +348,7 @@ sc.tl.rank_genes_groups(
         <time class="chat-time">2025/12/20 22:48</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经结合你前面的 <code class="inline-code">adata_Macro</code> 子集和 <code class="inline-code">leiden_sub</code> 聚类结果，修改了第 10 个单元格的代码。</p><p class="message-paragraph">**修改点说明：**<br>1.  **基因统计**：保留了你之前的函数（并修复了缩进），现在会同时输出总基因数和实际表达的基因数。<br>2.  **子群差异 (DE)**：利用你前面刚算好的 <code class="inline-code">leiden_sub</code> 分组，直接运行 <code class="inline-code">rank_genes_groups</code> 并画出 Top 20 基因图。<br>3.  **宏观差异**：在全数据 <code class="inline-code">adata</code> 中自动创建了 <code class="inline-code">is_macro</code> 列，用来计算 Macrophage 相比于其他所有细胞（Others）的差异基因，并自动保存结果到 <code class="inline-code">./write/Macrophage_vs_Others_DEG.csv</code>。</p><p class="message-paragraph">你可以直接运行这个单元格来查看结果。</p>
+        <p class="message-paragraph">已经结合你前面的 <code class="inline-code">adata_Macro</code> 子集和 <code class="inline-code">leiden_sub</code> 聚类结果，修改了第 10 个单元格的代码。</p><p class="message-paragraph">**修改点说明：**<br>1.  **基因统计**：保留了你之前的函数（并修复了缩进），现在会同时输出总基因数和实际表达的基因数。<br>2.  **子群差异 (DE)**：利用你前面刚算好的 <code class="inline-code">leiden_sub</code> 分组，直接运行 <code class="inline-code">rank_genes_groups</code> 并画出 Top 20 基因图。<br>3.  **宏观差异**：在全数据 <code class="inline-code">adata</code> 中自动创建了 <code class="inline-code">is_macro</code> 列，用来计算 Macrophage 相比于其他所有细胞（Others）的差异基因，并自动保存结果到 <code class="inline-code">./write/Macrophage_vs_Others_DEG.csv</code>。</p><p class="message-paragraph">你可以直接运行这个单元格来查看结果。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -384,7 +384,7 @@ sc.tl.rank_genes_groups(
         <time class="chat-time">2025/12/20 22:50</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经在第 10 个单元格中添加了 **Macrophage 内部 Primary（原发）与 Recurrent（复发）** 的差异分析代码。</p><p class="message-paragraph">**新增逻辑：**<br>1.  **自动检测**：检查 <code class="inline-code">adata_Macro.obs</code> 中是否存在 <code class="inline-code">primary_status</code> 列。<br>2.  **差异计算**：以 <code class="inline-code">Primary</code> 为参照（reference），计算 <code class="inline-code">Recurrent</code> 组的差异基因（使用 Wilcoxon 秩和检验）。<br>3.  **结果展示与保存**：<br>    *   在屏幕上打印前 5 个差异基因。<br>    *   将完整的差异分析列表保存为 <code class="inline-code">./write/Macro_DEG_Recurrent_vs_Primary.csv</code>。</p><p class="message-paragraph">你可以直接运行该单元格，运行结束后在</p><p class="message-paragraph">文件夹下就能找到对应的 CSV 文件了。</p>
+        <p class="message-paragraph">已经在第 10 个单元格中添加了 **Macrophage 内部 Primary（原发）与 Recurrent（复发）** 的差异分析代码。</p><p class="message-paragraph">**新增逻辑：**<br>1.  **自动检测**：检查 <code class="inline-code">adata_Macro.obs</code> 中是否存在 <code class="inline-code">primary_status</code> 列。<br>2.  **差异计算**：以 <code class="inline-code">Primary</code> 为参照（reference），计算 <code class="inline-code">Recurrent</code> 组的差异基因（使用 Wilcoxon 秩和检验）。<br>3.  **结果展示与保存**：<br>    *   在屏幕上打印前 5 个差异基因。<br>    *   将完整的差异分析列表保存为 <code class="inline-code">./write/Macro_DEG_Recurrent_vs_Primary.csv</code>。</p><p class="message-paragraph">你可以直接运行该单元格，运行结束后在</p><p class="message-paragraph">文件夹下就能找到对应的 CSV 文件了。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -563,7 +563,7 @@ else:
         <time class="chat-time">2025/12/20 23:00</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已经在代码中补全了**提取、显示并保存**结果表格的逻辑。</p><p class="message-paragraph">现在，第 10 个单元格（`#VSC-154a7ced</p><p class="message-paragraph"><code class="inline-code">）在运行后会执行以下操作：<br>1.  **Macrophage 内部子群 (leiden_sub)**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_subgroups_leiden_DEG.csv<code class="inline-code">。<br>2.  **Macrophage vs 其他细胞**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macrophage_vs_Others_DEG.csv<code class="inline-code">。<br>3.  **Primary vs Recurrent**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_DEG_Recurrent_vs_Primary.csv`。</p><p class="message-paragraph">你可以直接运行该单元格，所有结果都会自动保存到</p><p class="message-paragraph">文件夹下。</p>
+        <p class="message-paragraph">已经在代码中补全了**提取、显示并保存**结果表格的逻辑。</p><p class="message-paragraph">现在，第 10 个单元格（`#VSC-154a7ced</p><p class="message-paragraph"><code class="inline-code">）在运行后会执行以下操作：<br>1.  **Macrophage 内部子群 (leiden_sub)**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_subgroups_leiden_DEG.csv<code class="inline-code">。<br>2.  **Macrophage vs 其他细胞**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macrophage_vs_Others_DEG.csv<code class="inline-code">。<br>3.  **Primary vs Recurrent**：计算差异 -&gt; 打印前 5 行 -&gt; 保存为 </code>Macro_DEG_Recurrent_vs_Primary.csv`。</p><p class="message-paragraph">你可以直接运行该单元格，所有结果都会自动保存到</p><p class="message-paragraph">文件夹下。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">

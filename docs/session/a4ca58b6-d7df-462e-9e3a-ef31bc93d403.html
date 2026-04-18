@@ -203,7 +203,7 @@ hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]
         <time class="chat-time">2025/11/29 08:58</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已修复代码。问题是 <code class="inline-code">circlize</code> 包的 <code class="inline-code">degree</code> 函数遮盖了 <code class="inline-code">igraph</code> 的 <code class="inline-code">degree</code> 函数。</p><p class="message-paragraph">**主要修改**：<br>- <code class="inline-code">degree(g)</code> → <code class="inline-code">igraph::degree(g)</code><br>- <code class="inline-code">betweenness(g)</code> → <code class="inline-code">igraph::betweenness(g)</code><br>- <code class="inline-code">closeness(g)</code> → <code class="inline-code">igraph::closeness(g)</code><br>- <code class="inline-code">eigen_centrality(g)</code> → <code class="inline-code">igraph::eigen_centrality(g)</code><br>- <code class="inline-code">names(V(g))</code> → <code class="inline-code">V(g)$name</code><br>- 添加 <code class="inline-code">stringsAsFactors = FALSE</code></p><p class="message-paragraph">现在可以重新运行代码了。</p>
+        <p class="message-paragraph">已修复代码。问题是 <code class="inline-code">circlize</code> 包的 <code class="inline-code">degree</code> 函数遮盖了 <code class="inline-code">igraph</code> 的 <code class="inline-code">degree</code> 函数。</p><p class="message-paragraph">**主要修改**：<br>- <code class="inline-code">degree(g)</code> → <code class="inline-code">igraph::degree(g)</code><br>- <code class="inline-code">betweenness(g)</code> → <code class="inline-code">igraph::betweenness(g)</code><br>- <code class="inline-code">closeness(g)</code> → <code class="inline-code">igraph::closeness(g)</code><br>- <code class="inline-code">eigen_centrality(g)</code> → <code class="inline-code">igraph::eigen_centrality(g)</code><br>- <code class="inline-code">names(V(g))</code> → <code class="inline-code">V(g)$name</code><br>- 添加 <code class="inline-code">stringsAsFactors = FALSE</code></p><p class="message-paragraph">现在可以重新运行代码了。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -404,7 +404,7 @@ hub_analysis &lt;- hub_analysis[order(hub_analysis$degree, decreasing = TRUE), ]
         <time class="chat-time">2025/11/29 09:02</time>
       </div>
       <div class="chat-content">
-        <p class="message-paragraph">错误是因为 <code class="inline-code">ann_colors</code> 变量未定义。需要在热图代码之前添加 <code class="inline-code">ann_colors</code> 的定义。</p><pre class="message-code-block"><code></code></pre><p class="message-paragraph">已修复。添加了 <code class="inline-code">annotation_col</code> 和 <code class="inline-code">ann_colors</code> 的定义，并将 <code class="inline-code">pheatmap</code> 改为 <code class="inline-code">pheatmap::pheatmap</code> 以避免与 ComplexHeatmap 的冲突。</p><p class="message-paragraph">现在代码中包含了：</p><pre class="message-code-block"><code>annotation_col &lt;- data.frame(
+        <p class="message-paragraph">错误是因为 <code class="inline-code">ann_colors</code> 变量未定义。需要在热图代码之前添加 <code class="inline-code">ann_colors</code> 的定义。</p><p class="message-paragraph">已修复。添加了 <code class="inline-code">annotation_col</code> 和 <code class="inline-code">ann_colors</code> 的定义，并将 <code class="inline-code">pheatmap</code> 改为 <code class="inline-code">pheatmap::pheatmap</code> 以避免与 ComplexHeatmap 的冲突。</p><p class="message-paragraph">现在代码中包含了：</p><pre class="message-code-block"><code>annotation_col &lt;- data.frame(
     Group = pd$group,
     row.names = rownames(pd)
 )
@@ -446,7 +446,7 @@ ann_colors &lt;- list(
         <time class="chat-time">2025/11/29 09:03</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">代码已整理完成，主要修改：</p><p class="message-paragraph">1. **去除了所有 <code class="inline-code">+</code> 符号** - 这些是 R 控制台的续行符号<br>2. **添加了 <code class="inline-code">igraph::</code> 前缀** - 避免与 <code class="inline-code">circlize</code> 包的函数冲突<br>3. **使用 <code class="inline-code">pheatmap::pheatmap</code>** - 避免与 <code class="inline-code">ComplexHeatmap</code> 的冲突<br>4. **修正了缩进格式** - 使代码更易读</p><p class="message-paragraph">现在可以直接复制运行了。</p>
+        <p class="message-paragraph">代码已整理完成，主要修改：</p><p class="message-paragraph">1. **去除了所有 <code class="inline-code">+</code> 符号** - 这些是 R 控制台的续行符号<br>2. **添加了 <code class="inline-code">igraph::</code> 前缀** - 避免与 <code class="inline-code">circlize</code> 包的函数冲突<br>3. **使用 <code class="inline-code">pheatmap::pheatmap</code>** - 避免与 <code class="inline-code">ComplexHeatmap</code> 的冲突<br>4. **修正了缩进格式** - 使代码更易读</p><p class="message-paragraph">现在可以直接复制运行了。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -482,7 +482,7 @@ ann_colors &lt;- list(
         <time class="chat-time">2025/11/29 09:07</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已将 Hub 基因统一改为 Top 50，修改内容包括：</p><p class="message-paragraph">1. **显示和提取**：<code class="inline-code">top_hub_genes &lt;- head(hub_analysis, 50)</code><br>2. **柱状图**：<code class="inline-code">head(hub_analysis, 50)</code> 和标题改为 &quot;Top 50 Hub Genes&quot;<br>3. **网络图**：<code class="inline-code">top_hub_names &lt;- head(hub_analysis$gene, 50)</code></p><p class="message-paragraph">现在所有 Hub 基因相关的分析都使用 Top 50 了。</p>
+        <p class="message-paragraph">已将 Hub 基因统一改为 Top 50，修改内容包括：</p><p class="message-paragraph">1. **显示和提取**：<code class="inline-code">top_hub_genes &lt;- head(hub_analysis, 50)</code><br>2. **柱状图**：<code class="inline-code">head(hub_analysis, 50)</code> 和标题改为 &quot;Top 50 Hub Genes&quot;<br>3. **网络图**：<code class="inline-code">top_hub_names &lt;- head(hub_analysis$gene, 50)</code></p><p class="message-paragraph">现在所有 Hub 基因相关的分析都使用 Top 50 了。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -518,7 +518,7 @@ ann_colors &lt;- list(
         <time class="chat-time">2025/11/29 09:08</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已将 Hub 基因热图的风格统一为与上面差异基因热图一致，主要修改：</p><p class="message-paragraph">1. **使用 ComplexHeatmap** 替代 pheatmap<br>2. **颜色方案一致**：<code class="inline-code">colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100)</code><br>3. **分组注释颜色一致**：<code class="inline-code">Normal = &quot;#2fa1dd&quot;, Tumor = &quot;#f87669&quot;</code><br>4. **图例位置一致**：底部水平显示<br>5. **按分组拆分列**：<code class="inline-code">column_split = annotation_col_hub$Group</code><br>6. **边框和字体设置一致**<br>7. **同时保存 PDF 和 PNG**</p>
+        <p class="message-paragraph">已将 Hub 基因热图的风格统一为与上面差异基因热图一致，主要修改：</p><p class="message-paragraph">1. **使用 ComplexHeatmap** 替代 pheatmap<br>2. **颜色方案一致**：<code class="inline-code">colorRampPalette(c(&quot;#524b9a&quot;, &quot;white&quot;, &quot;#e63118&quot;))(100)</code><br>3. **分组注释颜色一致**：<code class="inline-code">Normal = &quot;#2fa1dd&quot;, Tumor = &quot;#f87669&quot;</code><br>4. **图例位置一致**：底部水平显示<br>5. **按分组拆分列**：<code class="inline-code">column_split = annotation_col_hub$Group</code><br>6. **边框和字体设置一致**<br>7. **同时保存 PDF 和 PNG**</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">
@@ -557,7 +557,7 @@ ann_colors &lt;- list(
         <time class="chat-time">2025/11/29 09:15</time>
       </div>
       <div class="chat-content">
-        <pre class="message-code-block"><code></code></pre><p class="message-paragraph">已修改火山图的 top 基因标注，现在分别从 Up 和 Down 基因中各取 logFC 绝对值最大的 10 个进行标注（共 20 个），同时删除了重复的保存代码。</p>
+        <p class="message-paragraph">已修改火山图的 top 基因标注，现在分别从 Up 和 Down 基因中各取 logFC 绝对值最大的 10 个进行标注（共 20 个），同时删除了重复的保存代码。</p>
       </div>
       <details class="tool-calls">
     <summary class="tool-calls-summary">

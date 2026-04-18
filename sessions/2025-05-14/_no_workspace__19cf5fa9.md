@@ -36,24 +36,23 @@ corrplot 0.95 loaded
 
 我现在使用正确的语法修复这个问题：
 
-```
-
-```
 我已修复了代码中的问题。以下是我所做的更改：
 
 1. 将 `grid.draw(p1_grob, vp = main_vp)` 修改为先切换视口，然后绘制：
-   ```r
+
+```
    pushViewport(main_vp)
    grid.draw(p1_grob)
    popViewport()
-   ```
+```
 
 2. 同样地，修改了 `print(p2, vp = legend_vp)` 为：
-   ```r
+
+```
    pushViewport(legend_vp)
    grid::grid.draw(ggplotGrob(p2))
    popViewport()
-   ```
+```
 
 3. 移除了重复的 `dev.off()` 调用，只保留一个。
 
@@ -73,9 +72,6 @@ corrplot 0.95 loaded
 
 当前你的代码使用了 grid 包中的视口（viewport）来控制图形的位置，但仍有改进空间，让两个图形更好地并排显示。
 
-```
-
-```
 我已经修改了你的代码，以实现 p1 在左边，p2 在右边，并且两者高度一致的排列效果。以下是我所做的主要更改：
 
 1. 首先将 p2 转换为 grob 对象，使其与 p1_grob 格式一致
@@ -104,17 +100,6 @@ corrplot 0.95 loaded
 
 让我修改一下这些保存路径：
 
-```
-
-```
-
-```
-
-```
-
-```
-
-```
 我已经修改了代码，将所有的PDF文件保存到当前文件夹（不再保存到子文件夹中）。具体修改如下：
 
 1. **一维变量相关性热图**：
@@ -147,14 +132,6 @@ correlation_heatmap_1d.pdf这个是我要 p1 和p2拼接在一起，p1 在 p2的
 
 我来修改代码：
 
-```
-
-```
-
-```
-
-```
-
 既然通过替换字符串方式修改失败，我将使用另一种方式来修改文件。我会保留当前文件，然后再增加一个更明确的方法：
 
 我已经为你创建了一个新文件，提供了两种解决方案来实现你想要的效果：将p1和p2拼接在一起，p1在左边，p2在右边，且高度一致。
@@ -166,7 +143,8 @@ correlation_heatmap_1d.pdf这个是我要 p1 和p2拼接在一起，p1 在 p2的
 两种解决方案：
 
 **方法1**：将corrplot函数封装在一个函数中，然后使用grid.grabExpr捕获
-```r
+
+```
 p1_func <- function() {
   corrplot(cor_matrix, method = "square", type = "upper", order = "original",
            p.mat = p.mat, sig.level = 0.01, insig = "blank", 
@@ -178,7 +156,8 @@ p1_grob <- grid::grid.grabExpr(p1_func())
 ```
 
 **方法2**：使用gridExtra包来简化两个图表的组合
-```r
+
+```
 if(!require(gridExtra)) install.packages("gridExtra")
 library(gridExtra)
 
@@ -208,28 +187,28 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 我来修复这个问题：
 
-```
-
-```
 我已经修复了你的代码，解决了报错问题。这个错误是因为在 `gridExtra::grid.arrange()` 函数中，你直接传入了 `p2`（ggplot 对象），而不是 `p2_grob`（grob 对象）。
 
 主要更改如下：
 
 1. 添加了 `gridExtra` 包的显式安装和加载代码：
-   ```r
+
+```
    if(!require(gridExtra)) install.packages("gridExtra")
    library(gridExtra)
-   ```
+```
 
 2. 显式地将 `p2` 转换为 grob 对象：
-   ```r
+
+```
    p2_grob <- ggplotGrob(p2)
-   ```
+```
 
 3. 在 `grid.arrange()` 函数中使用 `p2_grob` 而不是 `p2`：
-   ```r
+
+```
    grid.arrange(p1_grob, p2_grob, ncol = 2, widths = c(2, 1))
-   ```
+```
 
 这样修改后，代码应该能够成功运行并生成你想要的拼接图形了。`grid.arrange()` 函数需要接收 grob 对象或 grob 对象列表，而 `p1_grob` 已经是通过 `grid.grabExpr()` 转换为 grob 对象了，但 `p2` 是一个 ggplot 对象，需要通过 `ggplotGrob()` 函数转换为 grob 对象才能被 `grid.arrange()` 正确处理。
 
@@ -250,13 +229,6 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 我来修复这些问题：
 
-```
-
-```
-
-```
-
-```
 我已经修改了你的代码，确保所有三幅图都能正确保存。以下是我所做的更改：
 
 ### 1. 一维相关性热图 (correlation_heatmap_combined.pdf)
@@ -313,9 +285,6 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 我会修复这个问题并重新运行代码：
 
-```
-
-```
 现在我已经修复了代码中的问题。我使用了纯 grid 包的方法来安排两个图形，避免使用 gridExtra，这应该能解决之前的错误。让我们重新运行代码：
 
 太好了！代码成功运行完成，并生成了HTML输出文件。现在让我们检查是否生成了所有三个PDF文件：
@@ -365,7 +334,7 @@ p1
 
 这是p1的定义部分:
 
-```r
+```
 # 创建相关性热图 (不立即绘制)
 p1_func <- function() {
   corrplot(cor_matrix, method = "square", type = "upper", order = "original",
@@ -400,10 +369,6 @@ P1和 P2的高度是一致的，是挨着的，傻逼
 
 我理解你的需求了，你想要p1和p2有相同的高度且紧挨着摆放。我将修改代码以满足你的要求，确保它们高度一致并且紧挨着。
 
-```
-
-```
-
 了解了，您需要将 P1 和 P2 以相同高度并排显示。我看到您之前的代码使用 viewport 方法有些问题。让我帮您修复这个问题。
 
 分析了您的代码后，我发现可以使用更简单的方法来组合这两个图形并确保它们具有相同的高度。我们可以使用 `grid.arrange()` 函数，并正确设置 grob 对象。
@@ -412,20 +377,10 @@ P1和 P2的高度是一致的，是挨着的，傻逼
 
 我看到问题在于如何正确地将 p1_grob（通过 grid.grabExpr 捕获的 corrplot 输出）与 p2（ggplot 对象）组合。我来修改您的代码：
 
-```
-
-```
 现在让我们运行修改后的R Markdown文件：
 
 我们仍然遇到了相同的错误。问题出在 `p1_grob` 的格式上。我们需要更换一种方法来捕获和组合这两种不同类型的图表。让我修改代码：
 
-```
-
-```
-
-```
-
-```
 现在我们使用另一种方法，使用 Base R 的 `layout` 函数来布局第一个图表，并使用 gridBase 包来帮助嵌入 ggplot2 图表。让我们运行修改后的脚本：
 
 太好了！脚本成功运行，没有任何报错。现在让我们检查一下生成的PDF文件：
@@ -446,7 +401,8 @@ P1和 P2的高度是一致的，是挨着的，傻逼
    - 对于 ggplot2 图例，使用 gridBase 包的 `baseViewports()` 和 `pushViewport()` 将其嵌入到右侧面板
 
 2. **关键代码更改**：
-   ```r
+
+```
    # 使用layout进行布局
    layout(matrix(c(1, 2), 1, 2, byrow = TRUE), widths = c(2, 1))
 
@@ -465,7 +421,7 @@ P1和 P2的高度是一致的，是挨着的，傻逼
    pushViewport(vp1)
    grid.draw(ggplotGrob(p2))
    popViewport(2)
-   ```
+```
 
 ### 优势
 1. 此方法避免了之前遇到的 "grobs must be a single grob or a list of grobs, not a list" 错误
@@ -486,9 +442,6 @@ p1在p2的左边，他俩图形高度一致，跟标注没关系啊
 
 我看了您的代码，当前使用的方法其实已经很接近了，但在使用 viewport 时可能没有完全保持高度一致。让我们修改一下代码，确保两个图形的高度完全一致。
 
-```
-
-```
 现在让我们运行更新后的 R Markdown 文件：
 
 太好了！代码顺利运行完成。现在让我们检查生成的PDF文件是否满足要求：

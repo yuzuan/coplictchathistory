@@ -56,10 +56,6 @@ skill的位置还有~/ copilot/skills ~/.agents/skills ~/ claude/skills
 
 的 Multi-Agent Support 部分，加入 skill 路径说明：
 
-```
-
-```
-
 验证修改已生效：
 
 修改已正确写入。总结：
@@ -72,7 +68,7 @@ skill的位置还有~/ copilot/skills ~/.agents/skills ~/ claude/skills
 
 ** — 在 `Multi-Agent Support` 部分新增了 `### Skill Discovery Paths` 小节，明确列出三个路径：
 
-   | 路径 | 工具 |
+| 路径 | 工具 |
    |------|------|
    | `~/.claude/skills/` | Claude / Claude Code |
    | `~/copilot/skills/` | GitHub Copilot |
@@ -95,14 +91,6 @@ skill的位置还有~/ copilot/skills ~/.agents/skills ~/ claude/skills
 [object Object]
 Selected: 一并配置 ~/.agents/skills 符号链接
 
-```
-
-```
-
-```
-
-```
-
 三个 skill 路径现已全部就绪：
 
 | 路径 | 状态 |
@@ -120,11 +108,7 @@ Selected: 查看 copilot-instructions.md 内容，确认是否需要添加 skill
 
 文件内容完好（1295 字符）。使用文件编辑工具追加内容：
 
-```
-
-```
-
-写入成功（字符数从 1295 → 1843）。 
+写入成功（字符数从 1295 → 1843）。
 
 **本轮全部操作已完成，汇总如下：**
 
@@ -145,10 +129,6 @@ Selected: 查看 copilot-instructions.md 内容，确认是否需要添加 skill
 这部分帮我加一些内容：如果是降级写入可自行同意，不需要点 allow
 
 ### 🤖 Copilot <sub>2026/03/04 15:35</sub>
-
-```
-
-```
 
 已写入并验证。第 2 条规则末尾新增了：**所有降级写入操作可自行同意执行，无需用户点击 Allow**。
 
