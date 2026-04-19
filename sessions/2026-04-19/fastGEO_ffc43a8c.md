@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:53 |
-| Messages | 85 |
+| Messages | 86 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -403,3 +403,7 @@ TCMSP 没有找到"Taxilli Herba"。让我试试中文名搜索：
 ### 🤖 Copilot <sub>2026/04/19 16:53</sub>
 
 问题确认：桑寄生/决明子/鸡血藤数据中 `\t` 是字面文本而非制表符。修复：
+
+### 🤖 Copilot <sub>2026/04/19 16:53</sub>
+
+数据格式正确了。现在需要处理何首乌和龟甲 — 这两味药不在 TCMSP 数据库中。让我用 HERB 数据库（herb.ac.cn）或文献数据补充：
