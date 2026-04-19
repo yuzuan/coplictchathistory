@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:26 |
-| Messages | 54 |
+| End | 2026/04/19 16:27 |
+| Messages | 55 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -279,3 +279,7 @@ TCMSP 的数据表格不是普通 HTML `table`，而是 JavaScript 渲染的 gri
 搜索结果列出了药材名称，需要点击 "Epimrdii Herba" 链接进入详情页。但这个方法对 6 味药逐个操作太慢了。
 
 让我换个策略——直接用 R 写一个脚本，利用已获取的 token 和 URL 格式批量抓取 TCMSP 数据：
+
+### 🤖 Copilot <sub>2026/04/19 16:27</sub>
+
+TCMSP 使用 JavaScript 动态渲染，静态 HTML 没有表格。让我回到浏览器方法——直接导航到淫羊藿详情页，用 JS 提取渲染后的数据：
