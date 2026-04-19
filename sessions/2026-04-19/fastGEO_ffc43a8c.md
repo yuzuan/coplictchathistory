@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:05 |
-| Messages | 30 |
+| Messages | 31 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -166,3 +166,9 @@ API 列名正确。问题可能是 13 个目标基因查询时返回空导致后
 ### 🤖 Copilot <sub>2026/04/19 16:04</sub>
 
 交集为空，DEG 中的基因符号是大鼠格式，没有成功转换成人类。让我检查：
+
+### 🤖 Copilot <sub>2026/04/19 16:05</sub>
+
+问题清楚了。DEG CSV 的 `gene_symbol` 列不存在——CSV 存的是 `gene_human` 列。在 Step 2 读回来时用的是 `disease_df$gene_symbol`，没问题（GeneCards 有这列）。但关键问题是：**DEG 的 `deg_set` 正确用了 `deg_genes_human`（全大写）**，而 `disease_set` 用了 `toupper(disease_genes)` 也是大写。
+
+让我直接检查两个集合的交集数据：
