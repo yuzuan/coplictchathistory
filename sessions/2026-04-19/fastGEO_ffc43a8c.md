@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 15:28 |
-| Messages | 5 |
+| End | 2026/04/19 15:29 |
+| Messages | 6 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -61,3 +61,7 @@ Elderly
 ### 🤖 Copilot <sub>2026/04/19 15:27</sub>
 
 现在我需要确认整个脚本的步骤边界，然后把 GO/KEGG（原 Step 6）移到 PPI（原 Step 5）前面。
+
+### 🤖 Copilot <sub>2026/04/19 15:29</sub>
+
+需要交换 Step 5 (PPI) 和 Step 6 (GO/KEGG) 的顺序，同时更新编号。让我精确定位两个块的边界。
