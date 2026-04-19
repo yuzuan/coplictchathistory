@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 15:27 |
-| Messages | 4 |
+| Messages | 5 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -57,3 +57,7 @@ Elderly
 - `02_disease_genes.csv` — 如 API 失败则需从 GeneCards 下载
 
 所有输出保存在 `network_pharmacology/` 子目录。
+
+### 🤖 Copilot <sub>2026/04/19 15:27</sub>
+
+现在我需要确认整个脚本的步骤边界，然后把 GO/KEGG（原 Step 6）移到 PPI（原 Step 5）前面。
