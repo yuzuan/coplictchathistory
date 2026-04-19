@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:12 |
-| Messages | 42 |
+| End | 2026/04/19 16:13 |
+| Messages | 43 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -216,3 +216,7 @@ Now do the batch fix — add `dplyr::` to all bare dplyr verbs that could confli
 ### 🤖 Copilot <sub>2026/04/19 16:12</sub>
 
 Step 6 PPI 成功获取了 32 条边！但 `simplify` 被其他包覆盖了。在 igraph 中需要用 `igraph::simplify`。让我找到并修复：
+
+### 🤖 Copilot <sub>2026/04/19 16:13</sub>
+
+同时检查其他 igraph 函数是否也需要前缀（`degree`, `betweenness`, `closeness`, `graph_from_data_frame`, `delete_vertices`）：
