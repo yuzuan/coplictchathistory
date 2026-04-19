@@ -24,9 +24,9 @@
 
 我将设计R代码来帮您读取这些数据：
 
-`
+````
 
-`
+````
 
 我已经为您设计了一套完整的R代码，用于读取GSE162631_RAW文件夹中的zip文件数据。这段代码的主要功能包括：
 
@@ -192,7 +192,7 @@ Warning messages:
 
 您可以直接通过以下命令运行此脚本：
 
-```
+```bash
 cd /Users/yuzuan/Desktop/TCGA/1_single_cell/
 Rscript read_GSE162631_data.R
 ```

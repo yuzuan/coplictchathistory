@@ -42,8 +42,7 @@
 | 映射失败丢弃 | 352 个 probe（无法映射到 gene symbol） |
 
 **读取方式：**
-
-```
+```r
 load("GSE37031_expr_matrix.RData")
 # 对象 expr_matrix 即可用
 expr_matrix[1:5, 1:5]
@@ -114,8 +113,7 @@ GPL 注释表已生成，还需要其他处理吗？
 | 映射失败丢弃 | 352 个 probe（无法映射到 gene symbol） |
 
 **读取方式：**
-
-```
+```r
 load("GSE37031_expr_matrix.RData")
 # 对象 expr_matrix 即可用
 expr_matrix[1:5, 1:5]

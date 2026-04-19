@@ -71,18 +71,15 @@
 3. 运行/knit 建议（在你的 macOS zsh 终端）：
    - 在 RStudio 打开该 `.Rmd`，点击 “Knit”。
    - 或在终端使用 Rscript 渲染：
-
-```
+     ```bash
      R -e "rmarkdown::render('/Users/yuzuan/Downloads/MsTt 笔记/251020_group_volcano/2025_10_20 顶刊复现多分组火山图3个案例.Rmd')"
-```
-
-- 如果还没有安装 rmarkdown，请先在 R 中运行：
-
-```
+     ```
+   - 如果还没有安装 rmarkdown，请先在 R 中运行：
+     ```r
      install.packages('rmarkdown')
      install.packages(c('tidyverse','ggh4x','cowplot','scales','readxl','ggrepel','corrplot'))
      # 以及其它脚本引用的包（scRNAtoolVis 可能需 devtools::install_github）
-```
+     ```
 
 4. 我可以接着做（你可以选择）：
    - 选项 A（推荐）：我来清理并格式化 `.Rmd` 中的代码块（恢复换行、修复明显的拆行问题、把注释和代码分行），然后再提交修改的 `.Rmd`。
@@ -107,9 +104,17 @@ A
 
 接下来我将准备一个补丁，按块对每个代码块做格式化：拆分 library、把注释放在单独行、确保 top10_up 定义和 top10_down 在单独行并且变量名存在，以及格式化 ggplot 表达式换行。先在脑中构思每个 chunk 的修复，然后用 apply_patch 编辑 `.Rmd`。目标是尽可能不改变代码含义，只恢复可读性与语法正确性。现在我会应用补丁。
 
+```
+
+```
+
 我已应用格式化补丁并写回 `.Rmd`，接下来我将运行一个快速语法检查：使用 Rscript 尝试 parse the R code chunks to catch obvious语法错误（不会实际执行耗时或依赖数据的代码）。我会先提取所有代码块并尝试在 R 中 parse(text=...)。为此我会创建一个短的检查脚本并运行它。目标：发现未闭合括号或明显语法错误。
 
 我将修复该脚本中正则字符串的转义问题（在 R 字符串里需要双反斜杠或使用 fixed=TRUE），然后运行检查脚本。接着我会在终端运行它。
+
+```
+
+```
 
 我将运行检查脚本以解析每个 chunk，找出是否有语法错误。
 
@@ -403,7 +408,6 @@ A
 ## 💾 示例数据预览
 
 ### 案例1（data_facet1.xlsx）- 前3行
-
 ```
 gene      cluster   avg_log2FC   p_val_adj
 GENE550   B         -1.030      0.000368
@@ -412,7 +416,6 @@ GENE860   B         -3.110      0.0120
 ```
 
 ### 案例2（data_facet2.xlsx）- 前3行
-
 ```
 gene    cluster   avg_log2FC   p_val_adj
 MS4A1   B          1.040      0.00675
@@ -421,7 +424,6 @@ CD8A    B         -1.390      0.0326
 ```
 
 ### 案例3（data_facet3.xlsx）- 前3行
-
 ```
 gene    cluster        avg_log2FC   p_val_adj
 EGFR    N+ vs N0        2.240      0.0394
@@ -449,7 +451,7 @@ BRCA2   N+ vs N0       -3.460      0.00711
 
 ## 📁 所有生成文件
 
-```
+```bash
 /Users/yuzuan/Downloads/MsTt 笔记/251020_group_volcano/
 ├── data_facet1.xlsx              # ⭐ 案例1数据
 ├── data_facet2.xlsx              # ⭐ 案例2数据
@@ -466,7 +468,7 @@ BRCA2   N+ vs N0       -3.460      0.00711
 
 现在您可以直接运行 Rmd 文件中的代码来生成图片：
 
-```
+```r
 # 方法1：在 RStudio 中逐个运行 chunk
 # 打开 2025_10_20 顶刊复现多分组火山图3个案例.Rmd
 # 点击每个代码块的运行按钮
@@ -491,11 +493,27 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 问题找到了！`jjVolcano` 函数要求数据中必须有 `p_val` 列，但我生成的数据使用的是 `p_val_adj`。让我检查 jjVolcano 的具体要求，然后重新生成案例3的数据。
 
+```
+
+```
+
+```
+
+```
+
 现在我也需要更新 Rmd 文件中案例3的筛选条件，使用 `p_val` 而不是 `p_val_adj`：
+
+```
+
+```
 
 现在重新生成案例3的数据文件：
 
 很好！现在让我更新验证脚本以检查案例3的新列结构：
+
+```
+
+```
 
 现在运行验证脚本确认修复成功：
 

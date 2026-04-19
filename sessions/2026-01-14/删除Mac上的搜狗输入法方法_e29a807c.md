@@ -32,30 +32,25 @@
    - 选中搜狗输入法，点击 **-** 号移除
 
 3. **删除相关文件**（在访达中按 `⌘⇧G` 前往文件夹）：
-
-```
+   ```
    ~/Library/Input Methods/
-```
+   ```
+   删除 `SogouInput.app`
 
-删除 `SogouInput.app`
-
-```
+   ```
    ~/Library/Preferences/
-```
+   ```
+   删除 `com.sogou.inputmethod.*` 相关文件
 
-删除 `com.sogou.inputmethod.*` 相关文件
-
-```
+   ```
    ~/Library/Application Support/
-```
+   ```
+   删除 `Sogou` 文件夹
 
-删除 `Sogou` 文件夹
-
-```
+   ```
    ~/Library/Caches/
-```
-
-删除 `com.sogou.inputmethod.*` 相关文件
+   ```
+   删除 `com.sogou.inputmethod.*` 相关文件
 
 4. **清理启动项**：
    - 进入 **系统设置** > **通用** > **登录项**
@@ -103,21 +98,17 @@ Mac第三方输入法删除不了通常有以下几个原因和解决方法：
 如果确实需要，可以临时关闭SIP：
 1. 重启Mac，按住 `⌘R` 进入恢复模式
 2. 打开终端，输入：
-
-```
+   ```bash
    csrutil disable
-```
-
+   ```
 3. 重启后删除输入法
 4. 再次进入恢复模式，重新启用SIP：
-
-```
+   ```bash
    csrutil enable
-```
+   ```
 
 ### 步骤3：使用终端命令删除
-
-```
+```bash
 # 删除输入法应用
 sudo rm -rf ~/Library/Input\ Methods/输入法名称.app
 
@@ -132,16 +123,14 @@ sudo rm -rf ~/Library/LaunchAgents/com.输入法.*
 ```
 
 ### 步骤4：清理隐藏的守护进程
-
-```
+```bash
 # 查找并卸载LaunchAgents
 launchctl list | grep 输入法关键词
 launchctl remove 对应的服务名
 ```
 
 ### 步骤5：重置输入法设置
-
-```
+```bash
 # 重置输入法配置
 sudo killall -9 SystemUIServer
 sudo killall -9 ControlCenter

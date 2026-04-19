@@ -33,46 +33,41 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
    - 确保系统支持Docker容器化
 
 2. **清理之前的构建**（如果有的话）
-
-```
+   ```bash
    # 删除之前的本地构建文件
    rm -rf node_modules dist
    
    # 如果从1.4版本或更早版本升级，删除旧的Docker volumes
    docker volume prune
-```
+   ```
 
 ### 📥 下载和配置
 
 1. **获取源代码**
-
-```
+   ```bash
    git clone https://github.com/TheNetsky/Microsoft-Rewards-Script.git
    cd Microsoft-Rewards-Script
-```
+   ```
 
 2. **配置账户信息**
-
-```
+   ```bash
    # 复制示例配置文件
    cp src/accounts.example.json src/accounts.json
-```
-
-编辑 `src/accounts.json` 添加您的Microsoft账户信息：
-
-```
+   ```
+   
+   编辑 `src/accounts.json` 添加您的Microsoft账户信息：
+   ```json
    [
      {
        "email": "your-email@example.com",
        "password": "your-password"
      }
    ]
-```
+   ```
 
 3. **配置脚本设置**
    编辑 `src/config.json`，**重要：确保设置 `"headless": true`**：
-
-```
+   ```json
    {
      "headless": true,
      "baseURL": "https://rewards.bing.com",
@@ -84,15 +79,15 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
        "doMobileSearch": true
      }
    }
-```
+   ```
 
 ### 🐳 Docker配置
 
 4. **自定义 compose.yaml 配置**
-
-关键配置项：
-
-```
+   
+   关键配置项：
+   
+   ```yaml
    environment:
      # 设置您的时区
      TZ: "Asia/Shanghai"  # 或其他时区，如 "America/New_York"
@@ -107,11 +102,10 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
      MIN_SLEEP_MINUTES: "5"
      MAX_SLEEP_MINUTES: "50" 
      SKIP_RANDOM_SLEEP: "false"
-```
+   ```
 
-完整的 `compose.yaml` 示例：
-
-```
+   完整的 `compose.yaml` 示例：
+   ```yaml
    services:
      microsoft-rewards-script:
        build: .
@@ -139,20 +133,18 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
          timeout: 10s
          retries: 3
          start_period: 30s
-```
+   ```
 
 ### 🚀 部署和启动
 
 5. **启动Docker容器**
-
-```
+   ```bash
    # 构建并启动容器
    docker compose up -d
-```
+   ```
 
 6. **验证部署**
-
-```
+   ```bash
    # 查看容器状态
    docker ps
    
@@ -161,13 +153,12 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
    
    # 检查健康状态
    docker compose ps
-```
+   ```
 
 ### 📊 监控和维护
 
 7. **日常监控命令**
-
-```
+   ```bash
    # 查看最近的日志
    docker logs --tail 50 microsoft-rewards-script
    
@@ -179,23 +170,22 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
    
    # 重新构建并启动（配置更改后）
    docker compose up -d --build
-```
+   ```
 
 ### ⚙️ 高级配置
 
 8. **计划任务配置**
-
-使用 [crontab.guru](https://crontab.guru/) 来配置您的执行时间：
+   
+   使用 [crontab.guru](https://crontab.guru/) 来配置您的执行时间：
    - `"0 8,20 * * *"` - 每天8点和20点
    - `"0 */6 * * *"` - 每6小时一次
    - `"30 7,12,18 * * *"` - 每天7:30、12:30、18:30
 
 9. **资源限制调整**
-
-```
+   ```yaml
    mem_limit: 2g      # 根据需要调整内存限制
    cpus: 1            # 根据需要调整CPU核心数
-```
+   ```
 
 ### ⚠️ 重要提示
 
@@ -229,10 +219,9 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
 ### 2️⃣ 项目准备
 
 1. **克隆项目到本地**
-
-```
+   ```bash
    git clone https://github.com/TheNetsky/Microsoft-Rewards-Script.git
-```
+   ```
 
 2. **在VS Code中打开项目**
    - `文件` → `打开文件夹` → 选择 `Microsoft-Rewards-Script` 文件夹
@@ -279,14 +268,13 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
 1. **打开集成终端** (`Ctrl+``)
 
 2. **运行Docker Compose命令**
-
-```
+   ```bash
    # 构建并启动
    docker compose up -d
    
    # 或者强制重新构建
    docker compose up -d --build
-```
+   ```
 
 ### 5️⃣ 监控和管理
 
@@ -325,11 +313,10 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
    - 可以看到任何构建错误或警告
 
 2. **实时监控日志**
-
-```
+   ```bash
    # 在集成终端中运行
    docker logs -f microsoft-rewards-script
-```
+   ```
 
 3. **检查容器健康状态**
    - 在Docker视图中，容器图标会显示健康状态
@@ -342,17 +329,15 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
 **推荐的开发和部署流程：**
 
 1. **配置更改后重新部署**
-
-```
+   ```bash
    # 在VS Code终端中
    docker compose down
    docker compose up -d --build
-```
+   ```
 
 2. **使用VS Code任务**
    - 创建 `.vscode/tasks.json`：
-
-```
+   ```json
    {
      "version": "2.0.0",
      "tasks": [
@@ -376,13 +361,12 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
        }
      ]
    }
-```
+   ```
 
 3. **快捷键绑定**
    - `Ctrl+Shift+P` → "Preferences: Open Keyboard Shortcuts (JSON)"
    - 添加自定义快捷键：
-
-```
+   ```json
    [
      {
        "key": "ctrl+shift+d ctrl+u",
@@ -390,7 +374,7 @@ https://github.com/TheNetsky/Microsoft-Rewards-Script如果要布置docker，根
        "args": "Docker: Compose Up"
      }
    ]
-```
+   ```
 
 ### 8️⃣ 监控脚本执行
 

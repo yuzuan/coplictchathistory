@@ -56,8 +56,7 @@ Selected: 全面规范化
 - 安装脚本会在 `~/.claude/` 下写入/合并 `CLAUDE.md`、`settings.json`、`rules/`、`hooks/`、`skills/` 等文件
 
 README 提供一行远程安装命令：
-
-```
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Mizoreww/awesome-claude-code-config/main/install.sh)
 ```
 
@@ -169,8 +168,7 @@ settings.json 已修复，Claude Code 运行正常。接下来？
 Claude Code 有两种打开方式：
 
 **1. 终端 CLI（主要方式）**
-
-```
+```bash
 # 由于 Node 25 有 bug，每次需先设 PATH（或写入 ~/.zshrc 一劳永逸）
 export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
 claude
@@ -264,14 +262,12 @@ Selected: 其他任务（请说明）
 - 系统终端：打开 `Terminal.app` 或 iTerm2
 
 **2. 直接输入：**
-
-```
+```bash
 claude
 ```
 
 **3. 如果需要代理访问（GitHub 等网络功能）：**
-
-```
+```bash
 export https_proxy=http://127.0.0.1:8234 http_proxy=http://127.0.0.1:8234
 claude
 ```
@@ -311,8 +307,7 @@ Selected: 继续 Claude Code 配置
 - 安装脚本会在 `~/.claude/` 下写入/合并 `CLAUDE.md`、`settings.json`、`rules/`、`hooks/`、`skills/` 等文件
 
 README 提供一行远程安装命令：
-
-```
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Mizoreww/awesome-claude-code-config/main/install.sh)
 ```
 
@@ -410,8 +405,7 @@ settings.json 已修复，Claude Code 运行正常。接下来？
 Claude Code 有两种打开方式：
 
 **1. 终端 CLI（主要方式）**
-
-```
+```bash
 # 由于 Node 25 有 bug，每次需先设 PATH（或写入 ~/.zshrc 一劳永逸）
 export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
 claude
@@ -487,14 +481,12 @@ Selected: 其他任务（请说明）
 - 系统终端：打开 `Terminal.app` 或 iTerm2
 
 **2. 直接输入：**
-
-```
+```bash
 claude
 ```
 
 **3. 如果需要代理访问（GitHub 等网络功能）：**
-
-```
+```bash
 export https_proxy=http://127.0.0.1:8234 http_proxy=http://127.0.0.1:8234
 claude
 ```
@@ -544,8 +536,7 @@ Selected: 全面规范化
 - 安装脚本会在 `~/.claude/` 下写入/合并 `CLAUDE.md`、`settings.json`、`rules/`、`hooks/`、`skills/` 等文件
 
 README 提供一行远程安装命令：
-
-```
+```bash
 bash <(curl -fsSL https://raw.githubusercontent.com/Mizoreww/awesome-claude-code-config/main/install.sh)
 ```
 
@@ -643,8 +634,7 @@ settings.json 已修复，Claude Code 运行正常。接下来？
 Claude Code 有两种打开方式：
 
 **1. 终端 CLI（主要方式）**
-
-```
+```bash
 # 由于 Node 25 有 bug，每次需先设 PATH（或写入 ~/.zshrc 一劳永逸）
 export PATH="/opt/homebrew/opt/node@22/bin:$PATH"
 claude
@@ -720,14 +710,12 @@ Selected: 其他任务（请说明）
 - 系统终端：打开 `Terminal.app` 或 iTerm2
 
 **2. 直接输入：**
-
-```
+```bash
 claude
 ```
 
 **3. 如果需要代理访问（GitHub 等网络功能）：**
-
-```
+```bash
 export https_proxy=http://127.0.0.1:8234 http_proxy=http://127.0.0.1:8234
 claude
 ```

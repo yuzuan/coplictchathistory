@@ -34,7 +34,7 @@
 
 1. 首先需要安装PaddlePaddle和其他依赖项：
 
-```
+```bash
 pip install paddlepaddle
 pip install opencv-python
 pip install pillow
@@ -43,13 +43,13 @@ pip install numpy
 
 对于PaddleOCR项目，您可能还需要安装其专用的依赖项：
 
-```
+```bash
 pip install -r /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/requirements.txt
 ```
 
 如果requirements.txt文件不存在，您可能需要安装这些常见的额外依赖：
 
-```
+```bash
 pip install shapely
 pip install pyclipper
 pip install scikit-image
@@ -60,32 +60,27 @@ pip install scikit-image
 安装完依赖后，您可以按以下方式使用该程序：
 
 1. **识别单张图片**:
-
-```
+```bash
 python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_dir /path/to/your/image.jpg
 ```
 
 2. **识别包含多张图片的文件夹**:
-
-```
+```bash
 python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_dir /path/to/your/image/directory
 ```
 
 3. **使用特定语言模型**（默认是中文，可以指定其他语言）:
-
-```
+```bash
 python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_dir /path/to/your/image.jpg --lang en
 ```
 
 4. **保存识别结果到文件**:
-
-```
+```bash
 python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_dir /path/to/your/image.jpg --savefile --output /path/to/output/directory
 ```
 
 5. **分析文档结构**（表格、布局等）:
-
-```
+```bash
 python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_dir /path/to/your/image.jpg --type structure
 ```
 
@@ -93,7 +88,7 @@ python /Users/yuzuan/Downloads/Downloads/PaddleOCR-2.10.0/paddleocr.py --image_d
 
 除了命令行，您还可以在自己的Python脚本中调用PaddleOCR：
 
-```
+```python
 from paddleocr import PaddleOCR
 
 # 初始化PaddleOCR
@@ -155,7 +150,7 @@ for line in result:
 2. 使用PaddleOCR识别图片中的文本
 3. 将识别结果保存为docx文件，并保持原文件名
 
-```
+```python
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
@@ -283,16 +278,13 @@ if __name__ == "__main__":
 1. 创建一个新的文本文件，将上面的代码复制粘贴进去
 2. 将文件保存为`convert_images_to_docx.py`
 3. 打开终端，执行以下命令安装所需依赖：
-
-```
+   ```bash
    pip install paddlepaddle opencv-python pillow numpy python-docx
-```
-
+   ```
 4. 在终端中导航到保存脚本的目录，然后运行：
-
-```
+   ```bash
    python convert_images_to_docx.py
-```
+   ```
 
 这个脚本将会：
 - 查找
