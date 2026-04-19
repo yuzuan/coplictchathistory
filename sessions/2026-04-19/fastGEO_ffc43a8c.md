@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:47 |
-| Messages | 79 |
+| End | 2026/04/19 16:48 |
+| Messages | 80 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -379,3 +379,7 @@ TCMSP 没有找到"Taxilli Herba"。让我试试中文名搜索：
 ### 🤖 Copilot <sub>2026/04/19 16:47</sub>
 
 找到了！桑寄生的英文名是 "Herba Taxilli"。让我也查找其他几味药的正确名称：
+
+### 🤖 Copilot <sub>2026/04/19 16:48</sub>
+
+何首乌和龟甲不在 TCMSP 数据库中（共 502 味药）。先处理已有的药材。让我用正确名称搜索桑寄生：
