@@ -43,10 +43,11 @@ conda activate rd2
 **正确的做法：**
 
 1. **方法一（推荐）**：在启动 Jupyter Notebook 之前，先在终端激活环境
-   ```bash
+
+```
    conda activate rd2
    jupyter lab  # 或 jupyter notebook
-   ```
+```
 
 2. **方法二**：直接删除这个单元格，因为：
    - 如果你在 `rd2` 环境中启动的 Jupyter，那么 notebook 已经在使用 `rd2` 环境了
@@ -207,7 +208,7 @@ radiomics
 
 ## 这段代码的逻辑：
 
-```python
+```
 for folder in folders:
     files = os.listdir(os.path.join(basePath,folder))
     for file in files:
@@ -315,11 +316,13 @@ for folder in folders:
    - 可以同时看到轴位、冠状位、矢状位三个方向
 
 ### **方法 2：使用图谱（当前 notebook 的方法）**
-```python
+
+```
 # 这个方法完全自动，无需手动勾画
 # 从标准脑图谱中提取特定 ROI
 roiIndex = 5  # 选择图谱中的某个区域编号
 ```
+
 - **优点**：全自动，适合标准化研究
 - **缺点**：只适用于标准脑区，不适合肿瘤等病变
 

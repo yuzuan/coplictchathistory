@@ -209,7 +209,8 @@ Users > yuzuan > Library > Application Support > Code > LUser>globalStorage > sa
 步骤概述：安装 pm2 → 为每个 MCP 写一个启动脚本（把必需的 env 写到脚本里或用系统 env）→ 用 pm2 启动并保存进程列表 → 配置 pm2 开机自启。
 
 示例命令（在 zsh 终端执行）：
-```bash
+
+```
 # 1. 全局安装 pm2
 npm install -g pm2
 
@@ -278,7 +279,7 @@ pm2 startup
 - 如果你有防火墙、代理或端口被占用，也会导致 Cline 无法检测到 MCP。
 
 我接下来可以：
-- 如果你愿意，我可以为你自动在仓库里创建这几份启动脚本（`~/mcp-scripts/*.sh`）并给出 pm2 启动命令，或者生成 launchd plist。请告诉我你偏好 pm2 还是 launchd，以及你是否现在要我写脚本并演示（我可以直接在终端执行命令并返回结果）。  
+- 如果你愿意，我可以为你自动在仓库里创建这几份启动脚本（`~/mcp-scripts/*.sh`）并给出 pm2 启动命令，或者生成 launchd plist。请告诉我你偏好 pm2 还是 launchd，以及你是否现在要我写脚本并演示（我可以直接在终端执行命令并返回结果）。
 
 需求覆盖状态
 - 填写 env：未完成（需要你提供真实值或允许我把值写入脚本）。  
@@ -316,7 +317,8 @@ ModuleNotFoundError: No module named 'pandas'
 - Python 可执行路径（用于在终端运行）：
 
 验证步骤（在 zsh 终端运行）
-```bash
+
+```
 # 验证 pandas 可用
 /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day3_preview/.venv/bin/python -c "import pandas as pd; print(pd.__version__)"
 ```

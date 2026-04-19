@@ -218,7 +218,8 @@ Python 版本保存原来命名
 好的，以下是在 R 中读取保存的 h5ad 文件的代码：
 
 **方法 1: 使用 Seurat 和 SeuratDisk（推荐）**
-```r
+
+```
 # 安装必要的包（如果还没有安装）
 if (!require("Seurat")) install.packages("Seurat")
 if (!require("SeuratDisk")) devtools::install_github("mojaveazure/seurat-disk")
@@ -237,7 +238,8 @@ print(adata)
 ```
 
 **方法 2: 使用 anndata（如果安装了 reticulate）**
-```r
+
+```
 # 安装必要的包
 if (!require("reticulate")) install.packages("reticulate")
 library(reticulate)
@@ -251,7 +253,8 @@ print(adata)
 ```
 
 **方法 3: 使用 Seurat 的 ReadH5AD（Seurat v5）**
-```r
+
+```
 library(Seurat)
 
 # 如果使用 Seurat v5，可以直接读取
@@ -279,7 +282,7 @@ Error: Invalid h5Seurat file: cannot find attribute 'version'
 
 您的 R 代码有个小问题。`LoadH5Seurat` 应该读取转换后的 `.h5seurat` 文件，而不是原始的 `.h5ad` 文件。以下是正确的代码：
 
-```r
+```
 library(Seurat)
 library(SeuratDisk)
 
@@ -303,7 +306,7 @@ print(sce.all.int)
 
 或者更简洁的写法：
 
-```r
+```
 library(Seurat)
 library(SeuratDisk)
 
@@ -333,7 +336,7 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 ## 方案 1：使用 Seurat v5 原生读取（推荐）
 
-```r
+```
 # Seurat v5 可以直接读取 h5ad 文件
 library(Seurat)
 
@@ -343,7 +346,7 @@ sce.all.int <- ReadH5AD("write/adata_for_R.h5ad")
 
 ## 方案 2：使用 reticulate + anndata
 
-```r
+```
 library(reticulate)
 
 # 使用 Python 的 anndata 读取
@@ -373,7 +376,7 @@ sce.all.int[["umap"]] <- CreateDimReducObject(
 
 ## 方案 3：更新或降级包版本
 
-```r
+```
 # 选项 A: 更新 SeuratDisk（开发版）
 remotes::install_github("mojaveazure/seurat-disk")
 
@@ -383,6 +386,6 @@ remotes::install_version("Seurat", version = "4.4.0")
 
 **建议使用方案 1**，因为 Seurat v5 已经内置了 h5ad 读取功能，最简单直接。如果你使用的是较旧的 Seurat 版本，可以先更新：
 
-```r
+```
 install.packages("Seurat")  # 更新到最新版本
 ```

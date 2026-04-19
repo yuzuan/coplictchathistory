@@ -55,21 +55,22 @@ library(readxl)
 library(ggpubr)
 library(vegan)
 library(patchwork)
-```
 
-```{r data}
+{r data}
 # 读入数据
 data_Mv <- read_excel("data_M.verbenaceus.xlsx")
 data_Mc <- read_excel("data_M.cardinalis.xlsx")
 # 此绘图数据为模拟数据，无实际意义，如需文末可以自助获取。
+
 ```
 
 <!--
 绘图 - 小提琴图
 计算各样本的挥发物总排放量，用来绘制小提琴图。
 -->
+```
 
-```{r violin-data}
+{r violin-data}
 # 准备小提琴图数据
 data_Mv_processed <- data_Mv %>%
   select(1:2) %>%    
@@ -92,9 +93,8 @@ sample_labels1 <- c("MvY" = "MvY (n=17)",
                     "MvR" = "MvR (n=18)", 
                     "McY" = "McY (n=15)",
                     "McR" = "McR (n=32)")
-```
 
-```{r violin-plot}
+{r violin-plot}
 # 绘制小提琴图
 p1 <- ggplot(data_violin, aes(x = SampleType, y = Sum, fill = SampleType)) +
   geom_violin(adjust = 1.3,          
@@ -139,6 +139,7 @@ p1 <- ggplot(data_violin, aes(x = SampleType, y = Sum, fill = SampleType)) +
         legend.justification = c(1, 1),
         legend.background = element_rect(color = "black", fill = "white", linewidth = 0.6))
 p1
+
 ```
 
 <!--
@@ -150,8 +151,9 @@ p1
 使用geom_polygon()函数绘制每个样本类型的凸包多边形。
 使用annotate()函数在图中添加 stress 值的文本标注。
 -->
+```
 
-```{r nmds-mv}
+{r nmds-mv}
 # 计算距离矩阵和NMDS: M.verbenaceus组
 dist_matrix_Mv <- vegdist(data_Mv[, 3:ncol(data_Mv)], method = "bray")
 nmds_Mv <- metaMDS(dist_matrix_Mv, k = 2)
@@ -171,7 +173,7 @@ if (nmds_Mv$stress >= 0.001) {
 # 计算凸包边界点，即多边形轮廓
 hull_Mv <- nmds_points_Mv %>%
   group_by(SampleType) %>%
-  slice(chull(MDS1, MDS2))  
+  slice(chull(MDS1, MDS2))
 
 # 定义绘图顺序
 nmds_points_Mv$SampleType <- factor(nmds_points_Mv$SampleType, levels = c("MvR", "MvY"))
@@ -179,9 +181,8 @@ hull_Mv$SampleType <- factor(hull_Mv$SampleType, levels = c("MvR", "MvY"))
 
 # 定义颜色
 my_color2<-c("#ff3030", "#eec900")
-```
 
-```{r nmds-mv-plot}
+{r nmds-mv-plot}
 # 绘制图形
 p2 <- ggplot(nmds_points_Mv, aes(x = MDS1, y = -MDS2)) +
   geom_point(aes(fill = SampleType),
@@ -213,6 +214,7 @@ p2 <- ggplot(nmds_points_Mv, aes(x = MDS1, y = -MDS2)) +
         legend.justification = c(1, 1),
         legend.background = element_rect(color = "black", fill = "white", linewidth = 0.6))
 p2
+
 ```
 
 <!--
@@ -224,8 +226,9 @@ p2
 使用+运算符将 p1, p2, p3 组合在一起。
 使用plot_annotation()函数为组合的图形添加标签。参数tag_levels = 'A'指定使用字母（A, B, C 等）作为标签。
 -->
+```
 
-```{r combine-plot}
+{r combine-plot}
 # 组合图形
 # 假设 p3 已经定义
 all <- p1 + p2 + p3 + 
@@ -285,9 +288,9 @@ all
 
 ### 🤖 Copilot <sub>2025/05/19 22:42</sub>
 
-````
+`
 
-````
+`
 
 ### 👤 User <sub>2025/05/19 22:45</sub>
 
@@ -297,17 +300,9 @@ all
 
 看起来你已经有了示例数据文件，但由于它们是以纯文本格式保存的，而不是真正的Excel文件，所以之前的代码无法正确读取。我将修改代码以适应现有的数据文件，然后帮你运行代码。
 
-```
+`
 
-```
-
-````
-
-````
-
-```
-
-```
+`
 
 太好了！我已经成功帮你：
 
@@ -335,10 +330,6 @@ all
 ### 🤖 Copilot <sub>2025/05/19 22:59</sub>
 
 我明白你的要求，你希望我保持你的代码不变，但创建更符合你期望效果的数据，以便让图表呈现更好看的效果。我将删除之前创建的数据，重新思考并创建新的数据集。
-
-```
-
-```
 
 现在我已经为你创建了全新的数据集，并通过深度思考设计出能更好展示出小提琴图和NMDS分析效果的数据模式。这些新数据具有以下特点：
 
@@ -387,14 +378,6 @@ all
 
 让我重新组织一下。我注意到我们需要创建新的数据来更好地匹配目标效果。让我们一步一步来：
 
-```
-
-```
-
-```
-
-```
-
 我已经重新创建了数据集并进行了多次调整，现在让我们来看看具体的改进：
 
 1. M.verbenaceus (Mv) 数据：
@@ -436,7 +419,7 @@ all
 
 ---
 
-```yaml
+```
 ---
 title: "Nature 复现 | 小提琴图 + NMDS分析"
 output: html_document
@@ -469,21 +452,22 @@ library(readxl)
 library(ggpubr)
 library(vegan)
 library(patchwork)
-```
 
-```{r data}
+{r data}
 # 读入数据
 data_Mv <- read_excel("data_M.verbenaceus.xlsx")
 data_Mc <- read_excel("data_M.cardinalis.xlsx")
 # 此绘图数据为模拟数据，无实际意义，如需文末可以自助获取。
+
 ```
 
 <!--
 绘图 - 小提琴图
 计算各样本的挥发物总排放量，用来绘制小提琴图。
 -->
+```
 
-```{r violin-data}
+{r violin-data}
 # 准备小提琴图数据
 data_Mv_processed <- data_Mv %>%
   select(1:2) %>%    
@@ -506,9 +490,8 @@ sample_labels1 <- c("MvY" = "MvY (n=17)",
                     "MvR" = "MvR (n=18)", 
                     "McY" = "McY (n=15)",
                     "McR" = "McR (n=32)")
-```
 
-```{r violin-plot}
+{r violin-plot}
 # 绘制小提琴图
 p1 <- ggplot(data_violin, aes(x = SampleType, y = Sum, fill = SampleType)) +
   geom_violin(adjust = 1.3,          
@@ -553,6 +536,7 @@ p1 <- ggplot(data_violin, aes(x = SampleType, y = Sum, fill = SampleType)) +
         legend.justification = c(1, 1),
         legend.background = element_rect(color = "black", fill = "white", linewidth = 0.6))
 p1
+
 ```
 
 <!--
@@ -564,8 +548,9 @@ p1
 使用geom_polygon()函数绘制每个样本类型的凸包多边形。
 使用annotate()函数在图中添加 stress 值的文本标注。
 -->
+```
 
-```{r nmds-mv}
+{r nmds-mv}
 # 计算距离矩阵和NMDS: M.cardinalis组
 dist_matrix_Mv <- vegdist(data_Mv[, 3:ncol(data_Mv)], method = "bray")
 nmds_Mv <- metaMDS(dist_matrix_Mv, k = 2)
@@ -585,7 +570,7 @@ if (nmds_Mv$stress >= 0.001) {
 # 计算凸包边界点，即多边形轮廓
 hull_Mv <- nmds_points_Mv %>%
   group_by(SampleType) %>%
-  slice(chull(MDS1, MDS2))  
+  slice(chull(MDS1, MDS2))
 
 # 定义绘图顺序
 nmds_points_Mv$SampleType <- factor(nmds_points_Mv$SampleType, levels = c("MvR", "MvY"))
@@ -627,13 +612,15 @@ p2 <- ggplot(nmds_points_Mv, aes(x = MDS1, y = -MDS2)) +
         legend.justification = c(1, 1),
         legend.background = element_rect(color = "black", fill = "white", linewidth = 0.6))
 p2
+
 ```
 
 <!--
 用相同的代码绘制 M.cardinalis 组的 NMDS 图，不再赘述。
 -->
+```
 
-```{r combine-plot}
+{r combine-plot}
 # 组合图形
 all <- p1 + p2 + p3 + 
   plot_annotation(tag_levels = 'A') &         

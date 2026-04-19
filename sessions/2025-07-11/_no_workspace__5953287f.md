@@ -19,7 +19,7 @@
 
 下面是提取自您当前文件中的所有 R 代码，并将其他说明文字全部转为注释后生成的 `fastGEO_tutorial.Rmd` 内容。您可以复制下面内容并保存为 `.Rmd` 文件。
 
-```yaml
+```
 ---
 title: "fastGEO 使用教程"
 author: ""

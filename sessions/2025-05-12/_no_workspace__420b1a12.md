@@ -44,15 +44,15 @@
 2. **使用命令行打开**：
    您可以在终端中使用以下命令打开VS Code并指定工作区文件夹：
 
-   ```zsh
+```
    code /path/to/your/folder
-   ```
+```
 
-   例如，如果您想打开桌面上的项目文件夹：
+例如，如果您想打开桌面上的项目文件夹：
 
-   ```zsh
+```
    code ~/Desktop/myproject
-   ```
+```
 
 3. **打开最近使用的文件夹**：
    - 在VS Code中点击"文件 > 打开最近的文件夹"
@@ -80,13 +80,13 @@
 
 1. 如果路径应该是用户目录下的文件，可以尝试：
 
-```zsh
+```
 code ~/Desktop/TCGA/1_single_cell/1.\ python/1.GSE135045.py
 ```
 
 2. 或者使用绝对路径格式：
 
-```zsh
+```
 code /Users/yuzuan/Desktop/TCGA/1_single_cell/1.\ python/1.GSE135045.py
 ```
 
@@ -94,7 +94,7 @@ code /Users/yuzuan/Desktop/TCGA/1_single_cell/1.\ python/1.GSE135045.py
 
 如果您想打开整个目录作为工作区，可以使用：
 
-```zsh
+```
 code ~/Desktop/TCGA/1_single_cell/1.\ python/
 ```
 

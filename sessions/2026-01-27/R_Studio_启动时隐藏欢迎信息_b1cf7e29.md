@@ -36,7 +36,7 @@ Type 'q()' to quit R.
 **方案 1（推荐，视觉上隐藏启动信息）**  
 - 在 `~/.Rprofile` 添加启动时自动清屏代码（不修改 R 或 RStudio 配置，只清空控制台）。将下面内容粘到你的 `~/.Rprofile`（若文件不存在则创建）：
 
-```bash
+```
 mkdir -p ~/.config
 cat > ~/.Rprofile <<'RPROFILE'
 if (interactive()) {
@@ -56,11 +56,13 @@ RPROFILE
 **方案 2（真正抑制启动横幅，较复杂）**  
 - 原理：R 的版权/欢迎文字由 R 可执行文件打印，只有通过 `--quiet`/`--silent` 等启动参数才能完全抑制。RStudio 默认不提供简单 UI 来添加这些参数，但可以用 wrapper 脚本让 RStudio 使用带参数的 R：
   1. 在某个目录创建一个脚本（例如 `~/bin/R-wrapper`），内容类似：
-```bash
+
+```
 #!/bin/bash
 exec /full/path/to/real/R --quiet "$@"
 ```
-  2. 赋可执行权限：`chmod +x ~/bin/R-wrapper`。
+
+2. 赋可执行权限：`chmod +x ~/bin/R-wrapper`。
   3. 在 RStudio -> Tools -> Global Options -> General -> Change R Version，指向这个 wrapper（或通过设置 RSTUDIO_WHICH_R 指向它，视你配置的 RStudio 版本而定）。
 - 风险/注意：RStudio 可能期望真实的 R 结构（例如 `R`、`Rscript` 等），部分 RStudio 版本对 wrapper 支持有限；如果遇到问题可恢复原来设置。
 
@@ -80,7 +82,7 @@ exec /full/path/to/real/R --quiet "$@"
 
 ### 🤖 Copilot <sub>2026/01/27 14:49</sub>
 
-我已显示 `~/.Rprofile` 的内容： 
+我已显示 `~/.Rprofile` 的内容：
 
 if (interactive()) {
   try({

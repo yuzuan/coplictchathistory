@@ -26,10 +26,6 @@
 
 的第7个代码单元格中，在 `sc.tl.leiden()` 之前添加重新计算邻接图的代码：
 
-```
-
-```
-
 修改完成。现在重新运行第7个代码单元格，应该就不会报错了。这个修改会在进行 leiden 聚类之前重新计算邻接图，确保索引正确匹配子集数据。
 
 实际上，你在notebook后面分析 Proliferative 细胞时已经正确处理了这个问题（使用了相同的解决方案）。现在 Macrophage 的分析也采用了同样的处理方式。
@@ -44,16 +40,15 @@
 
 **解决方案**：在提取子集时立即使用 `.copy()` 创建独立副本。
 
-```
-
-```
-
 修改完成。关键改动是在第7个单元格的第一行，将：
-```python
+
+```
 adata_Macrophage = adata[adata.obs['self_annotation'].isin(['Macrophage'])]
 ```
+
 改为：
-```python
+
+```
 adata_Macrophage = adata[adata.obs['self_annotation'].isin(['Macrophage'])].copy()
 ```
 
@@ -68,10 +63,6 @@ adata_Macrophage = adata[adata.obs['self_annotation'].isin(['Macrophage'])].copy
 ### 🤖 Copilot <sub>2026/01/21 16:39</sub>
 
 这个错误表明 `adata` 中的 `obsp`（邻接矩阵）本身已经存在索引问题。我们需要在提取子集之前先清理这些有问题的数据结构。
-
-```
-
-```
 
 问题在于 `adata` 的 `obsp` 中的邻接矩阵数据已损坏。我修改了第7个单元格，在 `.copy()` 之后立即删除有问题的 `obsp` 数据，然后第8个单元格会重新计算干净的邻接图。
 
@@ -88,10 +79,6 @@ adata_Macrophage = adata[adata.obs['self_annotation'].isin(['Macrophage'])].copy
 
 问题是 `adata` 的 `obsp` 本身已损坏，`.copy()` 时会尝试复制它导致失败。我们需要在原始数据上先清理，或者手动创建子集而不复制 `obsp`。
 
-```
-
-```
-
 修改完成。现在的策略是：
 1. **先删除**原始 `adata` 中损坏的 `obsp` 数据（`connectivities` 和 `distances`）
 2. 然后再提取子集并复制
@@ -104,10 +91,6 @@ adata_Macrophage = adata[adata.obs['self_annotation'].isin(['Macrophage'])].copy
 在后面加一个Neutrophils
 
 ### 🤖 Copilot <sub>2026/01/21 17:41</sub>
-
-```
-
-```
 
 已在 B sub-clustering 部分后面添加了 Neutrophils（中性粒细胞）的子聚类分析部分，包括：
 

@@ -115,7 +115,7 @@ UMAP 已足够用于大数据可视化，t-SNE 在全量数据上不值得等。
 
 改动方案（一行变化）：
 
-```python
+```
 # 当前：双份内存
 adata_combined.layers["counts"] = adata_combined.X.copy().tocsr()
 
@@ -374,39 +374,15 @@ Selected: 进入下游分析
 
 backed 模式下 raw 的稀疏矩阵不支持 fancy indexing。修复脚本：
 
-```
-
-```
-
 backed 模式对 raw 的 sparse 矩阵有兼容性问题。改用全量加载并只读取 marker 基因子集：
-
-```
-
-```
 
 Now also simplify the chunked reading since we have the full data in memory:
 
-```
-
-```
-
 Also remove the unused variables:
-
-```
-
-```
 
 Also remove the `chunk_size`/`n_cells` lines and the `file.close()`:
 
-```
-
-```
-
 还有残留的旧代码，清理掉：
-
-```
-
-```
 
 数据拿到了。27 个 cluster，我来综合 marker 基因平均表达量分析每个 cluster 的细胞类型。现在再运行一下 rank_genes_groups 做交叉验证：
 

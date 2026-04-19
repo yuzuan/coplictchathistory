@@ -6,7 +6,7 @@
 | Workspace | LaTeX Note?user=67ee3bc6ebc529f001abc2fc&project=6897380ebbd7e41194520c8f |
 | Start | 2025/09/02 21:36 |
 | End | 2025/09/02 21:55 |
-| Messages | 10 |
+| Messages | 9 |
 
 ---
 
@@ -23,10 +23,12 @@
 
 2. **本地编译并查看 PDF**  
    在终端进入包含 `.tex` 文件的目录，运行如下命令编译：
-   ```sh
+
+```
    pdflatex main.tex
-   ```
-   编译后会生成 `main.pdf`，你可以用本地 PDF 阅读器打开。
+```
+
+编译后会生成 `main.pdf`，你可以用本地 PDF 阅读器打开。
 
 3. **Overleaf 在线预览**  
    如果你是在 Overleaf 平台工作，保存后右侧会自动显示编译效果。
@@ -66,9 +68,6 @@
 
 安装 LaTeX Workshop 并配置自动预览
 
-### 🤖 Copilot <sub>2025/09/02 21:45</sub>
-
-
 ### 👤 User <sub>2025/09/02 21:48</sub>
 
 安装 LaTeX Workshop 并配置自动预览
@@ -89,9 +88,9 @@
 
 更新成功。接下来我会写入该文件。
 
-````
+`
 
-````
+`
 
 已完成编辑
 
@@ -123,7 +122,8 @@
 
 必要的底层依赖（如果尚未安装）
 - 需要安装 TeX 发行版（Mac 上常用 MacTeX 或 BasicTeX）。推荐安装 BasicTeX（体积小），可以用 Homebrew：
-```bash
+
+```
 # 安装 BasicTeX（如果你还没有 TeX）
 brew install --cask basictex
 
@@ -131,6 +131,7 @@ brew install --cask basictex
 sudo tlmgr update --self
 sudo tlmgr install latexmk collection-latexrecommended
 ```
+
 （MacTeX 可替代 BasicTeX：`brew install --cask mactex`，体积较大）
 
 常见故障与快速排查
@@ -198,13 +199,15 @@ sudo tlmgr install latexmk collection-latexrecommended
 或工作区
 
 （覆盖/追加即可），它会把 PDF 以标签页打开、保存时自动构建、并把输出放到 `out/` 文件夹，便于管理。
-```json
+
+```
 {
   "latex-workshop.latex.autoBuild.run": "onSave",
   "latex-workshop.view.pdf.viewer": "tab",
   "latex-workshop.latex.outDir": "%DIR%/out"
 }
 ```
+
 （若使用工作区设置，放在工程根目录下的
 
 ）
