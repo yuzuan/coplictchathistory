@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:33 |
-| Messages | 65 |
+| End | 2026/04/19 16:34 |
+| Messages | 66 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -323,3 +323,7 @@ Grid 1 有 1620 条靶点数据。先看字段结构：
 ### 🤖 Copilot <sub>2026/04/19 16:33</sub>
 
 靶点详情页不可用。换个策略 — 回到草药页面，检查其他 Grid 是否有基因信息：
+
+### 🤖 Copilot <sub>2026/04/19 16:34</sub>
+
+TCMSP 没有直接给基因符号，只有蛋白名和 drugbank_ID。让我检查分子详情页是否有靶点基因符号：
