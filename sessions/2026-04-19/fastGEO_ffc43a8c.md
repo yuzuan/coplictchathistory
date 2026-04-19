@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:04 |
-| Messages | 29 |
+| Messages | 30 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -162,3 +162,7 @@ Step 5 通过了！Step 6 PPI 报 `preferredName_A` 找不到。这是 STRING AP
 ### 🤖 Copilot <sub>2026/04/19 16:03</sub>
 
 API 列名正确。问题可能是 13 个目标基因查询时返回空导致后续处理出错。让我检查实际的目标基因：
+
+### 🤖 Copilot <sub>2026/04/19 16:04</sub>
+
+交集为空，DEG 中的基因符号是大鼠格式，没有成功转换成人类。让我检查：
