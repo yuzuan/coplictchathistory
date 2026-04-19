@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:06 |
-| Messages | 32 |
+| Messages | 33 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -176,3 +176,7 @@ API 列名正确。问题可能是 13 个目标基因查询时返回空导致后
 ### 🤖 Copilot <sub>2026/04/19 16:06</sub>
 
 交集实际上有 13 个基因，完全正确！问题出在运行时 `deg_genes_human` 变量的状态。让我直接重新运行完整流程看 Step 6 报错的位置：
+
+### 🤖 Copilot <sub>2026/04/19 16:06</sub>
+
+问题可能在于 `dplyr::select(preferredName_A, preferredName_B, score)` — 当 STRING 返回错误响应时（比如空标识符），`data` 是个有 `Error` 和 `ErrorMessage` 列的 data.frame，没有 `preferredName_A`。但 13 个基因不应该为空。让我看看是否有 `rename` 也需要加前缀：
