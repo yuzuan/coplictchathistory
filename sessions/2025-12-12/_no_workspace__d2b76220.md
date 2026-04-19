@@ -71,7 +71,7 @@ ggsave(file.path(out_dir, "volcano_plot.png"), p_volcano, width = 8, height = 6,
 
 你的需求是：用R读取3个Excel文件，提取基因名、log2FC和Regulation（Up/Down/Not change），并根据log2FC和FDR绘制火山图，标注Up和Down各自log2FC绝对值最大的前10个基因。下面是完整的R脚本模板，你只需修改out_dir为你的输出目录即可直接运行：
 
-```r
+```
 library(readxl)
 library(ggplot2)
 library(ggrepel)
@@ -156,7 +156,7 @@ colnames(DEG)
 
 你的数据已经包含了“gene”“logFC”“change”等关键列。你只需在脚本中这样筛选和绘图即可：
 
-```r
+```
 library(ggplot2)
 library(ggrepel)
 library(dplyr)
@@ -274,7 +274,8 @@ colnames(DEG)
 
 **使用方法：**
 在RStudio或R控制台中运行：
-```r
+
+```
 source("/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/00_GEO_data_GSE163489/volcano_plot_script.R")
 ```
 
@@ -333,9 +334,6 @@ print(p_volcano)
 
 ### 🤖 Copilot <sub>2025/12/12 15:07</sub>
 
-```
-
-```
 已更新脚本，主要改动：
 
 1. **添加数据筛选**：只保留需要的列（gene, logFC, change, FC (abs)）
@@ -396,9 +394,6 @@ ggsave(file.path(out_dir, "volcano_plot.png"), p_volcano, width = 8, height = 6,
 
 ### 🤖 Copilot <sub>2025/12/12 15:09</sub>
 
-```
-
-```
 已更新脚本，主要改动：
 
 1. **移除dplyr依赖**：改用基础R语法（`[`和`order()`）
@@ -422,9 +417,6 @@ Browse[1]>
 
 ### 🤖 Copilot <sub>2025/12/12 15:10</sub>
 
-```
-
-```
 已修复脚本！问题是数据中：
 1. 第5列原始列名不是`change`，而是其他名称（如"Regulation"）
 2. 值是小写的"up"/"down"而非"Up"/"Down"
@@ -434,6 +426,7 @@ Browse[1]>
 2. **标准化值**：将"up"→"Up"，"down"→"Down"，其他→"Not change"
 
 可以直接运行了，在RStudio中执行：
-```r
+
+```
 source("/Users/yuzuan/Desktop/2025_08_10 fastGEO/test/00_GEO_data_GSE163489/volcano_plot_script.R")
 ```

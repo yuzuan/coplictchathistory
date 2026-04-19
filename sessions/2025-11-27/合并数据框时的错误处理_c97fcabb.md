@@ -47,7 +47,7 @@ Called from: signal(obj)
 
 ## 方法 1：将 row.names 转换为列再合并
 
-```r
+```
 # 将行名转换为列
 data1$Gene <- rownames(data1)
 data2$Gene <- rownames(data2)
@@ -60,7 +60,7 @@ data <- Reduce(function(x, y) merge(x, y, by = "Gene", all = FALSE),
 
 ## 方法 2：确保使用 data.frame 而不是 data.table
 
-```r
+```
 # 将 data.table 转换回 data.frame
 data1 <- as.data.frame(data1)
 data2 <- as.data.frame(data2)
@@ -82,7 +82,7 @@ data <- Reduce(function(x, y) {
 
 ## 方法 3：使用 dplyr（推荐）
 
-```r
+```
 library(dplyr)
 
 # 将行名转换为列
@@ -106,7 +106,7 @@ data <- data1 %>%
 
 合并后将第一列设置为行名：
 
-```r
+```
 # 合并后，第一列（Gene）设置为行名
 rownames(data) <- data[, 1]
 data <- data[, -1]
@@ -114,7 +114,7 @@ data <- data[, -1]
 
 或者如果你用的是方法 1，合并后直接：
 
-```r
+```
 rownames(data) <- data$Gene
 data$Gene <- NULL
 ```
@@ -131,7 +131,7 @@ data <- data[, -1]重复的平均值
 
 如果你有重复的行名（Gene），需要先对重复值取平均再设置行名：
 
-```r
+```
 # 方法：对重复的 Gene 取平均值
 library(dplyr)
 
@@ -148,7 +148,7 @@ data$Gene <- NULL
 
 或者使用基础 R：
 
-```r
+```
 # 基础 R 方法
 # 确保数据是数值型（除了 Gene 列）
 gene_col <- data[, 1]
@@ -181,7 +181,7 @@ Error in aggregate.data.frame(as.data.frame(x), ...) :
 
 这个错误是因为 `gene_col` 和 `numeric_data` 的行数不一致。试试这个修正版本：
 
-```r
+```
 # 确保在同一个数据框内操作
 gene_col <- as.character(data[, 1])
 numeric_data <- data[, -1]

@@ -18,33 +18,6 @@
 
 我看到您想将代码中的 `pdf2zh` 修改为 `pdf2zh_next`。我会帮您修改这个 TypeScript 文件中的相关内容。
 
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
 已成功将代码中的所有 `pdf2zh` 相关内容修改为 `pdf2zh_next`，包括：
 
 1. **注释中的描述** - 更新为使用 `pdf2zh_next`
@@ -89,9 +62,6 @@
 
 您说得对！我看到第10行的可执行文件路径还是 `pdf2zh_next`，但是在最后的返回消息中还有两处使用的是 `[pdf2zh]` 而不是 `[pdf2zh_next]`。让我修复这个问题：
 
-```
-
-```
 好的！现在已经修复了最后两个地方的标签，将 `[pdf2zh]` 改为 `[pdf2zh_next]`。现在整个脚本中的所有引用都已经统一使用 `pdf2zh_next` 了：
 
 - ✅ 第10行的可执行文件路径：
@@ -111,7 +81,7 @@ const pdf2zhPath = "/opt/anaconda3/bin/pdf2zh_next";
 
 我看到您选中了第10行的路径。您的代码中第10行已经正确设置为 `pdf2zh_next`：
 
-```typescript
+```
 const pdf2zhPath = "/opt/anaconda3/bin/pdf2zh_next";
 ```
 

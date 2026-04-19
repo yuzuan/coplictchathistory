@@ -124,10 +124,12 @@ http://www.genetictargets.com/PDAC2BOOKLET/figure-2.html
 ## 运行前注意（必须核对）
 1. 依赖 R 包（Rmd 中有 library()）：WGCNA, ggplot2, dplyr/tidyverse, stringr, ggpubr, readxl, openxlsx, survival, survminer 等。  
    - 若缺包，请先安装，例如：
-     ```bash
+
+```
      # zsh
      R -e 'install.packages(c("WGCNA","ggplot2","dplyr","stringr","ggpubr","readxl","openxlsx","survival","survminer","ggpubr"))'
-     ```
+```
+
 2. 必要数据文件必须存在（Rmd 使用的相对路径）：
    -
 
@@ -147,13 +149,15 @@ http://www.genetictargets.com/PDAC2BOOKLET/figure-2.html
 
 ## 如何在本机渲染（建议）
 在项目根目录下用 Rscript 渲染（zsh）：
-```bash
+
+```
 # 渲染完整的 Figure2_extracted.Rmd 为 HTML
 R -e "rmarkdown::render('Figure2_extracted.Rmd', output_dir = 'results/Figure2')"
 
 # 或渲染单独的 WGCNA Rmd
 R -e "rmarkdown::render('Figure2_wgcna_extracted.Rmd', output_dir = 'results/Figure2')"
 ```
+
 或者在 RStudio 中打开 .Rmd，点击 Knit。
 
 ## 我可以接着做（请选择一项）
@@ -202,12 +206,14 @@ C — 你直接把页面上可见的 R 代码片段粘贴到此处
 
 附：在本地用命令保存网页（如果你愿意在终端自己抓取并上传 HTML）
 - 在 macOS zsh 中你可以试下面的命令把页面存为 local.html（注意：微信页面有时需要额外 Cookie/Headers，命令可能失败；如果失败请使用浏览器“另存为”）：
-```bash
+
+```
 # 在当前目录保存页面为 local.html（可能被目标站点拒绝）
 curl -L -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
   "https://mp.weixin.qq.com/s?__biz=MzUzOTQzNzU0NA==&mid=2247499011&idx=1&sn=b669046f191f9c751bc4d9c08cb3cec4&scene=21&poc_token=HGrG5GijogrkfhA2M8Ug2_VonQWG3ZxTatWtEoPe" \
   -o local_wechat_article.html --compressed
 ```
+
 - 若 curl 成功，把 `local_wechat_article.html` 上传或把它放到仓库中我就能处理；若失败请使用浏览器“另存为”。
 
 简单说明（提取规则）
@@ -250,14 +256,17 @@ C — 你把文章中可见的 R 代码直接粘贴到此对话里
 
 D — 我给你两种在你本地抓取页面的命令/脚本（curl + headless Puppeteer），你在本地运行后把生成的 HTML 上传给我
 - 推荐命令（用 curl，失败概率高但简单）：
-```bash
+
+```
 # 在项目目录运行（zsh）
 curl -L -A "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" \
   "https://mp.weixin.qq.com/s?__biz=MzUzOTQzNzU0NA==&mid=2247499011&idx=1&sn=b669046f191f9c751bc4d9c08cb3cec4&scene=21&poc_token=HGrG5GijogrkfhA2M8Ug2_VonQWG3ZxTatWtEoPe" \
   -o local_wechat_article.html --compressed
 ```
+
 - 更稳妥（若 curl 失败），用 Node + Puppeteer（需 Node 环境）保存完整渲染后的页面：
-```javascript
+
+```
 // save_wechat.js — 运行： node save_wechat.js
 const fs = require('fs');
 const puppeteer = require('puppeteer');
@@ -272,6 +281,7 @@ const puppeteer = require('puppeteer');
   await browser.close();
 })();
 ```
+
 运行后把 `local_wechat_article.html` 上传给我，我来提取。
 
 ---
@@ -359,14 +369,18 @@ Rmd 中包含的步骤（简要）
 
 如何在本地运行（两种方式：在 Rstudio 中打开该 Rmd 并 Knit，或在 shell 中启动 R 执行渲染）
 - 在 R（交互式）中渲染（推荐在 RStudio 中打开并运行）：
-```r
+
+```
 # 在 R 控制台中
 rmarkdown::render("WGCNA_immune_lncRNA_extracted.Rmd", output_dir = "results/WGCNA_immune_lncRNA")
 ```
+
 - 在 shell 中（zsh）启动 Rscript：
-```bash
+
+```
 Rscript -e 'rmarkdown::render(" /Users/yuzuan/Downloads/生信技能树月更复现/PDAC2_data_results/WGCNA_immune_lncRNA_extracted.Rmd", output_dir = " /Users/yuzuan/Downloads/生信技能树月更复现/PDAC2_data_results/results/WGCNA_immune_lncRNA")'
 ```
+
 （注意：路径中不要有多余空格，上面为示意；我可以为你生成精确可复制的命令）
 
 质量门（我会在你允许我运行时做）

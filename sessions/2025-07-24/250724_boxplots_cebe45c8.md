@@ -91,18 +91,20 @@
 
 #### **坐标系变换细节**：
 1. **扇形图（120度）**:
-   ```r
+
+```
    coord_radial(start = -pi/3, end = pi/3, 
                 r.axis.inside = TRUE, 
                 inner.radius = 0.3)
-   ```
+```
 
 2. **半圆图（180度）**:
-   ```r
+
+```
    coord_radial(start = -pi/2, end = pi/2, 
                 r.axis.inside = TRUE, 
                 inner.radius = 0.1)
-   ```
+```
 
 #### **刻度与标签设计**：
 - **半径轴（原Y轴）**：刻度标签保留，显示数值范围0-4
@@ -185,27 +187,15 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 现在我可以用更具体的上下文来修复第一个代码块：
 
-```
-
-```
-
 现在我还需要修复扇形箱线图代码块。让我找到那个部分：
 
 我看到扇形箱线图代码块中也缺少mean计算。让我修复它：
-
-```
-
-```
 
 现在让我修复半圆形小提琴图代码块。让我先找到那个部分：
 
 我看到半圆形小提琴图中也需要计算mean。让我找到那个代码块的开始：
 
 现在我修复半圆形小提琴图代码块，添加mean计算：
-
-```
-
-```
 
 还有一个问题，我注意到颜色定义中有一个错误。让我修复它：
 
@@ -215,21 +205,9 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 让我用更具体的上下文来修复第一个：
 
-```
-
-```
-
 现在修复第二个（扇形箱线图）的颜色错误：
 
-```
-
-```
-
 现在修复第三个（半圆形小提琴图）的颜色错误：
-
-```
-
-```
 
 还有一个问题，我需要确保数据文件存在。让我重新创建数据文件：
 
@@ -319,7 +297,8 @@ read ECONNRESET
 
 ### 方法4：重新安装R语言支持包
 在R控制台中运行：
-```r
+
+```
 install.packages("languageserver")
 install.packages("httpgd")
 ```
@@ -352,7 +331,8 @@ install.packages("httpgd")
 1. 访问 GitHub → Settings → Developer settings → Personal access tokens → Tokens (classic)
 2. 点击 "Generate new token (classic)"
 3. 设置适当的权限范围：
-   ```
+
+```
    ✅ repo (完整仓库访问权限)
    ✅ workflow (GitHub Actions工作流权限)
    ✅ write:packages (包写入权限)
@@ -365,7 +345,7 @@ install.packages("httpgd")
    ✅ notifications (通知)
    ✅ user (用户信息)
    ✅ delete_repo (删除仓库，谨慎使用)
-   ```
+```
 
 ### 2. 安装GitHub MCP服务器
 
@@ -441,7 +421,8 @@ install.packages("httpgd")
 ### 🚀 下一步操作：
 
 1. **设置GitHub Token**：
-   ```bash
+
+```
    # 访问 https://github.com/settings/tokens
    # 生成token后设置环境变量
    export GITHUB_PERSONAL_ACCESS_TOKEN="your_token_here"
@@ -449,7 +430,7 @@ install.packages("httpgd")
    # 添加到 ~/.zshrc
    echo 'export GITHUB_PERSONAL_ACCESS_TOKEN="your_token_here"' >> ~/.zshrc
    source ~/.zshrc
-   ```
+```
 
 2. **安装VS Code扩展**：
    - GitHub Copilot
@@ -457,9 +438,10 @@ install.packages("httpgd")
    - GitHub Pull Requests
 
 3. **打开工作区**：
-   ```bash
+
+```
    code github-mcp-workspace.code-workspace
-   ```
+```
 
 4. **验证配置**：
    - 重启VS Code

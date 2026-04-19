@@ -30,19 +30,23 @@ Claude Code for VS Code如何使用Any Router的 api
 
 ## 方案 A：如果 AnyRouter 已实现 MCP（最简单）
 1) 在终端（你的 shell 为 zsh）使用 Claude CLI 把 AnyRouter 注册为 HTTP MCP 服务器。示例：
-```bash
+
+```
 # 把 AnyRouter 注册为 HTTP 类型的 MCP 服务器（user/local/project scope 任选）
 claude mcp add --transport http anyrouter https://anyrouter.example.com/mcp \
   --
 
 "Authorization: Bearer $ANYROUTER_KEY"
 ```
+
 - 替换 https://anyrouter.example.com/mcp 为 AnyRouter 的 MCP 端点。若需要其他头（X-API-Key 等），用多个 --header 参数传入。
 2) 验证
-```bash
+
+```
 claude mcp list
 claude mcp get anyrouter
 ```
+
 3) 在 VS Code 中使用  
 - VS Code 的 Claude Code 扩展会读取 CLI 已注册的 MCP 服务器。注册完成后，在 Claude 会话里可以使用 /mcp 或者通过 @ 提示访问 anyrouter 暴露的资源或 slash 命令（取决于 AnyRouter 提供的 prompts/resources）。
 - 若想共享给团队，把上面的配置改成 project scope（加 --scope project），它会写入项目根 `.mcp.json`，团队成员可以一起使用。
@@ -55,7 +59,8 @@ claude mcp get anyrouter
 下面给出最小可用的 Node.js 适配器示例（Express + node-fetch）。你可以把它运行在本地（例如 http://localhost:8080/mcp），然后用 Claude 注册为 HTTP MCP。
 
 - create a file adapter.js（示例代码）：
-```javascript
+
+```
 // adapter.js - 最小示例（Node 18+）
 // 用法: ANYROUTER_URL=... ANYROUTER_KEY=... node adapter.js
 
@@ -126,7 +131,8 @@ app.listen(port, () => {
 ```
 
 运行（zsh）：
-```bash
+
+```
 # 在项目目录
 export ANYROUTER_URL="https://api.anyrouter.example/v1/chat/completions"
 export ANYROUTER_KEY="你的_anyrouter_key"
@@ -134,13 +140,15 @@ node adapter.js
 ```
 
 把本地适配器注册为 HTTP MCP：
-```bash
+
+```
 claude mcp add --transport http anyrouter-local http://localhost:8080/mcp \
   --scope local
 ```
 
 或把它作为 project-scoped（写入 .mcp.json）：
-```bash
+
+```
 claude mcp add --transport http anyrouter-local --scope project http://localhost:8080/mcp \
   --header "Authorization: Bearer $ANYROUTER_KEY"
 # 也可以通过 claude mcp add-json 添加一个 JSON 配置
@@ -161,21 +169,25 @@ claude mcp add --transport http anyrouter-local --scope project http://localhost
 
 ## 测试与验证（最小 smoke test）
 1) 适配器运行后（假设在本地 8080）：
-```bash
+
+```
 # 请求 adapter，检查 adapter 能成功调用 AnyRouter
 curl -X POST http://localhost:8080/mcp \
   -H "Content-Type: application/json" \
   -d '{"prompt":"Say hello from AnyRouter test"}'
 ```
+
 期待返回 JSON，其中包含 result.text 或 raw。
 
 2) 在 Claude CLI 中验证：
-```bash
+
+```
 claude mcp get anyrouter-local
 claude mcp list
 # 在 claude 会话内：
 /mcp
 ```
+
 3) 在 VS Code 扩展中打开 Claude Code 面板，触发与 MCP 相关的命令或在交互中引用该 MCP 服务器。
 
 ## 小结与提醒
@@ -464,7 +476,8 @@ Invalid API Key · Please run /login 怎么解决？这表明 Claude Code 没有
 控制台里明确建议将以下两个变量设好（sk- 开头的 token）：
 
 在终端（或把它写进 `~/.zshrc`）：
-```bash
+
+```
 # zsh 示例（只写一次，按需替换）
 export ANTHROPIC_AUTH_TOKEN="sk-你的_token"
 export ANTHROPIC_BASE_URL="https://anyrouter.top"
@@ -473,7 +486,8 @@ export ANTHROPIC_BASE_URL="https://anyrouter.top"
 ```
 
 把变量写入 `~/.zshrc`（示例）：
-```bash
+
+```
 echo 'export ANTHROPIC_AUTH_TOKEN="sk-你的_token"' >> ~/.zshrc
 echo 'export ANTHROPIC_BASE_URL="https://anyrouter.top"' >> ~/.zshrc
 source ~/.zshrc
@@ -485,7 +499,8 @@ source ~/.zshrc
 
 ## 2) 安装并运行 Claude Code（CLI）
 （控制台建议）：
-```bash
+
+```
 npm install -g @anthropic-ai/claude-code
 # 检查版本
 claude --version
@@ -494,6 +509,7 @@ claude --version
 cd ~/your-project
 claude
 ```
+
 第一次运行会引导主题、许可与工作目录信任等。按提示完成即可。
 
 在 VS Code 中使用 Claude Code 扩展：
@@ -508,13 +524,15 @@ claude
 验证（命令行 smoke test）：
 - 在本地用 claude 打开会话并试一句话，例如 ask “help me create a function to reverse a string”，观察是否能正常响应。
 - 也可以用 curl 测试（注意：AnyRouter 接口可能只接受 Claude Code 风格代理流量；如果网站只代理 Claude Code，直接 curl 到 v1/response 端点不一定有效 — 下面给一个通用测试命令以防站点支持直接 HTTP 调用）：
-```bash
+
+```
 # 通用示例（不保证 AnyRouter 完全兼容此路径，先用 Claude CLI 优先）
 curl -X POST "${ANTHROPIC_BASE_URL}/v1/responses" \
   -H "Authorization: Bearer ${ANTHROPIC_AUTH_TOKEN}" \
   -H "Content-Type: application/json" \
   -d '{"model":"claude-sonnet-4.5","input":"Say hello from AnyRouter test"}'
 ```
+
 如果返回 401/403/“Invalid API Key”，请确认控制台里创建的 token（sk-...）是否正确，或网站是否仅允许 Claude Code 代理流量（控制台有明确说明“本站直接接入官方 Claude Code 转发，无法转发非 Claude Code 的 API 流量”——这意味着直接 HTTP 请求可能被拒绝，优先使用 `claude` CLI/扩展）。
 
 ---
@@ -523,10 +541,12 @@ curl -X POST "${ANTHROPIC_BASE_URL}/v1/responses" \
 如果你想让 Claude 把 AnyRouter 当作一个 MCP 服务器（例如让 Claude 在对话中调用该服务暴露的 prompts/resources），可以注册一个 HTTP 类型的 MCP 服务器（前提：AnyRouter 必须支持 MCP API 或你部署一个本地适配器桥接）。
 
 示例：直接注册（若 AnyRouter 提供 /mcp 端点）：
-```bash
+
+```
 claude mcp add --transport http anyrouter https://anyrouter.top/mcp \
   --header "Authorization: Bearer ${ANTHROPIC_AUTH_TOKEN}"
 ```
+
 如果 AnyRouter 不直接实现 MCP，你可以：
 - 本地运行一个“适配器”服务，把 Claude 的 MCP 请求转成 AnyRouter 的 HTTP/REST 请求（我之前给过 Node.js 示例）；  
 - 然后把本地适配器注册为 MCP：`claude mcp add --transport http anyrouter-local http://localhost:8080/mcp`。
@@ -539,7 +559,7 @@ claude mcp add --transport http anyrouter https://anyrouter.top/mcp \
 - Invalid API Key / Please run /login：通常由于未设置 `ANTHROPIC_AUTH_TOKEN` 或 token 错误。到 AnyRouter 控制台 -> API 令牌 页面，确认或新建 token（形如 sk-xxxx）。  
 - 显示 offline / fetch failed：可能与网络或 DNS 污染有关。控制台提供备用域名与大陆优化域名（例如 `https://pmpjfbhq.cn-nb1.rainapp.top` 或 `https://7a61fbe1b5f3.d93a09b6.top/`），在国内网络不稳定时尝试替换 `ANTHROPIC_BASE_URL`。  
 - 控制台已提示“主站域名可能被 DNS 污染，新增域名 7a61...top”，因此如果连接失败请尝试备用域。  
-- AnyRouter 说明中有一句：本站不能转发“非 Claude Code 的 API 流量”，这意味着直接模拟 OpenAI-style 的通用 API 调用可能会被阻断——优先使用 `claude` CLI 或通过它的 “/mcp” 交互方式。  
+- AnyRouter 说明中有一句：本站不能转发“非 Claude Code 的 API 流量”，这意味着直接模拟 OpenAI-style 的通用 API 调用可能会被阻断——优先使用 `claude` CLI 或通过它的 “/mcp” 交互方式。
 
 ---
 
@@ -641,25 +661,6 @@ v24.6.0
 
 之前我在工作区创建的文件位于虚拟工作区，并未映射到你的系统根目录; 需要把适配器放到你当前用户目录下（比如 ~/anyrouter-adapter）。我将创建目录 `~/anyrouter-adapter` 并写入之前生成的文件内容，然后安装依赖并启动。首先创建目录并把文件写入。
 
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
-
-```
 现在我将进入目录并运行 npm install，然后启动 adapter（npm start），最后做一个健康检查 curl 到 /health。预计依赖安装成功后服务能在 http://localhost:8080 启动并返回健康 JSON。下面在终端执行这些命令。
 
 ### 👤 User <sub>2025/10/08 15:16</sub>

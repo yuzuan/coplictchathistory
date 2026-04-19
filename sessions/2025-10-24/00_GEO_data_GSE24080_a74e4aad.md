@@ -20,15 +20,7 @@
 
 现在我来为你添加 Consensus CDF 图的代码。我会在 ConsensusClusterPlus 运行后添加绘制 CDF 图的代码。
 
-```
-
-```
-
 现在我还需要修改后面使用聚类结果的部分，因为我们现在改为评估 K=2 到 K=6：
-
-```
-
-```
 
 完成了！我已经为你添加了 Consensus CDF 图的代码。主要改动包括：
 
@@ -77,22 +69,15 @@ Error in data.frame(PC1 = pca_result$x[, 1], PC2 = pca_result$x[, 2],  :
 
 我看到问题了。`clusters` 变量需要确保与 `exp_sel_matrix` 的样本顺序和数量一致。让我修复这个问题：
 
-```
-
-```
-
-```
-
-```
-
 完成！我已经修复了 PCA 图的错误。主要改动：
 
 ## 修复的问题：
 
 1. **样本匹配问题**：使用 `match()` 函数确保 `clusters` 向量与 `exp_sel_matrix` 的行名（样本名）完全匹配
-   ```r
+
+```
    clusters_for_pca <- cluster_assign$Cluster[match(rownames(exp_sel_matrix), cluster_assign$Sample)]
-   ```
+```
 
 2. **添加了诊断信息**：输出样本数量和匹配情况，方便检查
 
@@ -136,21 +121,9 @@ Error in survfit.formula(surv_object ~ Cluster, data = surv_data) :
 
 问题在于 `exp_sel_matrix` 的维度。ConsensusClusterPlus 需要**列为样本**的矩阵，但我们的 `exp_sel_matrix` 是**行为样本**的。让我修复这个问题：
 
-```
-
-```
-
 现在让我检查并修复生存分析部分的数据合并问题：
 
-```
-
-```
-
 现在让我把生存分析的其余部分也包裹在条件判断中：
-
-```
-
-```
 
 完成！我已经修复了两个关键问题：
 
@@ -200,15 +173,7 @@ Error in survfit.formula(surv_object ~ Cluster, data = surv_data) :
 
 让我修改代码，添加更清晰的解释和推荐逻辑：
 
-```
-
-```
-
 现在让我也在 final_k 的选择部分添加一个提醒：
-
-```
-
-```
 
 完成！现在代码会提供更清晰的综合推荐。让我解释一下你的结果：
 
@@ -222,7 +187,7 @@ Error in survfit.formula(surv_object ~ Cluster, data = surv_data) :
 
 2. **CH指数** (你的结果没显示，可能也是 K=2)
    - 强调：类间分离度 vs 类内紧密度的比值
-   
+
 3. **Consensus CDF = K=6** 
    - 强调：聚类的**稳定性和可重复性**
    - K=6 时，虽然分组更细，但每次重采样聚类结果更一致
@@ -267,15 +232,12 @@ Error in survfit.formula(surv_object ~ Cluster, data = surv_data) :
 
 让我为你详细解读 ConsensusClusterPlus 的结果。我会在代码中添加一个专门的解读部分：
 
-```
-
-```
-
 完美！现在让我为你详细解读你的具体结果：
 
 ## 📖 你的 ConsensusClusterPlus 结果解读
 
 ### 实际数据：
+
 ```
 K = 2: 中间区域比例 = 74.16% (0.7416)
 K = 3: 中间区域比例 = 70.96% (0.7096)
@@ -337,6 +299,7 @@ K = 6: 中间区域比例 = 51.64% (0.5164) ← 最佳
 ### 📝 论文中如何呈现
 
 **推荐写法：**
+
 ```
 "We performed consensus clustering analysis with 50 replicates 
 to evaluate clustering stability. While K=2 showed optimal 
@@ -380,10 +343,6 @@ Error in results[[2]]$ml$reps : $ operator is invalid for atomic vectors
 ### 🤖 Copilot <sub>2025/10/24 15:24</sub>
 
 看到错误了，`results[[2]]$ml$reps` 这个访问方式不对。让我修复这个问题：
-
-```
-
-```
 
 完成！我已经修复了错误。问题是 `results[[2]]$ml$reps` 的访问方式不正确，我直接改为硬编码的 "50 次"（因为代码中设置的 `reps = 50`）。
 

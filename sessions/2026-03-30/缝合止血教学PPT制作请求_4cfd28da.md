@@ -283,27 +283,11 @@ The issue is regular ASCII double quotes inside Python strings. Let me fix all o
 
 Syntax fixed. Now let's generate:
 
-```
-
-```
-
-```
-
-```
-
 The issue is that
 
 is an
 
 type, not a simple float. I need to convert properly:
-
-```
-
-```
-
-```
-
-```
 
 v3 已生成（15页，899KB）。让我验证内容和结构：
 
@@ -418,23 +402,11 @@ The issue is regular ASCII double quotes inside Python strings. Let me fix all o
 
 Syntax fixed. Now let's generate:
 
-```
-
-```
-
-```
-
-```
-
 The issue is that
 
 is an
 
 type, not a simple float. I need to convert properly:
-
-```
-
-```
 
 v3 已生成（15页，899KB）。让我验证内容和结构：
 
