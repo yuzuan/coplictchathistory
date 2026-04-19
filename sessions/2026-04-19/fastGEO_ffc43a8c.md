@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:08 |
-| Messages | 35 |
+| Messages | 36 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -188,3 +188,7 @@ API 列名正确。问题可能是 13 个目标基因查询时返回空导致后
 ### 🤖 Copilot <sub>2026/04/19 16:08</sub>
 
 STRING API 和 `dplyr::select` 完全正常！问题应该在脚本执行流程中。让我看看 Step 5 (GO/KEGG) 结尾是否有报错导致 Step 6 实际执行的不是 REST 函数内部的 select，而是其他地方。让我看 Step 5 完整代码：
+
+### 🤖 Copilot <sub>2026/04/19 16:08</sub>
+
+GO/KEGG 部分没有问题。让我看 Step 6 后面 `rename` 使用的地方，错误消息说 `找不到对象'preferredName_A'` — 这可能是 `rename` 不是 dplyr 的 rename：
