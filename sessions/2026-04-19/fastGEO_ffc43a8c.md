@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 15:37 |
-| Messages | 15 |
+| Messages | 16 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -106,3 +106,7 @@ Open Targets API 调用出错了——`content()` 参数问题。让我检查代
 ### 🤖 Copilot <sub>2026/04/19 15:37</sub>
 
 `content()` 命名空间冲突。改为显式 `httr::content()` + 命名参数：
+
+### 🤖 Copilot <sub>2026/04/19 15:37</sub>
+
+还需检查是否有其他 `content(` 调用：
