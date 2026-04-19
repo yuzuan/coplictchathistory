@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:09 |
-| Messages | 37 |
+| Messages | 38 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -196,3 +196,7 @@ GO/KEGG 部分没有问题。让我看 Step 6 后面 `rename` 使用的地方，
 ### 🤖 Copilot <sub>2026/04/19 16:08</sub>
 
 找到了！`rename` 被其他包覆盖了。在加载 clusterProfiler/STRINGdb 后，`rename` 不再是 dplyr 的。修复所有 `rename` 为 `dplyr::rename`：
+
+### 🤖 Copilot <sub>2026/04/19 16:09</sub>
+
+需要给所有裸 dplyr 函数加命名空间前缀。最高效的方式是一次性做全局替换：
