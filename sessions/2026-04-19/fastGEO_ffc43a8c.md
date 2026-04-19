@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 15:39 |
-| Messages | 20 |
+| End | 2026/04/19 15:40 |
+| Messages | 21 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -126,3 +126,7 @@ Open Targets API 调用出错了——`content()` 参数问题。让我检查代
 ### 🤖 Copilot <sub>2026/04/19 15:39</sub>
 
 Step 1 (DEG) 成功了，Step 2 读到了文件但 0 个基因，Step 3 缺少中药靶点文件。让我检查一下现有的疾病基因文件：
+
+### 🤖 Copilot <sub>2026/04/19 15:40</sub>
+
+疾病基因文件是空的（上次运行失败后只留下表头）。让我看看 Step 2 的逻辑——它可能因为文件已存在就跳过了 API 查询：
