@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:52 |
-| Messages | 84 |
+| End | 2026/04/19 16:53 |
+| Messages | 85 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -399,3 +399,7 @@ TCMSP 没有找到"Taxilli Herba"。让我试试中文名搜索：
 ### 🤖 Copilot <sub>2026/04/19 16:52</sub>
 
 看起来桑寄生的数据中 tab 可能是文字 `\t` 而非实际制表符。让我检查并修复：
+
+### 🤖 Copilot <sub>2026/04/19 16:53</sub>
+
+问题确认：桑寄生/决明子/鸡血藤数据中 `\t` 是字面文本而非制表符。修复：
