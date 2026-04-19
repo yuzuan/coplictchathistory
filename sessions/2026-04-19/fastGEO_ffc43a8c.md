@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:20 |
-| Messages | 47 |
+| Messages | 48 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -249,3 +249,7 @@ TCMSP 的 URL 直接查询报错了。让我通过搜索框查询：
 ### 🤖 Copilot <sub>2026/04/19 16:19</sub>
 
 成功进入了 TCMSP 的淫羊藿页面！我可以看到有 Ingredients、Related Targets、Related Diseases 三个 tab。让我直接点击 "Related Targets" tab 获取靶点数据：
+
+### 🤖 Copilot <sub>2026/04/19 16:20</sub>
+
+TCMSP 的靶点是蛋白名而非基因符号，且逐页爬取 6 味药效率很低。让我换用 HERB 数据库（http://herb.ac.cn/）的 API，它直接提供基因符号：
