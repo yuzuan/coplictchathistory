@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 15:31 |
-| Messages | 8 |
+| End | 2026/04/19 15:32 |
+| Messages | 10 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -73,3 +73,11 @@ Elderly
 ### 🤖 Copilot <sub>2026/04/19 15:31</sub>
 
 Now I'll swap the two blocks. This is a large replacement - GO/KEGG becomes Step 5, PPI becomes Step 6. Also need to update the Cytoscape reference in Step 7.
+
+### 🤖 Copilot <sub>2026/04/19 15:31</sub>
+
+Now update the Cytoscape reference in Step 7 to use the new `06_` prefix:
+
+### 🤖 Copilot <sub>2026/04/19 15:32</sub>
+
+Also update the final summary Cytoscape instructions:
