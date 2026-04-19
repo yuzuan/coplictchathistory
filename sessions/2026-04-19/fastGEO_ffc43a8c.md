@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 16:05 |
-| Messages | 31 |
+| End | 2026/04/19 16:06 |
+| Messages | 32 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -172,3 +172,7 @@ API 列名正确。问题可能是 13 个目标基因查询时返回空导致后
 问题清楚了。DEG CSV 的 `gene_symbol` 列不存在——CSV 存的是 `gene_human` 列。在 Step 2 读回来时用的是 `disease_df$gene_symbol`，没问题（GeneCards 有这列）。但关键问题是：**DEG 的 `deg_set` 正确用了 `deg_genes_human`（全大写）**，而 `disease_set` 用了 `toupper(disease_genes)` 也是大写。
 
 让我直接检查两个集合的交集数据：
+
+### 🤖 Copilot <sub>2026/04/19 16:06</sub>
+
+交集实际上有 13 个基因，完全正确！问题出在运行时 `deg_genes_human` 变量的状态。让我直接重新运行完整流程看 Step 6 报错的位置：
