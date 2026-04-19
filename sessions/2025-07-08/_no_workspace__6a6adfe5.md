@@ -86,8 +86,7 @@ Error in var.select(fit) : could not find function "var.select"
 在 `randomForestSRC` 3.3.1 版本中，`var.select()` 函数可能已经被重命名或移动。请尝试以下替代方法：
 
 1. **检查包中可用的函数：**
-
-```
+```r
 # 查看 randomForestSRC 包中所有可用的函数
 ls("package:randomForestSRC")
 
@@ -96,8 +95,7 @@ help(package = "randomForestSRC")
 ```
 
 2. **使用 `vimp()` 函数进行变量重要性分析：**
-
-```
+```r
 # 获取变量重要性
 vimp_result <- vimp(fit)
 print(vimp_result)
@@ -108,16 +106,14 @@ print(fit$importance)
 ```
 
 3. **使用 `subsample()` 函数进行变量选择：**
-
-```
+```r
 # 使用子采样方法进行变量选择
 sub_result <- subsample(fit)
 print(sub_result)
 ```
 
 4. **如果需要变量选择功能，可以尝试：**
-
-```
+```r
 # 检查是否有 var.select 相关的函数
 apropos("var")
 apropos("select")
@@ -127,8 +123,7 @@ apropos("variable")
 ```
 
 **建议的完整代码：**
-
-```
+```r
 library(randomForestSRC)
 data(veteran, package = "randomForestSRC")
 
@@ -186,7 +181,7 @@ plot(vimp_result)
 
 让我们尝试一些其他方法来进行变量选择和重要性分析：
 
-```
+```r
 # 1. 首先检查fit对象的结构，看看包含哪些信息
 str(fit)
 names(fit)
@@ -210,7 +205,7 @@ ls("package:randomForestSRC")
 
 另外，您也可以尝试以下方法：
 
-```
+```r
 # 方法1: 使用置换重要性
 # 重新拟合模型，确保计算重要性
 fit <- rfsrc(Surv(time, status) ~ ., data = veteran, importance = TRUE)
@@ -235,7 +230,7 @@ fit_selected <- rfsrc(formula_selected, data = veteran)
 
 如果这些方法还不行，请运行以下代码来获取更多信息：
 
-```
+```r
 # 查看 randomForestSRC 包的所有导出函数
 ls("package:randomForestSRC")
 
@@ -329,7 +324,7 @@ Built: R 4.5.0; aarch64-apple-darwin20; 2025-07-08 15:00:46 UTC; unix
 
 让我们尝试这些方法来进行变量选择：
 
-```
+```r
 # 方法1: 使用 vimp() 函数计算变量重要性
 vimp_result <- vimp(fit)
 print(vimp_result)
@@ -364,7 +359,7 @@ print(sorted_importance)
 
 **推荐的变量选择流程：**
 
-```
+```r
 library(randomForestSRC)
 data(veteran, package = "randomForestSRC")
 
@@ -409,7 +404,7 @@ rid <- var.select(fit)$topvars这个要如何改？
 
 根据之前的分析，在 `randomForestSRC` 3.3.1 版本中，`var.select()` 函数已经被替换。您需要使用 `subsample()` 函数来进行变量选择。以下是修改后的代码：
 
-```
+```r
 set.seed(seed)
 fit <- rfsrc(Surv(time,event)~.,data = est_dd,
              ntree = 1000,nodesize = rf_nodesize,##该值建议多调整  
@@ -451,7 +446,7 @@ print(rid)
 
 **推荐的完整替代方案：**
 
-```
+```r
 set.seed(seed)
 fit <- rfsrc(Surv(time,event)~.,data = est_dd,
              ntree = 1000,nodesize = rf_nodesize,
@@ -505,7 +500,7 @@ print(rid)
 
 **您可以通过以下方式安装旧版本：**
 
-```
+```r
 # 方法1: 安装 2.9.3 版本（最后一个包含 var.select 的稳定版本）
 remove.packages("randomForestSRC")
 remotes::install_version("randomForestSRC", version = "2.9.3")
@@ -515,8 +510,7 @@ remotes::install_version("randomForestSRC", version = "2.5.1")
 ```
 
 **验证安装：**
-
-```
+```r
 library(randomForestSRC)
 packageVersion("randomForestSRC")  # 应该显示 2.9.3
 
@@ -532,7 +526,7 @@ exists("var.select")
 **新版本的等效替代方案：**
 如果您必须使用新版本，可以创建一个模拟 `var.select()` 功能的函数：
 
-```
+```r
 # 自定义 var.select 替代函数
 var.select <- function(fit, method = "md", ntree = 100, ...) {
   # 使用 subsample 方法
@@ -1596,7 +1590,7 @@ var.select(mv.obj, method = "vh.vimp", nrep = 10)
 
 让我帮您解决这个问题。基于文档，`var.select()` 函数确实应该在 `randomForestSRC` 包中。让我们尝试重新安装并正确加载：
 
-```
+```r
 # 首先完全清除当前的 randomForestSRC 包
 remove.packages("randomForestSRC")
 
@@ -1619,7 +1613,7 @@ var.select
 
 如果还是不行，我们可以创建一个基于文档的自定义 `var.select()` 函数：
 
-```
+```r
 # 自定义 var.select 函数（基于 randomForestSRC 的逻辑）
 var.select <- function(object = NULL, 
                        formula = NULL, 

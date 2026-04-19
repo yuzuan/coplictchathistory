@@ -25,7 +25,6 @@
 **错误原因分析：**
 
 这是一个 `anndata` 和 `squidpy` 版本兼容性问题。错误信息显示：
-
 ```
 ImportError: cannot import name 'SparseCSCView' from 'anndata._core.views'
 ```
@@ -168,7 +167,7 @@ Perfect！现在我来总结一下这个问题的原因和解决方案：
 
 我通过调整参数解决了这个问题：
 
-```
+```python
 sq.pl.ligrec(
     adata,
     cluster_key="cluster",

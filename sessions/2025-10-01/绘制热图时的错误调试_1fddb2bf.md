@@ -68,7 +68,7 @@ Error in `.rowNamesDF<-`(x, value = value) : invalid 'row.names' length
 
 请尝试以下修正代码：
 
-```
+```r
 # 1. 首先检查数据维度
 print(paste("矩阵维度:", nrow(mat), "行 x", ncol(mat), "列"))
 print(paste("分组长度:", length(group)))
@@ -116,7 +116,7 @@ pheatmap(
 
 ## 如果仍想使用 tinyarray::draw_heatmap
 
-```
+```r
 # 方法1：确保所有参数正确
 h <- draw_heatmap(
   mat = mat, 
@@ -141,7 +141,7 @@ h <- draw_heatmap(
 
 ## 调试建议
 
-```
+```r
 # 检查关键信息
 str(mat)
 str(group)
@@ -166,7 +166,7 @@ any(duplicated(colnames(mat)))
 
 ## 解决方案
 
-```
+```r
 # 按 group 排序样本
 group_order <- order(group)
 mat_ordered <- mat_scaled[, group_order, drop = FALSE]
@@ -207,7 +207,7 @@ pheatmap(
 
 ## 使用 tinyarray::draw_heatmap 的方案
 
-```
+```r
 # tinyarray 的 draw_heatmap 默认就会按分组聚集样本
 # 关键是确保数据格式正确
 
@@ -227,7 +227,7 @@ h <- draw_heatmap(
 
 ## 完整代码示例
 
-```
+```r
 library(pheatmap)
 library(RColorBrewer)
 
@@ -297,7 +297,7 @@ pheatmap(
 
 ## 解决方案
 
-```
+```r
 library(pheatmap)
 library(RColorBrewer)
 
@@ -352,7 +352,7 @@ pheatmap(
 
 ## 使用 ComplexHeatmap 包（更强大的选项）
 
-```
+```r
 library(ComplexHeatmap)
 library(circlize)
 
@@ -392,7 +392,7 @@ Heatmap(
 
 ## 简化版（推荐）
 
-```
+```r
 # 最简洁的代码
 library(pheatmap)
 

@@ -30,8 +30,7 @@
 
 ### 临时修改（当前会话有效）
 在R控制台运行：
-
-```
+```r
 # 使用其他国内镜像
 options(repos = c(CRAN = "https://mirrors.ustc.edu.cn/CRAN/"))  # 中科大
 # 或
@@ -58,6 +57,13 @@ options(repos = c(CRAN = "https://mirrors.aliyun.com/CRAN/"))   # 阿里云
 
 我看到您现有的配置使用的是清华镜像。现在帮您修改为阿里云镜像：
 
+```
+
+```
+
+```
+
+```
 ✅ 已成功将R镜像源从清华改为阿里云！
 
 **修改内容：**
@@ -67,15 +73,13 @@ options(repos = c(CRAN = "https://mirrors.aliyun.com/CRAN/"))   # 阿里云
 **生效方式：**
 1. **重启R/RStudio** - 新配置会自动生效
 2. 或在当前R会话中运行：
-
-```
+   ```r
    source("~/.Rprofile")
-```
+   ```
 
 **验证配置：**
 重启R后，运行以下命令确认镜像源：
-
-```
+```r
 getOption("repos")
 ```
 
@@ -122,7 +126,7 @@ BioC_mirror = "https://mirrors.tuna.tsinghua.edu.cn/bioconductor"这个也改一
 
 ## 1. **biomaRt** - 推荐用于念珠菌
 
-```
+```r
 # 安装包
 install.packages("BiocManager")
 BiocManager::install("biomaRt")
@@ -155,7 +159,7 @@ results <- getBM(
 
 ## 2. **AnnotationHub** - 获取注释数据
 
-```
+```r
 BiocManager::install("AnnotationHub")
 library(AnnotationHub)
 
@@ -168,7 +172,7 @@ query(ah, c("Candida", "albicans"))
 
 如果使用CGD (Candida Genome Database)的数据：
 
-```
+```r
 # 从CGD下载映射文件后
 mapping <- read.delim("candida_gene_mapping.txt")
 
@@ -182,7 +186,7 @@ converted <- mapping %>%
 
 ## 4. **UniProt.ws** - 蛋白质ID转换
 
-```
+```r
 BiocManager::install("UniProt.ws")
 library(UniProt.ws)
 
@@ -207,7 +211,7 @@ B90001 B9J08_000002 B9J08_000003这种开头的
 
 ## 推荐方案：使用 **biomaRt** 连接 Ensembl Fungi
 
-```
+```r
 library(biomaRt)
 
 # 连接Ensembl Fungi数据库
@@ -242,7 +246,7 @@ print(results)
 
 ## 方案2：使用 **UniProt.ws** 包（更适合B9开头的ID）
 
-```
+```r
 # 安装
 BiocManager::install("UniProt.ws")
 library(UniProt.ws)
@@ -267,7 +271,7 @@ print(results)
 
 ## 方案3：直接使用UniProt API（最灵活）
 
-```
+```r
 library(httr)
 library(jsonlite)
 
@@ -300,7 +304,7 @@ converted <- convert_ids(your_genes)
 
 ## 快速检查您的ID类型
 
-```
+```r
 # 先在UniProt网站手动查一个ID确认
 # https://www.uniprot.org/uniprotkb?query=B9J08_000002
 
@@ -333,11 +337,15 @@ content(response, "text")
 
 问题根源是**阿里云镜像的Bioconductor源有问题**。让我修改配置文件，针对Bioconductor使用官方源，CRAN继续使用阿里云：
 
+```
+
+```
+
 🎉 **安装成功！UniProt.ws 2.46.1 已安装**
 
 现在可以用它来转换念珠菌的ID了。针对您的 `B9J08_000002` 这类ID，这是 **locus tag** 格式的UniProt ID。这里是完整的转换代码：
 
-```
+```r
 library(UniProt.ws)
 
 # 1. 连接到UniProt（白色念珠菌）
@@ -395,7 +403,7 @@ View(results)
 
 ## 在R中查询耳念珠菌信息：
 
-```
+```r
 library(UniProt.ws)
 
 # 查看耳念珠菌的Taxon ID
@@ -432,7 +440,7 @@ Error in .select(x, keys, columns, keytype, ...) :
 
 错误原因是 `keytype` 参数值不正确。需要先查看可用的 keytypes：
 
-```
+```r
 library(UniProt.ws)
 
 # 1. 连接到耳念珠菌
@@ -464,7 +472,7 @@ print(results)
 
 **如果您的ID是 locus tag 格式（如 B9J08_000002），应该这样查：**
 
-```
+```r
 # 方法1: 直接用ID查询（不指定keytype，让它自动匹配）
 results <- select(up,
                   keys = your_genes,
@@ -639,7 +647,7 @@ Error in .select(x, keys, columns, keytype, ...) :
 
 看到了！问题是大小写和列名不正确。正确的应该是：
 
-```
+```r
 # 正确的查询
 results <- select(up, 
                   keys = your_genes,
@@ -669,7 +677,7 @@ head(results)
 
 **如果某些基因查不到，可以分批查询：**
 
-```
+```r
 # 只查基本信息
 results_basic <- select(up,
                         keys = your_genes,
@@ -718,7 +726,7 @@ IDs not mapped: B9J08_000001, B9J08_000002, B9J08_000003, B9J08_000004, B9J08_00
 
 ## 方案1: 使用 biomaRt（推荐）
 
-```
+```r
 library(biomaRt)
 
 # 连接到Ensembl Fungi
@@ -752,7 +760,7 @@ results <- getBM(
 
 ## 方案2: 使用UniProt ID映射API
 
-```
+```r
 library(httr)
 library(jsonlite)
 
@@ -792,7 +800,7 @@ results <- map_ids_uniprot(your_genes)
 
 如果这些ID来自CGD（Candida Genome Database）：
 
-```
+```r
 # 从CGD下载注释文件
 # http://www.candidagenome.org/
 
@@ -818,7 +826,7 @@ Error in checkDataset(dataset = dataset, mart = mart) :
 
 数据集名称不对。让我帮您查找正确的耳念珠菌数据集：
 
-```
+```r
 library(biomaRt)
 
 # 连接到Ensembl Fungi
@@ -848,7 +856,7 @@ View(datasets)
 
 ## 备选方案：使用NCBI数据
 
-```
+```r
 library(rentrez)
 library(httr)
 
@@ -872,7 +880,7 @@ if (search_result$count > 0) {
 
 如果您有GFF文件：
 
-```
+```r
 library(rtracklayer)
 
 # 读取GFF注释文件
@@ -926,7 +934,7 @@ NCBI Gene也查不到，说明这些ID可能是：
 
 ## 尝试其他NCBI数据库：
 
-```
+```r
 library(rentrez)
 
 # 尝试在Nucleotide数据库搜索
@@ -950,7 +958,7 @@ print(search_all)
 
 ## 最直接的解决方案：下载注释文件
 
-```
+```r
 library(rtracklayer)
 library(GenomicFeatures)
 
@@ -1020,7 +1028,7 @@ Entrez search result with 0 hits (object contains 0 IDs and no web_history objec
 
 太好了！在**protein数据库找到了**！现在获取详细信息并批量转换：
 
-```
+```r
 library(rentrez)
 library(dplyr)
 
@@ -1098,7 +1106,7 @@ write.csv(results, "protein_id_mapping.csv", row.names = FALSE)
 
 **更精确的方法 - 使用locus_tag直接获取：**
 
-```
+```r
 library(rentrez)
 
 # 批量获取蛋白质信息
@@ -1164,7 +1172,7 @@ Called from: entrez_check(response)
 
 请求太大了！需要改为逐个查询或使用更小的批次：
 
-```
+```r
 library(rentrez)
 library(dplyr)
 
@@ -1265,7 +1273,7 @@ cat("\n结果已保存到: candida_auris_id_mapping.csv\n")
 
 **如果数据量很大（>1000个ID），建议使用并行处理：**
 
-```
+```r
 library(parallel)
 library(rentrez)
 

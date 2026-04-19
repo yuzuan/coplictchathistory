@@ -24,6 +24,10 @@
 
 同步更新脚本中的保存路径，保持代码与实际一致：
 
+```
+
+```
+
 全部完成。结果汇总：
 
 **文件**: `00_GEO_data_GSE141910/GSE141910_expr_matrix.RData`（23 MB）
@@ -35,8 +39,7 @@
 - 对象类型: `data.frame`
 
 **读取方式**:
-
-```
+```r
 load("GSE141910_expr_matrix.RData")
 # 加载后对象名为 expr_matrix
 dim(expr_matrix)  # 20781 x 366
@@ -52,6 +55,10 @@ dim(expr_matrix)  # 20781 x 366
 
 同步更新脚本中的保存路径，保持代码与实际一致：
 
+```
+
+```
+
 全部完成。结果汇总：
 
 **文件**: `00_GEO_data_GSE141910/GSE141910_expr_matrix.RData`（23 MB）
@@ -63,8 +70,7 @@ dim(expr_matrix)  # 20781 x 366
 - 对象类型: `data.frame`
 
 **读取方式**:
-
-```
+```r
 load("GSE141910_expr_matrix.RData")
 # 加载后对象名为 expr_matrix
 dim(expr_matrix)  # 20781 x 366

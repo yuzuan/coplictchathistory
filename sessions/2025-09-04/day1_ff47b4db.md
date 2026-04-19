@@ -20,13 +20,13 @@
 
 文件是 Conda 的“显式规范”依赖列表，里面全是包的下载链接。要安装这些依赖，推荐用 conda 命令：
 
-```
+```bash
 conda create --name sc_env --file /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day1/sc.env.txt
 ```
 
 这会新建一个名为 `sc_env` 的环境并安装所有依赖。如果你已经有环境，可以用：
 
-```
+```bash
 conda install --file /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day1/sc.env.txt
 ```
 
@@ -92,7 +92,7 @@ Cannot extract package to a case-insensitive file system. Your install destinati
 **解决方法：**
 请在终端依次运行以下命令，接受条款：
 
-```
+```bash
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/main
 conda tos accept --override-channels --channel https://repo.anaconda.com/pkgs/r
 ```
@@ -116,30 +116,26 @@ conda: error: argument COMMAND: invalid choice: 'tos' (choose from 'activate', '
 
 1. **升级 Conda**  
    先升级到最新版 Conda，命令如下：
-
-```
+   ```bash
    conda update -n base -c defaults conda
-```
-
-升级后再试试 `conda tos accept ...` 命令。
+   ```
+   升级后再试试 `conda tos accept ...` 命令。
 
 2. **手动移除相关 channel**  
    如果你不需要官方 channel，可以在 `.condarc` 文件里移除 `https://repo.anaconda.com/pkgs/main` 和 `https://repo.anaconda.com/pkgs/r`，只保留你需要的镜像源（如清华、bioconda、conda-forge）。
 
-编辑 `~/.condarc`，channels 部分只留你需要的，比如：
-
-```
+   编辑 `~/.condarc`，channels 部分只留你需要的，比如：
+   ```yaml
    channels:
      - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
      - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
-```
+   ```
 
 3. **用 mamba 安装**  
    如果你装了 mamba，可以用 mamba 替代 conda，通常不会遇到 TOS 问题：
-
-```
+   ```bash
    mamba env create -f /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day1/sc.env.yml
-```
+   ```
 
 如需具体操作指导，请告知你想采用哪种方式。
 
@@ -152,26 +148,21 @@ conda: error: argument COMMAND: invalid choice: 'tos' (choose from 'activate', '
 你可以手动编辑你的 `~/.condarc` 文件，移除官方 channel，只保留你需要的镜像源。具体步骤如下：
 
 1. 在终端输入以下命令，打开 `.condarc` 文件（如果没有会自动创建）：
-
-```
+   ```bash
    nano ~/.condarc
-```
-
+   ```
 2. 把内容修改为只保留你需要的源，比如：
-
-```
+   ```yaml
    channels:
      - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
      - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
-```
-
+   ```
 3. 保存并退出（nano 下按 `Ctrl+O` 回车保存，`Ctrl+X` 退出）。
 
 4. 重新运行你的环境安装命令：
-
-```
+   ```bash
    conda env create -f /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day1/sc.env.yml
-```
+   ```
 
 这样就不会再提示 TOS 问题。如果还有疑问请继续反馈。
 
@@ -188,7 +179,7 @@ channels:
 
 你的 channels 配置有点问题，应该每个 channel 单独一行，且不要重复或拼接。正确写法如下：
 
-```
+```yaml
 channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
@@ -198,7 +189,7 @@ channels:
 
 建议只保留你需要的镜像源，比如只用清华镜像：
 
-```
+```yaml
 channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
@@ -235,7 +226,7 @@ File Name to write : /Users/yuzuan/.condarc
 
 你的 `.condarc` 文件内容已经正确，只保留了清华镜像源：
 
-```
+```yaml
 channels:
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/bioconda
   - https://mirrors.tuna.tsinghua.edu.cn/anaconda/cloud/conda-forge
@@ -245,7 +236,7 @@ channels:
 
 接下来，重新运行环境安装命令：
 
-```
+```bash
 conda env create -f /Users/yuzuan/Downloads/生信技能树课程/pythonSC/资料/day1/sc.env.yml
 ```
 

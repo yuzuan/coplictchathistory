@@ -34,13 +34,13 @@
 
 文件创建新环境，可以运行以下命令：
 
-```
+```bash
 conda env create -f /Users/yuzuan/Downloads/sc.env.yml
 ```
 
 如果环境已存在并想更新它：
 
-```
+```bash
 conda env update -f /Users/yuzuan/Downloads/sc.env.yml
 ```
 
@@ -58,7 +58,7 @@ conda env update -f /Users/yuzuan/Downloads/sc.env.yml
 
 文件定义了一个名为 `sc` 的环境，但它似乎还没有被创建。如果您昨天尝试安装但没有成功，或者忘记了步骤，可以现在从该文件创建环境：
 
-```
+```bash
 conda env create -f /Users/yuzuan/Downloads/sc.env.yml
 ```
 
@@ -109,10 +109,9 @@ sc2-scrublet 环境已成功删除。
 1. **修改 yml 文件**：移除或更新 Linux 特定的依赖项（例如，去掉精确版本和哈希，只保留包名和通道）。
 
 2. **创建简化环境**：如果不需要所有包，可以手动创建环境：
-
-```
+   ```
    conda create -n sc python=3.13 jupyter matplotlib pandas numpy scipy -c conda-forge
-```
+   ```
 
 3. **使用跨平台 yml**：如果您有原始 Linux 环境的导出，请在 macOS 上重新导出或手动调整。
 
@@ -221,7 +220,7 @@ sc2 环境中安装的空间转录组相关包共有 **7 个**：
 
 这些包要求 zarr 3.x 版本，但环境中安装的是 2.x。要解决，可以尝试更新 zarr 到 3.x 版本：
 
-```
+```bash
 conda activate sc2
 pip install zarr>=3
 ```

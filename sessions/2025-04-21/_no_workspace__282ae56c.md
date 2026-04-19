@@ -87,9 +87,7 @@ Call `lifecycle::last_lifecycle_warnings()` to see where this warning was genera
 
 我需要修改箱线图部分的代码，将`size`参数更改为`linewidth`参数：
 
-`
-
-```
+````
 
 p1 <- ggplot(data_long, aes(x = group, y = value)) +
   # 一半 violin 图
@@ -121,9 +119,7 @@ p1 <- ggplot(data_long, aes(x = group, y = value)) +
   labs(x = "Group", y = "Distance (pixels)",
        title = expression(atop("Distance between macrophage_",
                                paste("VIM"^{"+"}, " cells and T" [reg], " cells"))))
-```
-
-`
+````
 
 ### 👤 User <sub>2025/04/21 22:43</sub>
 
@@ -151,9 +147,7 @@ print"
 
 我看到您的代码中存在括号匹配问题，导致了语法错误。在`summarise()`函数内有一个列表操作没有正确闭合括号。让我帮您修复这个问题：
 
-`
-
-```
+````
 
 quantiles <- seq(0.1, 0.9, by = 0.1)
 
@@ -173,9 +167,7 @@ quantile_data <- data_long %>%
   ungroup()
 
 print(quantile_data)
-```
-
-`
+````
 
 很好，我已经修复了代码中的问题。主要的错误在于`summarise()`函数内的括号没有正确匹配，我添加了缺失的括号并做了以下改动：
 
@@ -222,9 +214,7 @@ Run `rlang::last_trace()` to see where the error occurred.
 
 让我修改代码来解决这个问题：
 
-`
-
-```
+````
 
 quantile_data <- data_long %>%
   group_by(group) %>%
@@ -240,15 +230,12 @@ quantile_data <- data_long %>%
     "P < 0.05", 
     "NS")) %>%
   ungroup()
-```
-
-`
+````
 
 我已经修复了代码中的问题。错误出现在获取`hdquantile()`函数标准误差的方式上。通过检查`hdquantile`函数的行为，我发现当`se=TRUE`时，该函数返回的是一个带有属性的数值向量，而不是一个列表。
 
 修改后的代码使用了正确的语法来获取标准误差：
-
-```
+```r
 se = list(map_dbl(quantiles, ~ attr(hdquantile(value, ., se = TRUE), "se")))
 ```
 

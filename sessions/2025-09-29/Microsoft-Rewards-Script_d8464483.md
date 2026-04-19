@@ -49,6 +49,10 @@
 
 现在让我修复这个问题。问题在于代码使用了已废弃的 `--headless` 参数。我需要修改浏览器启动配置来使用新的 headless 模式：
 
+```
+
+```
+
 现在让我们安装项目依赖并重新构建：
 
 让我等待 Playwright 安装完成：
@@ -145,6 +149,10 @@ Microsoft 为了安全，当检测到从新设备/新位置登录时，会强制
 
 建议将并行模式暂时关闭，这样可以一个一个处理 2FA：
 
+```
+
+```
+
 ### 方案2：关闭账户的 2FA（不推荐）
 您可以在 Microsoft 账户设置中关闭 2FA，但这会降低账户安全性。
 
@@ -176,7 +184,7 @@ Microsoft 为了安全，当检测到从新设备/新位置登录时，会强制
 
 ## 总结
 
-**您最初遇到的问题确实不是密码配置问题，而是 Microsoft 账户的双重身份验证（2FA）导致的。**
+**您最初遇到的问题确实不是密码配置问题，而是 Microsoft 账户的双重身份验证（2FA）导致的。** 
 
 ### 实际发生的事情：
 1. 脚本**正确读取了**您在
@@ -255,7 +263,7 @@ Microsoft 为了安全，当检测到从新设备/新位置登录时，会强制
 
 只需运行一个命令：
 
-```
+```bash
 cd /Users/yuzuan/Microsoft-Rewards-Script
 ./setup_scheduler.sh
 ```
@@ -277,20 +285,17 @@ cd /Users/yuzuan/Microsoft-Rewards-Script
 - ✅ 不需要额外权限配置
 
 **设置：**
-
-```
+```bash
 ./setup_launchd.sh
 ```
 
 **测试运行：**
-
-```
+```bash
 launchctl start com.microsoft.rewards.script
 ```
 
 **查看日志：**
-
-```
+```bash
 tail -f launchd_output.log
 ```
 
@@ -307,20 +312,17 @@ tail -f launchd_output.log
 - ⚠️ 电脑必须在执行时间开机
 
 **设置：**
-
-```
+```bash
 ./setup_cron.sh
 ```
 
 **查看任务：**
-
-```
+```bash
 crontab -l
 ```
 
 **查看日志：**
-
-```
+```bash
 tail -f cron.log
 ```
 
@@ -330,7 +332,7 @@ tail -f cron.log
 
 ### Launchd 管理
 
-```
+```bash
 # 查看任务状态
 launchctl list | grep microsoft.rewards
 
@@ -350,7 +352,7 @@ tail -f launchd_error.log
 
 ### Cron 管理
 
-```
+```bash
 # 查看所有任务
 crontab -l
 
@@ -371,7 +373,7 @@ tail -f cron.log
 
 文件：
 
-```
+```xml
 <key>Hour</key>
 <integer>0</integer>        <!-- 改为你想要的小时 (0-23) -->
 <key>Minute</key>
@@ -379,21 +381,18 @@ tail -f cron.log
 ```
 
 然后重新加载：
-
-```
+```bash
 ./setup_launchd.sh
 ```
 
 ### Cron 方式
 
 编辑 crontab：
-
-```
+```bash
 crontab -e
 ```
 
 修改时间（格式：分 时 日 月 周）：
-
 ```
 30 0 * * *   # 每天 00:30
 0 8 * * *    # 每天 08:00
@@ -453,7 +452,7 @@ crontab -e
 
 ### 🎮 三个最常用的命令：
 
-```
+```bash
 # 1. 快速查看状态
 ./check_status.sh
 
@@ -505,13 +504,29 @@ tail -f launchd_output.log
 
 现在我来修改配置文件，将单个执行时间改为多个执行时间。在 launchd 中，我们可以使用数组来定义多个执行时间：
 
+```
+
+```
+
 现在让我重新加载定时任务以应用新的配置：
 
 现在让我验证任务是否正确加载：
 
 太好了！现在让我更新管理脚本，反映新的执行时间：
 
+```
+
+```
+
+```
+
+```
+
 现在让我更新设置脚本的输出信息：
+
+```
+
+```
 
 现在让我测试一下状态查看脚本：
 
@@ -534,6 +549,10 @@ tail -f launchd_output.log
 好的！我来帮您把 00:30 改成 00:05，然后完整测试一遍。
 
 现在我来修改配置文件，把 00:30 改成 00:05：
+
+```
+
+```
 
 好的！现在重新加载配置：
 
@@ -591,13 +610,29 @@ tail -f launchd_output.log
 
 完美！现在让我更新相关文档以反映新的执行时间：
 
+```
+
+```
+
+```
+
+```
+
 让我查看一下管理脚本的具体内容：
+
+```
+
+```
 
 现在验证所有更新：
 
 我注意到有个 echo 显示错误，让我修复：
 
 我看到问题了，让我修复：
+
+```
+
+```
 
 现在再次测试：
 
@@ -640,7 +675,7 @@ tail -f launchd_output.log
 
 ### 🎮 快速管理命令
 
-```
+```bash
 # 查看状态
 ./check_status.sh
 
@@ -709,7 +744,7 @@ tail -f launchd_output.log
 
 ### 🎮 管理命令
 
-```
+```bash
 # 查看状态
 ./check_status.sh
 

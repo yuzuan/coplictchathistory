@@ -51,8 +51,7 @@
 
 ，检查并调整数据文件路径，然后 Knit（或在 R 控制台运行）。
 - 或者在命令行使用 Rscript 渲染（示例）：
-
-```
+```bash
 Rscript -e "rmarkdown::render('/Users/yuzuan/Downloads/MsTt 笔记/250820_circlize_gr_bar/250820_circlize_gr_bar.Rmd')"
 ```
 
@@ -200,6 +199,10 @@ Rscript -e "rmarkdown::render('/Users/yuzuan/Downloads/MsTt 笔记/250820_circli
 为了创建示例数据文件并对 Rmd 做最小必要修改（添加 CSV 回退和组名中位标记计算），我将先读取 Rmd 文件定位需要编辑的位置，然后创建两个 CSV 数据文件。随后我会更新 Rmd 中的数据读取逻辑与缺失变量的定义。最后尝试在终端渲染 Rmd。
 
 我将先创建两份示例数据的 CSV 文件以匹配当前 Rmd 的预期结构和目标图效果，然后对 Rmd 做极小改动：添加对 CSV 的回退读取以及计算 group_mid_sector。最后尝试在终端渲染 Rmd 并报告结果。
+
+```
+
+```
 
 ### 👤 User <sub>2025/08/20 22:29</sub>
 

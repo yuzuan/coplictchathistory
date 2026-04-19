@@ -19,8 +19,7 @@
 报错原因是**键名不匹配**：
 
 在第6个cell中，执行差异分析时使用了自定义的键名：
-
-```
+```python
 sc.tl.rank_genes_groups(
     adata, 
     groupby='sample_type', 
@@ -31,8 +30,7 @@ sc.tl.rank_genes_groups(
 ```
 
 但在第7个cell（报错的cell）中，尝试用 `key='wilcoxon'` 来获取结果：
-
-```
+```python
 deg_results = sc.get.rank_genes_groups_df(adata, group=None, key='wilcoxon')
 ```
 
@@ -51,8 +49,7 @@ deg_results = sc.get.rank_genes_groups_df(adata, group=None, key='wilcoxon')
 这个新错误 `KeyError: 'names'` 发生在第6个cell中，原因是**参数名写错了**：
 
 在这行代码中：
-
-```
+```python
 sc.tl.rank_genes_groups(
     adata, 
     groupby='sample_type', 
@@ -70,8 +67,7 @@ sc.tl.rank_genes_groups(
 因为使用了错误的参数名，差异分析结果没有正确保存，所以后续调用 `sc.pl.rank_genes_groups()` 时找不到 `'names'` 字段。
 
 **正确写法**应该是：
-
-```
+```python
 sc.tl.rank_genes_groups(
     adata, 
     groupby='sample_type', 
@@ -157,16 +153,14 @@ sc.tl.rank_genes_groups(
 已修复！主要更改：
 
 将颜色映射部分从：
-
-```
+```python
 colors = plt.cm.Set2(range(len(sample_types)))
 color_map = dict(zip(sample_types, colors))
 point_colors = scatter_data['sample_type'].map(color_map)
 ```
 
 改为：
-
-```
+```python
 cmap = plt.cm.Set2
 colors = [cmap(i / len(sample_types)) for i in range(len(sample_types))]
 color_map = dict(zip(sample_types, colors))
