@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:27 |
-| Messages | 55 |
+| Messages | 56 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -283,3 +283,7 @@ TCMSP 的数据表格不是普通 HTML `table`，而是 JavaScript 渲染的 gri
 ### 🤖 Copilot <sub>2026/04/19 16:27</sub>
 
 TCMSP 使用 JavaScript 动态渲染，静态 HTML 没有表格。让我回到浏览器方法——直接导航到淫羊藿详情页，用 JS 提取渲染后的数据：
+
+### 🤖 Copilot <sub>2026/04/19 16:27</sub>
+
+数据出来了！15 行是一页。第 7 列是 OB(%)，第 10 列是 DL。但表格只显示 15 行/页。让我先检查总行数和分页：
