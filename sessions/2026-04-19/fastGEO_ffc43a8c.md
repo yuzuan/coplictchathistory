@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 15:39 |
-| Messages | 19 |
+| Messages | 20 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -122,3 +122,7 @@ Open Targets API 调用出错了——`content()` 参数问题。让我检查代
 ### 🤖 Copilot <sub>2026/04/19 15:38</sub>
 
 语法验证后重新运行：
+
+### 🤖 Copilot <sub>2026/04/19 15:39</sub>
+
+Step 1 (DEG) 成功了，Step 2 读到了文件但 0 个基因，Step 3 缺少中药靶点文件。让我检查一下现有的疾病基因文件：
