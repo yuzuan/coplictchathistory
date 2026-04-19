@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:07 |
-| Messages | 33 |
+| Messages | 34 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -180,3 +180,7 @@ API 列名正确。问题可能是 13 个目标基因查询时返回空导致后
 ### 🤖 Copilot <sub>2026/04/19 16:06</sub>
 
 问题可能在于 `dplyr::select(preferredName_A, preferredName_B, score)` — 当 STRING 返回错误响应时（比如空标识符），`data` 是个有 `Error` 和 `ErrorMessage` 列的 data.frame，没有 `preferredName_A`。但 13 个基因不应该为空。让我看看是否有 `rename` 也需要加前缀：
+
+### 🤖 Copilot <sub>2026/04/19 16:07</sub>
+
+问题是 `dplyr::select` 用了 bare names（`preferredName_A`），但在函数定义外的 select 冲突仍然存在。实际上由于 `dplyr::select` 已经是显式的了，应该能工作。让我直接用 13 个交集基因测试 STRING：
