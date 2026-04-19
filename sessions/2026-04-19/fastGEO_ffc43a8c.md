@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 16:49 |
-| Messages | 80 |
+| Messages | 81 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -383,3 +383,7 @@ TCMSP 没有找到"Taxilli Herba"。让我试试中文名搜索：
 ### 🤖 Copilot <sub>2026/04/19 16:48</sub>
 
 何首乌和龟甲不在 TCMSP 数据库中（共 502 味药）。先处理已有的药材。让我用正确名称搜索桑寄生：
+
+### 🤖 Copilot <sub>2026/04/19 16:49</sub>
+
+桑寄生: 2 个活性成分（sitosterol, quercetin），157 靶点。保存并继续：
