@@ -27,7 +27,7 @@
 
 或者直接编辑用户设置 `settings.json`，加入：
 
-```json
+```
 {
   "update.mode": "none"
 }

@@ -34,9 +34,6 @@
 
 让我来修复这些问题：
 
-```
-
-```
 现在 JSON 语法错误已经修复了，但是出现了一个新的警告。VS Code 提示 MCP 服务器不应该在用户设置中配置，而应该使用专用的 MCP 配置。
 
 ## 修复总结：
@@ -87,9 +84,6 @@
 
 如果你想修复那个小的类型警告，可以这样修改：
 
-```
-
-```
 现在让我检查是否还有其他错误：
 
 完美！现在
@@ -126,9 +120,6 @@
 
 你应该使用在 `inputs` 中定义的变量。根据你的配置，应该引用 `github_token` 这个输入变量。让我修复这个问题：
 
-```
-
-```
 看起来 VS Code 仍然不能识别这个变量。让我检查一下 MCP 配置的正确语法。根据 MCP 的标准配置格式，可能需要调整变量引用方式。
 
 让我再次检查完整的文件来确保理解正确的配置格式：
@@ -176,14 +167,8 @@
 
 ## 建议的正确配置：
 
-```
-
-```
 现在让我修复 `inputs` 部分的描述：
 
-```
-
-```
 现在让我检查最终的配置：
 
 完美！现在你的 Docker 托管 MCP 配置已经正确了。
@@ -232,9 +217,6 @@ VS Code 显示的变量警告可以忽略，这只是静态分析的限制，实
 
 ## 方案 1：使用 npx 运行（推荐）
 
-```
-
-```
 完成！现在你的配置已经从 Docker 托管改为直接使用 npx 运行。
 
 ## 当前配置说明：
@@ -261,7 +243,8 @@ VS Code 显示的变量警告可以忽略，这只是静态分析的限制，实
 如果你更喜欢其他方式，我还可以帮你配置：
 
 **方案 2：本地安装**
-```json
+
+```
 {
   "command": "node",
   "args": ["path/to/server-github/dist/index.js"]
@@ -269,7 +252,8 @@ VS Code 显示的变量警告可以忽略，这只是静态分析的限制，实
 ```
 
 **方案 3：使用 Python 版本**
-```json
+
+```
 {
   "command": "python",
   "args": ["-m", "mcp_server_github"]
@@ -314,7 +298,7 @@ VS Code 显示的变量警告仍然可以忽略，这是正常的静态分析限
 
 我建议安装官方的 GitHub 扩展，这样你就可以直接在 VS Code 中集成 GitHub 功能，而不需要 MCP 服务器：
 
-```vscode-extensions
+```
 github.vscode-pull-request-github,github.vscode-github-actions,github.remotehub
 ```
 
@@ -329,9 +313,6 @@ github.vscode-pull-request-github,github.vscode-github-actions,github.remotehub
 
 如果你确实需要保留 MCP，当前的 npx 配置已经是最简单的方式了：
 
-```
-
-```
 我移除了 `"type": "stdio"` 因为这是默认值。
 
 ## 推荐方案：

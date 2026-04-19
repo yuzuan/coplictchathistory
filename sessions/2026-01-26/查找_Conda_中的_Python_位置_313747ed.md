@@ -155,12 +155,15 @@ ERROR: file:///Users/yuzuan does not appear to be a Python project: neither 'set
 
 可选解决方案（二选一）：
 - 选项 A — 切换到项目根目录（包含 `setup.py` 或 `pyproject.toml`）再安装：
-```bash
+
+```
 cd /path/to/your/project
 pip install -e .
 ```
+
 - 选项 B — 如果你确实想把当前目录作为可编辑包，创建一个最小 `pyproject.toml`，然后安装：
-```bash
+
+```
 cat > pyproject.toml <<'EOF'
 [build-system]
 requires = ["setuptools", "wheel"]
@@ -192,7 +195,8 @@ pip install -e .
 - 要在 `/opt/anaconda3/envs/doclayout_yolo/bin/python` 获取可执行文件，有两种做法：
 
 选项 1（需要管理员权限）—— 在 /opt 下创建目录并安装（我可以为你运行）：
-```bash
+
+```
 sudo mkdir -p /opt/anaconda3
 sudo chown $(whoami) /opt/anaconda3
 conda create --prefix /opt/anaconda3/envs/doclayout_yolo python=3.10 -y
@@ -200,7 +204,8 @@ ls -l /opt/anaconda3/envs/doclayout_yolo/bin/python
 ```
 
 选项 2（推荐，更简单）—— 使用你已有的 mambaforge/miniconda 路径（无需 sudo）：
-```bash
+
+```
 conda create -n doclayout_yolo python=3.10 -y
 conda activate doclayout_yolo
 which python
@@ -259,10 +264,11 @@ pyproject.toml 并安装
   3. 激活环境并运行 `pip install -e /path/to/your_project`。
 
 - 方案 B — 使用 `src` 布局或在 `pyproject.toml` 中显式设置 `packages`/`py_modules`，避免自动发现。例如将源代码放到 `src/`，并在 `pyproject.toml` 中指定：
-  ```
+
+```
   [tool.setuptools.packages.find]
   where = ["src"]
-  ```
+```
 
 我可以现在把一个 minimal 示例项目（`/Users/yuzuan/temp_local_pkg`）创建为 `src` 布局并在环境里可编辑安装，或者你告诉我你的真实项目路径让我去那儿安装。选择：`创建示例并安装` 或 `我提供项目路径`。
 
@@ -337,16 +343,19 @@ pyproject.toml 并安装
 
 - 如何运行推理（示例命令）
   - 激活环境并运行批量脚本（把 `<images_dir>` 换成你的图片文件夹）：
-    ```bash
+
+```
     conda activate doclayout_yolo
     python /Users/yuzuan/Zotero/Figure/predict.py -d <images_dir> -m /Users/yuzuan/Zotero/Figure/models/DocLayout-YOLO-DocStructBench-imgsz1280-2501/doclayout_yolo_docstructbench_imgsz1280_2501.pt
-    ```
-  - SDK 示例（Python）：
-    ```python
+```
+
+- SDK 示例（Python）：
+
+```
     from doclayout_yolo import YOLOv10
     model = YOLOv10("/Users/yuzuan/Zotero/Figure/models/DocLayout-YOLO-DocStructBench-imgsz1280-2501/doclayout_yolo_docstructbench_imgsz1280_2501.pt")
     res = model.predict("path/to/image.png", imgsz=1024, conf=0.2, device="cpu")
-    ```
+```
 
 - 我可以继续为你做的事（请选择一个）
   - 运行一次示例推理（需要你指定包含测试图片的目录，或允许我下载示例图片到项目下的 `assets/example`）。
@@ -380,10 +389,6 @@ pyproject.toml 并安装
 现在我将安装官方 `doclayout-yolo` 包到环境并再次运行推理以验证。
 
 我要修改 `predict.py`，在加载模型前注册安全的反序列化全局类，然后重试推理。
-
-```
-
-```
 
 运行结果：
 - 已安装并注册必要依赖，修改了 `predict.py` 以允许反序列化自定义类。

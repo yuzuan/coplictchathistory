@@ -34,7 +34,7 @@
 
 在 from_Seurat.R 中，聚类结果的转换主要通过 **`obs` 映射**完成：
 
-```r
+```
 # Seurat 对象的细胞元数据（包括聚类结果）→ AnnData 的 obs
 .from_Seurat_guess_obs <- function(seurat_obj, assay_name) {
   # 所有细胞元数据列（包括 seurat_clusters, RNA_snn_res.0.5 等）都会被转换
@@ -51,7 +51,8 @@
 - 这些列会直接复制到 AnnData 的 `obs` 数据框中，保持相同的列名
 
 **示例：**
-```r
+
+```
 # Seurat 对象
 obj$meta.data:
   orig.ident  nCount_RNA  seurat_clusters  RNA_snn_res.0.5  RNA_snn_res.0.8
@@ -65,7 +66,7 @@ adata$obs:
 
 在 as_Seurat.R 中，转换过程是反向的：
 
-```r
+```
 # AnnData 的 obs → Seurat 对象的细胞元数据
 .as_Seurat_guess_object_metadata <- function(adata) {
   # 所有 obs 列都会被转换
@@ -79,7 +80,8 @@ adata$obs:
 - 这些列会被添加到 Seurat 对象的 `obj[[]]` 元数据中
 
 **示例：**
-```r
+
+```
 # AnnData 对象
 adata$obs:
   cell_type  leiden_res_0.5  leiden_res_1.0  louvain_res_0.8
@@ -99,7 +101,7 @@ seurat[[]]:
 - **Seurat 常见命名**:
   - `seurat_clusters`: 默认聚类
   - `<assay>_snn_res.<resolution>`: 多分辨率 SNN 聚类（如 `RNA_snn_res.0.5`）
-  
+
 - **Python scanpy 常见命名**:
   - `leiden`: Leiden 聚类
   - `leiden_res_<resolution>`: 多分辨率 Leiden（如 `leiden_res_0.5`）
@@ -114,7 +116,7 @@ seurat[[]]:
 #### **自定义映射**
 你可以手动指定要转换哪些列：
 
-```r
+```
 # 从 Seurat 转换时只转换特定聚类
 adata <- from_Seurat(
   seurat_obj,
@@ -138,7 +140,7 @@ seurat <- as_Seurat(
 
 在测试文件中可以看到验证过程：
 
-```r
+```
 # test-from_Seurat.R
 for (obs_key in colnames(obj[[]])) {
   test_that(paste0("as_AnnData (Seurat) retains obs key: ", obs_key), {
