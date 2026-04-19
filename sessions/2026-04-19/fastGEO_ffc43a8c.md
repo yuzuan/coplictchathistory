@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/19 15:38 |
-| Messages | 17 |
+| Messages | 18 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -114,3 +114,7 @@ Open Targets API 调用出错了——`content()` 参数问题。让我检查代
 ### 🤖 Copilot <sub>2026/04/19 15:38</sub>
 
 也检查下其他 httr 函数是否有类似冲突（`GET`, `POST`, `status_code`）：
+
+### 🤖 Copilot <sub>2026/04/19 15:38</sub>
+
+加 `httr::` 前缀避免命名空间冲突：
