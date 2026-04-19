@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/19 15:33 |
-| Messages | 12 |
+| End | 2026/04/19 15:34 |
+| Messages | 13 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -89,3 +89,12 @@ Also update the final summary Cytoscape instructions:
 ### 🤖 Copilot <sub>2026/04/19 15:33</sub>
 
 顺序正确。再做一次语法检查：
+
+### 🤖 Copilot <sub>2026/04/19 15:34</sub>
+
+语法检查通过。调整完成：
+
+- **Step 5** → GO/KEGG 富集分析（原 Step 6）
+- **Step 6** → STRING PPI 网络（原 Step 5）
+- 所有输出文件前缀 (`05_`/`06_`) 和 Cytoscape 引用已同步更新
+- Step 7 Hub 基因分析依赖的 `g`（igraph 对象）仍在 PPI 之后，依赖链正确
