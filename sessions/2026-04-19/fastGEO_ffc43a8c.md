@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 01:02 |
-| Messages | 202 |
+| End | 2026/04/21 01:03 |
+| Messages | 203 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1118,3 +1118,17 @@ Firefox 正在下载（约 93MB，当前 10%）。下载会在后台继续，完
 ### 🤖 Copilot <sub>2026/04/21 01:02</sub>
 
 全部下载完成。验证一下安装：
+
+### 🤖 Copilot <sub>2026/04/21 01:03</sub>
+
+Playwright 安装完成，全部验证通过：
+
+| 组件 | 版本 | 状态 |
+|------|------|------|
+| playwright (Python) | 1.58.0 | ✅ |
+| Chromium | v1208 (Chrome 145) | ✅ |
+| Chrome Headless Shell | v1208 | ✅ |
+| Firefox | v1509 (146.0.1) | ✅ |
+| WebKit | v2248 (26.0) | ✅ |
+
+浏览器缓存位于 `~/Library/Caches/ms-playwright/`。
