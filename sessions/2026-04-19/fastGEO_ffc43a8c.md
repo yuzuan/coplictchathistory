@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:43 |
-| Messages | 218 |
+| Messages | 219 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1192,3 +1192,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:43</sub>
 
 没有 git 历史可直接对比，我改为读取这个代码块和它依赖的绘图辅助函数，直接评估修复逻辑本身以及潜在回归点。
+
+### 🤖 Copilot <sub>2026/04/21 13:43</sub>
+
+接下来核对 `gseaplot2()` 的参数和内部表格逻辑，确认这次改动是否真的把长通路名从 pvalue 表里移走，而不是只在标题层面做了换行。
