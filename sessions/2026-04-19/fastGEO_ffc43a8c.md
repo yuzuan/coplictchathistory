@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:48 |
-| Messages | 227 |
+| End | 2026/04/21 13:49 |
+| Messages | 228 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1228,3 +1228,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:48</sub>
 
 原则文件不在技能目录里，我先定位它的实际路径，再继续跑对抗式 reviewer。
+
+### 🤖 Copilot <sub>2026/04/21 13:49</sub>
+
+我改用终端在本机配置目录里定位这些评审原则文件，因为它们不在当前工作区内。
