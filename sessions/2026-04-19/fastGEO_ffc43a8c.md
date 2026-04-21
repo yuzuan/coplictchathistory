@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:40 |
-| Messages | 211 |
+| End | 2026/04/21 13:41 |
+| Messages | 212 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1164,3 +1164,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:40</sub>
 
 修复版 PDF 已生成并转成图片，接下来直接看图确认 pvalue/p.adjust 是否完整显示。
+
+### 🤖 Copilot <sub>2026/04/21 13:41</sub>
+
+代码已经改好，且单独验证图里 pvalue 和 p.adjust 已完整显示。现在补一次整份 Rmd 的渲染验证，并清掉临时预览文件。
