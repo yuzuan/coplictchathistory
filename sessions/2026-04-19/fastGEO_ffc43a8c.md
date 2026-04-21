@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:37 |
-| Messages | 207 |
+| End | 2026/04/21 13:38 |
+| Messages | 208 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1148,3 +1148,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:37</sub>
 
 这一步是确认 gseaplot2 如何放置 pvalue 表，以及现有 PDF 是否确实被标题挤压，结果会直接决定改标题还是改版式。
+
+### 🤖 Copilot <sub>2026/04/21 13:38</sub>
+
+准备做最小修复：去掉单通路 pvalue 表里重复的行名，并把长通路标题换成换行标题，避免把 pvalue / p.adjust 挤掉。
