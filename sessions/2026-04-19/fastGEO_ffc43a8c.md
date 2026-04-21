@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:43 |
-| Messages | 219 |
+| End | 2026/04/21 13:44 |
+| Messages | 220 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1196,3 +1196,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:43</sub>
 
 接下来核对 `gseaplot2()` 的参数和内部表格逻辑，确认这次改动是否真的把长通路名从 pvalue 表里移走，而不是只在标题层面做了换行。
+
+### 🤖 Copilot <sub>2026/04/21 13:44</sub>
+
+现在看表格实际是用 `annotation_custom()` 叠加到富集曲线面板里，下一步确认这个表格是否仍可能被设备边界裁切，以及去掉 rownames 后列宽是否稳定。
