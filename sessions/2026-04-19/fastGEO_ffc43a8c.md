@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:37 |
-| Messages | 206 |
+| Messages | 207 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1144,3 +1144,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:37</sub>
 
 已经定位到问题区段，在 7b 这两个 chunk。下一步我先确认 gseaplot2 的参数和标题/表格布局行为，再做最小修复。
+
+### 🤖 Copilot <sub>2026/04/21 13:37</sub>
+
+这一步是确认 gseaplot2 如何放置 pvalue 表，以及现有 PDF 是否确实被标题挤压，结果会直接决定改标题还是改版式。
