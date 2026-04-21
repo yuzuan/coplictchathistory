@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:39 |
-| Messages | 209 |
+| Messages | 210 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1156,3 +1156,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:39</sub>
 
 先核对补丁是否落在正确位置，然后只重跑目标通路这个 chunk 生成新图验证显示。
+
+### 🤖 Copilot <sub>2026/04/21 13:39</sub>
+
+现在只重跑问题通路，生成一份修复后的单独 PDF，再转成 PNG 目测确认表格没有被截断。
