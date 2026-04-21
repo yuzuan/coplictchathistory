@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:44 |
-| Messages | 220 |
+| End | 2026/04/21 13:45 |
+| Messages | 221 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1200,3 +1200,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:44</sub>
 
 现在看表格实际是用 `annotation_custom()` 叠加到富集曲线面板里，下一步确认这个表格是否仍可能被设备边界裁切，以及去掉 rownames 后列宽是否稳定。
+
+### 🤖 Copilot <sub>2026/04/21 13:45</sub>
+
+代码层面已经确认这次改动确实把长通路名从表格行名里移除了。我再看一下当前目录里有没有这段输出的成品图，方便判断是否还存在设备裁切或标题挤压。
