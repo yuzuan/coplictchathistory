@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:47 |
-| Messages | 224 |
+| End | 2026/04/21 13:48 |
+| Messages | 225 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1216,3 +1216,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:47</sub>
 
 我再核对合并图，因为紧邻的合并调用仍保留默认 rownames；如果用户把“修复已完成”理解为这一区域全部 GSEA 图都不再截断，这里可能还是遗漏点。
+
+### 🤖 Copilot <sub>2026/04/21 13:48</sub>
+
+按当前全局规则，代码评审需要走 adversarial-review 流程。我先读这个技能说明，确认这里应怎样执行。
