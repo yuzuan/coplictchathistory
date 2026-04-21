@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:38 |
-| Messages | 208 |
+| End | 2026/04/21 13:39 |
+| Messages | 209 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1152,3 +1152,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:38</sub>
 
 准备做最小修复：去掉单通路 pvalue 表里重复的行名，并把长通路标题换成换行标题，避免把 pvalue / p.adjust 挤掉。
+
+### 🤖 Copilot <sub>2026/04/21 13:39</sub>
+
+先核对补丁是否落在正确位置，然后只重跑目标通路这个 chunk 生成新图验证显示。
