@@ -26,3 +26,5 @@ INFO [2026-04-14 18:36:43] Done.
 GPL16043 确实不在已有注释列表中。GPL16043 = Affymetrix PrimeView（和 GPL15207 是同一款芯片，不同 GPL 编号）。用 `primeview.db` 构建注释即可。
 
 GPL16043 确实不在已有注释列表中。GPL16043 = Affymetrix PrimeView（和 GPL15207 是同一款芯片，不同 GPL 编号）。用 `primeview.db` 构建注释即可。
+
+GPL16043 确实不在已有注释列表中。GPL16043 = Affymetrix PrimeView（和 GPL15207 是同一款芯片，不同 GPL 编号）。用 `primeview.db` 构建注释即可。
