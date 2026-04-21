@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:45 |
-| Messages | 222 |
+| End | 2026/04/21 13:46 |
+| Messages | 223 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1208,3 +1208,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:45</sub>
 
 有单独导出的 GSEA PDF，我准备直接看其中最长通路那张，确认显示结果而不是只停留在源码推断。
+
+### 🤖 Copilot <sub>2026/04/21 13:46</sub>
+
+浏览器页无法直接读取内容，我改用文档提取来检查导出的 PDF 文本，重点看 pvalue 表字段是否完整出现。
