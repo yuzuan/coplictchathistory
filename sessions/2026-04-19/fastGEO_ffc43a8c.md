@@ -5,8 +5,8 @@
 | Session ID | `ffc43a8c-be44-41a2-b896-20b94096e02a` |
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
-| End | 2026/04/21 13:55 |
-| Messages | 235 |
+| End | 2026/04/21 13:56 |
+| Messages | 236 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1260,3 +1260,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:55</sub>
 
 你这个补充问题需要一点验证。我先把当前输入重新算一遍目标通路的 GSEA 结果，确认现在到底是哪组数值，然后再解释为什么会和上一版不一致。
+
+### 🤖 Copilot <sub>2026/04/21 13:56</sub>
+
+当前重算出来的数值和目录里现有 PDF 也对不上，说明问题不只是“排版修复”。我再核对一下 gseKEGG 本身是否带随机性参数。
