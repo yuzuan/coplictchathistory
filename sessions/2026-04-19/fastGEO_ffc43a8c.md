@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:56 |
-| Messages | 236 |
+| Messages | 237 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1264,3 +1264,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:56</sub>
 
 当前重算出来的数值和目录里现有 PDF 也对不上，说明问题不只是“排版修复”。我再核对一下 gseKEGG 本身是否带随机性参数。
+
+### 🤖 Copilot <sub>2026/04/21 13:56</sub>
+
+gseKEGG 默认就是 seed = FALSE。我再做一个最小复现：同一输入连续跑两次，看看数值会不会自己漂移。
