@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:43 |
-| Messages | 217 |
+| Messages | 218 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1188,3 +1188,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:43</sub>
 
 先查看这个文件的改动和目标代码块上下文，确认修复点是否真的覆盖了长通路名导致的 pvalue/p.adjust 截断问题，以及是否引入新的版式风险。
+
+### 🤖 Copilot <sub>2026/04/21 13:43</sub>
+
+没有 git 历史可直接对比，我改为读取这个代码块和它依赖的绘图辅助函数，直接评估修复逻辑本身以及潜在回归点。
