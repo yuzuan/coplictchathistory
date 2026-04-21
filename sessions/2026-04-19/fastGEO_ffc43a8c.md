@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:45 |
-| Messages | 221 |
+| Messages | 222 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1204,3 +1204,7 @@ Do a concise read-only code review of the change in /Users/yuzuan/Desktop/fastGE
 ### 🤖 Copilot <sub>2026/04/21 13:45</sub>
 
 代码层面已经确认这次改动确实把长通路名从表格行名里移除了。我再看一下当前目录里有没有这段输出的成品图，方便判断是否还存在设备裁切或标题挤压。
+
+### 🤖 Copilot <sub>2026/04/21 13:45</sub>
+
+有单独导出的 GSEA PDF，我准备直接看其中最长通路那张，确认显示结果而不是只停留在源码推断。
