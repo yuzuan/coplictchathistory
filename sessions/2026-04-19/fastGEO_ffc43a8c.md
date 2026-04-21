@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/19 15:13 |
 | End | 2026/04/21 13:40 |
-| Messages | 210 |
+| Messages | 211 |
 | Copilot | v0.44.1 |
 | VS Code | v1.116.0 |
 
@@ -1160,3 +1160,7 @@ Playwright 安装完成，全部验证通过：
 ### 🤖 Copilot <sub>2026/04/21 13:39</sub>
 
 现在只重跑问题通路，生成一份修复后的单独 PDF，再转成 PNG 目测确认表格没有被截断。
+
+### 🤖 Copilot <sub>2026/04/21 13:40</sub>
+
+修复版 PDF 已生成并转成图片，接下来直接看图确认 pvalue/p.adjust 是否完整显示。
