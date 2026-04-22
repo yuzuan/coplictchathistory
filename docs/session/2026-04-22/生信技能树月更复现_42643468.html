@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>请只读探索工作区中的参考 notebook /Users/yuzuan/Downloads/生信技能树月更复现/snGBM/1_snRNA_process...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 84 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 85 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-22/生信技能树月更复现_42643468.md">Markdown</a>
@@ -3163,6 +3163,66 @@ rna_merged.obs[&#39;celltype&#39;] = rna_merged.obs[&#39;leiden_0.5&#39;].map(cl
   &quot;editType&quot;: &quot;insert&quot;,
   &quot;language&quot;: &quot;markdown&quot;,
   &quot;newCode&quot;: &quot;## 10. 互斥 marker 共表达检查&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/22 18:20</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">这格负责生成共表达摘要表，并把每组 marker 对应的共表达标签写到 <code class="inline-code">adata.obs</code>。这样下一格画 UMAP 时不需要再重复算一次。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/0_integrate_two_datasets.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-d7516cb1&quot;,
+  &quot;editType&quot;: &quot;insert&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: [
+    &quot;exclusive_pairs = [(&#39;CD3D&#39;, &#39;APOE&#39;), (&#39;OLIG1&#39;, &#39;FCN1&#39;), (&#39;VWF&#39;, &#39;CD68&#39;), (&#39;GFAP&#39;, &#39;FCN1&#39;)]&quot;,
+    &quot;expr_cutoff = 1.0&quot;,
+    &quot;pair_rows = []&quot;,
+    &quot;pair_cols = []&quot;,
+    &quot;&quot;,
+    &quot;for g1, g2 in exclusive_pairs:&quot;,
+    &quot;    if g1 not in adata.var_names or g2 not in adata.var_names:&quot;,
+    &quot;        continue&quot;,
+    &quot;    x1 = adata[:, g1].X&quot;,
+    &quot;    x2 = adata[:, g2].X&quot;,
+    &quot;    if sparse.issparse(x1):&quot;,
+    &quot;        x1 = x1.toarray().ravel()&quot;,
+    &quot;        x2 = x2.toarray().ravel()&quot;,
+    &quot;    else:&quot;,
+    &quot;        x1 = np.asarray(x1).ravel()&quot;,
+    &quot;        x2 = np.asarray(x2).ravel()&quot;,
+    &quot;    coexpr = (x1 &gt; expr_cutoff) &amp; (x2 &gt; expr_cutoff)&quot;,
+    &quot;    col = f&#39;coexpr_{g1}_{g2}&#39;&quot;,
+    &quot;    adata.obs[col] = pd.Categorical(np.where(coexpr, &#39;coexpr&#39;, &#39;other&#39;))&quot;,
+    &quot;    pair_cols.append((col, f&#39;{g1}+ / {g2}+&#39;))&quot;,
+    &quot;    pair_rows.append({&quot;,
+    &quot;        &#39;pair&#39;: f&#39;{g1}+ / {g2}+&#39;,&quot;,
+    &quot;        &#39;n_coexpr&#39;: int(coexpr.sum()),&quot;,
+    &quot;        &#39;frac&#39;: float(coexpr.mean()),&quot;,
+    &quot;        &#39;top_celltype&#39;: adata.obs.loc[coexpr, &#39;celltype_refined&#39;].value_counts().index[0] if coexpr.sum() &gt; 0 else &#39;None&#39;,&quot;,
+    &quot;    })&quot;,
+    &quot;&quot;,
+    &quot;pair_df = pd.DataFrame(pair_rows)&quot;,
+    &quot;pair_df.to_csv(WRITE_DIR / &#39;exclusive_marker_coexpression_summary.csv&#39;, index=False)&quot;,
+    &quot;pair_df&quot;
+  ]
 }</code></pre>
   </div></div>
   </details>
