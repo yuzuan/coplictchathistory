@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/22 20:52 |
 | End | 2026/04/22 20:54 |
-| Messages | 3 |
+| Messages | 4 |
 | Copilot | v0.44.2 |
 | VS Code | v1.116.0 |
 
@@ -23,3 +23,7 @@
 ### 🤖 Copilot <sub>2026/04/22 20:54</sub>
 
 已经确认问题点了：GPL16686 从 GEO 拿到的平台表只有坐标、GB_ACC 之类字段，没有 gene symbol 列，所以不能直接从 a2@dataTable@table 里抽出 ID-SYMBOL。我要再做一步验证，确认用 hugene20sttranscriptcluster.db 的 PROBEID→SYMBOL 映射能直接对上这些 ID，然后把可运行代码给你。
+
+### 🤖 Copilot <sub>2026/04/22 20:54</sub>
+
+映射已经验证通了，确实应走 AnnotationDbi + hugene20sttranscriptcluster.db，而不是直接用 GPL 表。这个平台是一对多映射比较常见，同一个 ID 可能对应多个 SYMBOL，所以我再看一下仓库里之前对类似问题是保留第一条，还是把多个 symbol 合并成一个字符串。
