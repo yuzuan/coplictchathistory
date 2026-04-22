@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>请只读探索工作区中的参考 notebook /Users/yuzuan/Downloads/生信技能树月更复现/snGBM/1_snRNA_process...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 47 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 49 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-22/生信技能树月更复现_42643468.md">Markdown</a>
@@ -1744,6 +1744,49 @@
   &quot;query&quot;: &quot;rank_genes_groups|sc.tl.rank_genes&quot;,
   &quot;isRegexp&quot;: true,
   &quot;includePattern&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/snGBM/1_snRNA_processing.ipynb&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/22 16:32</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根据对 snGBM/1_snRNA_processing.ipynb 后半部分的完整探索，以下是结构化摘要：</p><p class="message-paragraph">---</p><p class="message-paragraph">## **结构化摘总结**</p><p class="message-paragraph">### **1. marker_gene_sets 键与值风格**</p><p class="message-paragraph">- **格式**: <code class="inline-code">dict[str, list[str]]</code><br>- **13 个细胞类型键**：</p><pre class="message-code-block"><code>  Oligodendrocyte, MES-like, AC-like, OPC-like, NPC-like
+  NK/T, Prol.NK/T
+  Pericyte, Endothelial
+  Monocyte, Microglia, Macrophage, CDC, Neutrophil</code></pre><p class="message-paragraph">- **基因数量**: 4-11 个/类型（平均 6-8 个）<br>- **值示例**: <code class="inline-code">&quot;Oligodendrocyte&quot;: [&quot;MAG&quot;, &quot;CLDN11&quot;, &quot;APLP1&quot;, ...]</code>（成熟标志）vs <code class="inline-code">&quot;MES-like&quot;: [&quot;VIM&quot;, &quot;CD44&quot;, &quot;CHI3L1&quot;, ...]</code>（间充质标志）</p><p class="message-paragraph">---</p><p class="message-paragraph">### **2. 核心自动打分/注释步骤与列名**</p><p class="message-paragraph">| 步骤 | 代码方式 | 生成列名 |<br>|------|--------|---------|<br>| **单步打分** | <code class="inline-code">sc.tl.score_genes(rna_merged, present, score_name=f&#39;score_{ct}&#39;)</code> | <code class="inline-code">score_Oligodendrocyte</code>, <code class="inline-code">score_MES-like</code> ... (13 列) |<br>| **置信度** | <code class="inline-code">top1 - top2</code> (score 前两名分差) | <code class="inline-code">annotation_confidence</code> |<br>| **单细胞预测** | <code class="inline-code">scores_df.idxmax()</code> 替换前缀 | <code class="inline-code">predicted_celltype</code> |<br>| **Cluster 多数投票** | 按 <code class="inline-code">leiden_0.5</code> groupby，非 Ambiguous cells 投票 | <code class="inline-code">celltype</code> (最终注释，Cluster级别) |<br>| **低置信阈值** | <code class="inline-code">score_diff &lt; 0.05</code> → 标记为 &#39;Ambiguous&#39; | <code class="inline-code">predicted_celltype</code> 更新为 &#39;Ambiguous&#39; |</p><p class="message-paragraph">---</p><p class="message-paragraph">### **3. 使用的可视化方法**</p><p class="message-paragraph">| 可视化类型 | 代码 | 关键参数 |<br>|-----------|------|--------|<br>| **Dotplot** | <code class="inline-code">sc.pl.dotplot(rna_merged, var_names=available, groupby=&#39;celltype&#39;, standard_scale=&#39;var&#39;, dendrogram=True)</code> | 按细胞类型或 leiden_0.5 分组 |<br>| **UMAP** | <code class="inline-code">sc.pl.umap(rna_merged, color=[&#39;leiden_0.5&#39;, &#39;celltype&#39;, &#39;dataset&#39;, &#39;tissue_unified&#39;])</code> | 4 个多面板 |<br>| **增强 UMAP** | <code class="inline-code">enhance_umap(rna_merged, color=&#39;celltype&#39;)</code> 自定义函数 | KDE 轮廓 + 标签排斥 + 百分比标注 + 科研风箭头 |<br>| **Rank Genes** | <code class="inline-code">sc.pl.rank_genes_groups(rna_merged, n_genes=15, key=&#39;tissue_deg_merged&#39;, sharey=False)</code> | Tumor vs Peritumoral DEG 可视化 |<br>| **CNV 热图** | <code class="inline-code">cnv.pl.chromosome_heatmap(adata_sub, groupby=&#39;celltype&#39;)</code> | 按细胞类型着色 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### **4. 依赖 rna_merged 或 leiden_0.5 需要改名的代码**</p><p class="message-paragraph">| 依赖对象 | 使用场景 | 需要改名策略 |<br>|---------|---------|-----------|<br>| **<code class="inline-code">rna_merged</code>** | 几乎全部打分、注释、可视化操作 | → 当前 notebook 改为目标 adata 名称（如 <code class="inline-code">adata_merged</code> 或 <code class="inline-code">rna_3loc</code>) |<br>| **<code class="inline-code">leiden_0.5</code>** | Cluster 多数投票、CNV 分析中的 Cluster 1/6/11/14 聚焦 | → 改为当前 notebook 使用的 leiden 键 (可能是 <code class="inline-code">leiden</code> 或 <code class="inline-code">leiden_0.5_3loc</code>) |<br>| **<code class="inline-code">tissue_unified</code>** | 所有 Tumor vs Peritumoral 对比 | → 检查当前 notebook 中该列是否存在，若列名不同需统一 |<br>| **<code class="inline-code">dataset</code>** | 数据来源区分 | → 若当前 notebook 有不同的批次键，需映射 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### **5. 建议最小迁移的 4-6 个 Cell**</p><p class="message-paragraph">| Cell 序号 | 功能 | 代码行 | 为什么关键 |<br>|---------|------|------|-----------|<br>| **Cell 1** | 定义 marker_gene_sets | ~534-560 | 核心知识库，直接复用 |<br>| **Cell 2** | 检查基因集重叠 + 警告 | ~563-575 | 质控，防止重复基因干扰打分 |<br>| **Cell 3** | 打分 + 置信度 + 多数投票 | ~578-604 | **最关键**：生成 <code class="inline-code">predicted_celltype</code> 和 <code class="inline-code">celltype</code> |<br>| **Cell 4** | Dotplot 可视化(marker展示) | ~633-643 | 验证注释质量，直观检查 marker 表达 |<br>| **Cell 5** | UMAP 可视化 + 增强版 | ~665-789 | 展示全景注释结果 |<br>| **Cell 6**（可选）| rank_genes_groups + DEG统计 | ~1025-1061 | 获取 Tumor vs Peritumoral DEG，进一步验证注释 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### **关键适配建议**</p><p class="message-paragraph">✓ **必改**: <code class="inline-code">rna_merged</code> → 当前 adata 名称  <br>✓ **必改**: <code class="inline-code">leiden_0.5</code> → 当前 leiden 键名  <br>✓ **必改**: <code class="inline-code">tissue_unified</code> → 检查当前列是否存在  <br>✓ **可选**: 保留 <code class="inline-code">enhance_umap()</code> 自定义函数（行 681-789），或直接用简化 <code class="inline-code">sc.pl.umap()</code>  <br>✓ **可选**: 整合 Cell 6 的 <code class="inline-code">rank_genes_groups</code> 进行细胞类型内 DEG 验证</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/22 16:32</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我已经拿到参考流程的骨架了。现在回到当前 notebook 看第 7 节末尾到底写没写 <code class="inline-code">adata2.h5ad</code>、以及注释应该接在 UMAP 后还是保存前，避免把新注释加在错误的位置。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">read_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/0_integrate_two_datasets.ipynb&quot;,
+  &quot;startLine&quot;: 495,
+  &quot;endLine&quot;: 560
 }</code></pre>
   </div></div>
   </details>
