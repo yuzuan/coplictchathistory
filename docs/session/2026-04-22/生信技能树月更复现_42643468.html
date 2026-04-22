@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>请只读探索工作区中的参考 notebook /Users/yuzuan/Downloads/生信技能树月更复现/snGBM/1_snRNA_process...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 112 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 15:53 · 113 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-22/生信技能树月更复现_42643468.md">Markdown</a>
@@ -4322,6 +4322,134 @@ fig, ax = enhance_umap(
     <span class="tool-call-name">copilot_getNotebookSummary</span>
     <pre class="tool-call-args"><code>{
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/0_integrate_two_datasets.ipynb&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/22 18:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我只改函数内部的标签放置，不动你已经验证过的配色、轮廓和图例。现在加入一个轻量避让：大群优先占中心，小群若太靠近就按固定步长错开，并画一条细引导线连回群中心。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/0_integrate_two_datasets.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-45d1269d&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: [
+    &quot;from matplotlib.colors import to_hex&quot;,
+    &quot;from scipy.stats import gaussian_kde&quot;,
+    &quot;&quot;,
+    &quot;def enhance_umap_minimal(adata, color, title, filename, figsize=(8, 8), size=8):&quot;,
+    &quot;    coords = adata.obsm[&#39;X_umap&#39;]&quot;,
+    &quot;    groups = adata.obs[color].astype(&#39;category&#39;)&quot;,
+    &quot;    categories = groups.cat.categories.tolist()&quot;,
+    &quot;&quot;,
+    &quot;    if f&#39;{color}_colors&#39; in adata.uns and len(adata.uns[f&#39;{color}_colors&#39;]) &gt;= len(categories):&quot;,
+    &quot;        palette = adata.uns[f&#39;{color}_colors&#39;][:len(categories)]&quot;,
+    &quot;    else:&quot;,
+    &quot;        cmap = plt.cm.get_cmap(&#39;tab20&#39;, len(categories))&quot;,
+    &quot;        palette = [to_hex(cmap(i)) for i in range(len(categories))]&quot;,
+    &quot;&quot;,
+    &quot;    pct = groups.value_counts(normalize=True).reindex(categories).fillna(0) * 100&quot;,
+    &quot;&quot;,
+    &quot;    fig, ax = plt.subplots(figsize=figsize)&quot;,
+    &quot;    ax.scatter(&quot;,
+    &quot;        coords[:, 0], coords[:, 1],&quot;,
+    &quot;        s=size, c=&#39;#d9d9d9&#39;, alpha=0.25, linewidths=0, rasterized=True,&quot;,
+    &quot;    )&quot;,
+    &quot;&quot;,
+    &quot;    label_info = []&quot;,
+    &quot;    for i, cat in enumerate(categories):&quot;,
+    &quot;        mask = (groups == cat).to_numpy()&quot;,
+    &quot;        pts = coords[mask]&quot;,
+    &quot;        ax.scatter(&quot;,
+    &quot;            pts[:, 0], pts[:, 1],&quot;,
+    &quot;            s=size, c=palette[i], alpha=0.85, linewidths=0, rasterized=True,&quot;,
+    &quot;            label=f&#39;{cat} ({pct[cat]:.1f}%)&#39;,&quot;,
+    &quot;        )&quot;,
+    &quot;        if pts.shape[0] &gt;= 300:&quot;,
+    &quot;            try:&quot;,
+    &quot;                xy = pts.T&quot;,
+    &quot;                kde = gaussian_kde(xy, bw_method=0.3)&quot;,
+    &quot;                x_min, y_min = pts.min(axis=0) - 0.5&quot;,
+    &quot;                x_max, y_max = pts.max(axis=0) + 0.5&quot;,
+    &quot;                xx, yy = np.mgrid[x_min:x_max:80j, y_min:y_max:80j]&quot;,
+    &quot;                zz = kde(np.vstack([xx.ravel(), yy.ravel()])).reshape(xx.shape)&quot;,
+    &quot;                ax.contour(&quot;,
+    &quot;                    xx, yy, zz,&quot;,
+    &quot;                    levels=[zz.max() * 0.15],&quot;,
+    &quot;                    colors=[palette[i]], linewidths=1.0, linestyles=&#39;--&#39;, alpha=0.5,&quot;,
+    &quot;                )&quot;,
+    &quot;            except Exception:&quot;,
+    &quot;                pass&quot;,
+    &quot;        if pts.shape[0] &gt;= 80:&quot;,
+    &quot;            label_info.append({&quot;,
+    &quot;                &#39;cat&#39;: cat,&quot;,
+    &quot;                &#39;center&#39;: np.median(pts, axis=0),&quot;,
+    &quot;                &#39;color&#39;: palette[i],&quot;,
+    &quot;                &#39;n&#39;: pts.shape[0],&quot;,
+    &quot;            })&quot;,
+    &quot;&quot;,
+    &quot;    x0, x1 = ax.get_xlim()&quot;,
+    &quot;    y0, y1 = ax.get_ylim()&quot;,
+    &quot;    dx, dy = x1 - x0, y1 - y0&quot;,
+    &quot;    step_x = 0.035 * dx&quot;,
+    &quot;    step_y = 0.035 * dy&quot;,
+    &quot;    min_dx = 0.06 * dx&quot;,
+    &quot;    min_dy = 0.05 * dy&quot;,
+    &quot;    placed = []&quot;,
+    &quot;&quot;,
+    &quot;    for j, info in enumerate(sorted(label_info, key=lambda x: x[&#39;n&#39;], reverse=True)):&quot;,
+    &quot;        center = info[&#39;center&#39;]&quot;,
+    &quot;        x_lab, y_lab = center[0], center[1]&quot;,
+    &quot;        tries = 0&quot;,
+    &quot;        while any(abs(x_lab - px) &lt; min_dx and abs(y_lab - py) &lt; min_dy for px, py in placed) and tries &lt; 12:&quot;,
+    &quot;            level = tries // 2 + 1&quot;,
+    &quot;            sign_y = 1 if tries % 2 == 0 else -1&quot;,
+    &quot;            sign_x = 1 if j % 2 == 0 else -1&quot;,
+    &quot;            x_lab = center[0] + sign_x * level * step_x&quot;,
+    &quot;            y_lab = center[1] + sign_y * level * step_y&quot;,
+    &quot;            tries += 1&quot;,
+    &quot;        placed.append((x_lab, y_lab))&quot;,
+    &quot;        if abs(x_lab - center[0]) &gt; 0.01 * dx or abs(y_lab - center[1]) &gt; 0.01 * dy:&quot;,
+    &quot;            ax.plot([center[0], x_lab], [center[1], y_lab], color=info[&#39;color&#39;], lw=0.8, alpha=0.7)&quot;,
+    &quot;        ax.text(&quot;,
+    &quot;            x_lab, y_lab, info[&#39;cat&#39;],&quot;,
+    &quot;            fontsize=9, weight=&#39;bold&#39;, ha=&#39;center&#39;, va=&#39;center&#39;, color=&#39;black&#39;,&quot;,
+    &quot;            bbox=dict(boxstyle=&#39;round,pad=0.2&#39;, fc=&#39;white&#39;, ec=&#39;none&#39;, alpha=0.75),&quot;,
+    &quot;        )&quot;,
+    &quot;&quot;,
+    &quot;    origin = (x0 + 0.06 * dx, y0 + 0.08 * dy)&quot;,
+    &quot;    ax.annotate(&#39;&#39;, xy=(origin[0] + 0.10 * dx, origin[1]), xytext=origin, arrowprops=dict(arrowstyle=&#39;-&gt;&#39;, lw=1.2, color=&#39;black&#39;))&quot;,
+    &quot;    ax.annotate(&#39;&#39;, xy=(origin[0], origin[1] + 0.10 * dy), xytext=origin, arrowprops=dict(arrowstyle=&#39;-&gt;&#39;, lw=1.2, color=&#39;black&#39;))&quot;,
+    &quot;    ax.text(origin[0] + 0.10 * dx, origin[1] - 0.03 * dy, &#39;UMAP1&#39;, fontsize=10)&quot;,
+    &quot;    ax.text(origin[0] - 0.03 * dx, origin[1] + 0.10 * dy, &#39;UMAP2&#39;, fontsize=10, rotation=90)&quot;,
+    &quot;&quot;,
+    &quot;    ax.set_xticks([])&quot;,
+    &quot;    ax.set_yticks([])&quot;,
+    &quot;    for spine in ax.spines.values():&quot;,
+    &quot;        spine.set_visible(False)&quot;,
+    &quot;    ax.set_title(title, fontsize=16)&quot;,
+    &quot;    ax.legend(loc=&#39;center left&#39;, bbox_to_anchor=(1.02, 0.5), frameon=False, fontsize=9, markerscale=2)&quot;,
+    &quot;    plt.tight_layout()&quot;,
+    &quot;    plt.savefig(FIG_DIR / filename, dpi=300, bbox_inches=&#39;tight&#39;)&quot;,
+    &quot;    plt.show()&quot;
+  ]
 }</code></pre>
   </div></div>
   </details>
