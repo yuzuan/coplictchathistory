@@ -5,8 +5,8 @@
 | Session ID | `72e1e0fb-bd00-48e4-b735-79b97734cb05` |
 | Workspace | fastGEO |
 | Start | 2026/04/22 20:52 |
-| End | 2026/04/22 20:54 |
-| Messages | 4 |
+| End | 2026/04/22 20:55 |
+| Messages | 5 |
 | Copilot | v0.44.2 |
 | VS Code | v1.116.0 |
 
@@ -27,3 +27,7 @@
 ### 🤖 Copilot <sub>2026/04/22 20:54</sub>
 
 映射已经验证通了，确实应走 AnnotationDbi + hugene20sttranscriptcluster.db，而不是直接用 GPL 表。这个平台是一对多映射比较常见，同一个 ID 可能对应多个 SYMBOL，所以我再看一下仓库里之前对类似问题是保留第一条，还是把多个 symbol 合并成一个字符串。
+
+### 🤖 Copilot <sub>2026/04/22 20:55</sub>
+
+我把答案收束到可直接运行的方案了，现在只差补两个精确定位：仓库里现成脚本对应哪几行，以及给你一个最稳妥的一对多处理写法。然后我就直接把最终代码和注意点给你。
