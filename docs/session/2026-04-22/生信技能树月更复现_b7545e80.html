@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>只做只读规划，不写代码。目标：按照 /Users/yuzuan/Downloads/生信技能树月更复现/scGBM/0_integrate_two_dat...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 14:39 · 57 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/22 14:39 · 58 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-22/生信技能树月更复现_b7545e80.md">Markdown</a>
@@ -1838,6 +1838,34 @@
   &quot;editType&quot;: &quot;edit&quot;,
   &quot;language&quot;: &quot;python&quot;,
   &quot;newCode&quot;: &quot;import gzip\nfrom scipy.io import mmread\n\ndef read_selected_barcodes(barcode_file, keep_idx):\n    keep_idx = np.asarray(keep_idx, dtype=int)\n    barcodes = []\n    ptr = 0\n    with gzip.open(barcode_file, \&quot;rt\&quot;) as handle:\n        for i, line in enumerate(handle):\n            if ptr &gt;= len(keep_idx):\n                break\n            if i == keep_idx[ptr]:\n                barcodes.append(line.strip())\n                ptr += 1\n    return barcodes\n\ndef load_raw_matrix_sample(matrix_file, feature_file, barcode_file):\n    matrix = mmread(gzip.open(matrix_file)).tocsr()\n    counts = np.asarray(matrix.sum(axis=0)).ravel()\n    n_genes = np.asarray((matrix &gt; 0).sum(axis=0)).ravel()\n    keep = (counts &gt;= min_umi) &amp; (n_genes &gt;= min_genes)\n    keep_idx = np.flatnonzero(keep)\n    barcodes = read_selected_barcodes(barcode_file, keep_idx)\n\n    features = pd.read_csv(feature_file, sep=\&quot;\\t\&quot;, header=None)\n    var = pd.DataFrame(index=features[1].astype(str))\n    var.index.name = None\n    var[\&quot;gene_ids\&quot;] = features[0].astype(str).values\n    if features.shape[1] &gt; 2:\n        var[\&quot;feature_types\&quot;] = features[2].astype(str).values\n\n    adata = ad.AnnData(X=matrix[:, keep].T.tocsr(), var=var)\n    adata.obs_names = barcodes\n    adata.var_names_make_unique()\n    print(f\&quot;raw 预筛: {matrix.shape[1]} -&gt; {adata.n_obs}\&quot;)\n    return adata\n\ndef load_10x_prefix_sample(data_dir, prefix):\n    matrix_file = data_dir / f\&quot;{prefix}matrix.mtx.gz\&quot;\n    feature_file = data_dir / f\&quot;{prefix}features.tsv.gz\&quot;\n    barcode_file = data_dir / f\&quot;{prefix}barcodes.tsv.gz\&quot;\n\n    with gzip.open(matrix_file, \&quot;rt\&quot;) as handle:\n        next(handle)\n        next(handle)\n        n_genes, n_barcodes, _ = map(int, next(handle).strip().split())\n\n    if n_barcodes &gt; 100000:\n        adata = load_raw_matrix_sample(matrix_file, feature_file, barcode_file)\n    else:\n        adata = sc.read_10x_mtx(data_dir, var_names=\&quot;gene_symbols\&quot;, make_unique=True, prefix=prefix, cache=False)\n\n    if not sparse.issparse(adata.X):\n        adata.X = sparse.csr_matrix(adata.X)\n    adata.X = adata.X.astype(np.int32)\n    return adata\n\nadatas_241 = []\nfor _, row in sample_sheet_241.iterrows():\n    gsm = str(row[\&quot;geo_accession\&quot;])\n    matrix_file = next(iter(DATA241_DIR.glob(f\&quot;{gsm}_*_matrix.mtx.gz\&quot;)), None)\n    if matrix_file is None:\n        print(f\&quot;找不到 {gsm} 的 matrix 文件\&quot;)\n        continue\n\n    prefix = matrix_file.name.replace(\&quot;matrix.mtx.gz\&quot;, \&quot;\&quot;)\n    adata = load_10x_prefix_sample(DATA241_DIR, prefix)\n    adata.obs[\&quot;barcode\&quot;] = adata.obs_names.astype(str)\n    adata.obs_names = [f\&quot;GSE241037_{gsm}_{bc}\&quot; for bc in adata.obs_names]\n    adata.obs[\&quot;dataset\&quot;] = \&quot;GSE241037\&quot;\n    adata.obs[\&quot;dataset_source\&quot;] = \&quot;GSE241037\&quot;\n    adata.obs[\&quot;Patient\&quot;] = str(row[\&quot;patient\&quot;])\n    adata.obs[\&quot;patient_id\&quot;] = \&quot;GSE241037_\&quot; + str(row[\&quot;patient\&quot;])\n    adata.obs[\&quot;Sample\&quot;] = gsm\n    adata.obs[\&quot;sample_raw\&quot;] = gsm\n    adata.obs[\&quot;sample\&quot;] = \&quot;GSE241037_\&quot; + gsm\n    adata.obs[\&quot;sample_id\&quot;] = adata.obs[\&quot;sample\&quot;]\n    adata.obs[\&quot;title\&quot;] = str(row[\&quot;title\&quot;])\n    adata.obs[\&quot;Region\&quot;] = row[\&quot;Region\&quot;]\n    adata.obs[\&quot;tissue_type\&quot;] = str(row[\&quot;tissue\&quot;])\n    adata.obs[\&quot;Group\&quot;] = str(row[\&quot;tissue\&quot;])\n    adata.obs[\&quot;Batch\&quot;] = \&quot;Batch_10X\&quot;\n    adata.obs[\&quot;Platform\&quot;] = \&quot;10X\&quot;\n    adatas_241.append(adata)\n    print(gsm, adata.shape)\n\nprint(\&quot;GSE241037 样本数:\&quot;, len(adatas_241))&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/22 15:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">前半链路已经打通，样本级汇总也回到了正确的 49 个样本。为了确认整合真正能继续往下走，我再跑 QC 单元，验证大对象拆样本后不会在质量控制这一步崩掉。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">run_notebook_cell</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/0_integrate_two_datasets.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-6d581167&quot;,
+  &quot;reason&quot;: &quot;验证样本级 QC 能在两套数据的统一元数据上顺利执行。&quot;,
+  &quot;continueOnError&quot;: false
 }</code></pre>
   </div></div>
   </details>
