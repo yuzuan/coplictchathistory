@@ -5,8 +5,8 @@
 | Session ID | `72e1e0fb-bd00-48e4-b735-79b97734cb05` |
 | Workspace | fastGEO |
 | Start | 2026/04/22 20:52 |
-| End | 2026/04/22 20:53 |
-| Messages | 2 |
+| End | 2026/04/22 20:54 |
+| Messages | 3 |
 | Copilot | v0.44.2 |
 | VS Code | v1.116.0 |
 
@@ -19,3 +19,7 @@
 ### 🤖 Copilot <sub>2026/04/22 20:53</sub>
 
 我已经确认仓库里把 GPL16686 视为 Affymetrix 平台，并且现成脚本指向了 hugene20sttranscriptcluster.db。下一步我直接核对 GPL16686 的平台表列名，判断是能从 GEO 表里直接提取，还是需要用 Bioconductor 注释包重建 ID-SYMBOL 映射。
+
+### 🤖 Copilot <sub>2026/04/22 20:54</sub>
+
+已经确认问题点了：GPL16686 从 GEO 拿到的平台表只有坐标、GB_ACC 之类字段，没有 gene symbol 列，所以不能直接从 a2@dataTable@table 里抽出 ID-SYMBOL。我要再做一步验证，确认用 hugene20sttranscriptcluster.db 的 PROBEID→SYMBOL 映射能直接对上这些 ID，然后把可运行代码给你。
