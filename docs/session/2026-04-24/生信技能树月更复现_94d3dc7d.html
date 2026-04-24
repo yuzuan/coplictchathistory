@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 114 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 115 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -4306,6 +4306,35 @@
   &quot;cellId&quot;: &quot;#VSC-adb9e2c4&quot;,
   &quot;reason&quot;: &quot;运行 cross notebook 的 program 内 DEG 默认对比。&quot;,
   &quot;continueOnError&quot;: false
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 20:48</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">核心分析已经全部跑完，DEG 也出了结果。现在我只做两处收尾修正：把两个热图的列名压短、把 DEG 单元里的无害 log1p warning 去掉，这样这个 notebook 后续直接复用会更干净。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-6c7e9c1c&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;focus_programs = [\n    &#39;Homeostatic_MG&#39;,\n    &#39;Complement_Scavenger_TAM&#39;,\n    &#39;Mg_Inflam_TAM&#39;,\n    &#39;Stress_HSUPR_TAM&#39;,\n    &#39;Stress_Hypoxia_TAM&#39;,\n    &#39;Scavenger_Lipid_TAM&#39;,\n    &#39;Inflammatory_Mono_DC&#39;,\n    &#39;Neutrophil&#39;,\n]\nfocus_mean = mean_fraction[mean_fraction[&#39;program_cross&#39;].isin(focus_programs)].copy()\n\ndataset_short = {\n    &#39;three_position&#39;: &#39;3pos&#39;,\n    &#39;scGBM&#39;: &#39;sc&#39;,\n    &#39;snGBM&#39;: &#39;sn&#39;,\n}\ntissue_short = {\n    &#39;Peripheral_like&#39;: &#39;Peri&#39;,\n    &#39;Edge&#39;: &#39;Edge&#39;,\n    &#39;Tumor_like&#39;: &#39;Tumor&#39;,\n}\n\nheatmap_df = focus_mean.pivot_table(\n    index=&#39;program_cross&#39;,\n    columns=[&#39;dataset&#39;, &#39;tissue_cross&#39;],\n    values=&#39;mean_fraction&#39;,\n)\ncolumn_order = [\n    (dataset_key, tissue_key)\n    for dataset_key in DATASET_ORDER\n    for tissue_key in TISSUE_ORDER\n    if (dataset_key, tissue_key) in heatmap_df.columns\n]\nheatmap_df = heatmap_df.reindex(columns=pd.MultiIndex.from_tuples(column_order))\nheatmap_df = heatmap_df.reindex([p for p in focus_programs if p in heatmap_df.index])\nheatmap_plot_df = heatmap_df.copy()\nheatmap_plot_df.columns = [\n    f\&quot;{dataset_short[dataset_key]}\\n{tissue_short[tissue_key]}\&quot;\n    for dataset_key, tissue_key in heatmap_plot_df.columns\n]\n\nfig, ax = plt.subplots(figsize=(12, 6))\nsns.heatmap(\n    heatmap_plot_df,\n    cmap=&#39;viridis&#39;,\n    annot=True,\n    fmt=&#39;.2f&#39;,\n    cbar_kws={&#39;label&#39;: &#39;Mean patient-level fraction&#39;},\n    ax=ax,\n)\nax.set_title(&#39;Patient-level myeloid_program_l1 abundance&#39;)\nax.set_xlabel(&#39;dataset × tissue position&#39;)\nax.set_ylabel(&#39;myeloid_program_l1&#39;)\nplt.tight_layout()\nplt.savefig(FIG_DIR / &#39;patient_level_program_fraction_heatmap.pdf&#39;, dpi=300, bbox_inches=&#39;tight&#39;)\nplt.show()\n\naxis_groups = {\n    &#39;Surveillance axis&#39;: [&#39;Homeostatic_MG&#39;, &#39;Complement_Scavenger_TAM&#39;, &#39;Mg_Inflam_TAM&#39;],\n    &#39;Stress axis&#39;: [&#39;Stress_HSUPR_TAM&#39;, &#39;Stress_Hypoxia_TAM&#39;],\n    &#39;Scavenger/Lipid axis&#39;: [&#39;Scavenger_Lipid_TAM&#39;],\n}\n\nfig, axes = plt.subplots(1, 3, figsize=(21, 5), sharey=False)\nfor ax, (axis_name, programs) in zip(axes, axis_groups.items()):\n    sub = focus_mean[focus_mean[&#39;program_cross&#39;].isin(programs)].copy()\n    if sub.empty:\n        ax.axis(&#39;off&#39;)\n        continue\n\n    for (dataset_key, program), grp in sub.groupby([&#39;dataset&#39;, &#39;program_cross&#39;], observed=True):\n        grp = grp.sort_values(&#39;tissue_cross&#39;)\n        x_pos = [TISSUE_ORDER.index(x) for x in grp[&#39;tissue_cross&#39;].astype(str)]\n        ax.plot(x_pos, grp[&#39;mean_fraction&#39;], marker=&#39;o&#39;, linewidth=2.2, label=f\&quot;{dataset_short[dataset_key]} | {program}\&quot;)\n\n    ax.set_xticks(range(len(TISSUE_ORDER)))\n    ax.set_xticklabels([tissue_short[x] for x in TISSUE_ORDER], rotation=20)\n    ax.set_title(axis_name)\n    ax.set_xlabel(&#39;tissue position&#39;)\n    ax.set_ylabel(&#39;Mean patient-level fraction&#39;)\n    ax.legend(frameon=False, fontsize=8)\n\nplt.tight_layout()\nplt.savefig(FIG_DIR / &#39;patient_level_program_fraction_axes.pdf&#39;, dpi=300, bbox_inches=&#39;tight&#39;)\nplt.show()&quot;
 }</code></pre>
   </div></div>
   </details>
