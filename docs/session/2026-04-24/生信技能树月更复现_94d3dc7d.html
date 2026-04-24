@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 11 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 12 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -337,6 +337,183 @@
   &quot;cellId&quot;: &quot;#VSC-2ae01186&quot;,
   &quot;reason&quot;: &quot;初始化分析环境和路径，为后续 myeloid 趋势分析准备变量。&quot;,
   &quot;continueOnError&quot;: false
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 16:31</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">真实 tissue_type 已经跑出来了，是 Peripheral、Edge、Core。当前启发式会把 Peripheral 和 Edge 按字母排，生物学顺序不够稳，我先把排序逻辑改成显式偏向 Peripheral → Edge → Core，再继续执行后面的单元。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/1_myeloid_subclustering.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-c80ff874&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: [
+    &quot;tissue_series = adata_mye.obs[&#39;tissue_type&#39;].astype(str)&quot;,
+    &quot;&quot;,
+    &quot;def infer_tissue_order(series):&quot;,
+    &quot;    if hasattr(series.dtype, &#39;categories&#39;) and getattr(series.dtype, &#39;ordered&#39;, False):&quot;,
+    &quot;        return [str(value) for value in series.dtype.categories]&quot;,
+    &quot;&quot;,
+    &quot;    labels = pd.Index(pd.Series(series).dropna().astype(str).unique())&quot;,
+    &quot;    normalized = {&quot;,
+    &quot;        label: label.lower().replace(&#39;_&#39;, &#39; &#39;).replace(&#39;-&#39;, &#39; &#39;)&quot;,
+    &quot;        for label in labels&quot;,
+    &quot;    }&quot;,
+    &quot;    keyword_priority = [&quot;,
+    &quot;        (&#39;normal&#39;, 0),&quot;,
+    &quot;        (&#39;healthy&#39;, 0),&quot;,
+    &quot;        (&#39;control&#39;, 0),&quot;,
+    &quot;        (&#39;adjacent normal&#39;, 0),&quot;,
+    &quot;        (&#39;non tumor&#39;, 0),&quot;,
+    &quot;        (&#39;nontumor&#39;, 0),&quot;,
+    &quot;        (&#39;peri&#39;, 1),&quot;,
+    &quot;        (&#39;peripheral&#39;, 1),&quot;,
+    &quot;        (&#39;peritumor&#39;, 1),&quot;,
+    &quot;        (&#39;peritumoral&#39;, 1),&quot;,
+    &quot;        (&#39;paratumor&#39;, 1),&quot;,
+    &quot;        (&#39;adjacent&#39;, 1),&quot;,
+    &quot;        (&#39;margin&#39;, 2),&quot;,
+    &quot;        (&#39;border&#39;, 2),&quot;,
+    &quot;        (&#39;edge&#39;, 2),&quot;,
+    &quot;        (&#39;tumor&#39;, 3),&quot;,
+    &quot;        (&#39;tumour&#39;, 3),&quot;,
+    &quot;        (&#39;core&#39;, 3),&quot;,
+    &quot;        (&#39;center&#39;, 3),&quot;,
+    &quot;        (&#39;centre&#39;, 3),&quot;,
+    &quot;        (&#39;lesion&#39;, 3),&quot;,
+    &quot;    ]&quot;,
+    &quot;&quot;,
+    &quot;    def label_rank(label):&quot;,
+    &quot;        text = normalized[label]&quot;,
+    &quot;        for keyword, rank in keyword_priority:&quot;,
+    &quot;            if keyword in text:&quot;,
+    &quot;                return (rank, text)&quot;,
+    &quot;        return (99, text)&quot;,
+    &quot;&quot;,
+    &quot;    return sorted(labels, key=label_rank)&quot;,
+    &quot;&quot;,
+    &quot;tissue_order = infer_tissue_order(adata_mye.obs[&#39;tissue_type&#39;])&quot;,
+    &quot;adata_mye.obs[&#39;tissue_type_ordered&#39;] = pd.Categorical(&quot;,
+    &quot;    tissue_series,&quot;,
+    &quot;    categories=tissue_order,&quot;,
+    &quot;    ordered=True,&quot;,
+    &quot;)&quot;,
+    &quot;&quot;,
+    &quot;subtype_by_tissue_count = pd.crosstab(&quot;,
+    &quot;    adata_mye.obs[&#39;myeloid_subtype&#39;],&quot;,
+    &quot;    adata_mye.obs[&#39;tissue_type_ordered&#39;],&quot;,
+    &quot;).reindex(columns=tissue_order, fill_value=0)&quot;,
+    &quot;&quot;,
+    &quot;subtype_by_tissue_frac = subtype_by_tissue_count.div(&quot;,
+    &quot;    subtype_by_tissue_count.sum(axis=1).replace(0, np.nan),&quot;,
+    &quot;    axis=0,&quot;,
+    &quot;).fillna(0)&quot;,
+    &quot;&quot;,
+    &quot;tissue_by_subtype_frac = pd.crosstab(&quot;,
+    &quot;    adata_mye.obs[&#39;tissue_type_ordered&#39;],&quot;,
+    &quot;    adata_mye.obs[&#39;myeloid_subtype&#39;],&quot;,
+    &quot;    normalize=&#39;index&#39;,&quot;,
+    &quot;).reindex(index=tissue_order).fillna(0)&quot;,
+    &quot;&quot;,
+    &quot;position_vector = np.arange(len(tissue_order), dtype=float)&quot;,
+    &quot;trend_summary = pd.DataFrame(index=subtype_by_tissue_frac.index)&quot;,
+    &quot;trend_summary[&#39;peak_tissue&#39;] = subtype_by_tissue_frac.idxmax(axis=1).astype(str)&quot;,
+    &quot;trend_summary[&#39;earliest_frac&#39;] = subtype_by_tissue_frac.iloc[:, 0].round(3)&quot;,
+    &quot;trend_summary[&#39;latest_frac&#39;] = subtype_by_tissue_frac.iloc[:, -1].round(3)&quot;,
+    &quot;trend_summary[&#39;late_minus_early&#39;] = (&quot;,
+    &quot;    trend_summary[&#39;latest_frac&#39;] - trend_summary[&#39;earliest_frac&#39;]&quot;,
+    &quot;).round(3)&quot;,
+    &quot;trend_summary[&#39;weighted_center&#39;] = subtype_by_tissue_frac.mul(&quot;,
+    &quot;    position_vector,&quot;,
+    &quot;    axis=1,&quot;,
+    &quot;).sum(axis=1).round(3)&quot;,
+    &quot;trend_summary[&#39;slope&#39;] = subtype_by_tissue_frac.apply(&quot;,
+    &quot;    lambda row: np.polyfit(position_vector, row.to_numpy(dtype=float), 1)[0],&quot;,
+    &quot;    axis=1,&quot;,
+    &quot;).round(4)&quot;,
+    &quot;trend_summary = trend_summary.sort_values(&quot;,
+    &quot;    [&#39;weighted_center&#39;, &#39;late_minus_early&#39;],&quot;,
+    &quot;    ascending=[True, False],&quot;,
+    &quot;)&quot;,
+    &quot;&quot;,
+    &quot;subtype_by_tissue_count.to_csv(WRITE_DIR / &#39;myeloid_subtype_by_tissue_count.csv&#39;)&quot;,
+    &quot;subtype_by_tissue_frac.to_csv(WRITE_DIR / &#39;myeloid_subtype_by_tissue_fraction_within_subtype.csv&#39;)&quot;,
+    &quot;tissue_by_subtype_frac.to_csv(WRITE_DIR / &#39;myeloid_tissue_composition_by_subtype.csv&#39;)&quot;,
+    &quot;trend_summary.to_csv(WRITE_DIR / &#39;myeloid_subtype_tissue_trend_summary.csv&#39;)&quot;,
+    &quot;&quot;,
+    &quot;top_shift_subtypes = trend_summary[&#39;slope&#39;].abs().sort_values(ascending=False).head(8).index.tolist()&quot;,
+    &quot;line_df = (&quot;,
+    &quot;    subtype_by_tissue_frac.loc[top_shift_subtypes]&quot;,
+    &quot;    .reset_index(names=&#39;myeloid_subtype&#39;)&quot;,
+    &quot;    .melt(id_vars=&#39;myeloid_subtype&#39;, var_name=&#39;tissue_type&#39;, value_name=&#39;fraction&#39;)&quot;,
+    &quot;)&quot;,
+    &quot;line_df[&#39;tissue_type&#39;] = pd.Categorical(line_df[&#39;tissue_type&#39;], categories=tissue_order, ordered=True)&quot;,
+    &quot;&quot;,
+    &quot;fig_height = max(5, 0.45 * len(subtype_by_tissue_frac) + 2)&quot;,
+    &quot;fig, axes = plt.subplots(&quot;,
+    &quot;    1,&quot;,
+    &quot;    2,&quot;,
+    &quot;    figsize=(18, fig_height),&quot;,
+    &quot;    gridspec_kw={&#39;width_ratios&#39;: [1.1, 1.0]},&quot;,
+    &quot;)&quot;,
+    &quot;&quot;,
+    &quot;sns.heatmap(&quot;,
+    &quot;    subtype_by_tissue_frac.loc[trend_summary.index],&quot;,
+    &quot;    cmap=&#39;viridis&#39;,&quot;,
+    &quot;    annot=len(subtype_by_tissue_frac) &lt;= 12,&quot;,
+    &quot;    fmt=&#39;.2f&#39;,&quot;,
+    &quot;    cbar_kws={&#39;label&#39;: &#39;Fraction within subtype&#39;},&quot;,
+    &quot;    ax=axes[0],&quot;,
+    &quot;)&quot;,
+    &quot;axes[0].set_title(&#39;Myeloid subtype distribution across ordered tissue_type&#39;)&quot;,
+    &quot;axes[0].set_xlabel(&#39;tissue_type&#39;)&quot;,
+    &quot;axes[0].set_ylabel(&#39;myeloid_subtype&#39;)&quot;,
+    &quot;&quot;,
+    &quot;sns.lineplot(&quot;,
+    &quot;    data=line_df,&quot;,
+    &quot;    x=&#39;tissue_type&#39;,&quot;,
+    &quot;    y=&#39;fraction&#39;,&quot;,
+    &quot;    hue=&#39;myeloid_subtype&#39;,&quot;,
+    &quot;    marker=&#39;o&#39;,&quot;,
+    &quot;    linewidth=2.5,&quot;,
+    &quot;    ax=axes[1],&quot;,
+    &quot;)&quot;,
+    &quot;axes[1].set_title(&#39;Top tissue-shifted myeloid subtypes&#39;)&quot;,
+    &quot;axes[1].set_xlabel(&#39;tissue_type&#39;)&quot;,
+    &quot;axes[1].set_ylabel(&#39;Fraction within subtype&#39;)&quot;,
+    &quot;axes[1].tick_params(axis=&#39;x&#39;, rotation=30)&quot;,
+    &quot;axes[1].legend(title=&#39;Subtype&#39;, bbox_to_anchor=(1.02, 1), loc=&#39;upper left&#39;, frameon=False)&quot;,
+    &quot;&quot;,
+    &quot;plt.tight_layout()&quot;,
+    &quot;plt.savefig(FIG_DIR / &#39;myeloid_subtype_tissue_trends.pdf&#39;, dpi=300, bbox_inches=&#39;tight&#39;)&quot;,
+    &quot;plt.show()&quot;,
+    &quot;&quot;,
+    &quot;print(&#39;Ordered tissue_type:&#39;, tissue_order)&quot;,
+    &quot;print(trend_summary.to_string())&quot;,
+    &quot;print(WRITE_DIR / &#39;myeloid_subtype_by_tissue_count.csv&#39;)&quot;,
+    &quot;print(WRITE_DIR / &#39;myeloid_subtype_by_tissue_fraction_within_subtype.csv&#39;)&quot;,
+    &quot;print(WRITE_DIR / &#39;myeloid_tissue_composition_by_subtype.csv&#39;)&quot;,
+    &quot;print(WRITE_DIR / &#39;myeloid_subtype_tissue_trend_summary.csv&#39;)&quot;,
+    &quot;print(FIG_DIR / &#39;myeloid_subtype_tissue_trends.pdf&#39;)&quot;
+  ]
 }</code></pre>
   </div></div>
   </details>
