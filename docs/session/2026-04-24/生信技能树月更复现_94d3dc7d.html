@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 7 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 8 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -223,6 +223,42 @@
     &quot;&quot;,
     &quot;用有序 tissue_type 展示各 myeloid subtype 的连续变化，避免只停留在 cluster × tissue 的交叉表。&quot;
   ]
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 16:28</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">先核对 notebook 末尾新增 cell 的实际内容，再做一次语法层面的校验，确保没有因为 notebook 编辑而引入拼写或结构问题。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">read_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/1_myeloid_subclustering.ipynb&quot;,
+  &quot;startLine&quot;: 360,
+  &quot;endLine&quot;: 560
+}</code></pre>
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">run_in_terminal</span>
+    <pre class="tool-call-args"><code>{
+  &quot;command&quot;: &quot;python3 - &lt;&lt;&#39;PY&#39;\nimport ast\ncode = &#39;&#39;&#39;\ntissue_series = adata_mye.obs[&#39;tissue_type&#39;].astype(str)\n\ndef infer_tissue_order(series):\n    if hasattr(series.dtype, &#39;categories&#39;) and getattr(series.dtype, &#39;ordered&#39;, False):\n        return [str(value) for value in series.dtype.categories]\n\n    labels = pd.Index(pd.Series(series).dropna().astype(str).unique())\n    normalized = {\n        label: label.lower().replace(&#39;_&#39;, &#39; &#39;).replace(&#39;-&#39;, &#39; &#39;)\n        for label in labels\n    }\n    keyword_groups = [\n        [&#39;normal&#39;, &#39;healthy&#39;, &#39;control&#39;, &#39;adjacent normal&#39;, &#39;non tumor&#39;, &#39;nontumor&#39;],\n        [&#39;peri&#39;, &#39;peritumor&#39;, &#39;peritumoral&#39;, &#39;paratumor&#39;, &#39;adjacent&#39;, &#39;margin&#39;, &#39;border&#39;, &#39;edge&#39;],\n        [&#39;tumor&#39;, &#39;tumour&#39;, &#39;core&#39;, &#39;center&#39;, &#39;centre&#39;, &#39;lesion&#39;],\n    ]\n\n    ordered = []\n    assigned = set()\n    for keywords in keyword_groups:\n        matched = [\n            label for label, text in normalized.items()\n            if label not in assigned and any(keyword in text for keyword in keywords)\n        ]\n        ordered.extend(sorted(matched))\n        assigned.update(matched)\n\n    ordered.extend(sorted(label for label in labels if label not in assigned))\n    return ordered\n\ntissue_order = infer_tissue_order(adata_mye.obs[&#39;tissue_type&#39;])\nadata_mye.obs[&#39;tissue_type_ordered&#39;] = pd.Categorical(\n    tissue_series,\n    categories=tissue_order,\n    ordered=True,\n)\n\nsubtype_by_tissue_count = pd.crosstab(\n    adata_mye.obs[&#39;myeloid_subtype&#39;],\n    adata_mye.obs[&#39;tissue_type_ordered&#39;],\n).reindex(columns=tissue_order, fill_value=0)\n\nsubtype_by_tissue_frac = subtype_by_tissue_count.div(\n    subtype_by_tissue_count.sum(axis=1).replace(0, np.nan),\n    axis=0,\n).fillna(0)\n\ntissue_by_subtype_frac = pd.crosstab(\n    adata_mye.obs[&#39;tissue_type_ordered&#39;],\n    adata_mye.obs[&#39;myeloid_subtype&#39;],\n    normalize=&#39;index&#39;,\n).reindex(index=tissue_order).fillna(0)\n\nposition_vector = np.arange(len(tissue_order), dtype=float)\ntrend_summary = pd.DataFrame(index=subtype_by_tissue_frac.index)\ntrend_summary[&#39;peak_tissue&#39;] = subtype_by_tissue_frac.idxmax(axis=1).astype(str)\ntrend_summary[&#39;earliest_frac&#39;] = subtype_by_tissue_frac.iloc[:, 0].round(3)\ntrend_summary[&#39;latest_frac&#39;] = subtype_by_tissue_frac.iloc[:, -1].round(3)\ntrend_summary[&#39;late_minus_early&#39;] = (\n    trend_summary[&#39;latest_frac&#39;] - trend_summary[&#39;earliest_frac&#39;]\n).round(3)\ntrend_summary[&#39;weighted_center&#39;] = subtype_by_tissue_frac.mul(\n    position_vector,\n    axis=1,\n).sum(axis=1).round(3)\ntrend_summary[&#39;slope&#39;] = subtype_by_tissue_frac.apply(\n    lambda row: np.polyfit(position_vector, row.to_numpy(dtype=float), 1)[0],\n    axis=1,\n).round(4)\ntrend_summary = trend_summary.sort_values(\n    [&#39;weighted_center&#39;, &#39;late_minus_early&#39;],\n    ascending=[True, False],\n)\n\nsubtype_by_tissue_count.to_csv(WRITE_DIR / &#39;myeloid_subtype_by_tissue_count.csv&#39;)\nsubtype_by_tissue_frac.to_csv(WRITE_DIR / &#39;myeloid_subtype_by_tissue_fraction_within_subtype.csv&#39;)\ntissue_by_subtype_frac.to_csv(WRITE_DIR / &#39;myeloid_tissue_composition_by_subtype.csv&#39;)\ntrend_summary.to_csv(WRITE_DIR / &#39;myeloid_subtype_tissue_trend_summary.csv&#39;)\n\ntop_shift_subtypes = trend_summary[&#39;slope&#39;].abs().sort_values(ascending=False).head(8).index.tolist()\nline_df = (\n    subtype_by_tissue_frac.loc[top_shift_subtypes]\n    .reset_index(names=&#39;myeloid_subtype&#39;)\n    .melt(id_vars=&#39;myeloid_subtype&#39;, var_name=&#39;tissue_type&#39;, value_name=&#39;fraction&#39;)\n)\nline_df[&#39;tissue_type&#39;] = pd.Categorical(line_df[&#39;tissue_type&#39;], categories=tissue_order, ordered=True)\n\nfig_height = max(5, 0.45 * len(subtype_by_tissue_frac) + 2)\nfig, axes = plt.subplots(\n    1,\n    2,\n    figsize=(18, fig_height),\n    gridspec_kw={&#39;width_ratios&#39;: [1.1, 1.0]},\n)\n\nsns.heatmap(\n    subtype_by_tissue_frac.loc[trend_summary.index],\n    cmap=&#39;viridis&#39;,\n    annot=len(subtype_by_tissue_frac) &lt;= 12,\n    fmt=&#39;.2f&#39;,\n    cbar_kws={&#39;label&#39;: &#39;Fraction within subtype&#39;},\n    ax=axes[0],\n)\naxes[0].set_title(&#39;Myeloid subtype distribution across ordered tissue_type&#39;)\naxes[0].set_xlabel(&#39;tissue_type&#39;)\naxes[0].set_ylabel(&#39;myeloid_subtype&#39;)\n\nsns.lineplot(\n    data=line_df,\n    x=&#39;tissue_type&#39;,\n    y=&#39;fraction&#39;,\n    hue=&#39;myeloid_subtype&#39;,\n    marker=&#39;o&#39;,\n    linewidth=2.5,\n    ax=axes[1],\n)\naxes[1].set_title(&#39;Top tissue-shifted myeloid subtypes&#39;)\naxes[1].set_xlabel(&#39;tissue_type&#39;)\naxes[1].set_ylabel(&#39;Fraction within subtype&#39;)\naxes[1].tick_params(axis=&#39;x&#39;, rotation=30)\naxes[1].legend(title=&#39;Subtype&#39;, bbox_to_anchor=(1.02, 1), loc=&#39;upper left&#39;, frameon=False)\n\nplt.tight_layout()\nplt.savefig(FIG_DIR / &#39;myeloid_subtype_tissue_trends.pdf&#39;, dpi=300, bbox_inches=&#39;tight&#39;)\nplt.show()\n\nprint(&#39;Ordered tissue_type:&#39;, tissue_order)\nprint(trend_summary.to_string())\nprint(WRITE_DIR / &#39;myeloid_subtype_by_tissue_count.csv&#39;)\nprint(WRITE_DIR / &#39;myeloid_subtype_by_tissue_fraction_within_subtype.csv&#39;)\nprint(WRITE_DIR / &#39;myeloid_tissue_composition_by_subtype.csv&#39;)\nprint(WRITE_DIR / &#39;myeloid_subtype_tissue_trend_summary.csv&#39;)\nprint(FIG_DIR / &#39;myeloid_subtype_tissue_trends.pdf&#39;)\n&#39;&#39;&#39;\nast.parse(code)\nprint(&#39;syntax_ok&#39;)\nPY&quot;,
+  &quot;explanation&quot;: &quot;用只做语法解析的方式校验新增 Python cell，避免依赖 scanpy 环境。&quot;,
+  &quot;goal&quot;: &quot;Validate inserted notebook cell syntax&quot;,
+  &quot;mode&quot;: &quot;sync&quot;,
+  &quot;timeout&quot;: 120000
 }</code></pre>
   </div></div>
   </details>
