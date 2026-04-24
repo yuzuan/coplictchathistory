@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 121 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 122 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -4552,6 +4552,43 @@
         <p class="message-paragraph">我看了 [cross_three_sc_sn_myeloid_programs.ipynb](&lt;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&gt;) 和它生成的 <code class="inline-code">write/cross_three_sc_sn_myeloid_programs/</code> 结果。结论是：**代码能正常跑通，整体分析框架是对的，但 abundance 统计和 DEG 还有几个需要注意的口径问题。**</p><p class="message-paragraph">**代码是否正常**</p><p class="message-paragraph">整体正常：</p><p class="message-paragraph">- 三个 h5ad 都成功读入。<br>- 统一字段 <code class="inline-code">myeloid_program_l1</code>、<code class="inline-code">tissue_position_unified</code> 都被正确使用。<br>- 输出文件齐全，包括：<br>  - <code class="inline-code">dataset_input_summary.csv</code><br>  - <code class="inline-code">program_presence_by_dataset.csv</code><br>  - <code class="inline-code">patient_level_program_fraction_summary.csv</code><br>  - <code class="inline-code">patient_level_program_fraction_tests.csv</code><br>  - <code class="inline-code">patient_level_program_scores_summary.csv</code><br>  - <code class="inline-code">program_level_score_summary.csv</code><br>  - 多个 program 内 DEG 文件</p><p class="message-paragraph">但有 3 个重要注意点：</p><p class="message-paragraph">1. 当前 patient-level 丰度只统计“出现过的 program”，没有把缺失 program 补成 0。  <br>   这会让稀有 program 的均值偏高。比如某个 patient 的 Tumor 中没有 <code class="inline-code">Complement_Scavenger_TAM</code>，现在它不会作为 0 进入均值。</p><p class="message-paragraph">2. 当前丰度检验用的是 Mann-Whitney U。  <br>   如果 Tumor 和 Peritumoral 是同一批患者的配对样本，后面最好改成 paired Wilcoxon，或者 mixed model。</p><p class="message-paragraph">3. program 内 DEG 是 cell-level Wilcoxon。  <br>   这个适合快速看 marker，但不能当最终统计结论。正式结果建议做 patient-level pseudobulk DEG。</p><p class="message-paragraph">**运行结果说明的趋势**</p><p class="message-paragraph">最清楚的趋势是：</p><p class="message-paragraph">**从瘤旁到肿瘤区，髓系细胞整体从“组织监视/补体/小胶质样状态”转向“缺氧/应激/清道夫脂质处理状态”。**</p><p class="message-paragraph">具体看：</p><p class="message-paragraph">1. **三位置数据支持空间梯度**<br>   - <code class="inline-code">Complement_Scavenger_TAM</code> 从 Peripheral 到 Core 下降：0.795 → 0.504。<br>   - <code class="inline-code">Scavenger_Lipid_TAM</code> 从 Peripheral 到 Core 上升：0.090 → 0.394。<br>   - 功能 score 也支持这个方向：<br>     - Hypoxia：Peripheral 0.354 → Edge 0.718 → Core 0.679<br>     - Scavenger：Peripheral 0.610 → Edge 0.809 → Core 0.973<br>     - Lipid_APOE：Peripheral 0.468 → Edge 0.592 → Core 0.707</p><p class="message-paragraph">2. **snGBM 强烈支持肿瘤区应激/缺氧状态**<br>   - <code class="inline-code">Stress_Hypoxia_TAM</code> 在 Tumor 明显升高：Peri 0.069 → Tumor 0.741，p=0.0159。<br>   - <code class="inline-code">Homeostatic_MG</code> 和 <code class="inline-code">Complement_Scavenger_TAM</code> 主要在 Peritumoral。<br>   - 功能 score 中 Tumor 更高：<br>     - Hypoxia：0.343 → 0.882<br>     - HS_UPR：0.365 → 1.241<br>     - Scavenger：0.578 → 0.909</p><p class="message-paragraph">3. **scGBM 的亚群比例方向更复杂**<br>   - <code class="inline-code">Mg_Inflam_TAM</code> 明显偏 Peritumoral。<br>   - <code class="inline-code">Complement_Scavenger_TAM</code> 在 scGBM 中偏 Tumor，这和三位置/snGBM 的方向不完全一致。<br>   - 但 scGBM 的功能 score 仍显示 Tumor-like 中 Hypoxia、Scavenger、Lipid_APOE、Systemic_Inflam 更高。<br>   - 所以 scGBM 更像是在提示：**同名 program 内部还有肿瘤区激活状态**，不能只看亚群比例。</p><p class="message-paragraph">**当前最稳的研究主线**</p><p class="message-paragraph">可以写成：</p><p class="message-paragraph">**GBM 髓系细胞从瘤旁组织监视状态，逐步转向肿瘤区缺氧、应激和脂质清道夫样状态。三位置数据提供空间梯度，snGBM 强化缺氧/应激轴，scGBM 显示肿瘤区髓系细胞存在更强的炎症、缺氧和脂质处理信号。**</p><p class="message-paragraph">**后续建议**</p><p class="message-paragraph">1. 把 abundance 分析改成 zero-filled patient-level 表。<br>2. 对配对患者用 paired Wilcoxon。<br>3. DEG 改成 pseudobulk。<br>4. 对 <code class="inline-code">Complement_Scavenger_TAM</code> 和 <code class="inline-code">Scavenger_Lipid_TAM</code> 继续拆细，因为三套数据中方向不完全一致。<br>5. DEG 结果里过滤 <code class="inline-code">RPL/RPS/MT/MALAT1/XIST</code> 等技术或管家基因后再解释。接着来做这些</p>
       </div>
       
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 21:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我先核对这本 cross notebook 的最新状态，再针对你指出的 5 个口径问题直接改 notebook：先修 abundance 为 zero-filled + paired 检验，再把最后一段 DEG 改成 pseudobulk，并加上技术基因过滤和两个易混 program 的拆分分析。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (3)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&quot;
+}</code></pre>
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">copilot_getNotebookSummary</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/2_myeloid_trajectory_pseudotime.ipynb&quot;
+}</code></pre>
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">read_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&quot;,
+  &quot;startLine&quot;: 1,
+  &quot;endLine&quot;: 720
+}</code></pre>
+  </div></div>
+  </details>
     </div>
   </div>
     </div>
