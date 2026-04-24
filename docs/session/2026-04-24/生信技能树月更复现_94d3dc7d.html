@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 117 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 118 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -4429,6 +4429,35 @@
       &quot;allowFreeformInput&quot;: false
     }
   ]
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 20:53</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">你选的是扩展 program 内 DEG 对比。我会把最后一个 DEG 单元从“少量手工对比”改成“按数据集和位置自动生成一批默认对比”，同时把每个对比的细胞数、病人数、是否跳过都记录下来，避免后面再手工补。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-adb9e2c4&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;PROGRAMS_FOR_INTERNAL_DEG = [\n    &#39;Complement_Scavenger_TAM&#39;,\n    &#39;Homeostatic_MG&#39;,\n    &#39;Mg_Inflam_TAM&#39;,\n    &#39;Stress_HSUPR_TAM&#39;,\n    &#39;Stress_Hypoxia_TAM&#39;,\n    &#39;Scavenger_Lipid_TAM&#39;,\n    &#39;Inflammatory_Mono_DC&#39;,\n    &#39;IFN_Response_TAM&#39;,\n    &#39;Neutrophil&#39;,\n]\n\ndef build_default_deg_contrasts(adatas):\n    contrast_rows = []\n    for dataset_key, adata in adatas.items():\n        available_programs = set(adata.obs[&#39;program_cross&#39;].astype(str))\n        available_tissues = set(adata.obs[&#39;tissue_cross&#39;].astype(str))\n\n        for program_name in PROGRAMS_FOR_INTERNAL_DEG:\n            if program_name not in available_programs:\n                continue\n\n            if {&#39;Peripheral_like&#39;, &#39;Tumor_like&#39;}.issubset(available_tissues):\n                contrast_rows.append((dataset_key, program_name, &#39;Peripheral_like&#39;, &#39;Tumor_like&#39;))\n            if {&#39;Peripheral_like&#39;, &#39;Edge&#39;}.issubset(available_tissues):\n                contrast_rows.append((dataset_key, program_name, &#39;Peripheral_like&#39;, &#39;Edge&#39;))\n            if {&#39;Edge&#39;, &#39;Tumor_like&#39;}.issubset(available_tissues):\n                contrast_rows.append((dataset_key, program_name, &#39;Edge&#39;, &#39;Tumor_like&#39;))\n\n    return contrast_rows\n\ndef run_program_internal_deg(adata, dataset_key, program_name, ref_group, target_group, top_n=30, min_cells=30, min_patients=2):\n    mask = (adata.obs[&#39;program_cross&#39;].astype(str) == program_name) &amp; adata.obs[&#39;tissue_cross&#39;].astype(str).isin([ref_group, target_group])\n    sub = adata[mask].copy()\n    tissue_labels = sub.obs[&#39;tissue_cross&#39;].astype(str)\n    group_counts = tissue_labels.value_counts()\n\n    patient_counts = (\n        sub.obs.assign(tissue_str=tissue_labels)\n        .groupby(&#39;tissue_str&#39;, observed=True)[&#39;patient_cross&#39;]\n        .nunique()\n        .to_dict()\n    )\n\n    result_meta = {\n        &#39;dataset&#39;: dataset_key,\n        &#39;program_cross&#39;: program_name,\n        &#39;reference_group&#39;: ref_group,\n        &#39;target_group&#39;: target_group,\n        &#39;reference_cells&#39;: int(group_counts.get(ref_group, 0)),\n        &#39;target_cells&#39;: int(group_counts.get(target_group, 0)),\n        &#39;reference_patients&#39;: int(patient_counts.get(ref_group, 0)),\n        &#39;target_patients&#39;: int(patient_counts.get(target_group, 0)),\n    }\n\n    if result_meta[&#39;reference_cells&#39;] &lt; min_cells or result_meta[&#39;target_cells&#39;] &lt; min_cells:\n        result_meta[&#39;status&#39;] = &#39;skipped_low_cells&#39;\n        result_meta[&#39;output_file&#39;] = None\n        return None, result_meta\n\n    if result_meta[&#39;reference_patients&#39;] &lt; min_patients or result_meta[&#39;target_patients&#39;] &lt; min_patients:\n        result_meta[&#39;status&#39;] = &#39;skipped_low_patients&#39;\n        result_meta[&#39;output_file&#39;] = None\n        return None, result_meta\n\n    if &#39;counts&#39; in sub.layers:\n        sub.X = sub.layers[&#39;counts&#39;].copy()\n        sub.raw = None\n        if &#39;log1p&#39; in sub.uns:\n            del sub.uns[&#39;log1p&#39;]\n\n    sc.pp.normalize_total(sub, target_sum=1e4)\n    sc.pp.log1p(sub)\n    sc.tl.rank_genes_groups(\n        sub,\n        groupby=&#39;tissue_cross&#39;,\n        groups=[target_group],\n        reference=ref_group,\n        method=&#39;wilcoxon&#39;,\n        n_genes=top_n,\n    )\n    deg_df = sc.get.rank_genes_groups_df(sub, group=target_group)\n    deg_df[&#39;dataset&#39;] = dataset_key\n    deg_df[&#39;program_cross&#39;] = program_name\n    deg_df[&#39;reference_group&#39;] = ref_group\n    deg_df[&#39;target_group&#39;] = target_group\n    out_name = f\&quot;deg_{dataset_key}_{program_name}_{target_group}_vs_{ref_group}.csv\&quot;.replace(&#39;/&#39;, &#39;_&#39;).replace(&#39; &#39;, &#39;_&#39;)\n    deg_df.to_csv(WRITE_DIR / out_name, index=False)\n\n    result_meta[&#39;status&#39;] = &#39;ok&#39;\n    result_meta[&#39;output_file&#39;] = out_name\n    return deg_df, result_meta\n\ndef summarize_top_hits(deg_df, top_n=5):\n    top_df = deg_df.head(top_n).copy()\n    keep_cols = [&#39;names&#39;, &#39;scores&#39;, &#39;logfoldchanges&#39;, &#39;pvals_adj&#39;, &#39;dataset&#39;, &#39;program_cross&#39;, &#39;reference_group&#39;, &#39;target_group&#39;]\n    return top_df[keep_cols]\n\nDEFAULT_DEG_CONTRASTS = build_default_deg_contrasts(adatas)\ncontrast_log_rows = []\ndeg_preview_rows = []\n\nfor dataset_key, program_name, ref_group, target_group in DEFAULT_DEG_CONTRASTS:\n    deg_df, result_meta = run_program_internal_deg(\n        adatas[dataset_key],\n        dataset_key,\n        program_name,\n        ref_group,\n        target_group,\n    )\n    contrast_log_rows.append(result_meta)\n    if deg_df is not None:\n        deg_preview_rows.append(summarize_top_hits(deg_df, top_n=6))\n\ncontrast_log_df = pd.DataFrame(contrast_log_rows)\ncontrast_log_df = contrast_log_df.sort_values([&#39;dataset&#39;, &#39;program_cross&#39;, &#39;reference_group&#39;, &#39;target_group&#39;])\ncontrast_log_df.to_csv(WRITE_DIR / &#39;program_internal_deg_contrast_log.csv&#39;, index=False)\ndisplay(contrast_log_df)\n\nif deg_preview_rows:\n    deg_preview_df = pd.concat(deg_preview_rows, ignore_index=True)\n    deg_preview_df.to_csv(WRITE_DIR / &#39;program_internal_deg_preview.csv&#39;, index=False)\n    display(deg_preview_df)\nelse:\n    print(&#39;No DEG contrast passed the minimum thresholds.&#39;)&quot;
 }</code></pre>
   </div></div>
   </details>
