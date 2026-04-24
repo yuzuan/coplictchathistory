@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 124 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 125 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -4661,6 +4661,35 @@
   &quot;editType&quot;: &quot;edit&quot;,
   &quot;language&quot;: &quot;python&quot;,
   &quot;newCode&quot;: &quot;import warnings\nwarnings.filterwarnings(&#39;ignore&#39;)\n\nfrom pathlib import Path\n\nimport numpy as np\nimport pandas as pd\nimport scanpy as sc\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nfrom scipy import sparse\nfrom scipy.stats import mannwhitneyu, wilcoxon\nfrom statsmodels.stats.multitest import multipletests\n\nROOT = Path(&#39;.&#39;).resolve()\nFIG_DIR = ROOT / &#39;figures&#39; / &#39;cross_three_sc_sn_myeloid_programs&#39;\nWRITE_DIR = ROOT / &#39;write&#39; / &#39;cross_three_sc_sn_myeloid_programs&#39;\nFIG_DIR.mkdir(parents=True, exist_ok=True)\nWRITE_DIR.mkdir(parents=True, exist_ok=True)\n\nsc.set_figure_params(dpi=120, color_map=&#39;viridis_r&#39;, transparent=False, frameon=False)\nsc.settings.figdir = str(FIG_DIR)\n%config InlineBackend.figure_format = &#39;retina&#39;\n\nDATASET_ORDER = [&#39;three_position&#39;, &#39;scGBM&#39;, &#39;snGBM&#39;]\nDATASET_LABELS = {\n    &#39;three_position&#39;: &#39;Three-position GBM&#39;,\n    &#39;scGBM&#39;: &#39;scGBM&#39;,\n    &#39;snGBM&#39;: &#39;snGBM&#39;,\n}\nTISSUE_ORDER = [&#39;Peripheral_like&#39;, &#39;Edge&#39;, &#39;Tumor_like&#39;]\n\nsns.set_theme(style=&#39;whitegrid&#39;, context=&#39;talk&#39;)&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 21:12</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">前两段代码已经换掉了，当前 notebook 结构变成了：zero-filled abundance、主 score、拆细 score、pseudobulk DEG。接下来我先补一下说明文字，再把这些新单元实际跑一遍，确认没有变量依赖或统计代码错误。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_three_sc_sn_myeloid_programs.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-ee28bfac&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;markdown&quot;,
+  &quot;newCode&quot;: &quot;## 2. patient-level program 丰度分析\n\n先在每个 patient × tissue 内计算 `myeloid_program_l1` 比例，并把没有出现的 program 显式补成 0，再汇总到数据集层面。配对比较时优先只用同时拥有两个位置样本的患者做 paired Wilcoxon。&quot;
 }</code></pre>
   </div></div>
   </details>
