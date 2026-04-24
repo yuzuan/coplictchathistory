@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 133 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 135 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -4944,6 +4944,55 @@
 }</code></pre>
   </div></div>
   </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/24 21:55</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">已经把你指出的 5 件事接进 [cross_three_sc_sn_myeloid_programs.ipynb](cross_three_sc_sn_myeloid_programs.ipynb) 里，并且把更新后的相关代码单元全部重跑过了。</p><p class="message-paragraph">现在的 notebook 变化是这样的。abundance 部分已经改成 zero-filled patient-level 表，缺失 program 会显式记为 0；配对比较优先用 paired Wilcoxon，并额外写出了配对患者汇总到 [write/cross_three_sc_sn_myeloid_programs/patient_level_program_pairing_summary.csv](write/cross_three_sc_sn_myeloid_programs/patient_level_program_pairing_summary.csv)。主 score 仍保留原来的大框架，但改成 patient-level 汇总，同时新增了 <code class="inline-code">Complement_Core</code>、<code class="inline-code">Scavenger_IS</code>、<code class="inline-code">Lipid_Metabolism</code>、<code class="inline-code">APOE_Lipid</code> 四个 refinement signatures，并补了对应拆细图和汇总表到 [write/cross_three_sc_sn_myeloid_programs/program_refinement_score_summary.csv](write/cross_three_sc_sn_myeloid_programs/program_refinement_score_summary.csv)。</p><p class="message-paragraph">最后一段 DEG 已经不再是 cell-level Wilcoxon，而是 patient-level pseudobulk。现在会先过滤 <code class="inline-code">RPL/RPS/MT/MALAT1/XIST</code> 这类技术或管家基因，再按配对患者做 pseudobulk paired Wilcoxon，结果写到 [write/cross_three_sc_sn_myeloid_programs/program_internal_pseudobulk_deg_contrast_log.csv](write/cross_three_sc_sn_myeloid_programs/program_internal_pseudobulk_deg_contrast_log.csv) 和 [write/cross_three_sc_sn_myeloid_programs/program_internal_pseudobulk_deg_preview.csv](write/cross_three_sc_sn_myeloid_programs/program_internal_pseudobulk_deg_preview.csv)。这次共生成了 24 个 pseudobulk DEG 文件；pair 不够或细胞太少的对比会明确标成 <code class="inline-code">skipped_low_pairs</code> 或 <code class="inline-code">skipped_low_cells</code>，不会再混进正式结果。唯一需要你知道的残留点是：pseudobulk 这一格能跑通，但运行时间比较长，这次大约 37 分钟。如果你后面准备频繁重跑，我建议下一步优先把 pseudobulk 预聚合缓存下来，或者再加一层更严格的表达过滤。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/04/24 23:22</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">明白了。那你的逻辑应该改成：</p><p class="message-paragraph">**scGBM / snGBM 先发现 Tumor vs Peritumoral 差异；three_position 作为验证集，用 Peripheral_like → Edge → Tumor_like 检查这个差异是不是连续梯度。**</p><p class="message-paragraph">也就是说，three_position 不是简单做 Tumor vs Peri，而是回答：</p><pre class="message-code-block"><code>这个 program / score 是否沿 Peripheral_like → Edge → Tumor_like 连续递增或连续递减？</code></pre><p class="message-paragraph">**当前 three_position 支持的连续趋势**</p><p class="message-paragraph">按你现有输出，比较清楚的是：</p><p class="message-paragraph">| 指标 | Peripheral_like → Edge → Tumor_like | 趋势 |<br>|---|---|---|<br>| <code class="inline-code">Complement_Scavenger_TAM</code> 丰度 | 0.795 → 0.581 → 0.504 | 连续递减 |<br>| <code class="inline-code">Scavenger_Lipid_TAM</code> 丰度 | 0.090 → 0.279 → 0.358 | 连续递增 |<br>| <code class="inline-code">Stress_HSUPR_TAM</code> 丰度 | 0.016 → 0.031 → 0.027 | Edge/Core 升高，不是严格递增 |<br>| <code class="inline-code">Stress_Hypoxia_TAM</code> 丰度 | 0.006 → 0.025 → 0.018 | Edge/Core 升高，不是严格递增 |<br>| <code class="inline-code">Inflammatory_Mono_DC</code> 丰度 | 0.094 → 0.084 → 0.094 | 无清楚趋势 |</p><p class="message-paragraph">功能 score 更支持连续变化：</p><p class="message-paragraph">| score | Peripheral_like → Edge → Tumor_like | 趋势 |<br>|---|---|---|<br>| <code class="inline-code">HS_UPR</code> | 0.458 → 0.556 → 0.629 | 连续递增 |<br>| <code class="inline-code">Scavenger</code> | 0.610 → 0.809 → 0.973 | 连续递增 |<br>| <code class="inline-code">Lipid_APOE</code> | 0.468 → 0.592 → 0.707 | 连续递增 |<br>| <code class="inline-code">Lipid_Metabolism</code> | 0.254 → 0.470 → 0.515 | 连续递增 |<br>| <code class="inline-code">APOE_Lipid</code> | 0.817 → 0.979 → 1.132 | 连续递增 |<br>| <code class="inline-code">Hypoxia</code> | 0.354 → 0.718 → 0.679 | Edge/Core 升高，不是严格递增 |<br>| <code class="inline-code">Complement</code> | 0.807 → 0.759 → 0.808 | 无连续趋势 |</p><p class="message-paragraph">所以 three_position 验证集目前最稳的结论是：</p><pre class="message-code-block"><code>从 Peripheral_like 到 Edge 再到 Tumor_like，
+补体/监视型髓系细胞比例连续下降；
+清道夫、脂质处理、APOE、HS-UPR 功能连续增强。</code></pre><p class="message-paragraph">**你应该怎么写验证逻辑**</p><p class="message-paragraph">不要写：</p><pre class="message-code-block"><code>three_position 也验证了所有 Tumor vs Peritumoral 差异</code></pre><p class="message-paragraph">更准确写：</p><pre class="message-code-block"><code>three_position 验证了部分 sc/sn 发现具有空间连续性。
+其中 Scavenger/Lipid/APOE/HS-UPR 呈连续递增，
+Complement_Scavenger_TAM 丰度呈连续递减。
+Hypoxia/Stress 在 Edge 和 Core 升高，但不是严格递增。</code></pre><p class="message-paragraph">**建议新增一个明确的 trend 判定表**</p><p class="message-paragraph">你现在的结果已经有均值，但最好再加一张表：</p><pre class="message-code-block"><code>metric
+Peripheral_like_mean
+Edge_mean
+Tumor_like_mean
+trend_type
+delta_Edge_minus_Peripheral
+delta_Tumor_minus_Edge
+delta_Tumor_minus_Peripheral</code></pre><p class="message-paragraph"><code class="inline-code">trend_type</code> 可以定义为：</p><pre class="message-code-block"><code>strict_increase: Peripheral &lt;= Edge &lt;= Tumor
+strict_decrease: Peripheral &gt;= Edge &gt;= Tumor
+edge_peak: Edge &gt; Peripheral and Edge &gt; Tumor
+core_peak: Tumor &gt; Edge and Tumor &gt; Peripheral
+flat_or_mixed: 其他</code></pre><p class="message-paragraph">这样你的验证结果会非常清楚。</p><p class="message-paragraph">**推荐结论框架**</p><p class="message-paragraph">可以这样总结：</p><p class="message-paragraph">1. **发现集 scGBM/snGBM**<br>   - Tumor-like 髓系细胞更偏缺氧、应激、脂质/APOE 和清道夫状态。<br>   - Peritumoral 更偏 homeostatic / complement / Mg-inflam 状态。</p><p class="message-paragraph">2. **验证集 three_position**<br>   - <code class="inline-code">Complement_Scavenger_TAM</code> 丰度沿空间连续下降。<br>   - <code class="inline-code">Scavenger_Lipid_TAM</code> 丰度沿空间连续上升。<br>   - <code class="inline-code">HS_UPR</code>、<code class="inline-code">Scavenger</code>、<code class="inline-code">Lipid_APOE</code>、<code class="inline-code">APOE_Lipid</code> score 沿空间连续上升。<br>   - <code class="inline-code">Hypoxia</code> 更像 Edge/Core 高，而不是严格递增。</p><p class="message-paragraph">3. **最终主线**<br>   - GBM 髓系细胞不是简单 Tumor vs Peritumoral 二分。<br>   - 它更像一个空间梯度：</p><pre class="message-code-block"><code>Peripheral_like
+补体 / 稳态 / 组织监视
+
+→ Edge
+缺氧和应激开始增强
+
+→ Tumor_like
+清道夫 / 脂质处理 / APOE / HS-UPR 更强</code></pre><p class="message-paragraph">这些能在空间转录组上验证码？</p>
+      </div>
+      
     </div>
   </div>
     </div>
