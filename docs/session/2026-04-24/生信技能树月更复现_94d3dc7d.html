@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>创建代码明确myeloid的在 tissue_type 的趋势变化</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 156 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/24 16:24 · 157 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-24/生信技能树月更复现_94d3dc7d.md">Markdown</a>
@@ -5816,6 +5816,44 @@ flat_or_mixed: 其他</code></pre><p class="message-paragraph">这样你的验�
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/scGBM/14_spatial_visium_validation_v1.1.ipynb&quot;,
   &quot;startLine&quot;: 1130,
   &quot;endLine&quot;: 1275
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/25 11:59</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我现在开始做实改：在两个 notebook 都新增“3 区间趋势判定”单元，代码做成可独立运行（即使内核是空的也能从已保存文件恢复），然后立刻执行新单元验证。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (2)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/9_spatial_transcriptomics.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-1860ffd9&quot;,
+  &quot;editType&quot;: &quot;insert&quot;,
+  &quot;language&quot;: &quot;markdown&quot;,
+  &quot;newCode&quot;: &quot;### 7.5 Peri-Edge-Core 连续梯度趋势判定（3 区间）\n\n将每个样本按肿瘤相关分数映射为 `Peripheral_like → Edge → Tumor_like`，并输出 `trend_type`（`strict_increase` / `strict_decrease` / `edge_peak` / `core_peak` / `flat_or_mixed`）。&quot;
+}</code></pre>
+  </div><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/9_spatial_transcriptomics.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-1860ffd9&quot;,
+  &quot;editType&quot;: &quot;insert&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;import numpy as np\nimport pandas as pd\nimport scanpy as sc\nfrom pathlib import Path\n\n\ndef classify_trend(v_peri, v_edge, v_tumor, abs_tol=0.01, rel_tol=0.02):\n    vals = np.array([v_peri, v_edge, v_tumor], dtype=float)\n    scale = max(1.0, np.max(np.abs(vals)))\n    eps = max(abs_tol, rel_tol * scale)\n    d1 = v_edge - v_peri\n    d2 = v_tumor - v_edge\n\n    if (d1 &gt; eps) and (d2 &gt; eps):\n        return &#39;strict_increase&#39;\n    if (d1 &lt; -eps) and (d2 &lt; -eps):\n        return &#39;strict_decrease&#39;\n    if (v_edge - v_peri &gt; eps) and (v_edge - v_tumor &gt; eps):\n        return &#39;edge_peak&#39;\n    if (v_tumor - v_peri &gt; eps) and (v_tumor - v_edge &gt; eps):\n        return &#39;core_peak&#39;\n    return &#39;flat_or_mixed&#39;\n\n\n# 1) 保障 adata 可用（支持空内核）\nif &#39;adata&#39; not in globals():\n    adata_path = Path(&#39;write/direction9_spatial/spatial_analyzed.h5ad&#39;)\n    if not adata_path.exists():\n        raise FileNotFoundError(f&#39;未找到 {adata_path}，请先运行前序分析单元。&#39;)\n    adata = sc.read_h5ad(adata_path)\n\n# 2) 若缺失 deconvolution 列，则尝试从保存结果补回\ndeconv_path = Path(&#39;write/direction9_spatial/deconvolution_NNLS.csv&#39;)\nif deconv_path.exists():\n    deconv_df = pd.read_csv(deconv_path, index_col=0)\n    common = adata.obs_names.intersection(deconv_df.index)\n    if len(common) &gt; 0:\n        for c in deconv_df.columns:\n            if c not in adata.obs.columns:\n                adata.obs[c] = np.nan\n            adata.obs.loc[common, c] = deconv_df.loc[common, c]\n\n# 3) 构建 tumor_ratio 并按样本映射 3 区间\ncandidate_tumor_cols = [&#39;MES-like&#39;, &#39;AC-like&#39;, &#39;NPC-like&#39;, &#39;OPC-like&#39;]\ntumor_cols = [c for c in candidate_tumor_cols if c in adata.obs.columns]\nif len(tumor_cols) == 0:\n    raise ValueError(&#39;未找到用于定义 tumor_ratio 的肿瘤细胞分量列（MES/AC/NPC/OPC-like）。&#39;)\n\nadata.obs[&#39;tumor_ratio&#39;] = adata.obs[tumor_cols].fillna(0).sum(axis=1)\nadata.obs[&#39;spatial_zone_3&#39;] = pd.Categorical([&#39;Unknown&#39;] * adata.n_obs)\n\nfor sid in adata.obs[&#39;sample&#39;].astype(str).unique():\n    mask = adata.obs[&#39;sample&#39;].astype(str) == sid\n    vals = adata.obs.loc[mask, &#39;tumor_ratio&#39;].astype(float)\n    q1, q2 = vals.quantile(0.333), vals.quantile(0.667)\n    zones = pd.Series(index=vals.index, dtype=&#39;object&#39;)\n    zones.loc[vals &lt;= q1] = &#39;Peripheral_like&#39;\n    zones.loc[(vals &gt; q1) &amp; (vals &lt;= q2)] = &#39;Edge&#39;\n    zones.loc[vals &gt; q2] = &#39;Tumor_like&#39;\n    adata.obs.loc[mask, &#39;spatial_zone_3&#39;] = zones\n\nadata.obs[&#39;spatial_zone_3&#39;] = pd.Categorical(\n    adata.obs[&#39;spatial_zone_3&#39;],\n    categories=[&#39;Peripheral_like&#39;, &#39;Edge&#39;, &#39;Tumor_like&#39;],\n    ordered=True,\n)\n\n# 4) 选择待验证指标（优先 myeloid + signature）\nscore_cols = [c for c in adata.obs.columns if c.endswith(&#39;_score&#39;)]\ndeconv_focus = [\n    c for c in [&#39;Macrophage&#39;, &#39;Monocyte&#39;, &#39;Microglia&#39;, &#39;Myeloid&#39;, &#39;MES-like&#39;]\n    if c in adata.obs.columns\n]\nmetric_cols = sorted(set(score_cols + deconv_focus))\n\nif len(metric_cols) == 0:\n    raise ValueError(&#39;未找到可用于趋势分析的指标列。&#39;)\n\n# 5) 每个样本先算 3 区间均值，再跨样本汇总，避免样本大小偏置\nzone_order = [&#39;Peripheral_like&#39;, &#39;Edge&#39;, &#39;Tumor_like&#39;]\nrows = []\n\nfor metric in metric_cols:\n    per_sample = []\n    for sid in adata.obs[&#39;sample&#39;].astype(str).unique():\n        sub = adata.obs.loc[adata.obs[&#39;sample&#39;].astype(str) == sid, [&#39;spatial_zone_3&#39;, metric]].copy()\n        sub = sub.dropna()\n        if sub.empty:\n            continue\n        counts = sub[&#39;spatial_zone_3&#39;].value_counts()\n        if any(counts.get(z, 0) &lt; 10 for z in zone_order):\n            continue\n        means = sub.groupby(&#39;spatial_zone_3&#39;)[metric].mean().reindex(zone_order)\n        if means.isna().any():\n            continue\n        per_sample.append(means)\n\n    if len(per_sample) == 0:\n        continue\n\n    sample_mat = pd.DataFrame(per_sample)\n    p, e, t = sample_mat.mean(axis=0).tolist()\n    trend_type = classify_trend(p, e, t)\n\n    rows.append({\n        &#39;metric&#39;: metric,\n        &#39;n_samples_used&#39;: int(sample_mat.shape[0]),\n        &#39;Peripheral_like_mean&#39;: float(p),\n        &#39;Edge_mean&#39;: float(e),\n        &#39;Tumor_like_mean&#39;: float(t),\n        &#39;delta_Peri_to_Edge&#39;: float(e - p),\n        &#39;delta_Edge_to_Tumor&#39;: float(t - e),\n        &#39;delta_Peri_to_Tumor&#39;: float(t - p),\n        &#39;trend_type&#39;: trend_type,\n    })\n\ntrend_df = pd.DataFrame(rows)\nif trend_df.empty:\n    raise ValueError(&#39;趋势结果为空：请检查指标列是否有足够非缺失值。&#39;)\n\ntrend_df = trend_df.sort_values([&#39;trend_type&#39;, &#39;delta_Peri_to_Tumor&#39;], ascending=[True, False]).reset_index(drop=True)\nsummary_df = trend_df[&#39;trend_type&#39;].value_counts().rename_axis(&#39;trend_type&#39;).reset_index(name=&#39;n_metrics&#39;)\n\nout_dir = Path(&#39;write/direction9_spatial&#39;)\nout_dir.mkdir(parents=True, exist_ok=True)\ntrend_path = out_dir / &#39;spatial_three_zone_metric_trend_validation.csv&#39;\nsummary_path = out_dir / &#39;spatial_three_zone_trend_summary.csv&#39;\ntrend_df.to_csv(trend_path, index=False)\nsummary_df.to_csv(summary_path, index=False)\n\nprint(&#39;=== Spatial 3-zone trend validation (Direction 9) ===&#39;)\nprint(f&#39;tumor_ratio columns: {tumor_cols}&#39;)\nprint(f&#39;metrics analyzed: {len(trend_df)}&#39;)\nprint(&#39;\\nTrend summary:&#39;)\nprint(summary_df.to_string(index=False))\nprint(f&#39;\\nSaved: {trend_path}&#39;)\nprint(f&#39;Saved: {summary_path}&#39;)\n\ndisplay(trend_df.head(20).round(4))&quot;
 }</code></pre>
   </div></div>
   </details>
