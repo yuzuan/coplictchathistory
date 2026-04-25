@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>不，直接在当前目录中的GEObluk_GBM文件夹里的数据</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/25 20:45 · 30 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/25 20:45 · 31 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-25/生信技能树月更复现_fd11b33f.md">Markdown</a>
@@ -1080,6 +1080,23 @@
 }</code></pre>
   </div></div>
   </details>
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/04/25 23:21</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">按照这个来做一下：要调整，不建议硬把现在的结果写成“预后验证失败”。</p><p class="message-paragraph">我刚才按更稳的方式快速复算了一下，主要问题不是 gene set 完全不合理，而是当前 notebook 的分析口径需要改。</p><p class="message-paragraph">**主要问题**</p><p class="message-paragraph">1. **CGGA 表达矩阵是原始 RSEM 量级，TCGA 是 log 量级**<br>   - 现在 notebook 直接用 <code class="inline-code">scanpy.tl.score_genes</code> 打分。<br>   - 这样 CGGA 和 TCGA 的 score 不在同一尺度上，CGGA 分数会被高表达基因影响。<br>   - 这一步要改成：每个队列内部先判断是否需要 <code class="inline-code">log2(x+1)</code>，然后对每个基因做 z-score，再求 signature 平均分。</p><p class="message-paragraph">2. **CGGA 693 不是纯 GBM 队列**<br>   - 它混有 WHO II、WHO III、WHO IV，primary 和 recurrent 也混在一起。<br>   - 所以 all glioma 里的显著结果，很大部分其实来自 grade、IDH、复发状态。<br>   - 不能直接拿它说 GBM 预后。</p><p class="message-paragraph">3. **Complement_MHCII_Myeloid 不适合作为主预后 signature**<br>   - 我复算后，Complement 在 TCGA GBM 和 CGGA GBM 中预后都不强。<br>   - 但是它和 TCGA 里的 <code class="inline-code">Complement_IS_TAM</code> 相关非常强，Spearman rho 约 0.91。<br>   - 所以它应该用于“免疫浸润验证”，不是主打“生存风险”。</p><p class="message-paragraph">4. **Hypoxia_Stress 比 Complement 更适合做预后**<br>   - 修正打分后，TCGA primary GBM 中 Hypoxia_Stress 连续 Cox 有信号。<br>   - core 版 HR 约 1.21，p 约 0.048。<br>   - extended 版 HR 约 1.23，p 约 0.030。<br>   - 但在 CGGA primary GBM 中，多因素后不稳定，所以只能写成“提示性预后相关”，不能写成强验证。</p><p class="message-paragraph">**我建议后续这样处理**</p><p class="message-paragraph">**第一，把结论分开写。**</p><p class="message-paragraph">主结论不要写成两个 signature 都能预测预后。建议改成：</p><p class="message-paragraph">- <code class="inline-code">Complement_MHCII_Myeloid</code>：用于验证髓系免疫浸润和 MHC-II 状态。<br>- <code class="inline-code">Hypoxia_Stress</code>：用于探索预后风险和肿瘤压力状态。</p><p class="message-paragraph">这样更符合你的结果。</p><p class="message-paragraph">**第二，修改 notebook 的打分方法。**</p><p class="message-paragraph">不要继续直接用 <code class="inline-code">scanpy.tl.score_genes</code> 做 bulk scoring。改成：</p><pre class="message-code-block"><code>expr = np.log2(expr + 1)
+
+score = expr.loc[valid_genes].T
+score = score.apply(lambda x: (x - x.mean()) / x.std(ddof=0), axis=0)
+signature_score = score.mean(axis=1)</code></pre><p class="message-paragraph">每个队列单独做 z-score，不要跨队列合并后再标准化。</p><p class="message-paragraph">**第三，预后分析只把 Hypoxia_Stress 作为主图。**</p><p class="message-paragraph">建议主图放：</p><p class="message-paragraph">- TCGA GBM primary tumor，continuous Cox。<br>- CGGA GBM WHO IV，continuous Cox。<br>- CGGA primary GBM WHO IV，作为补充。<br>- KM 曲线只作为展示，不作为主要统计证据。</p><p class="message-paragraph">**第四，Complement_MHCII_Myeloid 改做免疫浸润分析。**</p><p class="message-paragraph">它可以做这些：</p><p class="message-paragraph">- 和 <code class="inline-code">Complement_IS_TAM</code>、<code class="inline-code">SPP1_Scavenger_TAM</code>、<code class="inline-code">Microglia_TAM</code> 的相关性。<br>- 和 <code class="inline-code">CD68</code>, <code class="inline-code">CSF1R</code>, <code class="inline-code">AIF1</code>, <code class="inline-code">LST1</code>, <code class="inline-code">TYROBP</code> 的相关性。<br>- 和 <code class="inline-code">HLA-DRA</code>, <code class="inline-code">CD74</code>, <code class="inline-code">HLA-DPA1</code> 的相关性。<br>- 和 ESTIMATE immune score、stromal score、tumor purity 的关系。<br>- 和免疫检查点 <code class="inline-code">CD274</code>, <code class="inline-code">PDCD1LG2</code>, <code class="inline-code">HAVCR2</code>, <code class="inline-code">LAG3</code>, <code class="inline-code">TIGIT</code>, <code class="inline-code">IDO1</code> 的关系。</p><p class="message-paragraph">你现在已有的 TCGA ssGSEA 结果已经支持这个方向：</p><p class="message-paragraph">- Complement_MHCII_Myeloid 和 <code class="inline-code">Complement_IS_TAM</code>：rho 约 0.91。<br>- 和 <code class="inline-code">SPP1_Scavenger_TAM</code>：rho 约 0.79。<br>- 和 <code class="inline-code">Microglia_TAM</code>：rho 约 0.48。</p><p class="message-paragraph">这个结果比生存结果更漂亮，也更符合它的生物学含义。</p><p class="message-paragraph">**第五，最终故事线建议改成这样**</p><p class="message-paragraph">不要说：</p><p class="message-paragraph">“两个空间 signature 都能预测 GBM 预后。”</p><p class="message-paragraph">建议说：</p><p class="message-paragraph">“空间转录组和单细胞分析提示两个稳定状态：瘤旁相关的 Complement-MHCII 髓系免疫状态，以及肿瘤相关的 Hypoxia-Stress 状态。bulk 队列分析显示，Complement-MHCII 主要反映髓系免疫浸润，而 Hypoxia-Stress 与较差生存趋势相关，但其独立预后价值在 GBM 队列中仍需谨慎解释。”</p><p class="message-paragraph">这样最稳。当前 notebook 应该改，不是简单继续加图。重点是：**修正 bulk 打分方法，拆开免疫浸润和预后两条分析线。**</p>
+      </div>
+      
     </div>
   </div>
     </div>
