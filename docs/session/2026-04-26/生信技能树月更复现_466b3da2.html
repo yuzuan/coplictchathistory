@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>Perform a read-only review of the newly inserted cells in /Users/yuzuan/Downl...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/26 17:59 · 24 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/26 17:59 · 26 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-26/生信技能树月更复现_466b3da2.md">Markdown</a>
@@ -857,6 +857,48 @@
   &quot;filePath&quot;: &quot;/Users/finanfund/Documents/.github/copilot-instructions.md&quot;,
   &quot;startLine&quot;: 1,
   &quot;endLine&quot;: 240
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/26 18:09</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">**Findings**<br>1. 高: 第 14、15 个新增单元的 q25/q75 分组可能产生重叠样本，log-rank 结果会失真。[第 14 个单元的极端分组函数](cross_TCGA_CGGA_bulk_scoring.ipynb#L2030-L2033) 和 [第 15 个单元的汇总函数](cross_TCGA_CGGA_bulk_scoring.ipynb#L2145-L2148) 都用 &lt;= q25 和 &gt;= q75。只要分数有较多并列值，尤其当 q25 == q75 时，同一样本会同时进入 low 和 high，两组不再互斥，统计比较就不成立；即使 q25 &lt; q75，阈值并列也会把“极端四分位”膨胀成更大的边界组。最小修复：先检查 q25 &lt; q75，再构造互斥分组；保守做法是 q25 &gt;= q75 时直接跳过，或者改成基于排序/百分位排名的非重叠分组。</p><p class="message-paragraph">2. 中: 第 14 个新增单元对 CGGA 的旧状态防护不完整，部分重跑时会直接报 KeyError。[这里](cross_TCGA_CGGA_bulk_scoring.ipynb#L2073-L2083) 只检查了 clin_gbm 是否存在，就立刻切出两个 signature 列。如果用户前面只把 clin_gbm 加载出来，但没有成功把打分结果 join 回去，这一格会在列切片处失败。最小修复：在切片前显式检查 OS 列、事件列和两个 signature 列是否都存在，不满足就打印提示并跳过该 cohort。</p><p class="message-paragraph">3. 低: 第 15 个新增单元把所有异常都吞成 “skipped cohort”，会掩盖真正的代码问题。[这里](cross_TCGA_CGGA_bulk_scoring.ipynb#L2175-L2203) 使用了 except Exception，因此缺列、类型问题，甚至以后重构引入的编程错误，都会被记成 status 字符串而不是显式失败。最小修复：只捕获预期的数据问题，例如 ValueError 和 KeyError；其余异常直接抛出，或者至少附加 dataset 和 signature 上下文后再重新抛出。</p><p class="message-paragraph">**Notes**<br>未看到会在干净内核里按顺序从头执行时立即触发的未定义变量。新增区块依赖的 SIGNATURES、lifelines 导入、surv_df_tcga、clin_gbm 和 geo_adatas 都在前文定义，且大多有基本 guard。就“从头跑是否会挂”而言，最实质的正确性问题是第 1 条的 q25/q75 分组逻辑。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/26 18:09</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">子代理挑出了一个真实统计问题和一个执行顺序隐患。我现在把极端分组改成互斥的百分位排名分组，并给 CGGA 列依赖加显式检查，避免新增 section 在 ties 或局部重跑时出错。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_TCGA_CGGA_bulk_scoring.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-a52402e0&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;def split_extreme_groups(df, score_col, lower_pct=0.25, upper_pct=0.75):\n    # Use percentile ranks so low/high groups stay mutually exclusive when scores tie.\n    score_rank = df[score_col].rank(method=&#39;first&#39;, pct=True)\n    df_low = df[score_rank &lt;= lower_pct]\n    df_high = df[score_rank &gt; upper_pct]\n\n    if len(df_low) &lt; 8 or len(df_high) &lt; 8:\n        raise ValueError(f&#39;extreme groups too small ({len(df_low)}/{len(df_high)})&#39;)\n\n    return df_low, df_high\n\n\n\ndef plot_km_extremes_from_surv_df(df, score_col, time_col, event_col, title, ax):\n    df = df[[time_col, event_col, score_col]].copy()\n    df[time_col] = pd.to_numeric(df[time_col], errors=&#39;coerce&#39;)\n    df[event_col] = pd.to_numeric(df[event_col], errors=&#39;coerce&#39;)\n    df = df.replace([np.inf, -np.inf], np.nan).dropna()\n    df = df[df[time_col] &gt; 0]\n    df = df[df[event_col].isin([0, 1])]\n\n    try:\n        df_low, df_high = split_extreme_groups(df, score_col)\n    except ValueError:\n        ax.set_visible(False)\n        return None\n\n    result = logrank_test(\n        df_high[time_col],\n        df_low[time_col],\n        event_observed_A=df_high[event_col],\n        event_observed_B=df_low[event_col],\n    )\n\n    kmf = KaplanMeierFitter()\n    kmf.fit(df_low[time_col], event_observed=df_low[event_col], label=f&#39;Low q25 (n={len(df_low)})&#39;)\n    kmf.plot_survival_function(ax=ax, color=&#39;royalblue&#39;, ci_show=False)\n\n    kmf.fit(df_high[time_col], event_observed=df_high[event_col], label=f&#39;High q75 (n={len(df_high)})&#39;)\n    kmf.plot_survival_function(ax=ax, color=&#39;tomato&#39;, ci_show=False)\n\n    ax.set_title(f&#39;{title}\\nLog-rank p = {result.p_value:.4f}&#39;)\n    ax.set_xlabel(&#39;Overall Survival&#39;)\n    ax.set_ylabel(&#39;Survival Probability&#39;)\n    ax.set_ylim(0, 1.05)\n    ax.grid(True, alpha=0.25)\n\n    return {\n        &#39;n_total&#39;: len(df),\n        &#39;n_high&#39;: len(df_high),\n        &#39;n_low&#39;: len(df_low),\n        &#39;high_median_os&#39;: df_high[time_col].median(),\n        &#39;low_median_os&#39;: df_low[time_col].median(),\n        &#39;p_value&#39;: result.p_value,\n    }\n\n\nextreme_cohorts = []\nif surv_df_tcga is not None:\n    extreme_cohorts.append((&#39;TCGA GBM Primary&#39;, surv_df_tcga, os_col_tcga, event_col_tcga))\n\nif clin_gbm is not None:\n    cgga_os_col = &#39;OS&#39; if &#39;OS&#39; in clin_gbm.columns else None\n    cgga_event_col = next((col for col in clin_gbm.columns if &#39;censor&#39; in col.lower()), None)\n    required_cgga_cols = {\n        col for col in [\n            cgga_os_col,\n            cgga_event_col,\n            &#39;Peritumor_Complement_MHCII_Myeloid&#39;,\n            &#39;Tumor_Hypoxia_Stress&#39;,\n        ] if col is not None\n    }\n\n    if required_cgga_cols.issubset(clin_gbm.columns):\n        surv_df_cgga_extreme = clin_gbm[[\n            cgga_os_col,\n            cgga_event_col,\n            &#39;Peritumor_Complement_MHCII_Myeloid&#39;,\n            &#39;Tumor_Hypoxia_Stress&#39;,\n        ]].copy()\n        extreme_cohorts.append((&#39;CGGA Primary GBM&#39;, surv_df_cgga_extreme, cgga_os_col, cgga_event_col))\n    else:\n        missing_cgga_cols = sorted(required_cgga_cols.difference(clin_gbm.columns))\n        print(f&#39;Skipping CGGA extreme KM due to missing columns: {missing_cgga_cols}&#39;)\n\nextreme_signatures = [&#39;Peritumor_Complement_MHCII_Myeloid&#39;, &#39;Tumor_Hypoxia_Stress&#39;]\n\nif not extreme_cohorts:\n    print(&#39;TCGA / CGGA survival tables are not available. Please re-run the earlier bulk loading cells first.&#39;)\nelse:\n    fig, axes = plt.subplots(\n        len(extreme_signatures),\n        len(extreme_cohorts),\n        figsize=(6 * len(extreme_cohorts), 4.5 * len(extreme_signatures))\n    )\n\n    if len(extreme_signatures) == 1 and len(extreme_cohorts) == 1:\n        axes = np.array([[axes]])\n    elif len(extreme_signatures) == 1:\n        axes = np.array([axes])\n    elif len(extreme_cohorts) == 1:\n        axes = np.array([[ax] for ax in np.atleast_1d(axes)])\n\n    extreme_summary_rows = []\n    for row_idx, signature_name in enumerate(extreme_signatures):\n        for col_idx, (cohort_name, cohort_df, time_col, event_col) in enumerate(extreme_cohorts):\n            result = plot_km_extremes_from_surv_df(\n                cohort_df,\n                signature_name,\n                time_col,\n                event_col,\n                f&#39;{cohort_name} - {signature_name.replace(\&quot;_\&quot;, \&quot; \&quot;)}&#39;,\n                ax=axes[row_idx, col_idx],\n            )\n            if result is not None:\n                extreme_summary_rows.append({\n                    &#39;cohort&#39;: cohort_name,\n                    &#39;signature&#39;: signature_name,\n                    **result,\n                })\n\n    plt.tight_layout()\n    plt.show()\n\n    if extreme_summary_rows:\n        display(pd.DataFrame(extreme_summary_rows).sort_values([&#39;signature&#39;, &#39;cohort&#39;]).reset_index(drop=True))&quot;
 }</code></pre>
   </div></div>
   </details>
