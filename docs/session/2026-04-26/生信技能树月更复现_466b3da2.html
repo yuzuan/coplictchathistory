@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>先确认两个源 notebook 是已保存文件还是未保存的 untitled 编辑器内容，并读取三本 notebook 的结构后再合并，避免把 cell 顺...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/26 17:59 · 7 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/26 17:59 · 8 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-26/生信技能树月更复现_466b3da2.md">Markdown</a>
@@ -282,6 +282,35 @@
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/AGENTS.md&quot;,
   &quot;startLine&quot;: 1,
   &quot;endLine&quot;: 220
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/26 18:03</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">开始插入 notebook cells。我会只补充 Untitled-4/6 里目标 notebook 还没有的极端分组分析，并且用独立变量名隔离，避免覆盖现有 median split 结果。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_TCGA_CGGA_bulk_scoring.ipynb&quot;,
+  &quot;cellId&quot;: &quot;#VSC-1017cfb2&quot;,
+  &quot;editType&quot;: &quot;insert&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;def run_extreme_survival(obs_df, score_col, time_col=&#39;OS.time&#39;, event_col=&#39;OS&#39;):\n    df = obs_df[[time_col, event_col, score_col]].copy()\n    df[time_col] = pd.to_numeric(df[time_col], errors=&#39;coerce&#39;)\n    df[event_col] = pd.to_numeric(df[event_col], errors=&#39;coerce&#39;)\n    df = df.replace([np.inf, -np.inf], np.nan).dropna()\n    df = df[df[time_col] &gt; 0]\n    df = df[df[event_col].isin([0, 1])]\n\n    if len(df) &lt; 20:\n        raise ValueError(f&#39;usable samples &lt; 20 ({len(df)})&#39;)\n\n    q25 = df[score_col].quantile(0.25)\n    q75 = df[score_col].quantile(0.75)\n    df_low = df[df[score_col] &lt;= q25]\n    df_high = df[df[score_col] &gt;= q75]\n\n    if len(df_low) &lt; 8 or len(df_high) &lt; 8:\n        raise ValueError(f&#39;extreme groups too small ({len(df_low)}/{len(df_high)})&#39;)\n\n    result = logrank_test(\n        df_high[time_col],\n        df_low[time_col],\n        event_observed_A=df_high[event_col],\n        event_observed_B=df_low[event_col],\n    )\n\n    return {\n        &#39;n_total&#39;: len(df),\n        &#39;n_high&#39;: len(df_high),\n        &#39;n_low&#39;: len(df_low),\n        &#39;high_median_os&#39;: df_high[time_col].median(),\n        &#39;low_median_os&#39;: df_low[time_col].median(),\n        &#39;p_value&#39;: result.p_value,\n    }\n\n\nif &#39;geo_adatas&#39; not in globals() or not geo_adatas:\n    print(&#39;geo_adatas not available. Please re-run the GEO bulk screening cell first.&#39;)\nelse:\n    geo_extreme_rows = []\n\n    for dataset_name, adata_geo in geo_adatas.items():\n        for signature_name, gene_list in SIGNATURES.items():\n            valid_gene_count = sum(gene in adata_geo.var_names for gene in gene_list)\n            try:\n                if &#39;OS.time&#39; not in adata_geo.obs.columns or &#39;OS&#39; not in adata_geo.obs.columns:\n                    raise ValueError(&#39;missing OS.time / OS columns&#39;)\n\n                summary = run_extreme_survival(adata_geo.obs, signature_name)\n                geo_extreme_rows.append({\n                    &#39;dataset&#39;: dataset_name,\n                    &#39;signature&#39;: signature_name,\n                    &#39;valid_genes&#39;: valid_gene_count,\n                    **summary,\n                    &#39;status&#39;: &#39;ok&#39;,\n                })\n            except Exception as exc:\n                geo_extreme_rows.append({\n                    &#39;dataset&#39;: dataset_name,\n                    &#39;signature&#39;: signature_name,\n                    &#39;valid_genes&#39;: valid_gene_count,\n                    &#39;n_total&#39;: np.nan,\n                    &#39;n_high&#39;: np.nan,\n                    &#39;n_low&#39;: np.nan,\n                    &#39;high_median_os&#39;: np.nan,\n                    &#39;low_median_os&#39;: np.nan,\n                    &#39;p_value&#39;: np.nan,\n                    &#39;status&#39;: str(exc),\n                })\n\n    geo_extreme_results = pd.DataFrame(geo_extreme_rows)\n    geo_extreme_results_ok = (\n        geo_extreme_results[geo_extreme_results[&#39;status&#39;] == &#39;ok&#39;]\n        .sort_values([&#39;p_value&#39;, &#39;dataset&#39;])\n        .reset_index(drop=True)\n    )\n    geo_extreme_results_fail = geo_extreme_results[geo_extreme_results[&#39;status&#39;] != &#39;ok&#39;].reset_index(drop=True)\n\n    print(f&#39;Analysed {geo_extreme_results_ok[\&quot;dataset\&quot;].nunique()} GEO bulk cohorts with q25 vs q75 extreme splitting.&#39;)\n    display(\n        geo_extreme_results_ok[\n            [&#39;dataset&#39;, &#39;signature&#39;, &#39;valid_genes&#39;, &#39;n_total&#39;, &#39;n_high&#39;, &#39;n_low&#39;, &#39;high_median_os&#39;, &#39;low_median_os&#39;, &#39;p_value&#39;]\n        ].head(20)\n    )\n\n    geo_extreme_signature_summary = (\n        geo_extreme_results_ok.groupby(&#39;signature&#39;)[&#39;p_value&#39;]\n        .agg([&#39;count&#39;, &#39;min&#39;, &#39;median&#39;])\n        .sort_values(&#39;min&#39;)\n    )\n    display(geo_extreme_signature_summary)\n\n    significant_geo_extreme_results = geo_extreme_results_ok[geo_extreme_results_ok[&#39;p_value&#39;] &lt; 0.05].copy()\n    if significant_geo_extreme_results.empty:\n        print(&#39;No GEO bulk cohort reached p &lt; 0.05 under q25 vs q75 splitting for these two signatures.&#39;)\n    else:\n        print(&#39;Significant GEO bulk results (q25 vs q75, p &lt; 0.05):&#39;)\n        display(\n            significant_geo_extreme_results[\n                [&#39;dataset&#39;, &#39;signature&#39;, &#39;valid_genes&#39;, &#39;n_total&#39;, &#39;n_high&#39;, &#39;n_low&#39;, &#39;high_median_os&#39;, &#39;low_median_os&#39;, &#39;p_value&#39;]\n            ]\n        )\n\n    if not geo_extreme_results_fail.empty:\n        print(&#39;Skipped cohorts:&#39;)\n        display(geo_extreme_results_fail[[&#39;dataset&#39;, &#39;signature&#39;, &#39;status&#39;]].drop_duplicates().reset_index(drop=True))&quot;
 }</code></pre>
   </div></div>
   </details>
