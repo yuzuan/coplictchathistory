@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>不，直接在当前目录中的GEObluk_GBM文件夹里的数据</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/25 20:45 · 43 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/04/25 20:45 · 44 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-04-25/生信技能树月更复现_fd11b33f.md">Markdown</a>
@@ -1488,6 +1488,35 @@ signature_score = score.mean(axis=1)</code></pre><p class="message-paragraph">�
       &quot;title&quot;: &quot;添加 2x2 联合分层 KM 分析&quot;
     }
   ]
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/04/26 15:52</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">**Fix 2: TCGA cell** — 加入 barcode <code class="inline-code">[13:15]==&#39;01&#39;</code> primary tumor 过滤</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">edit_notebook_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;cellId&quot;: &quot;#VSC-6b5d2e7f&quot;,
+  &quot;editType&quot;: &quot;edit&quot;,
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/cross_TCGA_CGGA_bulk_scoring.ipynb&quot;,
+  &quot;language&quot;: &quot;python&quot;,
+  &quot;newCode&quot;: &quot;import os\n\ntcga_expr_path = &#39;./scGBM/write/10_TME_prognostic_features/TCGA_GBM_expr.tsv.gz&#39;\ntcga_clin_path = &#39;./scGBM/write/10_TME_prognostic_features/TCGA_GBM_survival_with_TME_risk.csv&#39;\n\nclin_df_tcga  = None\nsurv_df_tcga  = None\nexpr_df_tcga  = None\nos_col_tcga   = &#39;OS.time&#39;\nevent_col_tcga = &#39;OS&#39;\n\nif os.path.exists(tcga_expr_path) and os.path.exists(tcga_clin_path):\n    print(\&quot;Loading TCGA GBM Dataset...\&quot;)\n    expr_df_tcga = pd.read_csv(tcga_expr_path, sep=&#39;\\t&#39;, index_col=0)\n    expr_df_tcga.index = expr_df_tcga.index.astype(str)\n\n    clin_df_tcga = pd.read_csv(tcga_clin_path, index_col=0)\n    clin_df_tcga.index = clin_df_tcga.index.astype(str)\n\n    # 对齐 sample ID（TCGA barcode 截断为 15 位）\n    shared = expr_df_tcga.columns.intersection(clin_df_tcga.index)\n    if len(shared) == 0:\n        expr_df_tcga.columns = [idx[:15] for idx in expr_df_tcga.columns]\n        clin_df_tcga.index   = [idx[:15] for idx in clin_df_tcga.index]\n        shared = expr_df_tcga.columns.intersection(clin_df_tcga.index)\n\n    expr_df_tcga = expr_df_tcga.loc[:, ~expr_df_tcga.columns.duplicated()].loc[:, shared]\n    clin_df_tcga = clin_df_tcga.loc[~clin_df_tcga.index.duplicated()].loc[shared].copy()\n    print(f\&quot;TCGA GBM total matched: {expr_df_tcga.shape[1]} samples\&quot;)\n\n    # ── 只保留 primary tumor（barcode 位 [13:15] == &#39;01&#39;）──────────────────\n    # TCGA barcode 格式: TCGA-XX-XXXX-01 (15位截断后)\n    # [13:15] = 样本类型: &#39;01&#39;=Primary Solid Tumor, &#39;11&#39;=Normal, &#39;06&#39;=Metastatic\n    sample_types = pd.Series({c: c[13:15] if len(c) &gt;= 15 else &#39;UNK&#39;\n                               for c in expr_df_tcga.columns})\n    print(f\&quot;Sample type distribution: {sample_types.value_counts().to_dict()}\&quot;)\n\n    primary_cols = sample_types[sample_types == &#39;01&#39;].index.tolist()\n    n_total = expr_df_tcga.shape[1]\n    expr_df_tcga = expr_df_tcga.loc[:, primary_cols]\n    clin_df_tcga = clin_df_tcga.loc[primary_cols].copy()\n    print(f\&quot;After primary filter (barcode &#39;01&#39;): {len(primary_cols)} / {n_total} samples retained\&quot;)\n    print(f\&quot;TCGA GBM primary: {expr_df_tcga.shape[1]} samples, {expr_df_tcga.shape[0]} genes\&quot;)\n\n    # ── 打分（z-score 方法，与 CGGA / GEO 统一口径）────────────────────────\n    print(\&quot;\\nScoring TCGA GBM primary (z-score method):\&quot;)\n    tcga_scores = score_bulk_zscore(expr_df_tcga, SIGNATURES, auto_log=True)\n    clin_df_tcga = clin_df_tcga.join(tcga_scores)\n\n    surv_df_tcga = clin_df_tcga[[os_col_tcga, event_col_tcga,\n                                  &#39;Peritumor_Complement_MHCII_Myeloid&#39;,\n                                  &#39;Tumor_Hypoxia_Stress&#39;]].copy()\n    surv_df_tcga[os_col_tcga]    = pd.to_numeric(surv_df_tcga[os_col_tcga],    errors=&#39;coerce&#39;)\n    surv_df_tcga[event_col_tcga] = pd.to_numeric(surv_df_tcga[event_col_tcga], errors=&#39;coerce&#39;)\n    surv_df_tcga = surv_df_tcga.dropna()\n    surv_df_tcga = surv_df_tcga[surv_df_tcga[os_col_tcga] &gt; 0]\n\n    print(f\&quot;\\nTCGA GBM primary: N={len(surv_df_tcga)}, events={int(surv_df_tcga[event_col_tcga].sum())}\&quot;)\n    print(surv_df_tcga[[&#39;Peritumor_Complement_MHCII_Myeloid&#39;, &#39;Tumor_Hypoxia_Stress&#39;]].describe().round(3))\n\n    # ── 分析线 1: Tumor_Hypoxia_Stress 连续 Cox（主要预后分析）───────────────\n    print(\&quot;\\n[Tumor_Hypoxia_Stress] Continuous Cox (TCGA GBM primary):\&quot;)\n    try:\n        cph = CoxPHFitter()\n        cph.fit(surv_df_tcga[[os_col_tcga, event_col_tcga, &#39;Tumor_Hypoxia_Stress&#39;]],\n                duration_col=os_col_tcga, event_col=event_col_tcga)\n        display(cph.summary[[&#39;coef&#39;, &#39;exp(coef)&#39;, &#39;se(coef)&#39;, &#39;p&#39;]].round(4))\n    except Exception as e:\n        print(f\&quot;Cox failed: {e}\&quot;)\n\n    # KM 图（中位数，仅展示用途）\n    plot_km_median(surv_df_tcga, &#39;Tumor_Hypoxia_Stress&#39;,\n                   os_col_tcga, event_col_tcga,\n                   &#39;TCGA GBM – Tumor Hypoxia/Stress (Median Split, Primary Only)&#39;)\nelse:\n    print(\&quot;TCGA dataset paths not found.\&quot;)\n&quot;
 }</code></pre>
   </div></div>
   </details>
