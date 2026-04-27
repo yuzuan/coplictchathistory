@@ -5,8 +5,8 @@
 | Session ID | `52b88c9c-3186-4023-9fb3-cc00f64de2e1` |
 | Workspace | fastGEO |
 | Start | 2026/04/27 21:56 |
-| End | 2026/04/27 22:17 |
-| Messages | 16 |
+| End | 2026/04/27 22:18 |
+| Messages | 17 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -75,3 +75,7 @@ Ensembl 回补这条路不成立，说明这些残留条目不是标准可直接
 ### 🤖 Copilot <sub>2026/04/27 22:17</sub>
 
 ACCNUM 已经覆盖了全部能靠 accession 稳定拿到的条目。为了不乱猜，我只打算额外加一个非常保守的 alias 精确回补，能补几个算几个，其余不映射。
+
+### 🤖 Copilot <sub>2026/04/27 22:18</sub>
+
+准备开始落地脚本。改动会很小：新增一个只处理 GPL11095 的 R 脚本，输出到 test/GPL11095 下，并把对象保存成只有 ID 和 geneSYMBOL 两列的 RData。
