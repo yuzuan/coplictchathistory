@@ -5,8 +5,8 @@
 | Session ID | `52b88c9c-3186-4023-9fb3-cc00f64de2e1` |
 | Workspace | fastGEO |
 | Start | 2026/04/27 21:56 |
-| End | 2026/04/27 22:10 |
-| Messages | 5 |
+| End | 2026/04/27 22:11 |
+| Messages | 6 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -31,3 +31,7 @@
 ### 🤖 Copilot <sub>2026/04/27 22:10</sub>
 
 这个文件扩展名像 gzip，但内容不是标准 gzip。我要确认真实格式，再按实际格式读取，避免误判。
+
+### 🤖 Copilot <sub>2026/04/27 22:11</sub>
+
+文件本体是纯文本 SOFT，不需要解压。接下来我定位表头和几行样例，确认 gene symbol 的原始字段是不是可直接用，还是需要从描述列里提取。
