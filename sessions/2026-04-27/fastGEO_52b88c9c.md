@@ -5,8 +5,8 @@
 | Session ID | `52b88c9c-3186-4023-9fb3-cc00f64de2e1` |
 | Workspace | fastGEO |
 | Start | 2026/04/27 21:56 |
-| End | 2026/04/27 21:57 |
-| Messages | 3 |
+| End | 2026/04/27 21:58 |
+| Messages | 4 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -23,3 +23,7 @@
 ### 🤖 Copilot <sub>2026/04/27 21:57</sub>
 
 我先把步骤固定下来，避免改动和验证脱节：确认 GPL11095 平台字段、生成最小转换脚本、跑出 RData、再核对列名和值是否是 ID 和标准 geneSYMBOL。
+
+### 🤖 Copilot <sub>2026/04/27 21:58</sub>
+
+先直接看 GPL11095.soft.gz 的头部和注释表字段，这一步能确定该从哪一列抽 ID、哪一列清洗 gene symbol。
