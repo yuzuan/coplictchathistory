@@ -5,8 +5,8 @@
 | Session ID | `52b88c9c-3186-4023-9fb3-cc00f64de2e1` |
 | Workspace | fastGEO |
 | Start | 2026/04/27 21:56 |
-| End | 2026/04/27 22:11 |
-| Messages | 7 |
+| End | 2026/04/27 22:12 |
+| Messages | 8 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -39,3 +39,7 @@
 ### 🤖 Copilot <sub>2026/04/27 22:11</sub>
 
 GPL11095 表里没有现成的 gene symbol 列，只有探针 ID、Common name、GB_LIST 和 Species。我要先看仓库里这个平台之前有没有被注释过，如果没有，就走 RefSeq/GenBank accession 到 SYMBOL 的正规映射。
+
+### 🤖 Copilot <sub>2026/04/27 22:12</sub>
+
+现成的 GSE28941 注释结果里只有一个总对象，没有单独暴露 probe-to-symbol 表。我继续解它的结构，同时核对 GPL11095 里主要是 Human 探针，后续会按 Human 为主并处理少量 N/A/Mouse 控件。
