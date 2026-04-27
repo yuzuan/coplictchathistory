@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/04/27 21:56 |
 | End | 2026/04/27 21:57 |
-| Messages | 2 |
+| Messages | 3 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -19,3 +19,7 @@
 ### 🤖 Copilot <sub>2026/04/27 21:57</sub>
 
 已经定位到 GPL11095 原始平台文件，也找到仓库里已有的 GPL 注释处理线索。下一步我会对照现有 fastGEO 的注释格式，复用同一套输出结构生成 GPL11095 的 RData。
+
+### 🤖 Copilot <sub>2026/04/27 21:57</sub>
+
+我先把步骤固定下来，避免改动和验证脱节：确认 GPL11095 平台字段、生成最小转换脚本、跑出 RData、再核对列名和值是否是 ID 和标准 geneSYMBOL。
