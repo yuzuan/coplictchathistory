@@ -5,8 +5,8 @@
 | Session ID | `022df599-8e1a-4604-bf46-1675f802cbee` |
 | Workspace | fastGEO |
 | Start | 2026/04/30 19:16 |
-| End | 2026/04/30 19:18 |
-| Messages | 4 |
+| End | 2026/04/30 19:19 |
+| Messages | 5 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -27,3 +27,7 @@
 ### 🤖 Copilot <sub>2026/04/30 19:18</sub>
 
 先抓取这个 GPL 的原始文本，看它实际有哪些列；拿到字段名后就能稳定抽出 SYMBOL，不需要盲猜。
+
+### 🤖 Copilot <sub>2026/04/30 19:19</sub>
+
+我要加一个很小的 R 脚本到当前分析目录：它会抓取 GPL15491 的 HTML 预格式表格，按 GENE_ID 映射到 SYMBOL，并导出干净的两列表。然后我会实际跑一遍把结果文件生成出来。
