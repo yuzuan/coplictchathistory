@@ -5,8 +5,8 @@
 | Session ID | `022df599-8e1a-4604-bf46-1675f802cbee` |
 | Workspace | fastGEO |
 | Start | 2026/04/30 19:16 |
-| End | 2026/04/30 19:22 |
-| Messages | 13 |
+| End | 2026/04/30 19:35 |
+| Messages | 14 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -73,3 +73,7 @@
 ### 👤 User <sub>2026/04/30 19:34</sub>
 
 fastGEO 这个 R包总是出现下载 GPL 文件后打不开，比如目前存在的GPL92_pipe.rda GPL93_pipe.rda GPL571_pipe.rda。我希望不要下载在这，直接保存到anno_obj_user rda
+
+### 🤖 Copilot <sub>2026/04/30 19:35</sub>
+
+先定位 fastGEO 里 GPL 下载和缓存的写入路径，确认是哪里把文件落在项目目录，再改成直接写入用户注释库。随后我会把教程示例也同步改成新的用法。
