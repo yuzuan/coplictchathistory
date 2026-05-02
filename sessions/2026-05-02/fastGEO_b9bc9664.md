@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
 | End | 2026/05/02 22:57 |
-| Messages | 58 |
+| Messages | 59 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -440,3 +440,7 @@ clash 的系统代理和虚拟网卡模式能同时打开吗
 ### 🤖 Copilot <sub>2026/05/02 22:57</sub>
 
 我先补读必需上下文，再直接核对 Codex 自己保存的代理配置；这样能马上判断它会不会绕过你现在的 TUN-only 思路。
+
+### 🤖 Copilot <sub>2026/05/02 22:57</sub>
+
+我已经确认到残留项了：Codex 还保留着显式 HTTP/HTTPS 代理，这会让它继续走本地 7897，而不是纯 TUN 路径。我现在直接把这层显式代理去掉，让它跟你的 TUN-only 方案一致。
