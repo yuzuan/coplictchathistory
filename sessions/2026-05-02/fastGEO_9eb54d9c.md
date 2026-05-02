@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:21 |
-| Messages | 19 |
+| End | 2026/05/02 18:22 |
+| Messages | 20 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -209,3 +209,9 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:21</sub>
 
 我把结论压成最短版，方便你直接判断是否升级。
+
+### 🤖 Copilot <sub>2026/05/02 18:22</sub>
+
+最短结论如下。
+
+如果你拿这两个压缩包和当前主线比，fastGEO 1.10.3 并不是更新版，当前源码已经是 [fastGEO_src_2.0.1/fastGEO/DESCRIPTION](fastGEO_src_2.0.1/fastGEO/DESCRIPTION#L1-L15) 里的 2.0.1。现在版最值钱的改动，是把 GPL 注释从“写进包安装目录”改成“写进用户目录并可管理”，见 [fastGEO_src_2.0.1/fastGEO/R/anno_manage.R](fastGEO_src_2.0.1/fastGEO/R/anno_manage.R#L1-L181) 和旧教程对比 [fastGEO安装和使用教程-V1.10.3-无测试数据/fastGEO安装和使用教程_raw.tex](fastGEO安装和使用教程-V1.10.3-无测试数据/fastGEO安装和使用教程_raw.tex#L1516-L1559)。这会让你手动补 GPL 注释后在重装包、换机器、换项目时更不容易丢，也不会再把文件写乱。search_GEO、AI 提示词函数和 Shiny app 在 1.10.3 里就已经有了，所以不算当前新增；当前主要是把默认检索规模和注释加载流程调得更稳。fastR 1.9.1 这边工作区里没有更高版本对照源码，但它仍然是当前 fastGEO 的底层依赖，所以你真正该关注的是 fastGEO 是否升级，而不是 fastR 名字本身。
