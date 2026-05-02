@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:26 |
-| Messages | 26 |
+| Messages | 27 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -247,3 +247,14 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:26</sub>
 
 我先把这个误区直接纠正一下：不会，保存到 ~/.fastGEO/anno_obj_user.rda 的不是原始 GPL 文件本体，而是提取后的“探针 ID 到基因 SYMBOL 的注释表”。
+
+### 🤖 Copilot <sub>2026/05/02 18:26</sub>
+
+不会。
+
+浏览器下载下来的 GPL 原始文件，还是保存在你自己选的下载目录里；fastGEO 不会把这个原文件再塞进 ~/.fastGEO/anno_obj_user.rda。写进 ~/.fastGEO/anno_obj_user.rda 的，只是 fastGEO 从原文件或网页里提取出来的那张注释表，也就是“ID 和 SYMBOL 的映射结果”，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L156-L161) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L238-L241)。
+
+如果你希望“原始文件”和“提取结果”都留档，做法是：
+- 你手动下载的原始 GPL 文件自己保留在下载目录。
+- 调 read_GPL_file 时给 out_dir，这样会多写一个 GPL编号_annotation.csv。
+- 调 read_GPL_url 时给 out_dir，这样会留下 GPL编号.html 和 GPL编号_annotation.csv。
