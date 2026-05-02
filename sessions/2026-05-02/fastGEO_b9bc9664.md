@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
 | End | 2026/05/02 22:31 |
-| Messages | 19 |
+| Messages | 20 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -196,3 +196,7 @@ EYST-QD3U2
 ### 🤖 Copilot <sub>2026/05/02 22:31</sub>
 
 你切到 Clash 之后，之前用的 6152 很可能已经不是正确出口了。我先重新读当前系统代理和 Clash 监听端口，再直接测 auth.openai.com，这样能判断是端口错了还是节点本身还在拦。
+
+### 🤖 Copilot <sub>2026/05/02 22:31</sub>
+
+切到 Clash 之后，链路状态已经变了：auth.openai.com 现在是通的，之前那次失败基本就是因为还在强行走旧的 Surge 6152。接下来我直接复测 chatgpt.com 和重新发起一次不绑旧代理的 Codex 登录。
