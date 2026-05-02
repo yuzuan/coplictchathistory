@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:54 |
-| Messages | 38 |
+| Messages | 39 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -334,3 +334,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 能实现的场景是：你直接用 read_GPL_url，而且不传 out_dir。当前代码会把网页先放进临时文件、函数结束时自动删除，然后只把提取后的注释表写进 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L188-L200) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L238-L241)。也就是说，“不保留原始 GPL 文件本体，只保留注释表”这一目标，当前代码已经能做到。
 
 不能自动做到的场景是：你先手动把 GPL 原文件下载到本地，再用 read_GPL_file 去读。当前代码会提取注释并写入 ~/.fastGEO/anno_obj_user.rda，但不会替你删除那个本地原文件，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L137-L161)。如果你坚持走这个本地文件流程，就还差“自动删除输入文件”这一步，目前代码里没有。
+
+### 👤 User <sub>2026/05/02 21:26</sub>
+
+如何清除 Codex 的环境变量
