@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:28 |
-| Messages | 28 |
+| Messages | 29 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -262,3 +262,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:28</sub>
 
 这个问题我直接给你是或不是。是，提取完后的注释表会保存进 ~/.fastGEO/anno_obj_user.rda；不是，原始 GPL 文件本体不会保存进去。
+
+### 🤖 Copilot <sub>2026/05/02 18:28</sub>
+
+是的，提取完的“注释表”会保存到 ~/.fastGEO/anno_obj_user.rda；源码里对应的是 save_user_anno 这一步，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L156-L161) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L238-L241)。原始 GPL 文件本体仍然留在你浏览器下载目录，或者你指定的 out_dir 里，不会写进这个 rda。
