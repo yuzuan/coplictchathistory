@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 23:21 |
-| Messages | 83 |
+| End | 2026/05/02 23:22 |
+| Messages | 84 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -609,3 +609,24 @@ Clash 代理已经完全停了，没有任何端口在监听。**需要重新打
 ### 🤖 Copilot <sub>2026/05/02 23:21</sub>
 
 系统代理回到了 Surge (6152)。先测试 Surge 能不能访问 `platform.openai.com`：
+
+### 🤖 Copilot <sub>2026/05/02 23:22</sub>
+
+Surge 的出口 IP `104.153.209.33` 也被 Cloudflare 拦了（403）。
+
+**两步解决：**
+
+**第一步：用手机浏览器拿 API Key**（不需要 Mac 代理）
+1. 手机浏览器打开 `https://platform.openai.com/api-keys`
+2. 登录同一个 OpenAI 账号
+3. 点 **"Create new secret key"**，复制 `sk-...` 开头的 key
+
+**第二步：在 Mac 终端运行（不需要代理，只是写本地文件）**
+
+```
+codex login --with-api-key sk-你的key...
+```
+
+API key 登录只是写入本地配置，不走 Cloudflare。
+
+拿到 key 后把 `sk-xxx` 告诉我，我帮你直接运行完成。（或者你自己在终端粘贴，不想共享 key 的话）
