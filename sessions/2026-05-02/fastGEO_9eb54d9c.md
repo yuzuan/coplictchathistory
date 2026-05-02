@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 21:50 |
-| Messages | 80 |
+| End | 2026/05/02 21:51 |
+| Messages | 81 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -574,3 +574,7 @@ EWWQ-B56J8
 ### 🤖 Copilot <sub>2026/05/02 21:50</sub>
 
 新错误已经很有指向性了：Device Code 页面本身能通过 7897 打开，但 Codex 请求 usercode 接口时报错。我把完整错误尾部读出来，判断是代理协议配置问题还是节点问题。
+
+### 🤖 Copilot <sub>2026/05/02 21:51</sub>
+
+我先把变量收窄一下：只保留 HTTP_PROXY 和 HTTPS_PROXY，不再混入 ALL_PROXY。很多 CLI 在同时看到 HTTP 代理和 SOCKS 代理时会走错通道，这比继续猜浏览器状态更有效。
