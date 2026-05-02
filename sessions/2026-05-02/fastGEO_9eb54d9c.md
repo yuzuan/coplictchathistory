@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 22:09 |
-| Messages | 97 |
+| Messages | 99 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -642,3 +642,39 @@ CLI 自己有独立的 login 子命令，我再看一下它有没有比交互界
 ### 🤖 Copilot <sub>2026/05/02 22:09</sub>
 
 我只取最相关的命中，看这个客户端是不是手工改过代理行为。
+
+### 🤖 Copilot <sub>2026/05/02 22:09</sub>
+
+我已经把能自动排掉的链路都排完了，结论比较硬：当前代理本身是通的，但 Codex 进程自己的认证请求栈在你这台机器上仍然失败。再往下继续盲试收益很低，所以我把当前最短可行路径压成两条。现在已经能下结论了。
+
+根因不是 issue 2414 里最开始那种“单纯 localhost 回调失败”了，而是更具体的一层：
+
+1. 你的系统代理端口中途从 6152 变成了 7897。
+2. 通过当前真实代理 7897，浏览器页和 `deviceauth` 接口本身是通的。
+3. 但 Codex CLI 无论 0.118.0 还是更新后的 0.128.0，在你这台 macOS 上请求 `https://auth.openai.com/api/accounts/deviceauth/usercode` 仍然报 `error sending request`。
+4. 我已经验证过同一个接口用 `curl` 通过 7897 发 `POST` 能拿到正常 HTTP 响应，所以问题收缩成 “Codex 自己的认证请求栈 + 你当前代理环境” 的兼容性问题，不是代理完全不可用。
+
+也就是说，这一步继续在当前机器里硬磕浏览器回调或 Device Code，成功率不高。现在最短可行解是这两个：
+
+1. 在另一台能正常登录 Codex 的环境里先完成登录，然后把 `auth.json` 拷回这台 Mac 的 `~/.codex/auth.json`。
+2. 如果你有 API key，直接走 `codex login --with-api-key`，绕过 ChatGPT/device auth 整条链路。
+
+你这台机器上已经完成的有效修复信息是：
+- 当前应该使用的代理端口是 `127.0.0.1:7897`，不是 6152。
+- Codex 已更新到 `0.128.0`。
+- 以后如果还要试，至少要带上这组变量：
+
+```
+export HTTP_PROXY=http://127.0.0.1:7897
+export HTTPS_PROXY=http://127.0.0.1:7897
+export http_proxy=http://127.0.0.1:7897
+export https_proxy=http://127.0.0.1:7897
+export NO_PROXY=localhost,127.0.0.1
+export no_proxy=localhost,127.0.0.1
+```
+
+如果你想继续，我建议不要再重复之前那条失败链路，直接选一个真正能收敛的下一步。
+
+### 👤 User <sub>2026/05/02 22:09</sub>
+
+选一个真正能收敛的下一步
