@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:53 |
-| Messages | 34 |
+| Messages | 35 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -305,3 +305,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 当你不手动传 anno_file 时，download_GEO 会先把包内自带注释和 ~/.fastGEO/anno_obj_user.rda 里的用户注释合并起来，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/anno_manage.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/anno_manage.R#L21-L46) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/download_GEO.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/download_GEO.R#L52-L63)。如果同一个 GPL 在两边都存在，用户注释优先，也就是你自己提取并存进 ~/.fastGEO/anno_obj_user.rda 的结果会覆盖包内旧版本。
 
 所以你一旦先用 read_GPL_url 把某个平台的注释提取好，之后再跑 download_GEO 遇到同一个 GPL，它会优先直接拿这份用户注释去做探针注释，而不会再把你带回“缺注释、手工补平台”的老流程，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/download_GEO.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/download_GEO.R#L99-L122)。只有当这个 GPL 在合并后的注释仓库里还不存在时，它才会继续尝试 AnnoProbe 或在线注释。
+
+### 🤖 Copilot <sub>2026/05/02 18:53</sub>
+
+我把最推荐的实际用法压成固定习惯，避免你后面每次都重新判断。
