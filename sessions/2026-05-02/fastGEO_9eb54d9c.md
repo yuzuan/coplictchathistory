@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:28 |
-| Messages | 29 |
+| End | 2026/05/02 18:40 |
+| Messages | 30 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -266,3 +266,11 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:28</sub>
 
 是的，提取完的“注释表”会保存到 ~/.fastGEO/anno_obj_user.rda；源码里对应的是 save_user_anno 这一步，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L156-L161) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L238-L241)。原始 GPL 文件本体仍然留在你浏览器下载目录，或者你指定的 out_dir 里，不会写进这个 rda。
+
+### 🤖 Copilot <sub>2026/05/02 18:40</sub>
+
+如果你的要求是“原始 GPL 文件本体不要保留，提完注释就删掉”，那最合适的做法不是先用浏览器下载，也不是先用 read_GPL_file 处理本地文件，而是直接用 read_GPL_url，并且不要传 out_dir。
+
+原因是当前版 read_GPL_url 在 out_dir 为空时，会把网页内容放进临时文件，然后在函数结束时自动删掉，源码就在 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L188-L200)。真正长期留下来的只会是提取后的注释表，也就是保存到 ~/.fastGEO/anno_obj_user.rda 的内容，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L238-L241)。
+
+相反，如果你先手动下载原始 GPL 文件，再用 read_GPL_file 去读，fastGEO 不会自动删除你那个本地原文件；它只会提取注释并写入 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L137-L161)。所以如果你坚持“不留原文件”，建议你以后直接走 read_GPL_url 这一条。
