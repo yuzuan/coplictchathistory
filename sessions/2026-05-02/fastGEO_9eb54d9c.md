@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:43 |
-| Messages | 31 |
+| Messages | 32 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -278,3 +278,18 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:43</sub>
 
 我按你“不留原始 GPL 文件、只留注释表”的要求，给你一个最省事的推荐流程。
+
+### 🤖 Copilot <sub>2026/05/02 18:43</sub>
+
+最省事的推荐流程就是这 3 步。
+
+1. 不要先用浏览器下载原始 GPL 文件，直接复制 GEO 的那个平台网页链接。  
+2. 直接用 read_GPL_url 处理这个链接，而且不要传 out_dir。  
+3. 函数结束后，临时 HTML 会自动删除，只留下提取好的注释表到 ~/.fastGEO/anno_obj_user.rda；以后 download_GEO 会自动读取它。
+
+这样做的结果是：
+- 不留原始 GPL 文件本体。
+- 不在项目目录里落任何 html 或 csv。
+- 只保留真正有用的注释映射结果。
+
+如果你还担心以后换机器丢失，只需要偶尔备份一下 ~/.fastGEO/anno_obj_user.rda 就够了，不需要备份那些原始 GPL 页面。
