@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 22:45 |
-| Messages | 42 |
+| End | 2026/05/02 22:46 |
+| Messages | 43 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -305,3 +305,17 @@ EYST-QD3U2
 ### 🤖 Copilot <sub>2026/05/02 22:45</sub>
 
 我先补读必需上下文，然后直接告诉你授权码该填在哪个页面、看到什么界面才算对。
+
+### 🤖 Copilot <sub>2026/05/02 22:46</sub>
+
+授权码就填在这个页面里：
+
+https://auth.openai.com/codex/device
+
+你现在可以这样做：
+1. 看刚才我帮你打开的那个浏览器标签页。
+2. 如果页面先让你登录 OpenAI/ChatGPT 账号，先登录。
+3. 登录后会出现输入 device code 的输入框，把 EZKA-9TL0T 填进去。
+4. 提交后如果看到类似已授权、continue、return to app 的提示，就说明这一步完成了。
+
+如果你在 VS Code 里那个页面没看到输入框，直接用你平时的浏览器打开同一个网址也可以，效果一样。完成后我就去终端里收尾检查。
