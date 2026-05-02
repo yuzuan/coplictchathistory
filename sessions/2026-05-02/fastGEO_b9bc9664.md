@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
 | End | 2026/05/02 22:37 |
-| Messages | 30 |
+| Messages | 31 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -240,3 +240,7 @@ EYST-QD3U2
 ### 🤖 Copilot <sub>2026/05/02 22:37</sub>
 
 已经抓到真正的硬点了。Codex 并没有按你现在的 Clash 7897 走，它还在偷偷用旧的 6152。也就是说，切换到 Clash 后，Codex 的代理快照没刷新，所以一直往已经失效的旧代理打。
+
+### 🤖 Copilot <sub>2026/05/02 22:37</sub>
+
+旧代理来源找到了：就是 ~/.codex/.env。里面把 HTTP_PROXY 和 HTTPS_PROXY 写死成了 6152，所以你切到 Clash 以后，Codex 仍然固执地走 Surge 的旧口。这个就能直接改。
