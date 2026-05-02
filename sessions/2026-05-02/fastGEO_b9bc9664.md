@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 23:17 |
-| Messages | 80 |
+| End | 2026/05/02 23:18 |
+| Messages | 81 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -580,3 +580,24 @@ Clash 代理端口 7897 已经断开了（`Failed to connect to port 7897`）。
 Clash 代理已经完全停了，没有任何端口在监听。**需要重新打开 Clash Verge**，确认它正在运行并且系统代理是开着的。
 
 重启后告诉我，我帮你确认端口和节点选择，然后一步完成 Codex 登录。
+
+### 🤖 Copilot <sub>2026/05/02 23:18</sub>
+
+好的，不用代理软件，有更简单的方法：
+
+**方案一（最简单）：手机热点直接登录**
+1. 手机开热点，Mac 连手机热点（运营商 IP = 完全干净的住宅 IP，Cloudflare 不会拦）
+2. 不需要任何代理，直接运行 `codex login --device-auth`
+3. 浏览器打开链接，输入码，一次成功
+4. 登录完成后再换回 WiFi
+
+**方案二：OpenAI API Key 绕过整个授权流程**
+- 去 `platform.openai.com` → API Keys → Create new key
+- 然后：`codex login --with-api-key sk-xxx...`
+- 不走浏览器，不受 Cloudflare 影响
+- 缺点：需要 platform.openai.com 账号有余额
+
+**方案三：尝试修复 Clash**（如果你想继续用代理）
+- 先告诉我 Clash 的具体问题是什么（崩溃？节点错误？）
+
+手机热点方案 5 分钟内就能解决，强烈推荐。
