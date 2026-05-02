@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
 | End | 2026/05/02 22:48 |
-| Messages | 46 |
+| Messages | 47 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -341,3 +341,20 @@ https://auth.openai.com/codex/device
 ### 🤖 Copilot <sub>2026/05/02 22:48</sub>
 
 我先补读必需上下文，然后给你一个不依赖页面自动跳转的强制进入办法。
+
+### 🤖 Copilot <sub>2026/05/02 22:48</sub>
+
+别等它自动跳。直接强制这样做：
+
+1. 先在浏览器里把 OpenAI 账号登录完成。
+2. 登录完以后，手动把地址栏重新输入一次：
+   https://auth.openai.com/codex/device
+3. 回到这个地址后，再看有没有输入 code 的框。
+4. 有的话就填：
+   EZKA-9TL0T
+
+关键点只有两个：
+- 一定是 auth.openai.com/codex/device，不是别的页面。
+- 如果 VS Code 内置浏览器登录后跳不回 device 页，直接换你常用的外部浏览器，再手动重新打开这个地址，通常最稳。
+
+如果你现在已经登录过了，但还在别的页面，就不要停留，直接重新访问上面这个地址一次。这样能绕过大多数跳转问题。
