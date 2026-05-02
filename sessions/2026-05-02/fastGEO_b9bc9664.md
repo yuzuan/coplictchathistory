@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 22:38 |
-| Messages | 34 |
+| End | 2026/05/02 22:39 |
+| Messages | 35 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -256,3 +256,17 @@ EYST-QD3U2
 ### 🤖 Copilot <sub>2026/05/02 22:38</sub>
 
 根因已经落地成一个确定问题，不再是猜测。我顺手记一条通用经验，避免下次同类问题再从头排。
+
+### 🤖 Copilot <sub>2026/05/02 22:39</sub>
+
+问题已经推进到只差最后一步。
+
+我已经把 Codex 自己缓存的旧代理从 Surge 的 6152 修成了你当前 Clash 的 7897。修完以后，Codex 设备登录终于能正常启动，不再是一上来就报 usercode 发送失败。
+
+现在终端里正在等待你完成浏览器授权：
+1. 打开这个地址
+   https://auth.openai.com/codex/device
+2. 输入这次的一次性授权码
+   EZBP-Z66U2
+
+补一句风险判断：登录链路现在已经被我修通了，但你当前代理出口对 chatgpt.com 的某些后端接口仍然会触发 Cloudflare challenge。所以如果你浏览器授权完成后，Codex 还是异常，剩下大概率就是节点出口质量问题，不是本机配置了。
