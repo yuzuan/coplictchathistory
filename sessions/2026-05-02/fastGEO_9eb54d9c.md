@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:26 |
-| Messages | 27 |
+| End | 2026/05/02 18:28 |
+| Messages | 28 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -258,3 +258,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 - 你手动下载的原始 GPL 文件自己保留在下载目录。
 - 调 read_GPL_file 时给 out_dir，这样会多写一个 GPL编号_annotation.csv。
 - 调 read_GPL_url 时给 out_dir，这样会留下 GPL编号.html 和 GPL编号_annotation.csv。
+
+### 🤖 Copilot <sub>2026/05/02 18:28</sub>
+
+这个问题我直接给你是或不是。是，提取完后的注释表会保存进 ~/.fastGEO/anno_obj_user.rda；不是，原始 GPL 文件本体不会保存进去。
