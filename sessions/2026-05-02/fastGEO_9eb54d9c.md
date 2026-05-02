@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:24 |
-| Messages | 23 |
+| Messages | 24 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -227,3 +227,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:24</sub>
 
 源码实际路径在 fastGEO v 目录下面，不是我刚才用的短路径。我现在直接读取这三个文件，确认“自己下载的 GPL 文件”和“提取出的注释”分别保存到哪里。
+
+### 🤖 Copilot <sub>2026/05/02 18:24</sub>
+
+我已经拿到当前版源码，下面直接给你精确位置和默认保存规则。
