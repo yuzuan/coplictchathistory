@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:24 |
-| Messages | 24 |
+| Messages | 25 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -231,3 +231,15 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:24</sub>
 
 我已经拿到当前版源码，下面直接给你精确位置和默认保存规则。
+
+### 🤖 Copilot <sub>2026/05/02 18:24</sub>
+
+分两种情况。
+
+如果你是自己先从浏览器或 GEO 网站把 GPL 原文件下载到本地，那原始文件就留在你当时保存的那个目录里，fastGEO 不会把它挪走。
+
+如果你随后用 read_GPL_file 处理这个本地 GPL 文件，当前版会把“提取好的注释结果”持久化到 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L137-L161) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_file.Rd](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_file.Rd#L33-L34)。默认如果你没有给 out_dir，就不会额外在当前项目里写一个注释 CSV；如果你给了 out_dir，就会再多写一个 out_dir/GPL编号_annotation.csv。
+
+如果你不是先手动下载文件，而是直接用 read_GPL_url 让 fastGEO 去抓 GEO 网页，那么提取后的注释同样会保存到 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L188-L241) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_url.Rd](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_url.Rd#L33-L34)。这时如果你没给 out_dir，网页 HTML 只会放在临时目录里并在函数结束时清掉；如果给了 out_dir，就会留下两个文件：out_dir/GPL编号.html 和 out_dir/GPL编号_annotation.csv。
+
+所以最关键的一句是：现在真正长期保存、供 download_GEO 后续自动读取的，不是你手里的原始 GPL 文件，而是 ~/.fastGEO/anno_obj_user.rda 这个用户注释仓库。
