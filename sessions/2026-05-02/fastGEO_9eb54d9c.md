@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:43 |
-| Messages | 32 |
+| End | 2026/05/02 18:52 |
+| Messages | 33 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -293,3 +293,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 - 只保留真正有用的注释映射结果。
 
 如果你还担心以后换机器丢失，只需要偶尔备份一下 ~/.fastGEO/anno_obj_user.rda 就够了，不需要备份那些原始 GPL 页面。
+
+### 🤖 Copilot <sub>2026/05/02 18:52</sub>
+
+我把最后一环补上，就是 download_GEO 之后到底怎么利用这个注释仓库。
