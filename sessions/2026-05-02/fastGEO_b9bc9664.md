@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 22:31 |
-| Messages | 21 |
+| End | 2026/05/02 22:32 |
+| Messages | 22 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -204,3 +204,7 @@ EYST-QD3U2
 ### 🤖 Copilot <sub>2026/05/02 22:31</sub>
 
 现在还有个分叉没确认清楚：要么 Clash 的实际代理端口不是 7897，要么 Codex 没有正确走到你现在这条代理。我先把 Clash 的真实端口和配置读出来，再按正确端口重试。
+
+### 🤖 Copilot <sub>2026/05/02 22:32</sub>
+
+链路本身已经能到 auth.openai.com，但 Codex 还是在 usercode 这一步报发送请求失败。这个差异更像是 CLI 自己的代理读取方式问题。我先把 usercode 接口单独打通，再用小写代理变量重试一次，因为很多 Rust 网络库在这点上比较挑。
