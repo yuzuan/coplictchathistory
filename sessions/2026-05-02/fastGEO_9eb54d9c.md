@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 21:52 |
-| Messages | 83 |
+| Messages | 84 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -586,3 +586,7 @@ EWWQ-B56J8
 ### 🤖 Copilot <sub>2026/05/02 21:52</sub>
 
 我在这个干净的新会话里再次选 Device Code，这次只保留 HTTP/HTTPS 代理。
+
+### 🤖 Copilot <sub>2026/05/02 21:52</sub>
+
+这一步又缩小了范围：7897 代理链路本身是通的，但 0.118.0 这个旧版 Codex 在请求 deviceauth/usercode 时仍然报错。issue 里后来也提到这类认证 bug 修过多轮，所以现在最合理的动作就是把 Codex 更新到当前版再重试。
