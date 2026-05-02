@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
 | End | 2026/05/02 18:53 |
-| Messages | 35 |
+| Messages | 36 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -309,3 +309,16 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 ### 🤖 Copilot <sub>2026/05/02 18:53</sub>
 
 我把最推荐的实际用法压成固定习惯，避免你后面每次都重新判断。
+
+### 🤖 Copilot <sub>2026/05/02 18:53</sub>
+
+最推荐的实际用法就是下面这一套固定习惯。
+
+1. 平时先直接跑 download_GEO。  
+2. 如果某个 GPL 注释缺失，不要先用浏览器把原始 GPL 文件下载到本地。  
+3. 直接复制那个 GPL 的 GEO 网页链接，用 read_GPL_url 去提取，而且不传 out_dir。  
+4. 提取完之后重新跑 download_GEO，让它自动从 ~/.fastGEO/anno_obj_user.rda 读取你刚保存的注释。  
+5. 只有在你明确想留档 html 或 csv 时，才给 out_dir。  
+6. 真正需要长期备份的只有 ~/.fastGEO/anno_obj_user.rda，不是那些原始 GPL 页面。
+
+这样最省事，也最符合你现在“不留原始文件、只留注释表”的要求。
