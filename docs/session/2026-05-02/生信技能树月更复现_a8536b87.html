@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>对以下三个 notebook 做中等到深入程度的只读比较分析，不要修改任何文件：</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 49 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 50 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-02/生信技能树月更复现_a8536b87.md">Markdown</a>
@@ -2022,6 +2022,56 @@ Non_Myeloid ← 污染标签（仅 snGBM 显式）</code></pre><p class="message
       &quot;id&quot;: 4,
       &quot;title&quot;: &quot;归纳研究主线建议&quot;,
       &quot;status&quot;: &quot;completed&quot;
+    }
+  ]
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/03 00:24</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">**核心判断**<br>这三本 notebook 最适合收束成一个“程序层面”的研究，不适合继续把重点放在每本里各自的 subtype 名字上。真正稳定的是两条轴，而不是单个标签：</p><p class="message-paragraph">1. 一条是空间应激轴：从外围的补体/吞噬修复程序，逐步走向核心的缺氧与 HS-UPR 应激程序。<br>2. 另一条是谱系轴：Microglia 偏的程序和 Macrophage/Monocyte 偏的程序，在不同数据类型里会被放大或压缩。</p><p class="message-paragraph">如果你要定一个主线，我建议定成：<br>“GBM 髓系细胞沿 Peripheral/Peritumoral 到 Core/Tumor 的连续重编程，核心不是某一个 subtype 的增减，而是从清除/修复样程序向缺氧-蛋白稳态应激程序的迁移；这个过程又受到细胞来源差异影响。”</p><p class="message-paragraph">**三本的分工**<br>[三位置 GBM/1_myeloid_subclustering.ipynb](三位置%20GBM/1_myeloid_subclustering.ipynb#L1574-L1582) 的价值最高在空间分辨率。它把 Peripheral、Peritumoral 统一到 Peripheral_like，把 Core、Tumor 统一到 Tumor_like，但同时保留了 Peripheral、Edge、Core 三层趋势。真正该盯的是 [三位置 GBM/write/1_myeloid_subclustering/myeloid_subtype_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_subtype_tissue_trend_summary.csv) 和 [三位置 GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv)：HS_UPR、Hypoxia、Scavenger_IS 都往 Core 走，Systemic_Inflam 和 Complement_IS 更偏 Peripheral。这个 notebook 最适合当发现集。</p><p class="message-paragraph">[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L521-L529) 的价值最高在“全景 atlas”。它的 myeloid 输入最宽，包含 Macrophage、Microglia、Monocyte、Neutrophil，所以最容易把程序拆得细，但也最容易把来源差异混进来。当前你刚重跑出来的组织倾向在 [scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv](scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv) 里已经很清楚：Mg-Inflam TAM 和 Lipid-metabolism TAM 偏 Peripheral_like，而 Homeostatic MG、IFN-resp TAM、Systemic-Inflam TAM 偏 Tumor_like，Complement-Scavenger TAM 和 HS-UPR TAM 则接近中间态。这个 notebook 更适合当参考图谱和统一命名骨架。</p><p class="message-paragraph">[snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L552-L558) 的价值最高在“纯度”和“验证”。它只保留 macrophage 体系，并且明确把 Peritumoral 和 Tumor 统一成 Peripheral_like/Tumor_like，[snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L617-L619)。它还直接把 scGBM 当参考做 label transfer，[snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L1944-L1967) 和 [snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L2036-L2037)。程序层面的 Tumor vs Peritumoral 差异在 [snGBM/results/5_snRNA_myeloid_subclustering/myeloid_program_l1_tumor_vs_peritumoral_da.csv](snGBM/results/5_snRNA_myeloid_subclustering/myeloid_program_l1_tumor_vs_peritumoral_da.csv) 里最有用：Stress_Hypoxia_TAM 明显偏 Tumor，Complement_Scavenger_TAM 和 Homeostatic_MG 明显偏 Peri。</p><p class="message-paragraph">**最稳的共通点**<br>1. 补体/清道夫程序是三本都能看到的。三位置里是 Complement_IS/Scavenger_IS，[三位置 GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv)；scGBM 里是 Complement-Scavenger TAM 和 Lipid-metabolism TAM，[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L521-L523)；snGBM 里是 Complement-Scavenger TAM、Scavenger-Mac、APOE-TAM/Scavenger_Lipid，[snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L553-L558)。这说明“吞噬-清除-脂代谢”是稳健主程序，不是某一数据集偶然产物。<br>2. 应激程序也是三本都能看到的，但表型名称不完全一致。三位置里 HS_UPR 和 Hypoxia 都向 Core 增强；snGBM 里 Stress_Hypoxia_TAM 最强烈偏 Tumor，HS-UPR TAM 也偏 Tumor；scGBM 里 HS-UPR TAM 没有那么极端，更像边界/过渡态。这说明“核心应激”是稳的，但 scGBM 的混合输入会把它稀释。<br>3. 三位置里的 Edge 很关键。这个信息在另外两本完全没有，所以真正的连续梯度证据只能从 [三位置 GBM/write/1_myeloid_subclustering/myeloid_subtype_by_tissue_fraction_within_subtype.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_subtype_by_tissue_fraction_within_subtype.csv) 和 trend summary 提取。换句话说，三位置不是“多一个分组”这么简单，而是唯一能定义过渡态的位置模型。</p><p class="message-paragraph">**最关键的冲突**<br>1. Homeostatic MG 这个标签现在不能直接跨 notebook 等同。snGBM 的 Homeostatic MG 是典型稳态 microglia，注释写得很明确，P2RY12、NAV3、SLC1A3，而且 99% Peritumoral，[snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb#L552-L552)。但 scGBM 的“Homeostatic MG”其实带有明显的 MT1X、MT2A、CSTB 特征，[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L525-L525)，并且在你刚重跑的新结果里是 95.5% Tumor_like，[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L615-L615)。这更像一种 metal-stress microglia，而不是真正的 homeostatic microglia。这个标签漂移如果不先处理，会直接把研究主线带偏。<br>2. Mg-Inflam TAM 不够稳，至少不能当三本共通主线。它在 scGBM 里是最大群，[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L500-L500)，而 snGBM 并没有一个对应的独立群。这更像是一个依赖 scRNA 输入组成、尤其依赖 microglia 混入程度的程序，而不是“所有 GBM 髓系都共享”的核心状态。<br>3. Systemic-Inflam 也不够稳。三位置里它更偏 Peripheral，[三位置 GBM/write/1_myeloid_subclustering/myeloid_subtype_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_subtype_tissue_trend_summary.csv)，但当前 scGBM 新结果里它是 Tumor_like，[scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb#L617-L617)，而 snGBM 又没有一个非常干净的一一对应群。这说明它更像平台和谱系敏感程序，不适合作为第一主线。</p><p class="message-paragraph">**我建议的研究主线**<br>1. 主线一：外围/边界到核心的应激递进。<br>核心问题不是“哪个 subtype 多了”，而是 Complement_Scavenger/Scavenger_Lipid 这类修复-吞噬程序，如何在 Edge 过渡成 HS-UPR/Hypoxia/Stress_Hypoxia。三位置负责定义梯度，snGBM 负责验证 Tumor vs Peritumoral，scGBM 负责给出全景参考和 label space。<br>2. 主线二：把“空间轴”和“谱系轴”拆开。<br>建议明确分成 Program axis 和 Lineage axis 两层。Program axis 看 Complement_Scavenger、Scavenger_Lipid、Stress_HSUPR、Stress_Hypoxia。Lineage axis 看 Microglia-like、Macrophage-like、Monocyte-like。这样就能解释为什么 scGBM 会出现 Mg-Inflam 和“肿瘤型 Homeostatic MG”，而 snGBM 不会。<br>3. 主线三：把 Complement_Scavenger 定义成边界接口态，而不是终点态。<br>它在三位置偏 Peripheral，但不是最外围；在 scGBM 接近中间态；在 snGBM 又常常出现在 Peritumoral。它最像边界清除/修复接口，而不是单纯的“好”或“坏” TAM。这个状态非常适合往细胞通讯、血管邻近、基底膜重塑上扩。</p><p class="message-paragraph">**最值得你现在马上做的，不是继续加 subtype，而是先统一分析框架**<br>1. 先把三本都收敛到 myeloid_program_l1 层，不再直接比较原始 subtype 名字。<br>2. 把 scGBM 里的 Homeostatic MG 重新审一下命名，至少和 snGBM 的真正稳态 microglia 区分开。<br>3. 以三位置为发现集，先做一个 program 级别的 weighted center 排序，再用 scGBM 和 snGBM 验证哪些 program 在二位置里也保留同方向。<br>4. 真正的论文主图建议围绕 Peripheral/Edge/Core 或 Peripheral_like/Tumor_like 的程序迁移，不要围绕 Mg-Inflam 这种单数据集强信号来搭总叙事。</p><p class="message-paragraph">一句话收束：你现在最有潜力的研究思路，不是“找三本都叫同一个名字的 cluster”，而是“把三本都能投射到同一个程序坐标系里，证明 GBM 髓系细胞沿空间轴发生从清除/修复到缺氧-蛋白稳态应激的重编程，并且这个过程受 microglia 与 macrophage 来源差异调制”。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;next-step&quot;,
+      &quot;question&quot;: &quot;基于这版收敛后的研究判断，下一步你要我优先做什么？&quot;,
+      &quot;multiSelect&quot;: false,
+      &quot;allowFreeformInput&quot;: true,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;把这套比较整理成 markdown 研究备忘录&quot;,
+          &quot;description&quot;: &quot;生成一份可直接存档的结构化摘要&quot;
+        },
+        {
+          &quot;label&quot;: &quot;继续帮我重命名 scGBM 里的可疑 subtype&quot;,
+          &quot;description&quot;: &quot;先处理 Homeostatic MG 这类跨数据集含义不一致的标签&quot;
+        },
+        {
+          &quot;label&quot;: &quot;帮我设计一个统一 program-level 分析框架&quot;,
+          &quot;description&quot;: &quot;把三本 notebook 统一到同一套 program 比较流程&quot;
+        },
+        {
+          &quot;label&quot;: &quot;结束当前任务并等待新指令&quot;,
+          &quot;description&quot;: &quot;保留当前结论，不再继续操作&quot;
+        }
+      ]
     }
   ]
 }</code></pre>
