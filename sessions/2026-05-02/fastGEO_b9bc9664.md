@@ -6,7 +6,7 @@
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
 | End | 2026/05/02 22:21 |
-| Messages | 5 |
+| Messages | 6 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -31,3 +31,7 @@
 ### 🤖 Copilot <sub>2026/05/02 22:21</sub>
 
 日志已经给出关键异常，不是“没装好”。现在要把它定性成网络挑战、账号桥接，还是 CLI 自身认证状态问题。
+
+### 🤖 Copilot <sub>2026/05/02 22:21</sub>
+
+桥接文件是有的，说明“VS Code 没连到 ChatGPT 桌面端”不是主因。现在只差两件事要确认：CLI 认证状态，以及 chatgpt.com 请求是不是被 Cloudflare 挑战拦了。
