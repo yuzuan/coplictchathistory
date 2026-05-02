@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 23:26 |
-| Messages | 86 |
+| End | 2026/05/02 23:27 |
+| Messages | 87 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -638,3 +638,18 @@ API key 登录只是写入本地配置，不走 Cloudflare。
 ### 🤖 Copilot <sub>2026/05/02 23:26</sub>
 
 Device code 已生成：**F1JK-HQITV**（15分钟内有效）。先测试一下 Surge 能不能访问授权端点：
+
+### 🤖 Copilot <sub>2026/05/02 23:27</sub>
+
+302 是重定向（正常！说明 Surge 可以访问 auth.openai.com，不是 403）。
+
+**现在立刻在浏览器完成这几步：**
+
+1. 先开 `https://chatgpt.com` → 确认已登录（看到聊天界面）
+2. **不要关 chatgpt.com 标签页**，新建标签页打开 `https://auth.openai.com/codex/device`
+3. 看到输入框后填入：`F1JK-HQITV`
+4. 点 Authorize/确认
+
+**注意：浏览器必须也走 Surge 代理**（系统代理设置了 6152，浏览器默认跟随，应该没问题）
+
+完成后告诉我，我立刻检查终端是否收到确认。
