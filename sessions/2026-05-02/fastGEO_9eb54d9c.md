@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:24 |
-| Messages | 25 |
+| End | 2026/05/02 18:26 |
+| Messages | 26 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -243,3 +243,7 @@ search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在
 如果你不是先手动下载文件，而是直接用 read_GPL_url 让 fastGEO 去抓 GEO 网页，那么提取后的注释同样会保存到 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/R/read_GPL.R#L188-L241) 和 [fastGEO v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_url.Rd](fastGEO%20v/fastGEO_src_2.0.1/fastGEO/man/read_GPL_url.Rd#L33-L34)。这时如果你没给 out_dir，网页 HTML 只会放在临时目录里并在函数结束时清掉；如果给了 out_dir，就会留下两个文件：out_dir/GPL编号.html 和 out_dir/GPL编号_annotation.csv。
 
 所以最关键的一句是：现在真正长期保存、供 download_GEO 后续自动读取的，不是你手里的原始 GPL 文件，而是 ~/.fastGEO/anno_obj_user.rda 这个用户注释仓库。
+
+### 🤖 Copilot <sub>2026/05/02 18:26</sub>
+
+我先把这个误区直接纠正一下：不会，保存到 ~/.fastGEO/anno_obj_user.rda 的不是原始 GPL 文件本体，而是提取后的“探针 ID 到基因 SYMBOL 的注释表”。
