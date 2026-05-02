@@ -5,8 +5,8 @@
 | Session ID | `9eb54d9c-1eb5-4e4a-bf91-c6335e3e45f3` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 18:04 |
-| End | 2026/05/02 18:14 |
-| Messages | 17 |
+| End | 2026/05/02 18:15 |
+| Messages | 18 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -179,3 +179,29 @@ fastR::write2("rc", ...)  # 行 85
 ### 🤖 Copilot <sub>2026/05/02 18:14</sub>
 
 我继续按“逐函数差异表”往下做，先把关键导出接口和行为变化压缩成一张你能直接拿来判断升级价值的清单。
+
+### 🤖 Copilot <sub>2026/05/02 18:15</sub>
+
+逐函数看，当前版相对 1.10.3 的变化可以压成这几类。
+
+1. 新增公开接口  
+当前版新增了 add_GPL、list_GPL、remove_GPL 这 3 个导出函数，见 [fastGEO_src_2.0.1/fastGEO/NAMESPACE](fastGEO_src_2.0.1/fastGEO/NAMESPACE#L1-L35)。它们背后对应的是新的用户注释仓库模块 [fastGEO_src_2.0.1/fastGEO/R/anno_manage.R](fastGEO_src_2.0.1/fastGEO/R/anno_manage.R#L1-L181)。这组接口解决的是“自己补 GPL 注释后如何长期保存、查看、删除”的问题。
+
+2. 被收敛掉的旧接口  
+我直接解开 [fastGEO_1.10.3.tar.gz](fastGEO_1.10.3.tar.gz) 对比了导出表。1.10.3 里公开导出的 anno_GEO_main、get_GEO_GPL、read_CEL，在当前版已经不再公开；当前主线更强调通过 download_GEO、read_GPL_file、read_GPL_url、add_GPL 走完整流程，公开接口更少，但维护路径更稳定。
+
+3. download_GEO 主流程更稳了  
+旧版 download_GEO 仍把注释主流程挂到 anno_GEO_main 上，更多是围绕包内注释对象或手传 anno_file 运转。我解包 [fastGEO_1.10.3.tar.gz](fastGEO_1.10.3.tar.gz) 看到旧版最后仍是调 anno_GEO_main。当前版则在 [fastGEO_src_2.0.1/fastGEO/R/download_GEO.R](fastGEO_src_2.0.1/fastGEO/R/download_GEO.R#L52-L63) 先装载“内置注释 + 用户注释”的合并对象，再在 [fastGEO_src_2.0.1/fastGEO/R/download_GEO.R](fastGEO_src_2.0.1/fastGEO/R/download_GEO.R#L108-L134) 依次尝试本地注释、AnnoProbe、在线注释，降级路径更完整。
+
+4. GPL 注释保存策略是最大升级点  
+旧版教程明确写着，read_GPL_file 和 read_GPL_url 成功后会自动保存到 fastGEO 安装目录下的 data 目录，见 [fastGEO安装和使用教程-V1.10.3-无测试数据/fastGEO安装和使用教程_raw.tex](fastGEO安装和使用教程-V1.10.3-无测试数据/fastGEO安装和使用教程_raw.tex#L1516-L1559)。这意味着重装包、换库路径、无写权限时都容易出问题。当前版改成把用户注释持久化到家目录下的 ~/.fastGEO/anno_obj_user.rda，见 [fastGEO_src_2.0.1/fastGEO/R/anno_manage.R](fastGEO_src_2.0.1/fastGEO/R/anno_manage.R#L1-L55) 和 [02.fastGEO_analysis_tutorial.Rmd](02.fastGEO_analysis_tutorial.Rmd#L233-L257)。这就是 1.10.3 到当前版最实用的升级。
+
+5. search_GEO 不是当前才有，但默认行为变了  
+search_GEO、get_GEO_query_promot、get_GEO_summary_promot、run_fastGEO_app 在 1.10.3 里已经都有，所以这些不能算“现在新增”。真正变化是当前 [fastGEO_src_2.0.1/fastGEO/R/extract_GSE_info.R](fastGEO_src_2.0.1/fastGEO/R/extract_GSE_info.R#L1-L17) 把 search_GEO 的默认 retmax 设成了 1000；我解包 [fastGEO_1.10.3.tar.gz](fastGEO_1.10.3.tar.gz) 看到旧版默认是 10000。当前默认更保守，误拉太多 UID 的概率更低。
+
+6. 环境门槛提高了  
+当前 [fastGEO_src_2.0.1/fastGEO/DESCRIPTION](fastGEO_src_2.0.1/fastGEO/DESCRIPTION#L1-L15) 要求 R 至少 4.1.0；1.10.3 tar.gz 里还是 3.5.0 起步。也就是当前版功能更稳，但运行环境要求更高。
+
+再说 fastR 1.9.1。这里我得说严格一点：工作区里只有 [fastR_1.9.1.tar.gz](fastR_1.9.1.tar.gz)，没有更高版本 fastR 源码，而且本机 R 库里 fastGEO 和 fastR 也都没装，所以我没法诚实做“1.9.1 对比当前 fastR”的函数级升级表。能确定的是，当前 fastGEO 2.0.1 仍然直接依赖 fastR 的核心能力，见 [fastGEO_src_2.0.1/fastGEO/NAMESPACE](fastGEO_src_2.0.1/fastGEO/NAMESPACE#L38-L46)：parallel_apply、loadp、mkdir、download、lf、print_info、cat2 这些都还在用。也就是说，对 fastGEO 来说，fastR 1.9.1 不是边角依赖，而是底层工具层。
+
+如果只给一句判断：真正值得你关注的升级点主要在 fastGEO，不在 fastR。核心收益就是“GPL 注释不再写死到包目录，改成用户级持久化仓库 + 可管理接口 + 自动合并加载”，这一点会明显减少后续补平台注释时的出坑概率。
