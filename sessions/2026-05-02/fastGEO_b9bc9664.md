@@ -5,8 +5,8 @@
 | Session ID | `b9bc9664-5017-4cdc-b413-3b974c23f6ec` |
 | Workspace | fastGEO |
 | Start | 2026/05/02 22:20 |
-| End | 2026/05/02 22:56 |
-| Messages | 57 |
+| End | 2026/05/02 22:57 |
+| Messages | 58 |
 | Copilot | v0.45.1 |
 | VS Code | v1.117.0 |
 
@@ -436,3 +436,7 @@ clash 的系统代理和虚拟网卡模式能同时打开吗
 2. 把 Clash 的系统代理关掉。
 3. 然后再测一次 Codex 登录或授权页。
 4. 如果还被 challenge，优先换节点，不要先怀疑 TUN。
+
+### 🤖 Copilot <sub>2026/05/02 22:57</sub>
+
+我先补读必需上下文，再直接核对 Codex 自己保存的代理配置；这样能马上判断它会不会绕过你现在的 TUN-only 思路。
