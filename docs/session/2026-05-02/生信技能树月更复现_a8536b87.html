@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>对以下三个 notebook 做中等到深入程度的只读比较分析，不要修改任何文件：</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 97 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 98 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-02/生信技能树月更复现_a8536b87.md">Markdown</a>
@@ -3991,6 +3991,56 @@ Non_Myeloid ← 污染标签（仅 snGBM 显式）</code></pre><p class="message
         {
           &quot;label&quot;: &quot;结束当前任务并等待新指令&quot;,
           &quot;description&quot;: &quot;保留当前结果，不再继续操作&quot;
+        }
+      ]
+    }
+  ]
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/03 17:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">我会把这个统一框架设计成“一个主表 + 两个辅助表 + 三张核心图”，这样你后面既能做跨 notebook 比较，也能直接往文章图上靠。</p><p class="message-paragraph">**表格设计**<br>1. 主表：program_level_master.csv<br>用途：作为所有比较和绘图的唯一输入表。<br>建议列：<br>dataset<br>notebook<br>modality<br>position_raw<br>position_unified<br>program_l1<br>program_l2<br>lineage_unified<br>n_cells<br>total_cells_in_position<br>fraction_within_position<br>fraction_within_program<br>patient_or_sample<br>is_clean_myeloid<br>evidence_source<br>notes</p><p class="message-paragraph">解释：<br>fraction_within_position 是主比较指标，用来做跨数据集热图。<br>fraction_within_program 是辅助指标，用来看某个 program 更偏哪一侧。<br>position_raw 保留 Peripheral、Edge、Core、Peritumoral、Tumor。<br>position_unified 统一成 Peripheral_like、Edge、Tumor_like。<br>三位置如果没有某个 program，不要填 0，填空值，避免把“没有定义”误当成“真实缺失”。</p><p class="message-paragraph">2. 方向表：program_direction_summary.csv<br>用途：回答“这个 program 到底偏外围还是偏核心”。<br>建议列：<br>program_l1<br>dataset<br>position_model<br>peak_position<br>peripheral_fraction<br>edge_fraction<br>tumor_fraction<br>tumor_minus_peripheral<br>weighted_center<br>slope<br>evidence_strength<br>comment</p><p class="message-paragraph">解释：<br>三位置直接用 weighted_center 和 slope，来源就是 [三位置 GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv)。<br>scGBM 和 snGBM 没有 Edge，就只填 tumor_minus_peripheral。<br>evidence_strength 建议用 Strong、Moderate、Weak，方便后面筛主线。</p><p class="message-paragraph">3. 注释映射表：program_crosswalk.csv<br>用途：把三本里不同名字的 subtype 映射到同一 program 层。<br>建议列：<br>dataset<br>raw_subtype<br>merged_subtype<br>program_l1<br>lineage_unified<br>is_clean_myeloid<br>keep_for_main_figure<br>reason</p><p class="message-paragraph">解释：<br>这张表是把 [scGBM/write/4_Sub_clustering/myeloid_unified_name_mapping_applied.csv](scGBM/write/4_Sub_clustering/myeloid_unified_name_mapping_applied.csv)、[snGBM/results/5_snRNA_myeloid_subclustering/cluster_annotation_helper_res0.8.csv](snGBM/results/5_snRNA_myeloid_subclustering/cluster_annotation_helper_res0.8.csv) 和 [三位置 GBM/write/1_myeloid_subclustering/myeloid_cluster_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_cluster_summary.csv) 接起来的关键层。</p><p class="message-paragraph">**图的设计**<br>1. 主图 1：跨数据集 program abundance 热图<br>横轴：<br>scGBM Peripheral_like<br>scGBM Tumor_like<br>snGBM Peritumoral<br>snGBM Tumor<br>三位置 Peripheral<br>三位置 Edge<br>三位置 Core</p><p class="message-paragraph">纵轴建议按空间方向排序：<br>Complement_Scavenger_TAM<br>Mg_Inflam_TAM<br>Homeostatic_MG<br>Inflammatory_Mono_DC<br>Scavenger_Lipid_TAM<br>Stress_Hypoxia_TAM<br>Stress_HSUPR_TAM<br>IFN_Response_TAM</p><p class="message-paragraph">颜色：<br>fraction_within_position<br>单元格角标可选：<br>n_cells 或 evidence_strength</p><p class="message-paragraph">为什么这张图最重要：<br>它直接回答“同一个 program 在三本里是不是往同一个方向走”。</p><p class="message-paragraph">2. 主图 2：program 方向性坐标图<br>横轴：<br>空间方向分数<br>三位置用 weighted_center<br>两位置用 tumor_minus_peripheral 标准化后投到同一尺度</p><p class="message-paragraph">纵轴：<br>stress_vs_clearance score<br>可以手工定义：<br>Complement_Scavenger 和 Scavenger_Lipid 在下半区<br>Stress_Hypoxia 和 Stress_HSUPR 在上半区<br>Mg_Inflam 和 Inflammatory_Mono_DC 在中间偏左<br>Homeostatic_MG 单独标注</p><p class="message-paragraph">点大小：<br>总细胞数或平均 fraction_within_position<br>点颜色：<br>dataset</p><p class="message-paragraph">为什么要这张图：<br>热图只能看多寡，这张图能把“外围修复态”和“核心应激态”画成一条连续轴，适合直接支撑你的研究主线。</p><p class="message-paragraph">3. 主图 3：raw subtype 到 unified program 的 river / sankey<br>左侧：<br>各 notebook 的 raw subtype<br>中间：<br>merged subtype<br>右侧：<br>program_l1</p><p class="message-paragraph">为什么要这张图：<br>它能解释为什么 0.8 之后 cluster 数量变了，但 program 骨架没有被推翻。特别适合处理现在这种情况：<br>scGBM 是 11 个 cluster，<br>snGBM 是 12 个 cluster，<br>三位置是 15 个 cluster，<br>但最后并到 program 层其实只剩几条稳定主线。</p><p class="message-paragraph">**推荐的 program 顺序**<br>如果你想让图一眼就能读出“外围到核心”，我建议固定顺序，不要每张图自动聚类排序：</p><p class="message-paragraph">Complement_Scavenger_TAM<br>Mg_Inflam_TAM<br>Homeostatic_MG<br>Inflammatory_Mono_DC<br>Scavenger_Lipid_TAM<br>Stress_Hypoxia_TAM<br>Stress_HSUPR_TAM<br>IFN_Response_TAM</p><p class="message-paragraph">理由：<br>前四个更像外围入口或早期状态，后四个更像核心适应状态。<br>现在 0.8 之后，snGBM 已经把 Mg-Inflam 拆出来了，所以它应该正式进入统一框架，不再只是 scGBM 特有现象。</p><p class="message-paragraph">**三本接入这个框架时的注意点**<br>1. scGBM 直接用 [scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv](scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv) 和 program 统计表，位置层最清楚。<br>2. snGBM 先用 clean myeloid 版本，再汇总 program，否则污染群会拉歪图。<br>3. 三位置主打趋势，不要硬追求 subtype 名字和另外两本完全一致；它更适合贡献 weighted_center 和 slope，而不是贡献更多 subtype 名称。<br>4. Homeostatic_MG 目前先单列，但在图注里必须说明：scGBM 里的这个标签和 snGBM 的 canonical Homeostatic MG 语义并不完全一样。</p><p class="message-paragraph">**如果只做一张最能打的图**<br>我建议先做主图 1，也就是 program abundance 热图。<br>因为它最直接，也最容易把你现在 0.8 之后的核心故事讲清楚：<br>外围主要是 Complement/Mg-Inflam 类，<br>核心主要是 Stress/HSUPR 类，<br>三位置提供 Edge 过渡，<br>scGBM 和 snGBM 分别提供广谱 atlas 和高纯度验证。</p><p class="message-paragraph">如果你要把这个框架真正落地成文件和图，下一步最自然的是：<br>1. 先生成 program_level_master.csv<br>2. 再做主图 1 的热图<br>3. 最后补主图 2 的方向性坐标图</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;next-step&quot;,
+      &quot;question&quot;: &quot;这个统一的 program-level 框架已经定了，下一步你要我先落哪一步？&quot;,
+      &quot;multiSelect&quot;: false,
+      &quot;allowFreeformInput&quot;: true,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;直接帮我生成 program_level_master.csv&quot;,
+          &quot;description&quot;: &quot;把三本现有结果整理成统一主表&quot;
+        },
+        {
+          &quot;label&quot;: &quot;直接帮我做主图 1 的 program abundance 热图&quot;,
+          &quot;description&quot;: &quot;先把最关键的跨数据集热图画出来&quot;
+        },
+        {
+          &quot;label&quot;: &quot;先把这套框架写成 markdown 设计文档&quot;,
+          &quot;description&quot;: &quot;保存设计思路，后面再按文档实现&quot;
+        },
+        {
+          &quot;label&quot;: &quot;结束当前任务并等待新指令&quot;,
+          &quot;description&quot;: &quot;保留当前结论，不再继续操作&quot;
         }
       ]
     }
