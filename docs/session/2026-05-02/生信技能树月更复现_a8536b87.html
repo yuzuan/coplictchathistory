@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>对以下三个 notebook 做中等到深入程度的只读比较分析，不要修改任何文件：</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 96 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/02 23:32 · 97 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-02/生信技能树月更复现_a8536b87.md">Markdown</a>
@@ -3945,6 +3945,56 @@ Non_Myeloid ← 污染标签（仅 snGBM 显式）</code></pre><p class="message
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv&quot;,
   &quot;startLine&quot;: 1,
   &quot;endLine&quot;: 20
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/03 16:40</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">基于现在三本都切到 0.8 之后，我会把比较结论更新成一句更准确的话：三本的共通性比 0.5 时更强了，但这种共通性主要体现在 program family，而不是体现在 cluster 数或标签名字完全一致。</p><p class="message-paragraph">**0.8 之后的整体格局**<br>1. [scGBM/4_Sub_clustering.ipynb](scGBM/4_Sub_clustering.ipynb) 现在是 11 个 myeloid cluster，优势是全景髓系 atlas，位置倾向在 [scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv](scGBM/write/4_Sub_clustering/myeloid_subtype_by_tissue_position_fraction_within_label.csv) 很清楚：Mg-Inflam TAM 和 Lipid-metabolism TAM 偏 Peripheral_like，Systemic-Inflam TAM、IFN-resp TAM 和当前这个被标成 Homeostatic MG 的群偏 Tumor_like。<br>2. [snGBM/5_snRNA_myeloid_subclustering_v2.ipynb](snGBM/5_snRNA_myeloid_subclustering_v2.ipynb) 现在是 12 个 cluster，经 0.8 重做后，除了污染群之外，已经能拆出 Homeostatic MG、Mg-Inflam TAM、Stress-TAM、Scavenger-Mac、APOE-TAM、HS-UPR TAM、Complement-Scavenger TAM。关键证据在 [snGBM/results/5_snRNA_myeloid_subclustering/cluster_annotation_helper_res0.8.csv](snGBM/results/5_snRNA_myeloid_subclustering/cluster_annotation_helper_res0.8.csv)。<br>3. [三位置 GBM/1_myeloid_subclustering.ipynb](三位置%20GBM/1_myeloid_subclustering.ipynb) 现在是 15 个 cluster，但合并到 program 层之后仍然主要落在 4 个主程序上，见 [三位置 GBM/write/1_myeloid_subclustering/myeloid_cluster_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_cluster_summary.csv) 和 [三位置 GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv](三位置%20GBM/write/1_myeloid_subclustering/myeloid_program_l1_tissue_trend_summary.csv)。说明 0.8 对三位置主要是在补内部细节，而不是改写大的 program 骨架。</p><p class="message-paragraph">**0.8 之后最重要的共通点**<br>1. Stress 轴更稳了。三位置里 Stress_HSUPR_TAM 和 Stress_Hypoxia_TAM 都明确往 Core 走，尤其 HSUPR 的斜率最大；snGBM 里 Stress-TAM 和 HS-UPR TAM 都明显偏 Tumor；scGBM 里 HS-UPR TAM 虽然没有那么极端，但也不再是外围主导。这条“外围到核心的应激递进”现在是三本里最稳的共同主线。<br>2. Scavenger/Complement 轴也更稳了。三位置里 Complement_Scavenger_TAM 偏 Peripheral，而 Scavenger_Lipid_TAM 偏 Core；snGBM 里 Complement-Scavenger TAM 很外围，APOE-TAM 和 Scavenger-Mac 更靠肿瘤；scGBM 里 Complement-Scavenger 是中间态，Lipid-metabolism TAM 更偏 Peripheral_like。虽然具体位置不完全一致，但这三本都在重复同一件事：吞噬/补体/脂代谢是一组连续状态，不是单点终态。<br>3. Mg-Inflam 不再只是 scGBM 才有。0.5 的时候它更像 scGBM 特异，但 snGBM 的 0.8 现在也拆出了一个非常干净的 Peripheral/Peritumoral 偏 Mg-Inflam TAM 群。这个变化很重要，它让“外围炎症型 myeloid 起点”这条线变得更可信。</p><p class="message-paragraph">**0.8 之后仍然存在的关键冲突**<br>1. Homeostatic MG 仍然不能直接跨本等同。snGBM 的 Homeostatic MG 还是典型外围稳态 microglia；但 scGBM 当前这个被叫 Homeostatic MG 的群在位置上是 Tumor_like，而且 marker 也更像金属应激/反应态 microglia。这个标签现在仍然需要小心，不能直接拿来当跨数据集统一生物学实体。<br>2. 三位置虽然 cluster 数最多，但自动 merged subtype 仍然偏粗，只保住了 Complement、Scavenger、HS-UPR、Inflammatory_Mono_DC 四条主程序。这说明三位置更适合当“空间主轴发现集”，不适合单独承担精细 subtype 命名。<br>3. snGBM 的 0.8 拆出了更多污染支，说明分辨率上去之后，单核数据的 purity 问题会更明显。所以以后做 cross-dataset 比较时，最好默认先看 clean myeloid，再看全量。</p><p class="message-paragraph">**更新后的研究主线**<br>我现在会把主线改成两层，而不是之前那种单层叙事。</p><p class="message-paragraph">第一层是空间主轴：<br>Peripheral/Peritumoral 的 Complement_Scavenger 和 Mg-Inflam，往 Edge/Core/Tumor 逐步转向 Scavenger_Lipid、Stress_Hypoxia、HS-UPR。这一层由三位置提供方向，由 snGBM 和 scGBM 验证。</p><p class="message-paragraph">第二层是谱系分叉：<br>同样是外围起点，有一支更像 microglia-like inflammatory branch，体现在 Mg-Inflam 和真正的 Homeostatic MG；另一支更像 macrophage-like repair/phagocytic branch，体现在 Complement/Scavenger/APOE-Lipid。进入肿瘤核心之后，这两支都可能汇入应激程序，但速度和路径不同。</p><p class="message-paragraph">如果要把它写成一句论文级假说，就是：<br>GBM 髓系细胞并不是沿一条单线从瘤旁走向肿瘤核心，而是从“炎症型外围入口”和“吞噬修复型外围入口”两条支路出发，在核心区汇入以 Scavenger-Lipid 和 Stress-HSUPR 为代表的肿瘤适应程序；三位置数据定义了这条空间主轴，scGBM 和 snGBM 的 0.8 结果则把它拆解成可对齐的细分状态。</p><p class="message-paragraph">所以从研究优先级上，我现在会建议你：<br>1. 以 program-level 为主，subtype-level 为辅。<br>2. 把三位置当发现集，用来给程序排序和定义 Edge 的过渡意义。<br>3. 把 scGBM 和 snGBM 当细分验证集，用来解释同一 program 在不同谱系里的分叉。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;next-step&quot;,
+      &quot;question&quot;: &quot;基于这版 0.8 的重新比较，下一步你要我优先做什么？&quot;,
+      &quot;multiSelect&quot;: false,
+      &quot;allowFreeformInput&quot;: true,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;把这版 0.8 比较结论整理成 markdown 备忘录&quot;,
+          &quot;description&quot;: &quot;生成可直接保存的结构化研究摘要&quot;
+        },
+        {
+          &quot;label&quot;: &quot;继续把 snGBM 的 clean myeloid 和 DA 结果也更新到 0.8&quot;,
+          &quot;description&quot;: &quot;把后续差异丰度分析同步到新注释&quot;
+        },
+        {
+          &quot;label&quot;: &quot;帮我设计统一的 program-level 比较表格和图&quot;,
+          &quot;description&quot;: &quot;把三本的 program 结果并到一套跨数据集框架里&quot;
+        },
+        {
+          &quot;label&quot;: &quot;结束当前任务并等待新指令&quot;,
+          &quot;description&quot;: &quot;保留当前结果，不再继续操作&quot;
+        }
+      ]
+    }
+  ]
 }</code></pre>
   </div></div>
   </details>
