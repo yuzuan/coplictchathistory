@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>你在一个 GBM 单细胞分析仓库中。目标是修改 notebook /Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/1_...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/04 17:42 · 15 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/04 17:42 · 16 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-04/生信技能树月更复现_5c676200.md">Markdown</a>
@@ -520,6 +520,33 @@
   &quot;editType&quot;: &quot;insert&quot;,
   &quot;language&quot;: &quot;python&quot;,
   &quot;newCode&quot;: &quot;# === Marker-based scoring: 对三组 marker 分别打分, 自动生成 cluster 注释建议 ===\nall_marker_sets = {**identity_markers, **immunoreg_markers, **functional_markers}\n\n# 逐 module 打分\nfor module_name, genes in all_marker_sets.items():\n    genes_use = [g for g in genes if g in adata_mye.var_names]\n    sc.tl.score_genes(adata_mye, gene_list=genes_use, score_name=f&#39;score_{module_name}&#39;, use_raw=False)\n\nscore_cols = [f&#39;score_{m}&#39; for m in all_marker_sets]\ncluster_score_mean = adata_mye.obs.groupby(&#39;leiden_sub&#39;)[score_cols].mean().round(3)\n\n# 自动生成三组来源的 best-hit 标签\nidentity_cols = [f&#39;score_{m}&#39; for m in identity_markers]\nimmunoreg_cols = [f&#39;score_{m}&#39; for m in immunoreg_markers]\nfunctional_cols = [f&#39;score_{m}&#39; for m in functional_markers]\n\nauto_labels = pd.DataFrame(index=cluster_score_mean.index)\nauto_labels[&#39;best_identity&#39;] = cluster_score_mean[identity_cols].idxmax(axis=1).str.replace(&#39;score_&#39;, &#39;&#39;)\nauto_labels[&#39;best_immunoreg&#39;] = cluster_score_mean[immunoreg_cols].idxmax(axis=1).str.replace(&#39;score_&#39;, &#39;&#39;)\nauto_labels[&#39;best_functional&#39;] = cluster_score_mean[functional_cols].idxmax(axis=1).str.replace(&#39;score_&#39;, &#39;&#39;)\n\n# 组合命名: Identity_Immunoreg(+Functional 如果 functional score 显著高)\nauto_labels[&#39;suggested_name&#39;] = (\n    auto_labels[&#39;best_identity&#39;] + &#39;_&#39; + auto_labels[&#39;best_immunoreg&#39;]\n)\n\n# 如果某个 functional score 显著高于 identity/immunoreg, 追加到名称\nfor cl in auto_labels.index:\n    func_top = auto_labels.loc[cl, &#39;best_functional&#39;]\n    func_score = cluster_score_mean.loc[cl, f&#39;score_{func_top}&#39;]\n    id_score = cluster_score_mean.loc[cl, identity_cols].max()\n    im_score = cluster_score_mean.loc[cl, immunoreg_cols].max()\n    if func_score &gt; max(id_score, im_score):\n        auto_labels.loc[cl, &#39;suggested_name&#39;] = func_top + &#39;_dominant&#39;\n\n# 附加 cluster 大小\nauto_labels.insert(0, &#39;n_cells&#39;, adata_mye.obs[&#39;leiden_sub&#39;].value_counts().sort_index())\n\n# 显示 identity / immunoreg / functional 的关键分数便于核对\nkey_cols = [&#39;n_cells&#39;, &#39;suggested_name&#39;,\n            &#39;best_identity&#39;, &#39;best_immunoreg&#39;, &#39;best_functional&#39;]\ndisplay_cols = key_cols + identity_cols + immunoreg_cols + functional_cols\nauto_labels_display = auto_labels[display_cols].round(3)\nauto_labels_display.to_csv(&#39;write/4_Sub_clustering/myeloid_auto_annotation_helper.csv&#39;)\nauto_labels_display\n&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/04 18:06</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">Now update the annotation cell to use strict marker-based naming.</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">replace_string_in_file</span>
+    <pre class="tool-call-args"><code>{
+  &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/scGBM/4_Sub_clustering.ipynb&quot;,
+  &quot;oldString&quot;: &quot;# Harmony 后重新注释 (11 clusters, res=0.5)\nmye_annot = {\n    &#39;0&#39;:  &#39;Mg-Inflam TAM&#39;,           # 22,781 | RHOB/FOS/KLF2/CEBPD/PDK4 → IEG/Mg-Inflam | 91% Macro\n    &#39;1&#39;:  &#39;Complement-Scavenger TAM&#39;, # 14,890 | C1QA/B/C ++ CD163/FTL/CTSD/SELENOP | 81% Macro+17% MG\n    &#39;2&#39;:  &#39;Lipid-metabolism TAM&#39;,     # 10,445 | moderate Mg-Inflam + Complement | 84% Macro+16% MG\n    &#39;3&#39;:  &#39;Systemic-Inflam TAM&#39;,      # 9,379 | IL1B/CCL3/CCL4 high | 93% Macro\n    &#39;4&#39;:  &#39;Homeostatic MG&#39;,           # 6,366 | MT1X/MT2A/CSTB + CX3CR1/P2RY13 | 52% MG\n    &#39;5&#39;:  &#39;Classical Mono&#39;,            # 4,807 | VIM/VCAN/S100A6/TIMP1 | 83% Mono\n    &#39;6&#39;:  &#39;Other TAM&#39;,                # 4,416 | DOCK4/PLXDC2/LRMDA weak markers | 97% Macro\n    &#39;7&#39;:  &#39;HS-UPR TAM&#39;,               # 4,218 | HSPA1A/B/DNAJB1 maximal | 75% Macro+24% MG\n    &#39;8&#39;:  &#39;IFN-resp TAM&#39;,             # 2,461 | MIR99AHG/NLGN1 | 91% Macro\n    &#39;9&#39;:  &#39;Neutrophil&#39;,               # 1,789 | S100A8/A9/CXCL8/FTH1 | 79% Neutro\n    &#39;10&#39;: &#39;Other TAM&#39;,                # 29 | too small | 79% Macro\n}\n\nadata_mye.obs[&#39;myeloid_subtype&#39;] = (\n    adata_mye.obs[&#39;leiden_sub&#39;].map(mye_annot).astype(&#39;category&#39;)\n)\n\n# UMAP 展示注释结果\nsc.pl.umap(adata_mye, color=&#39;myeloid_subtype&#39;, legend_loc=&#39;on data&#39;, legend_fontsize=6,\n           title=&#39;Myeloid subtypes&#39;, save=&#39;_myeloid_annotated.png&#39;)\nadata_mye.obs[&#39;myeloid_subtype&#39;].value_counts()&quot;,
+  &quot;newString&quot;: &quot;# === 严格 marker-based 注释: 用 scoring 结果的三组 best-hit 组合命名 ===\n# 命名格式: Identity_ImmunoregProgram\n# 若 functional marker 压倒性高表达 (G2-M/G1-S/Hypoxia/HS-UPR), 则用 Functional_dominant\n\nmye_annot = {}\nfor cl in auto_labels.index:\n    cl_str = str(cl)\n    name = auto_labels.loc[cl, &#39;suggested_name&#39;]\n    n = auto_labels.loc[cl, &#39;n_cells&#39;]\n    mye_annot[cl_str] = name\n\n# 打印注释表供核对\nprint(\&quot;=== Marker-based auto-annotation ===\&quot;)\nfor cl_str in sorted(mye_annot.keys(), key=lambda x: int(x) if x.isdigit() else x):\n    name = mye_annot[cl_str]\n    n = auto_labels.loc[cl_str, &#39;n_cells&#39;] if cl_str in auto_labels.index else &#39;?&#39;\n    bi = auto_labels.loc[cl_str, &#39;best_identity&#39;] if cl_str in auto_labels.index else &#39;?&#39;\n    bm = auto_labels.loc[cl_str, &#39;best_immunoreg&#39;] if cl_str in auto_labels.index else &#39;?&#39;\n    bf = auto_labels.loc[cl_str, &#39;best_functional&#39;] if cl_str in auto_labels.index else &#39;?&#39;\n    print(f\&quot;  cl{cl_str}: {n:&gt;5} cells → {name:&lt;40s} (id={bi}, im={bm}, func={bf})\&quot;)\n\nadata_mye.obs[&#39;myeloid_subtype&#39;] = (\n    adata_mye.obs[&#39;leiden_sub&#39;].astype(str).map(mye_annot).astype(&#39;category&#39;)\n)\n\n# UMAP 展示注释结果\nsc.pl.umap(adata_mye, color=&#39;myeloid_subtype&#39;, legend_loc=&#39;on data&#39;, legend_fontsize=6,\n           title=&#39;Myeloid subtypes (marker-based)&#39;, save=&#39;_myeloid_annotated.png&#39;)\nprint(&#39;\\n&#39;)\nprint(adata_mye.obs[&#39;myeloid_subtype&#39;].value_counts())&quot;
 }</code></pre>
   </div></div>
   </details>
