@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>你在一个 GBM 单细胞分析仓库中。目标是修改 notebook /Users/yuzuan/Downloads/生信技能树月更复现/三位置 GBM/1_...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/04 17:42 · 148 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/04 17:42 · 149 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-04/生信技能树月更复现_5c676200.md">Markdown</a>
@@ -5055,6 +5055,67 @@ Systemic-Inflam  −0.84        LYZ         2.59             Monocyte    +3.69
   &quot;explanation&quot;: &quot;Analyze mid-trajectory functional gene categories&quot;,
   &quot;goal&quot;: &quot;Trajectory continuity analysis&quot;,
   &quot;mode&quot;: &quot;sync&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/05 15:20</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">## 🔬 Monocle3 Module 1 完整三段式轨迹</p><p class="message-paragraph">### 全局时序图</p><pre class="message-code-block"><code> dim_1:  -4 ─────── -2 ──────── 0 ──────── +2 ──────── +4 ──── +5.5
+         │                    │                    │                │
+    ═══════════════════  ═══════════════════  ═══════════════════
+    EARLY (484 genes)    MID (~464 genes)     LATE (169 genes)
+    「代谢-脂质 TAM」    「清道夫-缺氧-MHC-II」  「IFN 爆发 + CXCR3」
+    ═══════════════════  ═══════════════════  ═══════════════════</code></pre><p class="message-paragraph">### 三段详细解读</p><p class="message-paragraph">#### ⬅ Phase 1: EARLY — 代谢-脂质 TAM（dim_1: −4.4 ~ −0.5）</p><p class="message-paragraph">| 功能模块 | 基因 | dim_1 | 生物学含义 |<br>|---------|------|-------|-----------|<br>| **胆固醇合成** | CYP51A1, MSMO1, SQLE, HMGCS1, INSIG1, LDLR | −4.4 | LXR/SREBP 驱动的脂质代谢重编程 |<br>| **金属硫蛋白** | MT1A/H/G/X/F/E/M, MT2A | −3.0 | 锌稳态、ROS 清除 |<br>| **脂质代谢** | LPL, PPARG, ANGPTL7 | −3.0 | 脂肪酸摄取、脂质信号 |<br>| **早期趋化因子** | CCL2, CXCL8, IL1B, TNF, CCL7, CCL3, CCL4 | −1.5 ~ −0.4 | 趋化/促炎启动 |<br>| **Mg-Inflammatory** | KLF2, EGR1, CXCR4, PDK4 | −1.9 ~ +0.5 | 转录因子驱动激活 |</p><p class="message-paragraph">&gt; **解读**：轨迹起点不是静息 Microglia，而是**脂质代谢活跃的 Lipid-TAM**。胆固醇合成酶（CYP51A1/SQLE/HMGCS1）是最早的基因——这与 LXR 信号驱动的 TAM 脂质重编程一致。金属硫蛋白（MT1/MT2）的早期表达提示锌稳态和氧化应激管理是 TAM 激活的前提。</p><p class="message-paragraph">---</p><p class="message-paragraph">#### ↔ Phase 2: MID — 清道夫-缺氧-MHC-II（dim_1: 0 ~ 3）</p><p class="message-paragraph">| 功能模块 | 基因 | mean dim_1 | 生物学含义 |<br>|---------|------|-----------|-----------|<br>| **清道夫受体** | MRC1, MSR1, CD163, LYVE1, COLEC12 | +0.63 | 吞噬/内吞激活 |<br>| **脂质-TAM 标志** | APOE, APOC1, CTSD, GPNMB, LGALS3, LGMN | +1.33 | 脂质抗原呈递准备 |<br>| **缺氧应答** | ENO1, SLC2A1, HK2, VEGFA, LDHA | +1.60 | 糖酵解切换 (Warburg) |<br>| **MHC-II 呈递** | HLA-DQA1, HLA-DQB1, HLA-DPA1, HLA-DPB1 | +2.32 | 抗原呈递能力成熟 |</p><p class="message-paragraph">&gt; **解读**：从脂质代谢过渡到**吞噬-缺氧-MHC-II 的程序化激活**。清道夫受体（CD163/MRC1）和缺氧酶（ENO1/HK2/LDHA）同步上调，提示吞噬活性增加伴随代谢从 OXPHOS 切换到糖酵解。MHC-II 在中期偏后出现，说明抗原呈递能力是 TAM 功能成熟的标志。</p><p class="message-paragraph">---</p><p class="message-paragraph">#### ➡ Phase 3: LATE — IFN 爆发 + CXCR3 趋化 + 中性粒细胞/单核细胞（dim_1: &gt;3）</p><p class="message-paragraph">| 功能模块 | 基因 | dim_1 | 生物学含义 |<br>|---------|------|-------|-----------|<br>| **IFN 程序** 🔥 | DDX58(RIG-I), IFIT1/2/3, ISG15, MX2, RSAD2, IFI6, IFITM1/2/3, GBP1-5, ISG20, OASL, UBD | +4.8 ~ +5.4 | 胞质 RNA 感知 → I 型 IFN → ISG 级联 |<br>| **CXCR3 趋化因子** | CXCL9, CXCL10, CXCL11 | +5.0 | T/NK 细胞招募 |<br>| **TNF 超家族** | TNFSF10(TRAIL), TNFRSF4(OX40) | +5.3 | 凋亡诱导/共刺激 |<br>| **中性粒细胞** | S100A8, S100A9, S100A12, FCGR3B, CD177, PADI4 | +4.3 ~ +4.7 | 钙卫蛋白/NETosis |<br>| **单核细胞** | VCAN, FCN1 | +3.2 ~ +3.8 | 单核细胞标志 |</p><p class="message-paragraph">&gt; **解读**：终端是**大规模 IFN 响应爆发**。RIG-I（DDX58）是轨迹终点 #1 基因——胞质 RNA 感知器识别损伤/病毒 RNA → 触发 IRF3/IRF7 → I 型 IFN → ISG 级联（ISG15/IFIT/OASL/MX2/RSAD2）。同时 CXCL9/10/11（CXCR3 配体）在同期出现，提示 TAM 终端状态主动招募 T/NK 细胞。S100A8/A9/A12（钙卫蛋白）和 PADI4（NETosis 酶）提示中性粒细胞激活和 NET 形成是终端炎症的共同特征。</p><p class="message-paragraph">---</p><p class="message-paragraph">### 🎯 核心结论</p><pre class="message-code-block"><code>╔══════════════════════════════════════════════════════════════╗
+║  自测 Monocle3 轨迹 ≠ Microglia→TAM                         ║
+║  自测 Monocle3 轨迹 = Lipid-TAM → Scavenger/Hypoxia/MHC-II  ║
+║                       → IFN 爆发 + CXCR3 趋化                ║
+║                                                              ║
+║  ⚠ Complement (C1QA/B/C) 完全不在轨迹中                      ║
+║  → 与 CellChat 结论一致：Complement 在 GBM 中消失             ║
+║                                                              ║
+║  ✅ RIG-I/ISG 是轨迹的终极状态                               ║
+║  → 慢性 IFN 信号驱动 TAM 终端功能极化                        ║
+╚══════════════════════════════════════════════════════════════╝</code></pre>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;下一步&quot;,
+      &quot;question&quot;: &quot;终端炎症(Late phase)深度解读完成。核心发现：自测轨迹终点是 IFN 爆发(DDX58/ISG15/CXCL9-11)，非 Microglia→TAM。现在要做什么？&quot;,
+      &quot;multiSelect&quot;: false,
+      &quot;allowFreeformInput&quot;: true,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;写综合分析报告&quot;,
+          &quot;description&quot;: &quot;将全部发现（hdWGCNA 2模块 + Monocle3 3段轨迹 + CellChat + 跨数据集对比）写入 Markdown 报告到送检单细胞文件夹&quot;
+        },
+        {
+          &quot;label&quot;: &quot;画轨迹示意图&quot;,
+          &quot;description&quot;: &quot;用 Mermaid 画自测三段式轨迹 + 与 scGBM Microglia→TAM 的对应关系&quot;
+        },
+        {
+          &quot;label&quot;: &quot;结束分析&quot;,
+          &quot;description&quot;: &quot;所有深度分析完成，保存并等待新指令&quot;
+        }
+      ]
+    }
+  ]
 }</code></pre>
   </div></div>
   </details>
