@@ -1,7 +1,7 @@
 # Copilot Chat History
 
 > Auto-synced by [copilot-chat-sync](https://github.com/yuzuan/coplictchathistory)
-> Last updated: 2026/5/7 14:01:51
+> Last updated: 2026/5/7 14:02:09
 
 ## Sessions by Workspace
 
@@ -10,6 +10,7 @@
 <tr><th>WS</th><th>Session Date</th><th>File</th></tr>
 </thead>
 <tbody>
+<tr><td rowspan="1">GSE80609_RAW</td><td>2026&#8209;05&#8209;07&nbsp;14:01</td><td><a href="sessions/2026-05-07/GSE80609_RAW_5d9104ab.md">GSE80609_RAW_5d9104ab</a></td></tr>
 <tr><td rowspan="33">生信技能树月更复现</td><td>2026&#8209;05&#8209;04&nbsp;17:42</td><td><a href="sessions/2026-05-04/生信技能树月更复现_5c676200.md">生信技能树月更复现_5c676200</a></td></tr>
 <tr><td>2026&#8209;05&#8209;02&nbsp;23:32</td><td><a href="sessions/2026-05-02/生信技能树月更复现_a8536b87.md">生信技能树月更复现_a8536b87</a></td></tr>
 <tr><td>2026&#8209;05&#8209;01&nbsp;22:53</td><td><a href="sessions/2026-05-01/生信技能树月更复现_03eee0e4.md">生信技能树月更复现_03eee0e4</a></td></tr>
