@@ -1,7 +1,7 @@
 # Copilot Chat History
 
 > Auto-synced by [copilot-chat-sync](https://github.com/yuzuan/coplictchathistory)
-> Last updated: 2026/5/8 15:53:13
+> Last updated: 2026/5/8 15:53:44
 
 ## Sessions by Workspace
 
@@ -10,8 +10,8 @@
 <tr><th>WS</th><th>Session Date</th><th>File</th></tr>
 </thead>
 <tbody>
-<tr><td rowspan="1">GSE80609_RAW</td><td>2026&#8209;05&#8209;07&nbsp;14:01</td><td><a href="sessions/2026-05-07/GSE80609_RAW_5d9104ab.md">GSE80609_RAW_5d9104ab</a></td></tr>
-<tr><td rowspan="33">生信技能树月更复现</td><td>2026&#8209;05&#8209;04&nbsp;17:42</td><td><a href="sessions/2026-05-04/生信技能树月更复现_5c676200.md">生信技能树月更复现_5c676200</a></td></tr>
+<tr><td rowspan="34">生信技能树月更复现</td><td>2026&#8209;05&#8209;08&nbsp;15:52</td><td><a href="sessions/2026-05-08/生信技能树月更复现_5b27e1fe.md">生信技能树月更复现_5b27e1fe</a></td></tr>
+<tr><td>2026&#8209;05&#8209;04&nbsp;17:42</td><td><a href="sessions/2026-05-04/生信技能树月更复现_5c676200.md">生信技能树月更复现_5c676200</a></td></tr>
 <tr><td>2026&#8209;05&#8209;02&nbsp;23:32</td><td><a href="sessions/2026-05-02/生信技能树月更复现_a8536b87.md">生信技能树月更复现_a8536b87</a></td></tr>
 <tr><td>2026&#8209;05&#8209;01&nbsp;22:53</td><td><a href="sessions/2026-05-01/生信技能树月更复现_03eee0e4.md">生信技能树月更复现_03eee0e4</a></td></tr>
 <tr><td>2026&#8209;04&#8209;30&nbsp;14:46</td><td><a href="sessions/2026-04-30/生信技能树月更复现_2e7a46af.md">生信技能树月更复现_2e7a46af</a></td></tr>
@@ -44,6 +44,7 @@
 <tr><td>2026&#8209;03&#8209;17&nbsp;17:40</td><td><a href="sessions/2026-03-17/生信技能树月更复现_41fd3d04.md">生信技能树月更复现_41fd3d04</a></td></tr>
 <tr><td>2026&#8209;03&#8209;16&nbsp;10:43</td><td><a href="sessions/2026-03-16/生信技能树月更复现_1b651c63.md">生信技能树月更复现_1b651c63</a></td></tr>
 <tr><td>2026&#8209;03&#8209;14&nbsp;16:53</td><td><a href="sessions/2026-03-14/生信技能树月更复现_339fcae2.md">生信技能树月更复现_339fcae2</a></td></tr>
+<tr><td rowspan="1">GSE80609_RAW</td><td>2026&#8209;05&#8209;07&nbsp;14:01</td><td><a href="sessions/2026-05-07/GSE80609_RAW_5d9104ab.md">GSE80609_RAW_5d9104ab</a></td></tr>
 <tr><td rowspan="16">fastGEO</td><td>2026&#8209;05&#8209;02&nbsp;22:20</td><td><a href="sessions/2026-05-02/fastGEO_b9bc9664.md">fastGEO_b9bc9664</a></td></tr>
 <tr><td>2026&#8209;05&#8209;02&nbsp;18:04</td><td><a href="sessions/2026-05-02/fastGEO_9eb54d9c.md">fastGEO_9eb54d9c</a></td></tr>
 <tr><td>2026&#8209;04&#8209;30&nbsp;19:16</td><td><a href="sessions/2026-04-30/fastGEO_022df599.md">fastGEO_022df599</a></td></tr>
