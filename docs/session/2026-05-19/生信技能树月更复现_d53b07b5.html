@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>I need to thoroughly survey the myeloid subclustering/annotation notebooks ac...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 22 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 24 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-19/生信技能树月更复现_d53b07b5.md">Markdown</a>
@@ -718,6 +718,44 @@ Others:    Include Monocyte, Microglia, Neutrophil, etc.</code></pre><p class="m
       </div>
       <div class="chat-content">
         <p class="message-paragraph">这几个数据集粗注释分别有什么？</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/19 23:37</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在全貌清楚了。</p><p class="message-paragraph">---</p><p class="message-paragraph">## 四数据集 step2 粗注释全景对比</p><p class="message-paragraph">### scGBM：唯一不走 marker 打分路线的数据集</p><p class="message-paragraph">**与其他三套完全不同。** scGBM 的 step2 使用 **CellTypist 自动注释**（<code class="inline-code">Immune_All_High</code> 模型，32 种免疫细胞类型），再加人工校正，写入 <code class="inline-code">self_annotation</code> 列：</p><pre class="message-code-block"><code>scGBM/1_preprocess_scRNAdata_v1.1.ipynb
+  → celltypist.annotate(model=&#39;Immune_All_High&#39;)
+  → celltypist_annotation 列
+  → 人工校正 → self_annotation 列</code></pre><p class="message-paragraph">self_annotation 标签值（缩写风格）：</p><pre class="message-code-block"><code>Macro     107171
+AC         60249
+Oligo      47756
+Mono         ...
+Microglia    ...
+...</code></pre><p class="message-paragraph">step5 髓系提取时读的就是这个 <code class="inline-code">self_annotation</code> 列：</p><pre class="message-code-block"><code>STEP2_SOURCE_COLUMNS = [&#39;self_annotation&#39;]
+STEP2_MYELOID_LABELS = [&#39;Macro&#39;, &#39;Mono&#39;, &#39;Microglia&#39;]</code></pre><p class="message-paragraph">**也就是说，scGBM 的髓系分类起点是 CellTypist 训练好的分类器，根本没有经过 marker gene scoring。**</p><p class="message-paragraph">### snGBM / 三位置 GBM / 送检单细胞：统一走 marker 打分路线</p><p class="message-paragraph">这三套的 step2 完全一致：</p><pre class="message-code-block"><code>snGBM/1_snRNA_processing.ipynb
+三位置 GBM/0_integrate_two_datasets.ipynb
+送检单细胞/2_marker_gene_seekgene_scRNA.ipynb
+  → marker_gene_sets 打分 → cluster majority vote → celltype/predicted_celltype 列</code></pre><p class="message-paragraph">**三套共用同一套 marker gene**：</p><p class="message-paragraph">| 细胞类型 | marker 基因 | 备注 |<br>|---|---|---|<br>| Oligodendrocyte | MAG, CLDN11, APLP1, TMEM144, CNDP1, EDIL3, LARP6, MOG, AMER2, TUBB4A | |<br>| MES-like | VIM, CD44, CHI3L1, HILPDA, DDIT3, ENO2 | |<br>| AC-like | GFAP, S100B, HOPX, SLC1A3, MLC1 | |<br>| OPC-like | PLP1, OLIG1, OMG, TNR, ALCAM | |<br>| NPC-like | SOX4, SOX11, DCX, CD24, STMN1, STMN2 | |<br>| NK/T | CD3D, CD3E, TRBC2, CD3G, CD2, TRAC, IL7R, TRBC1, LCK, SKAP1, CD48 | |<br>| Prol.NK/T | MKI67, TOP2A, CD3D, CD3E, TRBC2, CD3G | |<br>| Pericyte | COL1A2, COL6A2, PDGFRB, COL3A1, EDNRA, LUM, COL1A1, PLAC9, FRZB | |<br>| Endothelial | ESAM, FLT1, RAMP2, VWF, EGFL7, SLC9A3R2, CAVIN2, ADGRL4, ABLIM1, ABCB1 | |<br>| Monocyte | FCN1, VCAN, S100A8, S100A9 | |<br>| **Microglia** | TMEM119, CX3CR1, TREM2, **GPNMB, CTSD, CD68** | ⚠️ |<br>| **Macrophage** | SPP1, APOE, **GPNMB, CTSD, CD68**, C1QA, C1QB | ⚠️ |<br>| CDC | FCER1A, HLA-DPB1, CD83, AREG | |<br>| Neutrophil | S100A8, FCGR3B, IFITM2 | |</p><p class="message-paragraph">**Microglia 和 Macrophage 共享 3/6 基因（GPNMB, CTSD, CD68）**。</p><p class="message-paragraph">### scGBM 自己也有 marker 打分方案，但 step5 没用</p><p class="message-paragraph">scGBM 的 <code class="inline-code">1_preprocess</code> notebook 里其实也定义了一套 <code class="inline-code">marker_gene_sets</code>（用于生成 <code class="inline-code">cell_type</code> 列），其中髓系 marker **零重叠**：</p><p class="message-paragraph">| 细胞类型 | marker 基因 |<br>|---|---|<br>| Macrophage | C1QA, C1QB, APOE, CD68, CD163, MERTK, MSR1 |<br>| Microglia | TMEM119, CX3CR1, TREM2, GPNMB, **P2RY12** |<br>| Monocyte | FCN1, VCAN, S100A8, S100A9, LYZ |</p><p class="message-paragraph">**但这套 annotation 结果写在 <code class="inline-code">cell_type</code> 列，step5 用的却是 <code class="inline-code">self_annotation</code> 列。**</p><p class="message-paragraph">---</p><p class="message-paragraph">## 核心结论</p><p class="message-paragraph">| 数据集 | step2 注释方法 | 髓系 marker 重叠 | step5 使用的列 |<br>|---|---|---|---|<br>| **scGBM** | CellTypist 自动 + 人工校正 | 不适用（非 marker-based） | <code class="inline-code">self_annotation</code> |<br>| **snGBM** | 14 类 marker 打分 + cluster 投票 | Microglia↔Macrophage 3/6 重叠 | <code class="inline-code">celltype</code>, <code class="inline-code">predicted_celltype</code> |<br>| **三位置 GBM** | 同上 | 同上 | <code class="inline-code">celltype_merged</code> 等 5 列 |<br>| **送检单细胞** | 同上 | 同上 | <code class="inline-code">cell_type</code> |</p><p class="message-paragraph">**scGBM 和其他三套的 step2 根本不是同一种方法。** scGBM 用 CellTypist 训练模型做分类，另外三套用 marker gene scoring + cluster 投票。前者的 Microglia/Macrophage 区分靠的是 CellTypist 在 20 个组织、18 个研究上训练的分类器；后者靠的是 6 个基因里 3 个共享的 marker 打分。</p><p class="message-paragraph">这意味着四套数据在进入 step5 髓系重注释之前，输入细胞池的构成逻辑已经不同——不是参数差异，是**方法学路线差异**。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/05/20 01:08</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">三位置 step1 就保留一个正式注释列 celltype，把那些refined、merged、myeloid 派生图和列都删掉</p>
       </div>
       
     </div>
