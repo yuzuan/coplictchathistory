@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>I need to thoroughly survey the myeloid subclustering/annotation notebooks ac...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 20 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 21 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-19/生信技能树月更复现_d53b07b5.md">Markdown</a>
@@ -657,6 +657,53 @@ Others:    Include Monocyte, Microglia, Neutrophil, etc.</code></pre><p class="m
     <span class="tool-call-name">copilot_getNotebookSummary</span>
     <pre class="tool-call-args"><code>{
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/scGBM/0_integrate_two_datasets.ipynb&quot;
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/19 23:32</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在我有完整链路了。以下是结论。</p><p class="message-paragraph">---</p><p class="message-paragraph">## 髓系分类逻辑存在两处结构性问题</p><p class="message-paragraph">### 问题一：step2 粗注释的 marker 在三个数据集之间有重叠悖论</p><p class="message-paragraph">**snGBM、三位置 GBM、送检单细胞（seekgene）**的 step2 粗注释使用完全相同的 marker 基因集：</p><p class="message-paragraph">| 细胞类型 | step2 marker |<br>|---|---|<br>| Macrophage | <code class="inline-code">SPP1, APOE, GPNMB, CTSD, CD68, C1QA, C1QB</code> |<br>| Microglia | <code class="inline-code">TMEM119, CX3CR1, TREM2, **GPNMB, CTSD, CD68**</code> |</p><p class="message-paragraph">Microglia 总共 6 个基因里有 3 个和 Macrophage 共享。这意味着**任何表达 GPNMB/CD68/CTSD 的 Microglia 细胞，Macrophage score 也会很高**。step2 用 <code class="inline-code">MIN_SCORE_DIFF=0.05</code> 阈值来裁决，但这是在两个高度相关的分数之间勉强划线。</p><p class="message-paragraph">这本身不是致命问题——毕竟 step5 会用 Miller 2025 top20 重做注释来&quot;救援&quot;。但问题出在下一条。</p><p class="message-paragraph">**scGBM 则完全不同**：它的 step2 marker 是：</p><p class="message-paragraph">| 细胞类型 | step2 marker |<br>|---|---|<br>| Macrophage | <code class="inline-code">C1QA, C1QB, APOE, CD68, CD163, MERTK, MSR1</code> |<br>| Microglia | <code class="inline-code">TMEM119, CX3CR1, TREM2, GPNMB, P2RY12</code> |</p><p class="message-paragraph">**零重叠**。所以 scGBM 的 step2 粗注释在 Macrophage/Microglia 区分上比其他三套更干净。这不是一致性差异，而是**起点就已经不同**。</p><p class="message-paragraph">### 问题二（更严重）：seekgene 的 step5 只提取 Macrophage + CDC，把 Monocyte/Microglia/Neutrophil 全部排除</p><pre class="message-code-block"><code>送检单细胞 step2 粗注释 → cell_type 列有: Macrophage, Microglia, Monocyte, CDC, Neutrophil, ...
+送检单细胞 step5 提取规则:  cell_type in {Macrophage, CDC}   ← 只取两类
+                                                    ↑
+                            Monocyte/Microglia/Neutrophil 被丢弃</code></pre><p class="message-paragraph">对比其他三套：</p><p class="message-paragraph">| 数据集 | step5 提取的髓系类型数 |<br>|---|---|<br>| scGBM | 3（Macro, Mono, Microglia） |<br>| snGBM | 6（含 cDC, Neutrophil） |<br>| 三位置 GBM | 7（含 Myeloid 通配） |<br>| **seekgene** | **2**（Macrophage, CDC） |</p><p class="message-paragraph">这意味着 seekgene 的 step5 子集聚类里永远不会出现 Microglia/Monocyte/Neutrophil cluster。但在 Miller 2025 框架下，这些被排除的细胞可能在子集聚类中被重注释为 Macrophage_XXX——它们被 step2 贴错了标签，但 step5 根本没机会纠正，因为它们在提取阶段就被过滤掉了。</p><p class="message-paragraph">**这才是真正的逻辑断裂**：step5 的目标是用更精细的 marker 重注释髓系，但它只重注释了 step2 认为的 Macrophage 和 CDC。如果 step2 把某些 Macrophage 标成了 Monocyte 或 Microglia，这些细胞就永远丢失了。</p><p class="message-paragraph">### 总结</p><p class="message-paragraph">| 严重程度 | 问题 |<br>|---|---|<br>| **结构性问题** | seekgene step5 的 2 类窄提取，使其髓系重注释口径与其他三套不可比 |<br>| **中等问题** | snGBM/三位置/seekgene 的 step2 Macrophage-Microglia marker 高度重叠（3/6），粗注释基线本身有混淆 |<br>| **轻度问题** | scGBM 的 <code class="inline-code">self_annotation</code> 列来源不透明（标注为&quot;人工校正&quot;但代码不可追溯），且标签用缩写 <code class="inline-code">Macro</code>/<code class="inline-code">Mono</code> |</p><p class="message-paragraph">这三个问题叠加意味着：四套数据的跨数据集&quot;Macrophage_Complement-IS 趋势一致&quot;结论，实际上建立在**不同口径的输入细胞池**之上，不能算严格意义上的独立复现。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;是否需要修复&quot;,
+      &quot;question&quot;: &quot;以上两个结构性问题需要修复吗？&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;修复 seekgene 提取范围&quot;,
+          &quot;description&quot;: &quot;把 seekgene step5 的提取从 Macrophage+CDC 扩到完整髓系 5 类（Macrophage/Monocyte/Microglia/CDC/Neutrophil），然后重跑&quot;
+        },
+        {
+          &quot;label&quot;: &quot;先不改，仅记录&quot;,
+          &quot;description&quot;: &quot;当前结论暂时维持，把这些问题写入 CONTEXT.md 和 Claudereview.md 作为后续 v4 复审材料&quot;
+        },
+        {
+          &quot;label&quot;: &quot;两件事都做&quot;,
+          &quot;description&quot;: &quot;既修复 seekgene 提取范围，也统一四套 step2 marker 的 Macrophage/Microglia 定义&quot;
+        }
+      ]
+    }
+  ]
 }</code></pre>
   </div></div>
   </details>
