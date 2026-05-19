@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>I need to thoroughly survey the myeloid subclustering/annotation notebooks ac...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 9 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 10 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-19/生信技能树月更复现_d53b07b5.md">Markdown</a>
@@ -333,6 +333,55 @@ Others:    Include Monocyte, Microglia, Neutrophil, etc.</code></pre><p class="m
   &quot;endLine&quot;: 70,
   &quot;filePath&quot;: &quot;/Users/yuzuan/Downloads/生信技能树月更复现/送检单细胞/5_myeloid_subtype_seekgene_scRNA.ipynb&quot;,
   &quot;startLine&quot;: 1
+}</code></pre>
+  </div></div>
+  </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/19 22:35</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">现在我已经掌握了充分的上下文。以下是完整审视结果。</p><p class="message-paragraph">---</p><p class="message-paragraph">## 四数据集髓系分类代码统一审视报告</p><p class="message-paragraph">### 一、一致项（可放心）</p><p class="message-paragraph">| 参数 | 四套一致值 |<br>|---|---|<br>| HVG n_top_genes | 2000 |<br>| HVG flavor | <code class="inline-code">seurat</code> |<br>| HVG batch_key | <code class="inline-code">sample</code> |<br>| PCA n_comps | 30 |<br>| Harmony key | <code class="inline-code">sample</code> |<br>| Harmony max_iter | 20 |<br>| Neighbors n_neighbors | 15 |<br>| Neighbors n_pcs | 30 |<br>| Leiden resolution | 0.8 |<br>| IDENTITY_MARKERS 五类 | 完全一致 |<br>| IMMUNOMODULATORY_ACTIVITY_MARKERS 四程序 | 完全一致 |<br>| OTHER_ACTIVITY_MARKERS (Hypoxia) | 完全一致 |<br>| CONTAMINATION_MARKERS 六类 | 完全一致 |<br>| RIBOSOMAL_PREFIXES | <code class="inline-code">(&#39;RPL&#39;, &#39;RPS&#39;)</code> |<br>| score_genes use_raw | <code class="inline-code">False</code> |<br>| 注释公式 | <code class="inline-code">identity_activity_label = best_identity + best_immunomodulatory</code> |<br>| 污染阈值 | <code class="inline-code">contam_score &gt; identity_score + 0.05</code> |<br>| 核糖体质控 | <code class="inline-code">ribosomal_top12_hits &gt;= 4</code> |<br>| MT%阈值 | <code class="inline-code">pct_counts_mt &gt; 20</code> |<br>| 输出 obs 列名 | <code class="inline-code">curated_myeloid_subtype</code>, <code class="inline-code">myeloid_subtype</code>, <code class="inline-code">myeloid_identity</code> 等一致 |</p><p class="message-paragraph">### 二、不一致项（按风险排序）</p><p class="message-paragraph">#### 🔴 高风险</p><p class="message-paragraph">| # | 问题 | scGBM | snGBM | 三位置 | seekgene |<br>|---|---|---|---|---|---|<br>| **1** | **髓系提取标签不统一** | <code class="inline-code">Macro</code>（不是 <code class="inline-code">Macrophage</code>） | <code class="inline-code">Macrophage</code> | <code class="inline-code">Macrophage</code> | <code class="inline-code">Macrophage</code> |<br>| **2** | **髓系提取范围差异巨大** | 3 类（Macro/Mono/Microglia） | 6 类（含 cDC/Neutrophil） | 7 类（含 Myeloid 通配） | **仅 2 类**（Macrophage/CDC） |<br>| **3** | **REGION_COL 列名不一致** | <code class="inline-code">tissue_type</code> | **<code class="inline-code">tissue</code>** | <code class="inline-code">tissue_type</code> | <code class="inline-code">group</code>（GBM/N） |</p><p class="message-paragraph">**问题1详解**：scGBM 的 <code class="inline-code">STEP2_MYELOID_LABELS = [&#39;Macro&#39;, &#39;Mono&#39;, &#39;Microglia&#39;]</code> 用了缩写 <code class="inline-code">Macro</code> 和 <code class="inline-code">Mono</code>。如果源头 <code class="inline-code">self_annotation</code> 列里写的是完整拼写 <code class="inline-code">Macrophage</code> / <code class="inline-code">Monocyte</code>，这些细胞会被漏掉。从 Claudereview.md 的共识记录来看，scGBM 确实能正常提取 13,183 个 <code class="inline-code">Macrophage_Complement-IS</code>，说明源头恰巧也是 <code class="inline-code">Macro</code> 缩写。但这是靠巧合，一旦上游改名就会静默失败。</p><p class="message-paragraph">**问题2详解**：seekgene 只提取 <code class="inline-code">cell_type in {Macrophage, CDC}</code>，把 Monocyte、Microglia、Neutrophil 全部排除在子集聚类之外。这意味着 seekgene 的髓系 UMAP 里永远不会出现 Monocyte/Microglia/Neutrophil cluster，和另外三套数据的&quot;全髓系子集重聚类&quot;口径完全不同。跨数据集比较时必须明确这个差异。</p><p class="message-paragraph">**问题3详解**：snGBM 用 <code class="inline-code">REGION_COL = &#39;tissue&#39;</code>，scGBM/三位置用 <code class="inline-code">tissue_type</code>。跨数据集脚本如果硬编码了某一列名，会在 snGBM 上静默失败。</p><p class="message-paragraph">#### 🟡 中风险</p><p class="message-paragraph">| # | 问题 | 详情 |<br>|---|---|---|<br>| **4** | **seekgene 缺少配置变量** | 没有 <code class="inline-code">DATASET_NAME</code>、<code class="inline-code">LEGACY_CLUSTER_COL</code>、<code class="inline-code">CLEAN_H5AD</code>、<code class="inline-code">OUTPUT_H5AD</code> 等集中变量；参数散落在代码中，不易维护 |<br>| **5** | **seekgene 输出 CSV 命名前缀不同** | 其他三套用 <code class="inline-code">latest_curated_myeloid_*</code>，seekgene 用 <code class="inline-code">seekgene_myeloid_subtype_*</code> |<br>| **6** | **seekgene 额外加入统计检验** | <code class="inline-code">mannwhitneyu</code> + BH-FDR，其他三套只做描述性 UMAP/heatmap。功能好但应统一加入或统一不加 |<br>| **7** | **CLEAN_H5AD 只有 snGBM 保存** | scGBM 和 三位置设为 <code class="inline-code">None</code>；seekgene 干脆没这个变量 |</p><p class="message-paragraph">#### 🟢 低风险 / 观察</p><p class="message-paragraph">| # | 观察 |<br>|---|---|<br>| **8** | seekgene 的 marker display 用了 <code class="inline-code">Miller_2025_raw_top20</code> 和 <code class="inline-code">latest_curated_2026-05-19</code> 两个 source 标签，比 scGBM 更详细 |<br>| **9** | 三位置 GBM 有 <code class="inline-code">celltype_merged</code>、<code class="inline-code">myeloid_celltype</code>、<code class="inline-code">celltype</code>、<code class="inline-code">celltype_refined</code>、<code class="inline-code">predicted_celltype</code> 五个来源列，提取最宽松但也最不容易漏 |<br>| **10** | scGBM 的 <code class="inline-code">STEP2_SOURCE_COLUMNS = [&#39;self_annotation&#39;]</code> 只有一列，而 snGBM/三位置有多列冗余；scGBM 单点故障风险更高 |</p><p class="message-paragraph">### 三、CONTEXT.md / Claudereview.md 中已记录但代码中未体现的问题</p><p class="message-paragraph">根据 Claudereview.md 的 v3 共识和送检单细胞审计：</p><p class="message-paragraph">| 记录中的问题 | 当前代码状态 |<br>|---|---|<br>| 送检单细胞 nb1 未应用 <code class="inline-code">pct_counts_mt</code> 过滤（H1） | **仍未修复** — 髓系子集 notebook 不涉及 QC，但源头 h5ad 仍有 2.6% 高 MT 细胞 |<br>| 送检单细胞 nb1 主图谱缺少 Harmony（H2） | **仍未修复** — seekgene 髓系 notebook 内部做了 Harmony，但全图谱 UMAP 没有 |<br>| snGBM cluster 6/9 TAM-like caveat | 代码标注为 <code class="inline-code">Microglia_Complement-IS</code>，与 Claudereview.md 约定的 &quot;Microglia-labeled TAM-like&quot; caveat 写法一致 |<br>| seekgene 的 <code class="inline-code">Macrophage_Scavenger-IS</code> 在新注释中不存在 | ✅ 代码行为与 CONTEXT.md 记录一致 |</p><p class="message-paragraph">### 四、建议整改优先级</p><p class="message-paragraph">| 优先级 | 改什么 | 影响面 |<br>|---|---|---|<br>| **必须改** | scGBM 的 <code class="inline-code">Macro</code> → <code class="inline-code">Macrophage</code>、<code class="inline-code">Mono</code> → <code class="inline-code">Monocyte</code>（对齐标签名） | 只改 scGBM 一个 cell 的常量定义，不触发重跑 |<br>| **必须改** | snGBM 的 <code class="inline-code">REGION_COL = &#39;tissue&#39;</code> → <code class="inline-code">&#39;tissue_type&#39;</code>（或统一改名） | 可能影响 snGBM 下游跨数据集脚本 |<br>| **强烈建议** | seekgene 加上 <code class="inline-code">DATASET_NAME</code>、<code class="inline-code">LEGACY_CLUSTER_COL</code>、<code class="inline-code">OUTPUT_H5AD</code> 等集中变量 | 不影响结果，但提高可维护性 |<br>| **建议** | seekgene 髓系提取是否需要扩到 Monocyte/Microglia/Neutrophil — 取决于生物学意图，如果确认只关注 Macrophage+cDC 则有理由保留 | 如果扩大提取范围，整个 seekgene 髓系注释需重跑 |<br>| **建议** | 四套统一加入或统一去掉 mannwhitneyu 统计检验 | 不影响现有结果 |</p><p class="message-paragraph">---</p><p class="message-paragraph">总结：四套 notebook 的核心分析管线（HVG→PCA→Harmony→Marker→注释）已高度一致。主要风险是三个参数不一致（髓系标签名、提取范围、区域列名），其中 scGBM 的 <code class="inline-code">Macro</code> 标签和 snGBM 的 <code class="inline-code">tissue</code> 列名属于静默故障隐患，seekgene 的 2 类窄提取是有意为之但需在跨数据集比较时明确声明。</p>
+      </div>
+      <details class="tool-calls">
+    <summary class="tool-calls-summary">
+      <span class="tool-calls-chevron" aria-hidden="true">▸</span>
+      <svg class="tool-calls-icon" width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M5.686 2.922A1.5 1.5 0 0 0 4.29 2.5h-.29v.528l.003.078a1.5 1.5 0 0 0 .706 1.147l1.454.966a.5.5 0 0 1 0 .831l-1.454.966A1.5 1.5 0 0 0 4.003 8.14L4 8.218v.282h.29a1.5 1.5 0 0 0 1.396-.422l2.45-2.45a.5.5 0 0 0 0-.707l-2.45-2z"/><path fill="currentColor" d="M10.314 2.922A1.5 1.5 0 0 1 11.71 2.5H12v.528l-.003.078a1.5 1.5 0 0 1-.706 1.147l-1.454.966a.5.5 0 0 0 0 .831l1.454.966a1.5 1.5 0 0 1 .706 1.124l.003.078V8.5h-.29a1.5 1.5 0 0 1-1.396-.422l-2.45-2.45a.5.5 0 0 1 0-.707l2.45-2z"/></svg>
+      <span>Tool calls (1)</span>
+    </summary>
+    <div class="tool-calls-body"><div class="tool-call-item">
+    <span class="tool-call-name">vscode_askQuestions</span>
+    <pre class="tool-call-args"><code>{
+  &quot;questions&quot;: [
+    {
+      &quot;header&quot;: &quot;下一步操作&quot;,
+      &quot;question&quot;: &quot;是否需要我修复上述不一致项？可选择：&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;label&quot;: &quot;修复全部高风险&quot;,
+          &quot;description&quot;: &quot;改 scGBM 的 Macro→Macrophage + snGBM 的 tissue→tissue_type + seekgene 补齐配置变量&quot;
+        },
+        {
+          &quot;label&quot;: &quot;只修标签对齐&quot;,
+          &quot;description&quot;: &quot;仅修复 scGBM 的 Macro/Mono 标签和 snGBM 的 region 列名&quot;
+        },
+        {
+          &quot;label&quot;: &quot;仅查看不改&quot;,
+          &quot;description&quot;: &quot;审视报告已足够，暂不修改代码&quot;
+        },
+        {
+          &quot;label&quot;: &quot;先讨论 seekgene 提取范围&quot;,
+          &quot;description&quot;: &quot;决定 seekgene 是否需要从 2 类扩到完整髓系 5 类后再说&quot;
+        }
+      ],
+      &quot;multiSelect&quot;: false
+    }
+  ]
 }</code></pre>
   </div></div>
   </details>
