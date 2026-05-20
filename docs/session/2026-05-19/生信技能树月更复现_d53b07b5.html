@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>I need to thoroughly survey the myeloid subclustering/annotation notebooks ac...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 52 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 54 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-19/生信技能树月更复现_d53b07b5.md">Markdown</a>
@@ -1472,6 +1472,32 @@ labels.loc[deg_contamination, &#39;curated_myeloid_subtype&#39;] = ...</code></p
 }</code></pre>
   </div></div>
   </details>
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/20 10:52</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">以下是完整汇总。</p><p class="message-paragraph">---</p><p class="message-paragraph">## 四数据集最新 step5：Macrophage Complement-IS / Scavenger-IS 全貌</p><p class="message-paragraph">### 细胞数</p><p class="message-paragraph">| 数据集 | Complement-IS | Scavenger-IS | 备注 |<br>|---|---|---|---|<br>| scGBM | 14,708 + 25,663 _lowconf | 1,977 | _lowconf cluster 方向相反（见下） |<br>| snGBM | 0（Microglia 2,272） | 0（Microglia 2,395） | snRNA 无 Macrophage identity |<br>| 三位置 | 6,146 | 5,522 | cluster 9 已剔除 ✅ |<br>| seekgene | 8,312 | 0 | cluster 6 等 4 个新剔除 |</p><p class="message-paragraph">### 区域趋势（mean fraction）</p><p class="message-paragraph">**scGBM**（Tumor vs Peritumoral）:</p><p class="message-paragraph">| Subtype | Peritumoral | Tumor | 方向 |<br>|---|---|---|---|<br>| Macrophage_Complement-IS | 0.092 | **0.246** | Tumor ↑ |<br>| Macrophage_Complement-IS_lowconf | **0.284** | 0.128 | ⚠️ Peritumoral ↑（反向！） |<br>| Macrophage_Scavenger-IS | 0.044 | **0.070** | Tumor ↑ |</p><p class="message-paragraph">&gt; 🔴 **关键发现**：<code class="inline-code">_lowconf</code> cluster（19K+6.5K 细胞）在 Peritumoral 比例 **2.2 倍于 Tumor**，与高置信 Complement-IS 方向相反。如果不下这个降级标签，scGBM 的 &quot;Macrophage_Complement-IS Tumor 高&quot; 结论会被严重冲淡。</p><p class="message-paragraph">**snGBM**（Tumor vs Peritumoral，Microglia 身份）:</p><p class="message-paragraph">| Subtype | Peritumoral | Tumor | 方向 |<br>|---|---|---|---|<br>| Microglia_Complement-IS | **0.467** | 0.053 | Peritumoral ↑ |<br>| Microglia_Scavenger-IS | 0.168 | **0.457** | Tumor ↑ |</p><p class="message-paragraph">**三位置 GBM**（Core / Edge / Peripheral）:</p><p class="message-paragraph">| Subtype | Peripheral | Edge | Core | 方向 |<br>|---|---|---|---|---|<br>| Macrophage_Complement-IS | 0.071 | 0.119 | **0.179** | Core ↑ |<br>| Macrophage_Scavenger-IS | 0.026 | **0.245** | 0.167 | Edge ↑ |</p><p class="message-paragraph">**seekgene**（GBM vs N）:</p><p class="message-paragraph">| Subtype | N mean | GBM mean | Δ | p | q |<br>|---|---|---|---|---|---|<br>| Macrophage_Complement-IS | 0.027 | **0.149** | +0.122 | 0.0095 | 0.0286 |</p><p class="message-paragraph">---</p><p class="message-paragraph">### 一句话总结</p><p class="message-paragraph">- **Macrophage_Complement-IS**：scGBM（强证据）/ 三位置 / seekgene 三套一致 Tumor/Core/GBM 高。snGBM 因 snRNA 限制无 Macrophage identity。<br>- **Macrophage_Scavenger-IS**：scGBM Tumor 高（弱）、三位置 Edge 最高、seekgene/snGBM 不存在离散亚群。<br>- **DEG 污染检查**成功捕获三位置 cluster 9（1,717 T 细胞）和 seekgene cluster 6（8,539 细胞），避免了假阳性结论。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/05/20 11:18</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">如果不要这个+ 25,663 _lowconf呢</p>
+      </div>
+      
     </div>
   </div>
     </div>
