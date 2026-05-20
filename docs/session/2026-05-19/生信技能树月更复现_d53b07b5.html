@@ -12,7 +12,7 @@
     <div>
       <p class="main-kicker">Standalone session</p>
       <h1>I need to thoroughly survey the myeloid subclustering/annotation notebooks ac...</h1>
-      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 57 messages</p>
+      <p class="selected-session-meta">生信技能树月更复现 · 2026/05/19 22:28 · 59 messages</p>
     </div>
     <div class="main-actions">
       <a class="action-link secondary" href="../../../sessions/2026-05-19/生信技能树月更复现_d53b07b5.md">Markdown</a>
@@ -1549,6 +1549,32 @@ labels.loc[deg_contamination, &#39;curated_myeloid_subtype&#39;] = ...</code></p
       </div>
       <div class="chat-content">
         <p class="message-paragraph">为什么会出现lowconf</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn assistant">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M7.998 0a.75.75 0 0 1 .727.563l.855 3.42 3.42.855a.75.75 0 0 1 0 1.453l-3.42.855-.855 3.42a.75.75 0 0 1-1.453 0l-.855-3.42-3.42-.855a.75.75 0 0 1 0-1.453l3.42-.855.855-3.42A.75.75 0 0 1 7.998 0z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">Copilot</span>
+        <time class="chat-time">2026/05/20 15:42</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">根因是这三个 cluster 的 immunomodulatory 分数**几乎平局**：</p><p class="message-paragraph">| Cluster | Complement-IS | 第二名 | margin |<br>|---|---|---|---|<br>| 0 | 0.845 | Mg-Inflammatory 0.787 | **0.057** |<br>| 6 | 0.290 | Mg-Inflammatory 0.287 | **0.003** |<br>| 7 | 0.798 | Systemic-Inflammatory 0.741 | **0.057** |</p><p class="message-paragraph"><code class="inline-code">sc.tl.score_genes()</code> 算的是基因集平均表达（log-normalized 尺度）。这几个 cluster 里，巨噬细胞**同时高表达**补体基因（C1QA/C1QB/C3）和炎症基因（OLR1/CD83/CCL3），两套程序的分数几乎一样高，<code class="inline-code">idxmax</code> 只是随机胜出。</p><p class="message-paragraph">换句话说，不是 Complement-IS 真的&quot;赢了&quot;，而是分数里的小数点后第三位决定了标签。只要换一个 reference gene set 或稍微扰动数据，标签就可能翻转为 Systemic-Inflammatory。所以那个 <code class="inline-code">&lt; 0.08</code> 规则本质是在说：**差距太小，别当强证据**。</p>
+      </div>
+      
+    </div>
+  </div>
+<div class="chat-turn user">
+    <div class="chat-avatar" aria-hidden="true"><svg width="16" height="16" viewBox="0 0 16 16"><path fill="currentColor" d="M8 1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7zM3 14s-1 0-1-1 1-5 6-5 6 4 6 5-1 1-1 1H3z"/></svg></div>
+    <div class="chat-body">
+      <div class="chat-header">
+        <span class="chat-sender">You</span>
+        <time class="chat-time">2026/05/20 15:44</time>
+      </div>
+      <div class="chat-content">
+        <p class="message-paragraph">按照这个规则identity_activity_label ZZЛИЕ</p><p class="message-paragraph">score-based NonMyeloid</p><p class="message-paragraph">DEG-based NonMyeloid (Ff)</p><p class="message-paragraph">LowQuality_Ribosomal</p><p class="message-paragraph">LowQuality_Stress还是没办法判定吗？</p>
       </div>
       
     </div>
