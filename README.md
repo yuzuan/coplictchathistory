@@ -1,13 +1,17 @@
 # Copilot Chat History
 
 > Auto-synced by [copilot-chat-sync](https://github.com/yuzuan/coplictchathistory)
-> Last updated: 2026/6/3 00:54:13
+> Last updated: 2026/6/3 00:55:08
 
 ## Web UI
 
 - Open the generated web UI: [docs/index.html](docs/index.html)
 
 ## Sessions
+
+### 2026-06-03
+
+- 简写建议与规范: [简写建议与规范_43cc59fc](sessions/2026-06-03/简写建议与规范_43cc59fc.md)
 
 ### 2026-06-02
 
